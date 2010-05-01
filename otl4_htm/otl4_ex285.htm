@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+  <title>OTL 4.0, Example 285 (Simple Unicode Insert/Select for both
+VARCHAR2 and NVARCHAR2 at the same time)</title>
+</head>
+<body>
+<center>
+<h1>OTL 4.0, Example 285 (Simple Unicode Insert/Select for both
+VARCHAR2 and NVARCHAR2 at the same time)</h1>
+</center>
+<h1>
+Example 285 (Simple Unicode Insert/Select for both VARCHAR2 and
+NVARCHAR2 at the same time)</h1>
+This example demonstrates a simple Unicode INSERT, SELECT for both
+VARCHAR and NVARCHAR2 at the same time.
+<h2>Source Code</h2>
+<pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
+<pre>#define OTL_ORA8I // Compile OTL 4.0/OCI8i<br>//#define OTL_ORA9I // Compile OTL 4.0/OCI9i<br>//#define OTL_ORA10G // Compile OTL 4.0/OCI10g<br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> // Enable Unicode OTL for OCI8i<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab "<br>               "values(:f1&lt;<a
+ href="otl3_bind_variables.htm#int">int</a>&gt;,:f2&lt;<a
+ href="otl3_bind_variables.htm#char">char</a>[31]&gt;,:f3&lt;<a
+ href="otl3_bind_variables.htm#nchar">nchar</a>[31]&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;char tmp[32];<br>&nbsp;unsigned short tmp2[31]; // Null terminated Unicode character array.<br><br>&nbsp;for(int i=1;i&lt;=100;++i){<br>&nbsp; sprintf(tmp,"Name%d",i);<br>&nbsp; unsigned short* c2=tmp2;<br>&nbsp; char* c1=tmp;<br>// Unicode's first 128 characters are ASCII (0..127), so<br>// all is needed for converting ASCII into Unicode is as follows:<br>&nbsp; while(*c1){<br>&nbsp;&nbsp; *c2=(unsigned char)*c1;<br>&nbsp;&nbsp; ++c1; ++c2;&nbsp;&nbsp;&nbsp;<br>&nbsp; }&nbsp;&nbsp;<br>&nbsp; *c2=0; // target Unicode string is null terminated,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // only the null terminator is a two-byte character,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // not one-byte<br>&nbsp; o&lt;&lt;i;<br>&nbsp; o<a
+ href="otl3_stream_class.htm#unicode_unsigned_char_write">&lt;&lt;</a>(unsigned char*)tmp2;&nbsp;<br>&nbsp;&nbsp; // overloaded operator&lt;&lt;(const unsigned char*) in the case of Unicode<br>&nbsp;&nbsp; // OTL accepts a pointer to a Unicode character array.<br>&nbsp;&nbsp; // operator&lt;&lt;(const unsigned short*) wasn't overloaded<br>&nbsp;&nbsp; // in order to avoid ambiguity in C++ type casting.<br>&nbsp; o<a
+ href="otl3_stream_class.htm#unicode_unsigned_char_write">&lt;&lt;</a>(unsigned char*)tmp2;&nbsp;<br>&nbsp;}<br><br>}<br><br>void select()<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select "<br>               "  f1, f2, "<br>               "  f3 :#3&lt;<a
+ href="otl3_bind_variables.htm#nchar">nchar</a>[31]&gt; " <br>                 // override the default mapping of f3 (from char[]) <br>                 // to nchar[]<br>              "from test_tab "<br>              "where f1&gt;=:f&lt;int&gt; "<br>              "  and f1&lt;=:f*2",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;int f1;<br>&nbsp;unsigned short f2[31];<br>&nbsp;unsigned short f3[31];<br><br>&nbsp;i&lt;&lt;4; // assigning :f = 4<br>&nbsp;&nbsp; // SELECT automatically executes when all input variables are<br>&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1;<br>&nbsp; i<a
+ href="otl3_stream_class.htm#unicode_unsigned_read">&gt;&gt;</a>(unsigned char*)f2;<br>&nbsp;&nbsp;&nbsp; // overloaded operator&gt;&gt;(unsigned char*) in the case of Unicode<br>&nbsp;&nbsp;&nbsp; // OTL accepts a pointer to a Unicode chracter array.<br>&nbsp;&nbsp;&nbsp; // operator&gt;&gt;(unsigned short*) wasn't overloaded&nbsp;<br>&nbsp;&nbsp;&nbsp; // in order to avoid ambiguity in C++ type casting.<br>&nbsp; i<a
+ href="otl3_stream_class.htm#unicode_unsigned_read">&gt;&gt;</a>(unsigned char*)f3;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2=";<br>// Unicode's first 128 characters are ASCII, so in order<br>// to convert Unicode back to ASCII all is needed is<br>// as follows:<br>&nbsp;&nbsp; for(int j=0;f2[j]!=0;++j){<br>&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;(char)f2[j];<br>&nbsp;&nbsp; }<br> &nbsp; cout&lt;&lt;", f3=";<br>&nbsp;&nbsp; for(int j2=0;f3[j2]!=0;++j2){<br>&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;(char)f2[j2];<br>&nbsp;&nbsp; }<br>&nbsp;&nbsp; cout&lt;&lt;endl;<br>&nbsp;}<br><br>}<br><br>int main()<br>{<br>&nbsp;<a
+ href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tiger"); // connect to Oracle<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 number, f2 varchar2(60), f3 nvarchar2(60))"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; insert(); // insert records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from Oracle<br><br>&nbsp;return 0;<br><br>}</pre>
+<h2>
+Output</h2>
+<pre>f1=4, f2=Name4, f3=Name4<br>f1=5, f2=Name5, f3=Name5<br>f1=6, f2=Name6, f3=Name6<br>f1=7, f2=Name7, f3=Name7<br>f1=8, f2=Name8, f3=Name8<br><br><hr
+ width="100%"></pre>
+<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
+ href="home.htm">Go
+Home</a></center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript">
+<!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+</p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

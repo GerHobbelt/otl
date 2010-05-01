@@ -1,0 +1,287 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Sergei Kuchin">
+   <meta name="GENERATOR" content="Mozilla/4.75 [en] (Win98; U) [Netscape]">
+   <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+   <title>Oracle, Odbc and DB2-CLITemplate Library, Version 3.2, What's New</title>
+</head>
+<body>
+
+<ul>
+<center>
+<h1>
+Oracle, Odbc and DB2-CLI Template Library, Version 3.2</h1></center>
+
+<center>
+<h1>
+What's New</h1></center>
+
+<h1>
+Rlogon() and otl_connect() constructor were enhanced with the auto_commit
+parameter</h1>
+For more detail, see the <a href="otl3_connect_class.htm#rlogon">rlogon</a>()
+function and examples <a href="otl3_ex46.htm">46,</a> <a href="otl3_ex47.htm">47</a>,
+<a href="otl3_ex48.htm">48</a>.
+<b><i>The
+<a href="otl4_htm.zip">archived version</a> of the OTL Programmer's Guide was 
+updated.</i></b>
+<br>&nbsp;
+<br>&nbsp;
+<h1>
+direct_exec() now returns a rows processed count; otl_stream::get_rpc()
+was added, it returns a rows processed count</h1>
+For more detail, see <a href="otl3_stream_class.htm#get_rpc">get_rpc</a>(),
+<a href="otl3_const_sql.htm">direct_exec</a>(),
+and examples <a href="otl3_ex43.htm">43</a>,
+<a href="otl3_ex44.htm">44</a>,
+<a href="otl3_ex45.htm">45</a>.
+<b><i>The
+<a href="otl4_htm.zip">archived version</a> of the OTL Progermmer's Guide was updated.</i></b>
+<br>&nbsp;
+<h1>
+OTL namespaces have been streamlined in OTL 3.1.30</h1>
+For more detail, see <a href="otl3_namespaces.htm">OTL namespaces</a> and
+<a href="otl3_ex42.htm">example
+42</a>.
+<br>&nbsp;
+<h1>
+Example 42 was added to demonstrate how to use more than one instance of
+OTL (e.g. OTL/ODBC and OTL/OCI8) and OTL namespaces</h1>
+In order to see the example, click <a href="otl3_ex42.htm">here</a>. This
+new example demonstrates how to connect to both MS SQL Server and Oracle
+8, creates tables in both, fill out the source table in MS SQL, and then
+copy it over to the target table in Oracle 8. Click <a href="otl3_namespaces.htm">here
+</a>for
+more detail on the OTL namespaces. <b><i>The <a href="otl4_htm.zip">archived version
+</a> of the OTL Programmer's was updated.</i></b>
+<br>&nbsp;
+<h1>
+Example 41 was added to the list of examples in order to demonstrate how
+to do UPDATEs with CLOBs in Oracle 8</h1>
+In order to see the example, click <a href="otl3_ex41.htm">here</a>. This
+new example demonstrates UPDATEs with CLOBs in Oracle 8. UPDATEs with BLOBs
+are similar to the UPDATEs with CLOBs if the word clob is replaced with
+the word blob. Also, <b><i>the <a href="otl4_htm.zip">archived version</a>
+of the OTL Progermmer's Guide was updated.</i></b>
+<br>&nbsp;
+<h1>
+OTL Header file is available for download</h1>
+In order to dowload the OTL header file, click <a href="otlv4_h.zip">here</a>.
+<br>&nbsp;
+<h1>
+OTL Programmer's Guide is available in the archived format for download</h1>
+In order to dowload the OTL Programmer's Guide, click <a href="otl4_htm.zip">here</a>.
+<br>&nbsp;
+<h1>
+OTL 3.0.26 in comparsion with OTL 3.0.20</h1>
+In this release, a new data container was introduced: <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>..
+For more detail, see examples <a href="otl3_ex38.htm">38</a>, <a href="otl3_ex39.htm">39</a>
+and <a href="otl3_ex40.htm">40</a>. Otl_datetime is unified for both OCIx
+and ODBC, meaning that it can be used uniformly across the board.
+<p><i>NOTE. </i>Important change in the OTL behavior: Oracle DATE [table]
+columns do not get mapped to the string variables any longer. They get
+mapped to the Oracle internal [7-byte] date format and can be read/written
+with the use otl_datetime variables. If need be, Oracle DATE has to be
+converted into the string format and back expilcitly with the help of TO_CHAR()
+and TO_DATE() functions, directly in SQL statements or PL/SQL blocks.
+<h1>
+OTL 3.0.20 in comparsion with OTL 3.0.19</h1>
+In this release, a major effort was made to clean up as many compilation
+warnings as possible, to make OTL compilable at the level of C++ compiler
+warnings set to its maximum: typical warnings like unused arguments in
+function, typecasting, missing assigment operators or copy constructors,
+etc. Also, examples <a href="otl3_ex35.htm">35</a>, <a href="otl3_ex36.htm">36</a>
+and <a href="otl3_ex37.htm">37</a> were added to the list of OTL examples
+in order to demonstrate the use of the <a href="otl3_stream_class.htm#nocommit">otl_nocommit_stream</a>
+class.
+<h1>
+<a NAME="ODBC30"></a>OTL 3.0.19 in comparsion with OTL 3.0.16</h1>
+In this release, OTL 3.1/ODBC was made compliant with the ODBC 3.x specification.
+In other words, older (ODBC 2.x) function calls were replaced with ODBC
+3.x function calls, to straighten out the behavior of OTL 3.1/ODBC when
+it's connected to MS SQL Server 7.0. This is really an internal enchance
+of the library.
+<br>&nbsp;
+<br>&nbsp;
+<h1>
+OTL 3.0.16 in comparsion with OTL 3.0.0</h1>
+In this release, a new class was introduced: <font size=+2><a href="otl3_stream_class.htm#nocommit">otl_nocommit_stream</a></font><font size=+1>.
+</font>This
+class is a derivative of the otl_stream class. otl_nocommit_stream supports
+all features, supported by otl_stream, but it hehaves differently. otl_nocommit_stream
+does not commit transactions, as apposed to otl_stream that commits transactions
+by default.
+<h1>
+OTL 3.0 in comparison with OTL 2.x <font size=+1>(updated 11/20/1999)</font></h1>
+This version of the OTL is compatible with the OTL/ODBC 2.x and OTL/OCI
+2.x series when <a href="otl3_stream_class.htm">otl_stream</a>'s, <a href="otl3_connect_class.htm">otl_connect</a>'s
+and <a href="otl3_exception_class.htm">otl_exception</a>'s are used. Support
+of low level features has been discontinued in this version.
+<p>The OTL 2.x/ODBC as well as OTL 2.x/OCI had the STL compliant otl_stream
+<a href="Otl_it02.htm">input</a>
+and <a href="Otl_it01.htm">output</a> iterators. Because of the low demand
+(I recevied too few requests on that) this feature has been discontinued.
+The iterators are based on the <a href="http://www.sgi.com/Technology/STL/">SGI
+STL</a>. The old <i>otl_iter.h </i>header file can be used with the OTL
+3.0, though.
+<p>The main difference between the OTL 3.1 and the OTL 2.x releases is
+that the OTL/OCI 2.x and the OTL/ODBC 2.x were integrated into a single
+library. A new, completely templatized framework was developed. Also, a
+series of so called OTL-adaptors was developed for the following database
+API's:
+<ul>
+<li>
+Oracle Call Interface 7 (OCI7)</li>
+
+<li>
+Oracle Call Interface 8 (OCI8)</li>
+
+<li>
+Open DataBase Connectivity (ODBC)</li>
+</ul>
+A complete set of functions was developed to manipulate with Large Object
+(LOB) columns. In particular, the following datatypes are supported:
+<ul>
+<li>
+MS SQL TEXT and IMAGE</li>
+
+<li>
+Sybase TEXT and IMAGE</li>
+
+<li>
+Oracle 7 LONG and LONG RAW</li>
+
+<li>
+LONG and LONG RAW in Oracle 8 as well as CLOB and BLOB</li>
+</ul>
+In <a href="otl3_exception_class.htm">otl_exception</a>, a new field was
+introduced:
+<pre>&nbsp;&nbsp; char var_info[256]</pre>
+It contains variable specific information in case if the following otl_exception
+is raised in the otl_stream operators >> or &lt;&lt;: "Incompatible datatypes
+in stream operation." It is useful when debugging operations with otl_streams.
+The <i>var_info </i>field provides a placeholder name (say, in an INSERT
+statement) or a relative number of an output column in a SELECT statement.
+Also, the <i>var_info</i> provides information on both the datatype of
+the placeholder/output column and the datatype of the actual parameter
+in the otl_stream operator to be used.
+<p><i>stm_text</i> is no longer a char* pointer, it was replaced with the
+straight char <i>stm_text[2048]</i> array. First 2047 bytes of a SQL statement
+are copied over from an otl_stream (or constant statement) into the <i>stm_text</i>
+container.
+<p>In the OTL 3.1 instantiated from the template framework and the OTL-adaptor
+for ODBC (OTL 3.0/ODBC for short), a new <a href="otl3_bind_variables.htm">placeholder
+notation</a> is supported, similar to Oracle type style placeholders:
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "INSERT INTO test_tab VALUES(:<b>f1</b>&lt;int>,:<b>f2</b>&lt;char[33]>)"</pre>
+In the OTL 2.x for ODBC, the placeholder notation was a little bit different:
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "INSERT INTO test_tab VALUES(:<b>1</b>&lt;int>,:<b>2</b>&lt;char[33]>)"</pre>
+It is still possible to use the old notation in OTL3.0/ODBC but it is recommended
+to use the new placeholder notation since it is compatibel with the placeholder
+notation for OTL3.0/OCIx. It will make source code more portable across
+databases.
+<p>The only limitation on the new style ODBC placeholders is that it is
+not allowed to refer to the same placeholder in a SQL statement more than
+once. For example, the following SQL statement works in the OTL 3.0/OCI
+but it does not work in the OTL 3.0/ODBC:
+<pre>&nbsp;&nbsp;&nbsp; "SELECT * "
+&nbsp;&nbsp;&nbsp; "FROM test_tab "
+&nbsp;&nbsp;&nbsp; "WHERE f1>=:<b>f1</b>&lt;int> "
+&nbsp;&nbsp;&nbsp; "&nbsp; AND f1&lt;=:<b>f1</b>*2 "</pre>
+In the OTL 3.0/ODBC, it needs to be rewritten this way:
+<pre>&nbsp;&nbsp;&nbsp; "SELECT * "
+&nbsp;&nbsp;&nbsp; "FROM test_tab "
+&nbsp;&nbsp;&nbsp; "WHERE f1>=:<b>f11</b>&lt;int> "
+&nbsp;&nbsp;&nbsp; "&nbsp; AND f1&lt;=:<b>f12</b>&lt;int>*2 "</pre>
+This is necessary in order to make each placeholder unique. This limitation
+is actually imposed by the ODBC standard. Placeholders in ODBC are positional,
+for example:
+<pre>&nbsp;&nbsp;&nbsp; "SELECT * "
+&nbsp;&nbsp;&nbsp; "FROM test_tab "
+&nbsp;&nbsp;&nbsp; "WHERE f1>= <b>?</b> "
+&nbsp;&nbsp;&nbsp; "&nbsp; AND f1&lt;= <b>?</b> * 2 "</pre>
+So, the first question mark in the statement above is placeholder number
+1. The second question mark is placeholder number 2.
+<p>Several new functions were introduced in the otl_stream and <a href="otl3_connect_class.htm">otl_connect</a>
+classes. For example, in the OTL 3.0/ODBC:
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db.set_timeout(&lt;X seconds>);</pre>
+This function sets a timeout on a connect object. The function has no effect
+in the OTL 3.0/OCI. It works with ODBC only. If, in the future, OCI provides
+client side timeout functionality, the function will have an actual implementation.
+<p>See the <a href="otl3.htm">OTL 3.0 manual</a> or more detail.
+<h2>
+How to compile OTL 3.0</h2>
+The following macro definitions (#define's) need to be defined in order
+to <a href="otl3_compile.htm">instantiate</a> different implementations
+of the OTL 3.0:
+<ul>
+<li>
+<b>OTL_ODBC</b> (for ODBC)</li>
+
+<li>
+<b>OTL_ORA7</b> (for OCI7)</li>
+
+<li>
+<b>OTL_ORA8</b> (for OCI8)</li>
+</ul>
+
+<h2>
+New namespace naming convensions</h2>
+By default, there is no <a href="otl3_namespaces.htm">namespace</a> defined
+in the OTL 3.0. If need be, each instantiation (OCI7, OCI8 or ODBC) of
+the OTL 3.0 can be wrapped up with a separate namespace. See the OTL header
+file for more detail.
+<h2>
+New data container for Large Objects</h2>
+<i><a href="otl3_long_string.htm">otl_long_string</a></i> class was introduced
+in the OTL 3.0 to hold Large Object values: TEXT's, IMAGE's, LONG's, LONG
+RAW's, CLOB's, BLOB's. The OTL 2.1/ODBC had the <i>otl_long_string
+</i>class
+but in the OTL 3.0 the class was generalized to contain any Large Objects
+<p>Two new <a href="otl3_bind_variables.htm">placeholder datatypes</a>
+were introduced:
+<ul>
+<li>
+<i>varchar_long</i> (to declare TEXT (MS SQL, Sybase), LONG (Oracle 7/8)
+variables)</li>
+
+<li>
+<i>raw_long</i> (to declare IMAGE (MS SQL, Sybase), LONG RAW (Oracle 7/8)
+variables)</li>
+
+<li>
+<i>clob </i>(to declare CLOB (Oracle 8) variables)</li>
+
+<li>
+<i>blob </i>(to declare BLOB (Oracle 8) variables)</li>
+</ul>
+See <a href="otl3.htm">the OTL 3.0 manual</a> and the header file for more
+detail.
+<center>
+<p>
+<hr WIDTH="100%">
+<p><a href="home.htm">Go Home</a></center>
+
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com<script Language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script>
+</a>.
+<p><i>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></ul>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta content="text/html; charset=us-ascii" http-equiv="Content-Type">
+  <meta content="Sergei Kuchin" name="Author">
+  <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]" name="GENERATOR">
+  <meta content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library" name="KeyWords">
+
+  <title>OTL 4.0, Examples for PostgreSQL / ODBC</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, Examples for PostgreSQL / ODBC<br></h1>
+  </center>The examples below work with PostgreSQL via ODBC. In general, all of these examples should work with any PostgreSQL 8.0 and higher, when ODBC&nbsp; is enabled in OTL by setting #define <a href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>, or #define <a href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a>. For more examples, see the <a href="otl4_gen_odbc_examples.htm">Generic ODBC</a> examples.<br>
+
+  <ol>
+    <li><b><a href="otl4_ex140.htm">Example 140 (Simple Insert/Select/Update)</a></b></li>
+
+    <li><b><a href="otl4_ex141.htm">Example 141 ("Incompatible datatypes in stream operation" exception)</a></b></li>
+
+    <li><b><a href="otl4_ex142.htm">Example 142 (otl_datetime container and DATE/TIME/TIMESTAMP&nbsp; table columns)</a></b></li>
+
+    <li><b><a href="otl4_ex143.htm">Example 143 (otl_long_string container and a TEXT column)</a></b></li>
+
+    <li><b><a href="otl4_ex144.htm">Example 144 (std::string and STL-compliant stream iterators)</a></b></li>
+
+    <li><b><a href="otl4_ex145.htm">Example 145 (otl_stream::describe_select() with a simple Select)</a></b></li>
+
+    <li><b><a href="otl4_ex146.htm">Example 146 (otl_stream and NULLs)</a></b></li>
+
+    <li><b><a href="otl4_ex214.htm">Example 214 (OTL_ADD_NULL_TERMINATOR_STRING_SIZE, PostgreSQL)</a></b></li>
+
+    <li><b><a href="otl4_ex342.htm">Example 342 (otl_stream_read_iterator, "get by name" functions, PostgreSQL)</a></b></li>
+
+    <li><b><a href="otl4_ex345.htm">Example 345 (Insert/Update/Select with TEXT in stream mode and otl_stream_read_iterator)</a></b></li>
+
+    <li><b><a href="otl4_ex346.htm">Example 346 (Insert/Update/Select with BYTEA in stream mode and otl_stream_read_iterator)</a></b></li>
+
+    <li><b><a href="otl4_ex347.htm">Example 347 (Strict numeric type checking on SELECTs)</a></b></li>
+
+    <li><b><a href="otl4_ex348.htm">Example 348&nbsp; (Simple Unicode Insert/Select and VARCHAR strings)</a></b></li>
+
+    <li><b><a href="otl4_ex349.htm">Example 349 (Simple Unicode Insert/Select with TEXT)</a></b></li>
+
+    <li><b><a href="otl4_ex350.htm">Example 350 (Simple Insert/Select/Update with a BOOL column)</a></b></li>
+
+    <li><b><a href="otl4_ex361.htm">Example 361 (Unicode VARCHAR Insert/Select and #define OTL_UNICODE_CHAR_TYPE)</a></b></li>
+
+    <li><b><a href="otl4_ex362.htm">Example 362 (Unicode VARCHAR Insert/Select and #define OTL_UNICODE_STRING_TYPE)</a></b></li>
+
+    <li><b><a href="otl4_ex369.htm">Example 369 (Unicode TEXT Insert/Select and #define OTL_UNICODE_STRING_TYPE)</a></b></li>
+
+    <li><b><a href="otl4_ex376.htm">Example 376 (Simple Insert/Select, otl_connect::operator&lt;&lt;, &lt;&lt;=, &gt;&gt;)</a></b></li>
+
+    <li><b><a href="otl4_ex383.htm">Example 383 (Insert/Update/Select, PostgreSQL TEXT in stream mode, and std:strings)</a></b></li>
+
+    <li><b><a href="otl4_ex393.htm">Example 393 (Insert/Update/Select with PostgreSQL TEXT&nbsp; in stream mode, without otl_lob_stream::set_len())</a></b></li>
+
+    <li><b><a href="otl4_ex454.htm">Example 454 (Simple Insert/Select with BYTEA datatype)</a></b></li>
+
+    <li><b><a href="otl4_ex465.htm">Example 465 (Simple Insert/Select with BYTEA datatype and otl_stream_read_iterator)</a></b></li>
+
+    <li><b><a href="otl4_ex675.htm">Example 675 (Simple Insert/Select/Update #define OTL_ODBC_MULTI_MODE)</a></b></li>
+
+    <li><b><a href="otl4_ex676.htm">Example 676 (otl_datetime container and a TIMESTAMP&nbsp; WITH TIMEZONE table column)</a></b></li>
+
+    <li><b><a href="otl4_ex686.htm">Example 686 (otl_datetime container and a TIMESTAMP&nbsp; WITH TIMEZONE table column under #define OTL_UNICODE)</a></b></li>
+  </ol>
+
+  <center>
+    <hr width="100%">
+    <a href="otl3_const_sql.htm">Prev</a> <a href="otl3_compile.htm">Next</a><a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com <script language="JavaScript" type="text/javascript">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

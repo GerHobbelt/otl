@@ -1,0 +1,118 @@
+<html><head><title>PACKAGE BODY PKG1</title>
+</head><body><h1>PACKAGE BODY PKG1</h1>
+<ol>
+<lh><b>Function list:</b></lh><br><br>
+<li><a href="pl000003.htm#FCN_SEQ1_GET_NEXT1">FCN_SEQ1_GET_NEXT</a></li>
+</ol>
+
+<ol>
+<lh><b>Procedure list:</b></lh><br><br>
+<li><a href="pl000003.htm#PRC_21">PRC_2</a></li>
+<li><a href="pl000003.htm#PRC_REF_CUR_TAB21">PRC_REF_CUR_TAB2</a></li>
+</ol>
+
+<ol>
+<lh><b>Cursors list:</b></lh><br><br>
+<li><a href="pl000003.htm#CUR_GET_VIEW11">CUR_GET_VIEW1</a></li>
+<li><a href="pl000003.htm#CUR_SEQ1_NEXT1">CUR_SEQ1_NEXT</a></li>
+</ol>
+
+<pre>
+<font color="#0000A0">CREATE</font> <font color="#0000A0">OR</font> <font color="#0000A0">REPLACE</font> <font color="#0000A0">PACKAGE</font> <font color="#0000A0">BODY</font> pkg1 <font color="#0000A0">IS</font>
+
+
+  user_defined_exc <font color="#0000A0">EXCEPTION</font>;
+
+<a name="L6"></a><a name="CUR_GET_VIEW11"></a><a name="CUR_GET_VIEW11"></a><b>  <font color="#0000A0">CURSOR</font> cur_get_view1 <font color="#0000A0">IS</font></b> /*<a href="rf000001.htm#"><b>=></b></a>*/
+    <font color="#0000A0">SELECT</font> * <font color="#0000A0">FROM</font> <a name="REF7"></a><a href="pl000011.htm#VIEW11">view1</a>;
+
+<i><font color="#804000">--- Returns the next value of SEQ1  </i></font>
+<a name="L10"></a><a name="FCN_SEQ1_GET_NEXT1"></a>
+/* <b>FCN_SEQ1_GET_NEXT</b>: <a href="rf000005.htm#">ref_list</a>, <a href="rt000005.htm#">ref_tree</a>, <a href="tr000005.htm#">fcall_tree</a> */
+
+<h2>  <font color="#0000A0">FUNCTION</font> fcn_seq1_get_next <font color="#0000A0">RETURN</font> <font color="#0000A0">NUMBER</font></h2>
+  <font color="#0000A0">IS</font>
+<a name="L12"></a><a name="CUR_SEQ1_NEXT1"></a><a name="CUR_SEQ1_NEXT1"></a><b>    <font color="#0000A0">CURSOR</font> cur_seq1_next <font color="#0000A0">IS</font></b> /*<a href="rf000002.htm#"><b>=></b></a>*/
+      <font color="#0000A0">SELECT</font> <a name="REF13"></a><a href="pl000008.htm#SEQ11">seq1</a>.<font color="#0000A0">NEXTVAL</font>
+        <font color="#0000A0">FROM</font> dual;
+    lv_next_val <font color="#0000A0">NUMBER</font>;
+  <font color="#0000A0">BEGIN</font>
+    <font color="#0000A0">OPEN</font> <a name="REF17"></a><a href="pl000003.htm#CUR_SEQ1_NEXT1">cur_seq1_next</a>;
+    <font color="#0000A0">FETCH</font> <a name="REF18"></a><a href="pl000003.htm#CUR_SEQ1_NEXT1">cur_seq1_next</a> <font color="#0000A0">INTO</font> lv_next_val;
+    <font color="#0000A0">CLOSE</font> <a name="REF19"></a><a href="pl000003.htm#CUR_SEQ1_NEXT1">cur_seq1_next</a>;
+    <font color="#0000A0">RETURN</font> lv_next_val;
+  <font color="#0000A0">END</font>;
+
+
+<i><font color="#804000">/* ***************************************************
+  This procedure returns a reference cursor pointing
+  to a SELECT statement.
+*************************************************** */</i></font>
+<a name="L28"></a><a name="PRC_REF_CUR_TAB21"></a>
+/* <b>PRC_REF_CUR_TAB2</b>: <a href="rf000011.htm#">ref_list</a>, <a href="rt000011.htm#">ref_tree</a>, <a href="tr000011.htm#">fcall_tree</a> */
+
+<h2>  <font color="#0000A0">PROCEDURE</font> prc_ref_cur_tab2(iov_ref <font color="#0000A0">IN</font> <font color="#0000A0">OUT</font> type1)</h2>
+  <font color="#0000A0">IS</font>
+    lv_max_val <font color="#0000A0">NUMBER</font>;
+  <font color="#0000A0">BEGIN</font>
+    lv_max_val := <a name="REF32"></a><a href="pl000006.htm#FCN_BIG_MAX_VAL1">pkg2.fcn_big_max_val</a>;
+    <font color="#0000A0"><a name="REF33"></a>OPEN</font> iov_ref <font color="#0000A0">FOR</font>
+      <font color="#0000A0">SELECT</font> *
+      <font color="#0000A0">FROM</font> <a name="REF35"></a><a href="pl000009.htm#TAB21">tab2</a>
+      <font color="#0000A0">WHERE</font> f1&lt;=lv_max_val;
+  <font color="#0000A0">END</font>;
+
+<i><font color="#804000">/* ***************************************************
+  This procedure is a sample of how reference cursors
+  can be used.
+*************************************************** */</i></font>
+<a name="L43"></a><a name="PRC_21"></a>
+/* <b>PRC_2</b>: <a href="rf000010.htm#">ref_list</a>, <a href="rt000010.htm#">ref_tree</a>, <a href="tr000010.htm#">fcall_tree</a> */
+
+<h2>  <font color="#0000A0">PROCEDURE</font> prc_2</h2>
+  <font color="#0000A0">IS</font>
+    lv_cur typ1;
+    lv_rec <a name="REF46"></a><a href="pl000009.htm#TAB21">tab2</a>%<font color="#0000A0">ROWTYPE</font>;
+    lv_next_val <font color="#0000A0">NUMBER</font>;
+  <font color="#0000A0">BEGIN</font>
+    <a name="REF49"></a><a href="pl000003.htm#PRC_REF_CUR_TAB21">prc_ref_cur_tab2</a>(lv_cur);
+    <font color="#0000A0">LOOP</font>
+      <font color="#0000A0"><a name="REF51"></a>FETCH</font> lv_cur <font color="#0000A0">INTO</font> lv_rec;
+      <font color="#0000A0">EXIT</font> <font color="#0000A0">WHEN</font> lv_cur%<font color="#0000A0">NOTFOUND</font>;
+      <font color="#0000A0">IF</font> lv_rec.f1=<a name="REF53"></a><a href="pl000006.htm#FCN_MAX_VAL1">pkg2.fcn_max_val</a> <font color="#0000A0">THEN</font>
+         <font color="#0000A0">BEGIN</font>
+           <font color="#0000A0">UPDATE</font> <a name="REF55"></a><a href="pl000009.htm#TAB21">tab2</a>
+             <font color="#0000A0">SET</font> f4=<font color="#008080">'This is maximum value'</font>
+             <font color="#0000A0">WHERE</font> f1=lv_rec.f1;
+           <font color="#0000A0">EXCEPTION</font>
+             <font color="#0000A0"><a name="REF59"></a>WHEN</font> <font color="#0000A0">OTHERS</font> <font color="#0000A0">THEN</font>
+                <i><font color="#804000">/* ********************************************
+                   this is an artificial example to demonstrate 
+                   as many features of the PLSQL2HTML converter
+                   as possible
+                ********************************************* */</i></font>
+                <font color="#0000A0"><a name="REF65"></a>RAISE</font> user_defined_exc;
+         <font color="#0000A0">END</font>;
+      <font color="#0000A0">END</font> <font color="#0000A0">IF</font>;
+    <font color="#0000A0">END</font> <font color="#0000A0">LOOP</font>;
+    <font color="#0000A0"><a name="REF69"></a>CLOSE</font> lv_cur;
+
+    <font color="#0000A0">FOR</font> lv_rec1 <font color="#0000A0">IN</font> <a name="REF71"></a><a href="pl000003.htm#CUR_GET_VIEW11">cur_get_view1</a> <font color="#0000A0">LOOP</font>
+      <i><font color="#804000">--- do some processing of the rows to be fetched</i></font>
+    <font color="#0000A0">END</font> <font color="#0000A0">LOOP</font>;
+
+  <font color="#0000A0">END</font>;
+
+<font color="#0000A0">END</font>;
+/
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</pre></body></html>
+

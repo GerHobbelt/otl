@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>OTL 4.0, Example 110 (Group datatype override in SELECT, Oracle 7)</TITLE>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <META NAME="Author" CONTENT="Sergei Kuchin">
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
+   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</HEAD>
+<BODY>
+
+<H1 ALIGN=CENTER>OTL 4.0, Example 110 (Group data type override in SELECT,
+Oracle 7)</H1>
+
+<H1>Example 110 (Group data type override in SELECT, Oracle 7)</H1>
+
+<P>This example demonstrates a SELECT statement with a group of numeric
+columns, being converted into a null terminated string. It is a useful
+technique when there is a need to read and write number, which are larger
+than 16 digits. Also, this example demonstrates the overriding of date
+columns.</P>
+
+<H2>Source Code</H2>
+
+<PRE>#include &lt;iostream&gt;
+using namespace std;
+
+#include &lt;stdio.h&gt;</PRE>
+
+<PRE>#define OTL_ORA7 // Compile OTL 4.0/OCI7
+#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+
+<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+
+void insert()
+// insert rows into table
+{&nbsp;
+&nbsp;<A HREF="otl3_stream_class.htm">otl_stream</A> o(50, // buffer size
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;insert into test_tab values(12345678900000000+:f1&lt;int&gt;,:f11&lt;int&gt;,:f2&lt;char[31]&gt;, SYSDATE)&quot;,&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );
+&nbsp;char tmp[32];
+
+&nbsp;for(int i=1;i&lt;=100;++i){
+&nbsp; sprintf(tmp,&quot;Name%d&quot;,i);
+&nbsp; o&lt;&lt;i&lt;&lt;i&lt;&lt;tmp;
+&nbsp;}
+}
+
+void select()
+{&nbsp;
+&nbsp;<A HREF="otl3_stream_class.htm">otl_stream</A> i;
+
+&nbsp;i.<A HREF="otl3_stream_class.htm#set_all_column_types">set_all_column_types</A>(otl_all_num2str | otl_all_date2str); 
+   // map all numeric columns to strings as well as
+   // map all date columns to strings
+
+&nbsp;i.open(50, // buffer size
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;select * from test_tab &quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;where f1&gt;=12345678900000000+:f&lt;int&gt; &quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;&nbsp; and f1&lt;=12345678900000000+:f*2&quot;,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;
+&nbsp;&nbsp; // create select stream
+&nbsp;
+&nbsp;char f1[40];
+ char f11[40];
+&nbsp;char f2[31];
+ char f3[30];
+
+&nbsp;i&lt;&lt;8; // assigning :f = 8
+&nbsp;&nbsp; // SELECT automatically executes when all input variables are
+&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer
+
+&nbsp;while(!i.eof()){ // while not end-of-data
+&nbsp; i&gt;&gt;f1&gt;&gt;f11&gt;&gt;f2&gt;&gt;f3;
+&nbsp; cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f11=&quot;&lt;&lt;f11&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;&quot;, f3=&quot;&lt;&lt;f3&lt;&lt;endl;
+&nbsp;}
+
+&nbsp;i&lt;&lt;4; // assigning :f = 4
+&nbsp;&nbsp; // SELECT automatically executes when all input variables are
+&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer
+
+&nbsp;while(!i.eof()){ // while not end-of-data
+&nbsp; i&gt;&gt;f1&gt;&gt;f11&gt;&gt;f2&gt;&gt;f3;
+&nbsp; cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f11=&quot;&lt;&lt;f11&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;&quot;, f3=&quot;&lt;&lt;f3&lt;&lt;endl;
+&nbsp;}
+
+}
+
+int main()
+{
+&nbsp;<A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize OCI environment
+&nbsp;try{
+
+&nbsp; db.rlogon(&quot;scott/tiger&quot;); // connect to Oracle
+
+&nbsp; <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
+</A>&nbsp;&nbsp; (
+&nbsp;&nbsp;&nbsp; db,
+&nbsp;&nbsp;&nbsp; &quot;drop table test_tab&quot;,
+&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions
+&nbsp;&nbsp; ); // drop table
+
+&nbsp; <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
+</A>&nbsp;&nbsp; (
+&nbsp;&nbsp;&nbsp; db,
+&nbsp;&nbsp;&nbsp; &quot;create table test_tab(f1 number, f11 number, f2 varchar2(30), f3 date)&quot;
+&nbsp;&nbsp;&nbsp; );&nbsp; // create table
+
+&nbsp; insert(); // insert records into table
+&nbsp; select(); // select records from table
+
+&nbsp;}
+
+&nbsp;catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+&nbsp;}
+
+&nbsp;db.logoff(); // disconnect from Oracle
+
+&nbsp;return 0;
+
+}</PRE>
+
+<H2>Output</H2>
+
+<PRE>f1=12345678900000008, f11=8, f2=Name8, f3=03-FEB-01
+f1=12345678900000009, f11=9, f2=Name9, f3=03-FEB-01
+f1=12345678900000010, f11=10, f2=Name10, f3=03-FEB-01
+f1=12345678900000011, f11=11, f2=Name11, f3=03-FEB-01
+f1=12345678900000012, f11=12, f2=Name12, f3=03-FEB-01
+f1=12345678900000013, f11=13, f2=Name13, f3=03-FEB-01
+f1=12345678900000014, f11=14, f2=Name14, f3=03-FEB-01
+f1=12345678900000015, f11=15, f2=Name15, f3=03-FEB-01
+f1=12345678900000016, f11=16, f2=Name16, f3=03-FEB-01
+f1=12345678900000004, f11=4, f2=Name4, f3=03-FEB-01
+f1=12345678900000005, f11=5, f2=Name5, f3=03-FEB-01
+f1=12345678900000006, f11=6, f2=Name6, f3=03-FEB-01
+f1=12345678900000007, f11=7, f2=Name7, f3=03-FEB-01
+f1=12345678900000008, f11=8, f2=Name8, f3=03-FEB-01
+
+<HR WIDTH="100%"></PRE>
+
+<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A><A HREF="home.htm">Go
+Home</A> </P></CENTER>
+
+<P>Copyright &copy; 1996-2009, Sergei Kuchin, email: <A HREF="mailto:skuchin@aceweb.com">skuchin@aceweb.com</A>,
+<A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A>.<SCRIPT Language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </SCRIPT></P>
+
+<P><I>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</I> </P>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</BODY>
+</HTML>

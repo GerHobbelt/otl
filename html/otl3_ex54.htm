@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.7 [en] (WinNT; I) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, Example 54 (Datatype override in SELECT, Oracle 8)</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, Example 54 (Datatype override in SELECT, Oracle 8)</h1>
+  </center>
+
+  <h1><a name="example1" id="example1"></a>Example 54 (Datatype override in SELECT, Oracle 8)</h1>This example demonstrates a SELECT statement with a numeric column, being converted into a null terminated string. It is a useful technique when there is a need to read and write number, which are larger than 16 digits.
+
+  <h2>Source Code</h2>
+  <pre>
+#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;
+</pre>
+  <pre>
+#define OTL_ORA8 // Compile OTL 4.0/OCI8<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{ <br> <a href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>              "insert into test_tab values(12345678900000000+:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br> char tmp[32];<br><br> for(int i=1;i&lt;=100;++i){<br>  sprintf(tmp,"Name%d",i);<br>  o&lt;&lt;i&lt;&lt;tmp;<br> }<br>}<br><br>void select()<br>{ <br> <a href="otl3_stream_class.htm">otl_stream</a> i;<br><br> i.<a href=
+"otl3_stream_class.htm#set_column_type">set_column_type</a>(1,otl_var_char,40); // use a string(40) instead of default double<br> i.<a href=
+"otl3_stream_class.htm#open">open</a>(50, // buffer size<br>        "select * from test_tab "<br>        "where f1&gt;=12345678900000000+:f&lt;int&gt; "<br>        "  and f1&lt;=12345678900000000+:f*2",<br>           // SELECT statement<br>        db // connect object<br>       ); <br>   // create select stream<br> <br> char f1[40];<br> char f2[31];<br><br> i&lt;&lt;8; // assigning :f = 8<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br> }<br><br> i&lt;&lt;4; // assigning :f = 4<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br> }<br><br>}<br><br>int main()<br>{<br> <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment<br> try{<br><br>  db.rlogon("scott/tiger"); // connect to Oracle<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "drop table test_tab",<br>    otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "create table test_tab(f1 number, f2 varchar2(30))"<br>    );  // create table<br><br>  insert(); // insert records into table<br>  select(); // select records from table<br><br> }<br><br> catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from Oracle<br><br> return 0;<br><br>}
+</pre>
+
+  <h2>Output</h2>
+  <pre>
+f1=12345678900000008, f2=Name8<br>f1=12345678900000009, f2=Name9<br>f1=12345678900000010, f2=Name10<br>f1=12345678900000011, f2=Name11<br>f1=12345678900000012, f2=Name12<br>f1=12345678900000013, f2=Name13<br>f1=12345678900000014, f2=Name14<br>f1=12345678900000015, f2=Name15<br>f1=12345678900000016, f2=Name16<br>f1=12345678900000004, f2=Name4<br>f1=12345678900000005, f2=Name5<br>f1=12345678900000006, f2=Name6<br>f1=12345678900000007, f2=Name7<br>f1=12345678900000008, f2=Name8<br><br><br><br><br><br><br>
+</pre>
+  <hr width="100%">
+
+  <center>
+    <a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com/a&gt;. <script language="JavaScript" type="text/javascript">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a></p>
+
+  <p><a href="mailto:skuchin@gmail.com"><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></a></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

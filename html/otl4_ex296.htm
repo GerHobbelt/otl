@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, Example 296 (std::string, STL-compliant stream iterators)</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, Example 296 (std::string, STL-compliant stream iterators)</h1>
+  </center>
+
+  <h1>Example 296 (std::string, STL-compliant stream iterators)</h1>This example demonstrates STL-compliant OTL stream iterators, std::strings, and ANSI C++ typecasts. This examples was linked with the TimesTen Client ODBC Driver library (libttclient.so (Linux/Unix), ttclient.lib (Windows)).
+
+  <h2>Source Code</h2>
+  <pre>
+#include &lt;iostream&gt;<br>#include &lt;vector&gt;<br>#include &lt;iterator&gt;<br>#include &lt;string&gt;<br>#include &lt;cstring&gt;<br>#include &lt;cstdlib&gt;
+</pre>
+  <pre>
+#define <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_WIN">OTL_ODBC_TIMESTEN_WIN</a> // Compile OTL 4.0/TimesTen ODBC for Windows<br>// Uncomment the following when building this example in Unix/Linux<br>// #define <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_UNIX">OTL_ODBC_TIMESTEN_UNIX</a> // Compile OTL 4.0/TimesTen ODBC for Unix<br><br>#define OTL_STL // Turn on STL features<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br>using namespace std;<br><br><a href=
+"otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>// row container class<br>class row{<br>public:<br> int f1;<br> string f2;<br><br>// default constructor<br> row(){f1=0;}<br><br>// destructor<br> ~row(){}<br><br>// copy constructor<br> row(const row&amp; row)<br> {<br>  f1=row.f1;<br>  f2=row.f2;<br> }<br> <br>// assignment operator<br> row&amp; operator=(const row&amp; row)<br> {<br>  f1=row.f1;<br>  f2=row.f2;<br>  return *this;<br> }<br><br>};<br><br>// redefined operator&gt;&gt; for reading row&amp; from otl_stream<br>otl_stream&amp; operator&gt;&gt;(otl_stream&amp; s, row&amp; row)<br>{<br> s&gt;&gt;row.f1&gt;&gt;row.f2;<br> return s;<br>}<br><br>// redefined operator&lt;&lt; for writing row&amp; into otl_stream<br>otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const row&amp; row)<br>{<br> s&lt;&lt;row.f1&lt;&lt;row.f2;<br> return s;<br>}<br><br>// redefined operator&lt;&lt; writing row&amp; into ostream<br>ostream&amp; operator&lt;&lt;(ostream&amp; s, const row&amp; row)<br>{<br> s&lt;&lt;"f1="&lt;&lt;row.f1&lt;&lt;", f2="&lt;&lt;row.f2;<br> return s;<br>}<br><br>void insert()<br>// insert rows into table<br>{ <br> // open a stream with no implicit committing <br> <a href="otl3_stream_class.htm">otl_stream</a> <br>   o(30, // buffer size<br>     "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", <br>         // INSERT statement<br>     db // connect object<br>    );<br><br> row r; // single row buffer<br> vector&lt;row&gt; vo; // vector of rows<br><br>// populate the vector<br> for(int i=1;i&lt;=100;++i){<br>  r.f1=i;<br>  r.f2="NameXXX";<br>  vo.push_back(r);<br> }<br><br>// insert vector into table<br> copy(vo.begin(), <br>      vo.end(), <br>      <a href="otl3_output_iterator.htm">otl_output_iterator</a>&lt;row&gt;(o)<br>     );<br><br>}<br><br>void select(const int af1)<br>{ <br> <a href="otl3_stream_class.htm">otl_stream</a> i(10, // buffer size can be set to a value in [1..128] range<br>              "select * from test_tab "<br>              "where f1 between :f11&lt;int&gt; and :f12&lt;int&gt;*2",<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> vector&lt;row&gt; v; // vector of rows<br><br> i&lt;&lt;af1&lt;&lt;af1; // enter :f11=8 and :f12=8 into the stream<br><br>// copy all rows to be fetched into the vector<br><br> copy(<a href="otl3_input_iterator.htm">otl_input_iterator</a>&lt;row,ptrdiff_t&gt;(i), <br>      <a href="otl3_input_iterator.htm">otl_input_iterator</a>&lt;row,ptrdiff_t&gt;(),<br>      back_inserter(v));    <br><br> cout&lt;&lt;"Size="&lt;&lt;(int)v.size()&lt;&lt;endl;<br><br>// send the vector to cout<br> copy(v.begin(), v.end(), ostream_iterator&lt;row&gt;(cout, "\n"));<br><br>}<br><br>int main()<br>{<br> <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment<br> try{<br><br>  db.rlogon("scott/tiger@TT_tt1121_32");<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "drop table test_tab",<br>    otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "create table test_tab(f1 int, f2 varchar(30))"<br>    );  // create table<br><br>  db.commit(); // committing the create table statement to to the database<br><br>  insert(); // insert records into table<br>  select(8); // select records from table<br><br> }<br><br> catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from ODBC<br><br> return 0;<br><br>}
+</pre>
+
+  <h2>Output</h2>
+  <pre>
+Size=9<br>f1=8, f2=NameXXX<br>f1=9, f2=NameXXX<br>f1=10, f2=NameXXX<br>f1=11, f2=NameXXX<br>f1=12, f2=NameXXX<br>f1=13, f2=NameXXX<br>f1=14, f2=NameXXX<br>f1=15, f2=NameXXX<br>f1=16, f2=NameXXX<br><br>
+</pre>
+  <hr width="100%">
+
+  <center>
+    <a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a> <script language="JavaScript" type="text/javascript">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

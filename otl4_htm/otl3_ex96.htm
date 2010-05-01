@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>OTL 4.0, Example 18 (otl_stream and NULLs)</TITLE>
+   <META NAME="Author" CONTENT="Sergei Kuchin">
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
+   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</HEAD>
+<BODY>
+
+<H1 ALIGN=CENTER>OTL 4.0, Example 96 (otl_stream and NULLs)</H1>
+
+<H1>Example 96 (otl_stream and NULLs)</H1>
+
+<P>This example demonstrates the otl_stream with NULLs.</P>
+
+<H2>Source Code</H2>
+
+<PRE>#include &lt;iostream&gt;
+using namespace std;
+
+#include &lt;stdio.h&gt;</PRE>
+
+<PRE>#define OTL_DB2_CLI // Compile OTL 4.0/DB2-CLI
+#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+
+<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+
+void insert()
+// insert rows into table
+{ 
+ <A HREF="otl3_stream_class.htm">otl_stream</A> o(50, // buffer size
+              &quot;insert into test_tab values(:f1&lt;float&gt;,:f2&lt;char[31]&gt;)&quot;, 
+                 // SQL statement
+              db // connect object
+             );
+ char tmp[32];
+
+ for(int i=1;i&lt;=100;++i){
+  sprintf(tmp,&quot;Name%d&quot;,i);
+  if(i==10)
+   o&lt;&lt;(float)i&lt;&lt;<A HREF="otl3_stream_class.htm#otl_null">otl_null</A>();
+  else
+   o&lt;&lt;(float)i&lt;&lt;tmp;
+ }
+}
+
+void select()
+{ 
+ <A HREF="otl3_stream_class.htm">otl_stream</A> i(50, // buffer size
+              &quot;select * from test_tab where f1&gt;=:f11&lt;int&gt; and f1&lt;=:f12&lt;int&gt;*2&quot;,
+                 // SELECT statement
+              db // connect object
+             ); 
+   // create select stream
+ 
+ float f1;
+ char f2[31];
+
+ i&lt;&lt;8&lt;&lt;8; // assigning :f11 = 8, :f12=8
+   // SELECT automatically executes when all input variables are
+   // assigned. First portion of output rows is fetched to the buffer
+
+ while(!i.eof()){ // while not end-of-data
+  i&gt;&gt;f1;
+  if(i.is_null())
+   cout&lt;&lt;&quot;f1=NULL,&quot;;
+  else
+   cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;,&quot;;
+  i&gt;&gt;f2;
+  if(i.is_null())
+   cout&lt;&lt;&quot;f2=NULL&quot;;
+  else
+   cout&lt;&lt;&quot;f2=&quot;&lt;&lt;f2;
+  cout&lt;&lt;endl;
+ }
+
+}
+
+int main()
+{
+ <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize DB2 CLI environment
+ try{
+
+  db.rlogon(&quot;scott/tiger@db2sql&quot;); // connect to DB2
+
+  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
+</A>   (
+    db,
+    &quot;drop table test_tab&quot;,
+    otl_exception::disabled // disable OTL exceptions
+   ); // drop table
+
+  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
+</A>   (
+    db,
+    &quot;create table test_tab(f1 int, f2 varchar(30))&quot;
+    );  // create table
+
+  insert(); // insert records into table
+  select(); // select records from table
+
+ }
+
+ catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+  cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from DB2
+
+ return 0;
+
+}
+</PRE>
+
+<H2>Output</H2>
+
+<PRE>f1=8, f2=Name8
+f1=9, f2=Name9
+f1=10, f2=NULL
+f1=11, f2=Name11
+f1=12, f2=Name12
+f1=13, f2=Name13
+f1=14, f2=Name14
+f1=15, f2=Name15
+f1=16, f2=Name16</PRE>
+
+<PRE>
+<HR WIDTH="100%"></PRE>
+
+<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
+<A HREF="home.htm">Go Home</A> </P></CENTER>
+
+<P>Copyright &copy; 1996-2009, Sergei Kuchin, email: <A HREF="mailto:skuchin@aceweb.com">skuchin@aceweb.com</A>,
+<A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A> <SCRIPT Language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </SCRIPT>.</P>
+
+<P><I>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</BODY>
+</HTML>

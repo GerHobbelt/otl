@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, Introduction</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, Introduction</h1>
+  </center>
+
+  <h1><a name="Introduction" id="Introduction"></a>Introduction</h1>This document describes the Oracle, ODBC and DB2-CLI Template Library, Version 4.0 (OTL 4.0). OTL 4.0 is a C++ library based on C++ templates.<br>
+
+  <p>OTL 4.0 was designed as a combination of a C++ template framework and OTL-adapters. The framework is a generic implementation of the concept of <a href="otl3_str.htm">OTL streams</a>. The OTL-adapters are thin wrappers around the database APIs and are used as <i>class type</i> parameters to be passed into the template framework.</p>
+
+  <p>OTL 4.0 covers the functionality of a full featured C++ database access library with just a handful of classes: <a href="otl3_str.htm">otl_stream</a>, <a href="otl3_connect_class.htm">otl_connect</a>, <a href="otl3_exception_class.htm">otl_exception</a>, <a href="otl3_long_string.htm">otl_long_string</a>, and several template PL/SQL (Oracle) <a href="otl3_pl_tab.htm">table container</a> classes, generated from the template framework and the OTL-adapters.</p>
+
+  <p>The OTL code gets expanded into direct database API function calls, so it provides very decent performance (only 10-15% overhead, compared with the database APIs themselves) and reliability in multi-processor environments as well as traditional batch programs. OTL 4.0, being a template library, is highly portable since it is self-sufficient and compact enough.</p>
+
+  <p>OTL 4.0 is ANSI C++ compliant (ANSI C++ typecasts, clean templatized code, etc.), tightly integrated with the Standard Template Library (STL) via STL-compliant <a href="otl3_iterators.htm">stream iterators</a>, and natively supports the STL <i>std::string</i>'s in <a href="otl3_str.htm">otl_stream</a>'s. OTL integrates with <a href="http://www.cs.wustl.edu/%7Eschmidt/ACE.html">ACE</a>, and supports <a href="http://www.dre.vanderbilt.edu/Doxygen/Current/html/ace/classACE__String__Base.html">ACE_TString</a>s.&nbsp;</p>
+
+  <p>OTL 4.0 supports all versions of Oracle starting with 7.3 (natively via the corresponding version of the OCI), DB2 UDB LUW / zOS (natively via DB2 CLI), MS SQL Server 2005/2008 (natively via SNAC), Informix 11 (natively via Informix CLI), TimesTen 7 and higher (natively TimesTen CLI), SAP-MAX/DB (natively via SAP/DB CLI), ODBC 3.x as well as ODBC 2.5 (for legacy applications) compliant data sources in MS Windows, Linux/Unix/Mac OS X (via unixodbc and iODBC driver managers): Sybase, MySQL, PostgreSQL, EnterpriseDB, SQLite,&nbsp; MS ACCESS, Firebird, etc. The list of supported database back ends is growing.<br>
+  <br>
+  In the last few years, transition from the 32-bit platforms to the 64-bit platforms has occurred: OTL's source code is portable, and it supports both 32-bit and 64-bit C++ compilers. Also, OTL supports UTF-8 and UTF-16 for Oracle, and UTF-16 for the rest of the database types, when the underlying database API / ODBC driver supports it.<br></p>
+  <hr width="100%">
+
+  <center>
+    <p><a href="otl3_str.htm">Next</a> <a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com <script language="JavaScript" type="text/javascript">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

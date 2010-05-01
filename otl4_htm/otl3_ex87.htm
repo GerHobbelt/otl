@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>Example 87 (STL vector based PL/SQL table of DATEs as parameter, Oracle 7)</TITLE>
+   <META NAME="Author" CONTENT="Sergei Kuchin">
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
+   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</HEAD>
+<BODY>
+
+<H1 ALIGN=CENTER>OTL 4.0, Example 87 (STL vector based PL/SQL table of
+DATEs as parameter, Oracle 7)</H1>
+
+<H1>Example 87 (STL vector based PL/SQL table of DATEs as parameter, Oracle
+7)</H1>
+
+<P>This example demonstrates how to use OTL <A HREF="otl3_pl_tab.htm">STL
+vector based PL/SQL table containers</A> for reading/writing PL/SQL tables
+of DATEs from/to the otl_stream.</P>
+
+<H2>Source Code</H2>
+
+<PRE>#define OTL_ORA7 // Compile OTL 4.0/OCI7
+#define OTL_STL // Turn on STL
+#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+
+#include &lt;cstdio&gt;
+#include &lt;string&gt;
+#include &lt;iostream&gt;
+
+using namespace std;
+
+<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+</PRE>
+
+<PRE>void plsql(void)
+{ 
+ otl_stream s(1, // buffer size needs to be set to 1 in this case
+              &quot;begin &quot;
+              &quot;  pkg_test.prc_test(:v&lt;int,in&gt;, :t2&lt;timestamp,out[200]&gt;); &quot;
+              &quot;end;&quot;,
+              db // connect object
+             );
+
+ s.set_commit(0); // Since there is no transactions, unset the stream auto-commit
+
+ <A HREF="otl3_pl_tab.htm">otl_datetime_vec</A> t2; // PL/SQL table of otl_datetime in the vector format</PRE>
+
+<PRE> s&lt;&lt;7; // assign :v = 7
+ s&gt;&gt;t2; // read :t2 from the stream.</PRE>
+
+<PRE> cout&lt;&lt;endl&lt;&lt;endl&lt;&lt;&quot;T2_Len=&quot;&lt;&lt;t2.len()&lt;&lt;endl;
+ for(int j=0;j&lt;t2.len();++j)
+  if(t2.is_null(j))
+   cout&lt;&lt;&quot;T2[&quot;&lt;&lt;j&lt;&lt;&quot;]=NULL&quot;&lt;&lt;endl;
+  else
+   cout&lt;&lt;&quot;T2[&quot;&lt;&lt;j&lt;&lt;&quot;]=&quot;&lt;&lt;t2.v[j].month
+       &lt;&lt;&quot;/&quot;&lt;&lt;t2.v[j].day
+       &lt;&lt;&quot;/&quot;&lt;&lt;t2.v[j].year
+       &lt;&lt;&quot; &quot;&lt;&lt;t2.v[j].hour
+       &lt;&lt;&quot;:&quot;&lt;&lt;t2.v[j].minute
+       &lt;&lt;&quot;:&quot;&lt;&lt;t2.v[j].second
+       &lt;&lt;endl;
+
+}
+
+
+int main()
+{
+ <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize OCI environment
+ try{
+
+  db.rlogon(&quot;scott/tiger&quot;); // connect to Oracle
+
+  otl_cursor::direct_exec
+   (db,
+    &quot;CREATE OR REPLACE PACKAGE pkg_test IS &quot;
+    &quot;  TYPE my_date_table IS TABLE OF DATE INDEX BY BINARY_INTEGER; &quot;
+    &quot; &quot;
+    &quot;  PROCEDURE prc_test(v IN NUMBER, v2 OUT my_date_table); &quot;
+    &quot; &quot;
+    &quot;END; &quot;
+  );
+
+  otl_cursor::direct_exec
+   (db,
+    &quot;CREATE OR REPLACE PACKAGE BODY pkg_test IS &quot;
+    &quot; &quot;
+    &quot;  PROCEDURE prc_test(v IN NUMBER, v2 OUT my_date_table) &quot;
+    &quot;  IS &quot;
+    &quot;  BEGIN &quot;
+    &quot;    FOR i IN 1..v LOOP &quot;
+    &quot;      v2(i) := SYSDATE-i; &quot;
+    &quot;    END LOOP; &quot;
+    &quot;  END; &quot;
+    &quot;   &quot;
+    &quot;END; &quot;
+  );
+
+
+  plsql();
+
+ }
+
+ catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from Oracle
+
+ return 0;
+
+}
+</PRE>
+
+<H2>Output</H2>
+
+<PRE>T2_Len=7
+T2[0]=2/29/2000 15:40:33
+T2[1]=2/28/2000 15:40:33
+T2[2]=2/27/2000 15:40:33
+T2[3]=2/26/2000 15:40:33
+T2[4]=2/25/2000 15:40:33
+T2[5]=2/24/2000 15:40:33
+T2[6]=2/23/2000 15:40:33
+
+
+
+
+
+
+
+
+
+
+<HR WIDTH="100%"></PRE>
+
+<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
+<A HREF="home.htm">Go Home</A> </P></CENTER>
+
+<P>Copyright &copy; 1996-2009, Sergei Kuchin, email: <A HREF="mailto:skuchin@aceweb.com">skuchin@aceweb.com</A>,
+<A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A> <SCRIPT Language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </SCRIPT>.</P>
+
+<P><I>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</BODY>
+</HTML>

@@ -1,0 +1,231 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, Examples for Oracle 8,8i</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, Examples for Oracle 8,8i<br></h1>
+  </center>The examples below work with Oracle 8, 8i / OCI8, 8i. In general, all of these examples should work with any Oracle version higher than Oracle 8.0, when OCI8, or OCI8i are enabled in OTL by setting #define <a href="otl3_compile.htm#OTL_ORA8">OTL_ORA8</a>, <a href="otl3_compile.htm#OTL_ORA8I">OTL_ORA8I</a>. Oracle normally provides decent backward compatibility, at least at the source code level. All examples for <a href="otl4_ora7_examples.htm">Oracle 7</a> should work when <a href="otl3_compile.htm#OTL_ORA8">OTL_ORA8</a>, or&nbsp; <a href="otl3_compile.htm#OTL_ORA8I">OTL_ORA8I</a> is enabled.<br>
+
+  <ol>
+    <li><b><a href="otl3_ex10.htm">Example 10 (Simple Insert/Select)</a></b></li>
+
+    <li><b><a href="otl3_ex11.htm">Example 11 ("Incompatible datatypes in stream operation" exception)</a></b></li>
+
+    <li><b><a href="otl3_ex12.htm">Example 12 (PL/SQL block)</a></b></li>
+
+    <li><b><a href="otl3_ex13.htm">Example 13 (Insert and Select via referenced cursor)</a></b></li>
+
+    <li><b><a href="otl3_ex14.htm">Example 14 (Simple Insert/Select with the LONG datatype)</a></b></li>
+
+    <li><b><a href="otl3_ex15.htm">Example 15 (Simple Insert/Select with the LONG RAW datatype)</a></b></li>
+
+    <li><b><a href="otl3_ex16.htm">Example 16 (otl_stream::describe_select() with a simple Select)</a></b></li>
+
+    <li><b><a href="otl3_ex17.htm">Example 17 (otl_stream::describe_select() with a referenced cursor)</a></b></li>
+
+    <li><b><a href="otl3_ex18.htm">Example 18 (otl_stream and NULLs)</a></b></li>
+
+    <li><b><a href="otl3_ex19.htm">Example 19 (Simple Insert/Select with the CLOB datatype)</a></b></li>
+
+    <li><b><a href="otl3_ex20.htm">Example 20 (Simple Insert/Select with the BLOB datatype)</a></b></li>
+
+    <li><b><a href="otl3_ex62.htm">Example 62 (Insert and Select via referenced cursor for Oracle 8i</a><a href="otl3_ex10.htm">)</a></b></li>
+
+    <li><b><a href="otl3_ex63.htm">Example 63 (otl_stream::describe_select() with a simple Select for Oracle 8i)</a></b></li>
+
+    <li><b><a href="otl3_ex64.htm">Example 64 (otl_stream::describe_select() with a referenced cursor for Oracle 8i)</a></b></li>
+
+    <li><b><a href="otl3_ex36.htm">Example 36 (otl_nocommit_stream in Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex39.htm">Examle 39 (otl_datetime in Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex41.htm">Example 41 (Insert/Update/Select with CLOB in Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex42.htm">Example 42 (ODBC, OCI: LONG ==&gt; CLOB. How to use OTL namespaces)</a></b></li>
+
+    <li><b><a href="otl3_ex44.htm">Example 44 (Get Rows Processed Count in Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex47.htm">Example 47 ("Auto-commit every SQL statement / commit-on-sucess" mode in Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex50.htm">Example 50 (PL/SQL tables as parameters, Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex52.htm">Example 52 (PL/SQL table of DATEs as parameter, Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex54.htm">Example 54 (Datatype override in SELECT, Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex56.htm">Example 56 (Insert/Update/Select with Oracle 8 CLOB in stream mode)</a></b></li>
+
+    <li><b><a href="otl3_ex57.htm">Example 57 (Insert/Update/Select with Oracle 8 BLOB in stream mode)</a></b></li>
+
+    <li><b><a href="otl3_ex59.htm">Example 59 (Using OTL/OCI8 in Pro*C/C++ environment)</a></b></li>
+
+    <li><b><a href="otl3_ex60.htm">Example 60 (Using OTL/OCI8: server_attach/detach and session_begin/end)</a></b></li>
+
+    <li><b><a href="otl3_ex61.htm">Example 61 (Using OTL/OCI8: server_attach/detach, session_begin/end, and session_reopen)</a></b></li>
+
+    <li><b><a href="otl3_ex66.htm">Example 66 (Simple Insert/Select and otl_stream::clean() function for Oracle 8/8i)</a></b></li>
+
+    <li><b><a href="otl3_ex69.htm">Example 69 (Dynamically allocated PL/SQL tables as parameters, Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex71.htm">Example 71 (Dynamically allocated PL/SQL table of DATEs as parameter, Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex73.htm">Example 73 (STL std::strings, ANSI C++ typecasts, Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex76.htm">Example 76 (STL-compliant OTL stream iterators, Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex86.htm">Example 86 (STL vector based PL/SQL tables as parameters, Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex88.htm">Example 88 (STL vector based PL/SQL table of DATEs as parameter, Oracle 8)</a></b></li>
+
+    <li><b><a href="otl3_ex98.htm">Example 98 (otl_value&lt;T&gt;, Oracle 8/8i)</a></b></li>
+
+    <li><b><a href="otl3_ex102.htm">Example 102 (#define OTL_UNCAUGHT_EXCEPTION_ON, Oracle 8/8i)</a></b></li>
+
+    <li><b><a href="otl3_ex111.htm">Example 111 (Group data type override in SELECT, Oracle 8/8i)</a></b></li>
+
+    <li><b><a href="otl3_ex113.htm">Example 113 (OTL stream pooling, Oracle 8/8i)</a></b></li>
+
+    <li><b><a href="otl3_ex116.htm">Example 116 (otl_stream::set_flush(), Oracle 8/8i)</a></b></li>
+
+    <li><b><a href="otl3_ex119.htm">Example 119 (<font size="-1">OTL_VALUE_TEMPLATE_ON, OTL_USER_DEFINED_STRING_CLASS_ON</font>, Oracle 8/8i)</a></b></li>
+
+    <li><b><a href="otl3_ex122.htm">Example 122 (Insert/Update/Select with Oracle 8i CLOB in stream mode)</a></b></li>
+
+    <li><b><a href="otl3_ex123.htm">Example 123 (Insert/Update/Select with Oracle 8i BLOB in stream mode)</a></b></li>
+
+    <li><b><a href="otl3_ex130.htm">Example 130 (Describe otl_stream's bind variables for Oracle 8i)</a></b></li>
+
+    <li><b><a href="otl4_ex148.htm">Example 148 (otl_refcur_stream, basic)</a></b></li>
+
+    <li><b><a href="otl4_ex149.htm">Example 149 (otl_refcur_stream, stored procedure)</a></b></li>
+
+    <li><b><a href="otl4_ex150.htm">Example 150 (otl_refcur_stream, PL/SQL tables and reference cursors as parameters in stored procedure)</a></b></li>
+
+    <li><b><a href="otl4_ex151.htm">Example 151 (otl_refcur_stream and otl_lob_stream, used together)</a></b></li>
+
+    <li><b><a href="otl4_ex152.htm">Example 152 (get_stream_type)</a></b></li>
+
+    <li><b><a href="otl4_ex153.htm">Example 153 (create_stored_proc_call)</a></b></li>
+
+    <li><b><a href="otl4_ex156.htm">Example 156 (OTL/OCI8/9, otl_connect::cancel())</a></b></li>
+
+    <li><b><a href="otl4_ex159.htm">Example 159 (otl_stream::clean(), cancelling SELECT's fetch sequence, Oracle 8i/9i )</a></b></li>
+
+    <li><b><a href="otl4_ex162.htm">Example 162 (otl_stream::clean(), cancelling REF CURSOR's fetch sequence, Oracle 8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex164.htm">Example 164 (otl_stream::clean(), cleaning the SELECT stream's error flags, Oracle 8i/9i )</a></b></li>
+
+    <li><b><a href="otl4_ex167.htm">Example 167 (otl_stream::clean(), cleaning the REF CURSOR otl_stream's error flags, Oracle 8i/9i )</a></b></li>
+
+    <li><b><a href="otl4_ex169.htm">Example 169 (#define's OTL_DEFAULT_XXX_NULL_TO_VAL, Oracle 7/8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex172.htm">Example 172 (#define OTL_ORA_TEXT_ON, Oracle 8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex173.htm">Example 173 (#define OTL_ORA_TEXT_ON, Oracle 8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex204.htm">Example 204 (otl_datetime container with TIMESTAMP values down to microseconds in Oracle 9i)</a></b></li>
+
+    <li><b><a href="otl4_ex205.htm">Example 205 (otl_exception, derived from a base class, Oracle)</a></b></li>
+
+    <li><b><a href="otl4_ex208.htm">Example 208 (lob_stream and SELECT INTO FOR&nbsp; UPDATE, Oracle)</a></b></li>
+
+    <li><b><a href="otl4_ex210.htm">Example 210 (Oracle and RAW column)</a></b></li>
+
+    <li><b><a href="otl4_ex211.htm">Example 211 (OTL_ADD_NULL_TERMINATOR_STRING_SIZE,Oracle)</a></b></li>
+
+    <li><b><a href="otl4_ex219.htm">Example 219 (otl_connect::change_password() and Oracle 8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex221.htm">Example 221 (std::string and LONGs, Oracle 8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex222.htm">Example 222 (std::string and CLOBs, Oracle 8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl3_ex232.htm">Example 232 (otl_stream::flush() and duplicate rows, Oracle 8, 8i, 9i)</a></b></li>
+
+    <li><b><a href="otl4_ex233.htm">Example 233 (#define OTL_ORA_MAP_STRINGS_TO_CHARZ, Oracle 8, 8i, 9i)</a></b></li>
+
+    <li><b><a href="otl4_ex234.htm">Example 234 (SQL statement label, Oracle 8,8i,9i)</a></b></li>
+
+    <li><b><a href="otl4_ex245.htm">Example 245 (user defined string class and LONGs, Oracle 8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex246.htm">Example 246 (user defined string class and CLOBs, Oracle 8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex250.htm">Example 250 (OTL tracing, Oracle 8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex254.htm">Example 254 (Explict bind variables in SELECT statement column definitions, Oracle 8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex258.htm">Example 258 (64-bit signed integers, Oracle 8/8i/9i)</a></b></li>
+
+    <li><b><a href="otl4_ex260.htm">Example 260 (OTL stream read iterator, simple SELECT, Oracle)</a></b></li>
+
+    <li><b><a href="otl4_ex261.htm">Example 261 (OTL stream read iterator, reference cursor, Oracle)</a></b></li>
+
+    <li><b><a href="otl4_ex289.htm">Example 289 (Strict numeric type checking on SELECTs)</a></b></li>
+
+    <li><b><a href="otl4_ex292.htm">Example 292 (common interface for otl_stream and otl_refcur_stream)</a></b></li>
+
+    <li><b><a href="otl4_ex308.htm">Example 308 (Stream buffer size as <span style="font-style: italic;">int</span>, simple Insert/Select)</a></b></li>
+
+    <li><b><a href="otl4_ex312.htm">Example 312 (Large PL/SQL tables as parameters)</a></b></li>
+
+    <li><b><a href="otl4_ex314.htm">Example 314 (PL/SQL tables of CHAR and VARCHAR2 together as parameters)</a></b></li>
+
+    <li><b><a href="otl4_ex315.htm">Example 315 (Insert/Update/Select with Oracle 8i CLOB in stream mode and otl_stream_read_iterator)</a></b></li>
+
+    <li><b><a href="otl4_ex316.htm">Example 316 (Insert/Update/Select with Oracle 8i BLOB in stream mode and otl_stream_read_iterator)</a></b></li>
+
+    <li><b><a href="otl4_ex339.htm">Example 339 (OTL stream read iterator, "get by name" functions, Oracle)</a></b></li>
+
+    <li><b><a href="otl4_ex372.htm">Example 372 (Simple Insert/Select, otl_connect::operator&lt;&lt;, &lt;&lt;=, &gt;&gt;)</a></b></li>
+
+    <li><b><a href="otl4_ex378.htm">Example 378 (Insert/Update/Select with Oracle 8i/9i/10g CLOB in stream mode and stored procs)</a></b></li>
+
+    <li><b><a href="otl4_ex379.htm">Example 379 (Insert/Update/Select, Oracle 8i/9i/10g CLOBs in stream mode, and std:strings)</a></b></li>
+
+    <li><b><a href="otl4_ex385.htm">Example 385 (Insert/Update/Select with Oracle 8i/9i/10g CLOB in stream mode and otl_long_string::set_last_piece())</a></b></li>
+
+    <li><b><a href="otl4_ex386.htm">Example 386 (Insert/Update/Select with Oracle 8i/9i/10g BLOB in stream mode and otl_long_string::set_last_piece())</a></b></li>
+
+    <li><b><a href="otl4_ex446.htm">Example 446 (Simple Insert/Select with Oracle RAW datatype)</a></b></li>
+
+    <li><b><a href="otl4_ex457.htm">Example 457 (Simple Insert/Select with Oracle RAW datatype and otl_stream_read_iterator)</a></b></li>
+
+    <li><b><a href="otl4_ex687.htm">Example 687 (OTL stream read iterator,&nbsp; otl_refcur_stream, Oracle)</a></b></li>
+
+    <li><a href="otl4_ex690.htm"></a><a href="otl4_ex692.htm">Example 692 (Customizing the date format in OTL tracing via #define OTL_TRACE_FORMAT_DATETIME)</a></li>
+
+    <li><b><a href="otl4_ex693.htm">Example 693 (Skipping to the end of the row with otl_stream::skip_to_end_of_row())</a></b></li>
+  </ol>
+
+  <center>
+    <hr width="100%">
+
+    <p><a href="otl3_const_sql.htm">Prev</a> <a href="otl3_compile.htm">Next</a><a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com <script language="JavaScript" type="text/javascript">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

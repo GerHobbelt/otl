@@ -1,0 +1,423 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+  <title>OTL 4.0, OTL reference cursor stream</title>
+</head>
+<body>
+<center>
+<h1>OTL 4.0, OTL reference cursor stream class</h1>
+</center>
+<h1>
+<a name="otl_refcur_stream"></a>OTL reference cursor stream class</h1>
+This class (otl_refcur_stream) is used for reading rows from a <a
+ href="otl3_bind_variables.htm#refcur">reference
+cursor</a> bind variable. The class is defined for OTL/OCI8/8i/9i/10g
+only.
+It's
+similar to the <a href="otl3_stream_class.htm">otl_stream</a> class
+itself,
+when the otl_stream is instantiated with a SELECT statement, or with a
+single reference cursor. otl_refcur_stream can be initiliazed by <a
+ href="otl3_stream_class.htm#stream_read_refcur">reading</a>
+a reference cursor descriptor from an otl_stream. The class, in tandem
+with the <a href="otl3_bind_variables.htm#refcur">refcur</a>
+placeholder,
+allows the otl_stream to return multiple reference cursors from a
+stored
+procedure call in one shot.
+<p>Potentially, the otl_refcur_stream class may raise an <a
+ href="otl3_exc_list.htm">OTL
+defined exception</a>.
+</p>
+<p>All of the functions, defined in this class, mimick the <a
+ href="otl3_stream_class.htm">otl_stream</a>
+functions, therefore, see the descriptions of the corresponding
+functions
+in <a href="otl3_stream_class.htm">otl_stream</a>.
+</p>
+<pre><font size="+2">class otl_refcur_stream {<br>public:<br></font></pre>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Function</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>void set_column_type(...);<br></pre>
+      <table style="text-align: left; width: 100%;" border="1"
+ cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;"><span
+ style="font-style: italic;">Parameter</span><br>
+            </td>
+            <td style="vertical-align: top;"><span
+ style="font-style: italic;">Description</span><br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int column_ndx</td>
+            <td style="vertical-align: top;">relative index of the
+columns in
+the
+query: 1,2,3... </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int col_type</td>
+            <td style="vertical-align: top;">one of the <a
+ href="file:///D%7C/oscl/vc/doc/otl4/otl3_stream_class.htm#otl_var_dbtype">data
+type
+constants</a>,
+defined by OTL. </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int col_size=0</td>
+            <td style="vertical-align: top;">size, associated with the
+new data type of
+the
+column. It has be to specified for the otl_var_char type only. Sizes
+of
+all numeric types are calculated. </td>
+          </tr>
+        </tbody>
+      </table>
+      </td>
+      <td style="vertical-align: top;">Sets
+a SELECT output column
+data type.
+In other
+words, override the default mapping of output column data types.<br>
+      <br>
+This function can be called for straight SELECT statements (both
+Oracle
+and ODBC), referenced cursor SELECT statements (Oracle), and implicit
+SELECT
+statements / result sets (ODBC for MS SQL Server and Sybase).<br>
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>void set_all_column_types(const unsigned mask=0);</pre>
+      </td>
+      <td style="vertical-align: top;">Sets
+data types of a group of
+SELECT
+output columns. This function can override data types of column groups:
+all numeric columns to string, all date columns to string, or the
+combination
+of both. <i>amask </i>parameter can be set to the following values:
+      <ul>
+        <li>otl_all_num2str, e.g.:
+set_all_column_types(otl_all_num2str);</li>
+        <li>otl_all_date2str, e.g.:
+set_all_column_types(otl_all_date2str);</li>
+        <li>otl_all_num2str | otl_all_date2str, e.g.:
+set_all_column_types(otl_all_num2str
+| otl_all_date2str);</li>
+      </ul>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>int is_null();</pre>
+      </td>
+      <td style="vertical-align: top;">Tests if NULL was fetched from
+the stream. </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>int eof();</pre>
+      </td>
+      <td style="vertical-align: top;">Tests if all
+data has been already read from the
+stream. This
+function
+has
+the same meaning as the eof() funtion in C++ streams </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;"><a name="skip_to_end_of_row"></a>void
+skip_to_end_of_row()</span><br>
+      </td>
+      <td style="vertical-align: top;">Skips
+to the end of the current row, for example:<br>
+&nbsp;&nbsp;&nbsp;&nbsp; <br>
+      <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
+ style="font-family: monospace;">while(!s.eof()){</span><br>
+      <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+s&gt;&gt;f1;<br>
+&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp;&nbsp; s.skip_to_end_of_row(); <br>
+      </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span style="font-family: monospace;">...<br>
+&nbsp;&nbsp; }<br>
+      </span></small> <br>
+otl_refcur_stream
+sets the internal pointers to the "end of the current row", so that the
+next call to operator &gt;&gt; will fetch the first value of the next
+logical row, or reach the end of the fetch sequence.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>void close();</pre>
+      </td>
+      <td style="vertical-align: top;">Closes the stream.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_column_desc* describe_select(int&amp; desc_len);</pre>
+      </td>
+      <td style="vertical-align: top;"><a
+ href="otl3_stream_class.htm#describe_select">Describes</a> the output
+columns of the reference cursor.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="describe_out_vars"></a>otl_var_desc* describe_out_vars(int&amp; desc_len);</pre>
+      </td>
+      <td style="vertical-align: top;"><a
+ href="otl3_stream_class.htm#describe_out_vars">Describes</a> stream's
+output bind variables.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="describe_next_out_var"></a>otl_var_desc* describe_next_out_var(void); </pre>
+      </td>
+      <td style="vertical-align: top;"><a
+ href="otl3_stream_class.htm#describe_next_out_var">Describes</a> the <span
+ style="font-style: italic;">next</span> output bind variable.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(char&amp; c);</pre>
+      </td>
+      <td style="vertical-align: top;">reads a single one-byte
+character </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(unsigned char&amp; c);</pre>
+      </td>
+      <td style="vertical-align: top;">reads a single one-byte unsigned
+character </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(char* s);</pre>
+      </td>
+      <td style="vertical-align: top;">reads a string of one-byte
+characters </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(unsigned char* s);</pre>
+      </td>
+      <td style="vertical-align: top;">reads a string of one-byte
+unsigned characters </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(int&amp; n);</pre>
+      </td>
+      <td style="vertical-align: top;">reads a signed 32-bit integer </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(unsigned&amp; u);</pre>
+      </td>
+      <td style="vertical-align: top;">reads an unsigned 32-bit integer
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(short&amp; sh);</pre>
+      </td>
+      <td style="vertical-align: top;">reads a signed 16-bit integer </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(long int&amp; l);</pre>
+      </td>
+      <td style="vertical-align: top;">reads a signed long integer (32,
+or 64-bit, depending on whether it's a 32-bit, LLP64 or LP64 platform) </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(float&amp; f);</pre>
+      </td>
+      <td style="vertical-align: top;">reads a 4-byte floating point
+value </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(double&amp; d);</pre>
+      </td>
+      <td style="vertical-align: top;">reads an 8-byte floating point
+value </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="OTL_BIGINT"></a>otl_refcur_stream&amp; operator&gt;&gt;(<a
+ href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>&amp; n);</pre>
+      </td>
+      <td style="vertical-align: top;">Reads a string (char) value from
+the stream and converts it to a signed 64-bit integer. This operator is
+useful for reading large whole numbers that are larger than the
+"double" container can hold. The underlying SELECT statement that gets
+returned to C++ via a reference cursor should explicitly convert
+numeric values to strings, for example: LTRIM(TO_CHAR(my_large_num)) </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a
+ href="otl3_long_string.htm">otl_long_string</a>&amp; s); </pre>
+      </td>
+      <td style="vertical-align: top;">Reads the LOB from the stream </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a
+ href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&amp; dt); </pre>
+      </td>
+      <td style="vertical-align: top;">Reads date/time from the stream </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a
+ href="otl3_lob_stream.htm">otl_lob_stream</a>&amp; lob);&nbsp;</pre>
+      </td>
+      <td style="vertical-align: top;">Reads reference to CLOB/BLOB
+from otl_refcur_stream into otl_lob_stream (OCI8). In other words,
+initialize otl_lob_stream for reading CLOB/BLOB in stream mode </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(std::string&amp; s);&nbsp;</pre>
+      </td>
+      <td style="vertical-align: top;">Under #define <a
+ href="otl3_compile.htm#OTL_STL">OTL_STL</a><br>
+      <br>
+Reads the ANSI C++ std::string. This operator can&nbsp; read
+VARCHAR/CHAR table fields as well as large string objects (TEXT, LONG,
+CLOB, etc.)<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(ACE_TString&amp; s);&nbsp;</pre>
+      </td>
+      <td style="vertical-align: top;">Under #define <a
+ href="otl3_compile.htm#OTL_ACE">OTL_ACE</a><br>
+      <br>
+Reads the ACE_TString. This operator can read VARCHAR/CHAR table fields
+as well as large string objects (TEXT, LONG, CLOB, etc.)<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(unsigned char* s);</pre>
+      </td>
+      <td style="vertical-align: top;">Under #define <a
+ href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a><br>
+      <br>
+Returns a null terminated array of unsigned short's&nbsp; (double-byte
+Unicode characters). Therefore, "unsigned char*" needs to be type cast
+to "unsigned short*". Also, it's recommended to allocate 2 bytes per
+each Unicode character. plus 2 bytes per possible surrogate character.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a
+ href="otl3_long_string.htm#otl_long_unicode_string">otl_long_unicode_string</a>&amp; s);&nbsp;</pre>
+      </td>
+      <td style="vertical-align: top;">Under #define <a
+ href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a><br>
+      <br>
+Reads the Unicode LOB from the stream<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(OTL_UNICODE_CHAR_TYPE* s);</pre>
+      </td>
+      <td style="vertical-align: top;">Under #define <a
+ href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a><br>
+      <br>
+Reads a NULL terminated string of Unicode characters<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(OTL_UNICODE_STRING_TYPE&amp; s);</pre>
+      </td>
+      <td style="vertical-align: top;">Under #define <a
+ href="otl3_compile.htm#OTL_UNICODE_STRING_TYPE">OTL_UNICODE_STRING_TYPE</a><br>
+      <br>
+Reads an std::string compliant (by interface) string of
+OTL_UNICODE_STRING_TYPE<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p></p>
+<pre><font size="+2">}; // end of otl_refcur_stream</font></pre>
+<p>
+</p>
+<hr width="100%">
+<center>
+<p><a href="otl3_pl_tab.htm">Prev</a> <a href="otl3_iterators.htm">Next
+</a><a href="otl3.htm">Contents
+</a><a href="home.htm">Go
+Home</a></p>
+</center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript"><!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i>
+</p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

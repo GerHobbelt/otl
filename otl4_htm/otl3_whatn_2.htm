@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/4.75 [en] (Win98; U) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+  <title>Oracle, Odbc and DB2-CLITemplate Library, Version 3.2, What's
+New</title>
+</head>
+<body>
+<ul>
+  <center>
+  <h1>Oracle, Odbc and DB2-CLI Template Library, Version 3.2</h1>
+  </center>
+  <center>
+  <h1>What's New</h1>
+  </center>
+  <table border="1">
+    <tbody>
+      <tr>
+        <td><b><font size="+1">Feature</font></b></td>
+        <td><b><font size="+1">Comment</font></b></td>
+      </tr>
+      <tr>
+        <td><blink>New</blink> (in OTL 3.1.20) OTL stream <a
+ href="otl3_bind_variables.htm#pl_tab">interface</a>
+and <a href="otl3_pl_tab.htm">dynamic data containers</a> for PL/SQL
+tables
+(OCIx)</td>
+        <td>See also examples <a href="otl3_ex68.htm">68</a>, <a
+ href="otl3_ex69.htm">69</a>,
+        <a href="otl3_ex70.htm">70</a>,
+        <a href="otl3_ex71.htm">71</a></td>
+      </tr>
+      <tr>
+        <td><blink>New</blink> (in OTL 3.1.18): an <a
+ href="otl4_examples.zip">archive</a>
+(ZIP file) of all the <a href="otl4_examples.htm">examples</a> is
+available
+for download.&nbsp;
+        <p>This release (3.1.18) is just a source code cleanup, meaning
+that pieces
+of code which had been under construction were eliminated from the
+header
+file.</p>
+        </td>
+        <td>See also the <a href="otl3_down.htm">download instructions</a>.</td>
+      </tr>
+      <tr>
+        <td><blink>New</blink> (in OTL 3.1.17 for OCIx as well as
+ODBC).&nbsp;
+        <ol>
+          <li>
+            <a href="otl3_stream_class.htm#clean">otl_stream::clean</a>()
+accepts a
+parameter: clean_up_error_flag. The parameter, if set to 1, forces the
+otl_stream to clean up its internal error flag, after an <a
+ href="otl3_exception_class.htm">otl_exception</a>
+was thrown.</li>
+          <br>
+&nbsp;
+          <li>OTL 3.1.17 compiles with xlC, AIX. Also, a compilation
+problem (#<a href="otl3_prob.htm#prob32">32</a>)
+was reported for Sun C++ 4.2 and OTL 3.1.16. It is fixed in OTL 3.1.17.</li>
+          <br>
+&nbsp;
+        </ol>
+        </td>
+        <td>
+        <ol>
+          <li>
+For more info on the new parameter of otl_stream::clean(), see examples
+            <a href="otl3_ex65.htm">65</a>,
+            <a href="otl3_ex66.htm">66</a>,
+            <a href="otl3_ex67.htm">67</a>.</li>
+          <br>
+&nbsp;
+          <li>For more info on the compilation problem for Sun C++ 4.2,
+see problem #<a href="otl3_prob.htm#prob32">32</a>.</li>
+        </ol>
+        </td>
+      </tr>
+      <tr>
+        <td><blink>New</blink> (in OTL 3.1.16/OCI8):&nbsp;
+        <ol>
+          <li>
+New otl_connect::<a href="otl3_connect_class.htm#session_reopen">session_reopen</a>()
+function.It allows to <i>reopen</i> the session [with the same
+username/password]
+faster (5-10%), if it was previously opened by <a
+ href="otl3_connect_class.htm#session_begin">session_begin</a>()
+and then closed by <a href="otl3_connect_class.htm#session_end">session_end</a>().</li>
+          <br>
+&nbsp;
+          <li>New #define <b>OTL_ORA8I </b>to better accommodate
+small differences between
+OCI8.0.x and OCI8.1.x (Oracle 8i): <a
+ href="otl3_stream_class.htm#describe_select">describe_select</a>()
+and <a href="otl3_stream_class.htm#ref_cur">reference cursor</a>
+select
+streams, if used, will require the use of the OTL_ORA8I macro
+definition
+for Oracle 8i and OTL_ORA8 for Oracle 8.</li>
+          <br>
+&nbsp;
+          <p>&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          </p>
+          <p>Generally speaking, if OTL/OCI8 is used in the Oracle 8i
+environment,
+OTL_ORA8I can be used always, e.g. in all the examples for OTL/OCI8,
+#define
+OTL_ORA8I can be set instead of OTL_ORA8.</p>
+        </ol>
+        </td>
+        <td>
+        <ol>
+          <li>
+See example <a href="otl3_ex61.htm">61</a> for more detail on
+session_reopen().</li>
+          <br>
+&nbsp;
+          <p>&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          </p>
+          <li>See "<a href="otl3_compile.htm">How to compile OTL</a>"
+and examples <a href="otl3_ex62.htm">62</a>,
+            <a href="otl3_ex63.htm">63</a>,
+            <a href="otl3_ex64.htm">64</a>.</li>
+          <br>
+&nbsp;
+          <p>&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          <br>
+&nbsp;
+          </p>
+          <p>This new feature fixes problem #<a
+ href="otl3_prob.htm#prob1">1</a>
+and streamlines fixes for problems #<a href="otl3_prob.htm#prob23">23</a>,
+          <a href="otl3_prob.htm#prob25">25</a></p>
+        </ol>
+        </td>
+      </tr>
+      <tr>
+        <td><a name="aCC_comp"></a><blink>New</blink> (in OTL
+3.1.14/OCIx): OTL
+compiles with the HP ANSI C++ (aCC) compiler. Also, OTL 3.1.14 is a bug
+fix (see problem #<a href="otl3_prob.htm#aCC_comp">30 </a>for more
+detail).</td>
+        <td>See problem #<a href="otl3_prob.htm#aCC_comp">30</a> for
+more detail.</td>
+      </tr>
+      <tr>
+        <td><blink>New</blink> (in OTL 3.1.11/ODBC) default datatype <a
+ href="otl3_stream_class.htm#mapping">mapping</a>
+of SELECT statement's output columns in <a href="otl3_stream_class.htm">otl_stream.</a>
+This feature allows the OTL stream to avoid numeric conversion for
+datatypes
+like INT, SMALLINT, TINYINT, FLOAT, REAL, etc. in MS SQL Server, or
+Sybase.
+In other words, the binary numeric datatypes get carried over from the
+database to C++ variables without any conversion.</td>
+        <td>See the source code.</td>
+      </tr>
+      <tr>
+        <td><a name="server_attach"></a><blink>New</blink> (in OTL
+3.1.9/OCI8)
+functions otl_connect::<a href="otl3_connect_class.htm#server_attach">server_attach</a>(),
+        <a href="otl3_connect_class.htm#server_detach">server_detach</a>(),
+        <a href="otl3_connect_class.htm#session_begin">session_begin</a>(),
+        <a href="otl3_connect_class.htm#session_end">session_end</a>().
+These functions implement separate operations of attaching/detaching
+to/from
+Oracle and beginning/ending a session. For more detail, see Oracle's
+regular
+manuals.</td>
+        <td>See also example <a href="otl3_ex60.htm">60.</a></td>
+      </tr>
+      <tr>
+        <td><a name="attach8"></a><blink>New</blink> (in OTL
+3.1.6/OCI8) otl_connect::<a href="otl3_connect_class.htm#attach8">rlogon</a>()
+function, which allows the OTL/OCI8 to be used in the Pro*C/C++
+environment,
+under the assumption that the primary database connection is made in
+Pro*C/C++.</td>
+        <td>See also example <a href="otl3_ex59.htm">59.</a></td>
+      </tr>
+      <tr>
+        <td><a name="attach7"></a><blink>New</blink> (in OTL
+3.1.5/OCI7) otl_connect::<a href="otl3_connect_class.htm#attach7">rlogon</a>()
+function, which allows the OTL/OCI7 to be used in the Pro*C/C++ legacy
+environment, under the assumption that the primary database connection
+is made in Pro*C/C++.</td>
+        <td>See also example <a href="otl3_ex58.htm">58.</a></td>
+      </tr>
+      <tr>
+        <td><a name="lob_stream"></a><blink>New</blink> (in OTL 3.1.4) <a
+ href="otl3_lob_stream.htm">otl_lob_stream</a>
+class, which is used for reading/writing unlimited [in size] Oracle 8
+CLOBs/BLOBs
+in stream mode.&nbsp;</td>
+        <td>See also examples <a href="otl3_ex56.htm">56</a>, <a
+ href="otl3_ex57.htm">57</a>.</td>
+      </tr>
+      <tr>
+        <td><blink>New</blink> (in OTL 3.1.3) <a
+ href="otl3_stream_class.htm#set_column_type">otl_stream::set_column_type</a>()
+function, which allows to override the default datatype mapping in
+SELECT
+otl_stream's.</td>
+        <td>See also examples <a href="otl3_ex53.htm">53</a>, <a
+ href="otl3_ex54.htm">54</a>,
+        <a href="otl3_ex55.htm">55</a></td>
+      </tr>
+      <tr>
+        <td><blink>New</blink> (in OTL 3.1.0) OTL stream <a
+ href="otl3_bind_variables.htm#pl_tab">interface</a>
+and <a href="otl3_pl_tab.htm">template data containers</a> for PL/SQL
+tables
+(OCIx)</td>
+        <td>See also examples <a href="otl3_ex49.htm">49</a>, <a
+ href="otl3_ex50.htm">50</a>,
+        <a href="otl3_ex51.htm">51</a>,
+        <a href="otl3_ex52.htm">52</a></td>
+      </tr>
+      <tr>
+        <td>New<i> auto_commit </i>parameter in the otl_connect <a
+ href="otl3_connect_class.htm#constructor">constructor</a>
+and the <a href="otl3_connect_class.htm#rlogon">rlogon</a>() function</td>
+        <td>See also examples <a href="otl3_ex46.htm">46</a>, <a
+ href="otl3_ex47.htm">47</a>,
+        <a href="otl3_ex48.htm">48</a></td>
+      </tr>
+      <tr>
+        <td>New <a href="otl3_stream_class.htm#get_rpc">otl_stream::get_rpc</a>()
+function; <a href="otl3_const_sql.htm">direct_exec</a>() may returm a
+long
+int value</td>
+        <td>See also examples <a href="otl3_ex43.htm">43</a>, <a
+ href="otl3_ex44.htm">44</a>,
+        <a href="otl3_ex45.htm">45</a></td>
+      </tr>
+      <tr>
+        <td>Streamlined OTL <a href="otl3_namespaces.htm">namespaces</a></td>
+        <td>See also example <a href="otl3_ex42.htm">42</a></td>
+      </tr>
+      <tr>
+        <td>Date &amp; time and a new OTL <a
+ href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>
+container</td>
+        <td>See also examples <a href="otl3_ex38.htm">38</a>, <a
+ href="otl3_ex39.htm">39</a>,
+        <a href="otl3_ex40.htm">40</a></td>
+      </tr>
+      <tr>
+        <td><a href="#ODBC30">OTL 3.1 compliance</a> with the ODBC 3.0
+specification</td>
+        <td>OTL 3.1 will not work with older ODBC 2.x drivers. For more
+detail,
+see information on the actual driver.</td>
+      </tr>
+      <tr>
+        <td>New <a href="otl3_stream_class.htm#nocommit">otl_nocommit_stream</a>
+class</td>
+        <td>See also examples <a href="otl3_ex35.htm">35</a>, <a
+ href="otl3_ex36.htm">36</a>,
+        <a href="otl3_ex37.htm">37</a></td>
+      </tr>
+    </tbody>
+  </table>
+</ul>
+<center><a href="otl3_whatn_3.htm">Continued on next page<br>
+</a></center>
+<ul>
+  <center>
+  <hr width="100%">
+  <p><a href="home.htm">Go Home</a></p>
+  </center>
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+  <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+  <script language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+  </p>
+  <p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p>
+</ul>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

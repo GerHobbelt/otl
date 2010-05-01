@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, OTL LOB stream class</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, OTL LOB stream class</h1>
+  </center>
+
+  <h1><a name="otl_lob_stream" id="otl_lob_stream"></a>OTL LOB stream class</h1>This class is used for reading / writing Large Objects (Oracle 8/8i/9i/10g/11g's [N]CLOBs/BLOBs, DB2's CLOBs/BLOBs, MS SQL Server's TEXT/IMAGE, MS SQL Server 2005/2008's VARCHAR(MAX) / BARBINARY(MAX) / NVARCHAR(MAX), MySQL's LONGTEXTs/LONGBLOBs, Sybase's (via ODBC) TEXTs/IMAGEs) in the stream mode. The stream mode allows an unlimited number of bytes to be read/written, regardless of the buffer size.
+
+  <p>otl_lob_stream does not have any specific constructor by which an actual instance of otl_lob_stream can be created. Instead, the stream gets initialized by <a href="otl3_stream_class.htm#stream_write_lob">writing</a> / <a href="otl3_stream_class.htm#stream_read_lob">reading</a> an otl_lob_stream variable to / from the otl_stream.</p>
+
+  <p>Potentially, the otl_lob_stream class may raise an <a href="otl3_exc_list.htm">OTL defined exception</a>.</p>
+  <pre>
+<font size="+2">class otl_lob_stream {<br>public:<br></font>
+</pre>
+
+  <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+    <tbody>
+      <tr>
+        <td style="vertical-align: top;"><span style="font-style: italic;">Function / data member</span><br></td>
+
+        <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br></td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+void set_len(const int alen);
+</pre>
+        </td>
+
+        <td style="vertical-align: top;"><a name="set_len" id="set_len"></a>Sets the total number of bytes (or Unicode characters) to be written to the otl_lob_stream. In other words, set the total size of the LOB. The total length of the LOB normally needs to set before the first LOB chunk should be written into the otl_lob_stream.<br>
+        <br>
+        However, OTL 4.0.138 and higher does not require that. OTL/ODBC/DB2-CLI completely relaxes that requirement. OTL/OCI8i/9i/10g/11g does not require that, if the last LOB chunk / piece in the sequence is indicated through a call&nbsp; to otl_long_string::<a href="otl3_long_string.htm#set_last_piece">set_last_piece</a>(true).<br></td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top; font-family: monospace;">otl_lob_stream&amp; operator&lt;&lt;<br>
+        (const std::string&amp; s);</td>
+
+        <td style="vertical-align: top;"><a name="WRITE_STRING" id="WRITE_STRING"></a>Writes the whole CLOB&nbsp; / TEXT / VARCHAR(MAX), etc. into the stream.<br>
+        Declared, when <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> is defined and <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> is not defined<br></td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;"><span style="font-family: monospace;">otl_lob_stream&amp; operator&lt;&lt;<br>
+        (const ACE_TString&amp; s);</span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+
+        <td style="vertical-align: top;">Writes the whole CLOB&nbsp; / TEXT / VARCHAR(MAX), etc. into the stream.<br>
+        Declared, when <a href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is defined and <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> is not defined.<br></td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;"><span style="font-family: monospace;">otl_lob_stream&amp;<br>
+        operator&gt;&gt;(std::string&amp; s);</span></td>
+
+        <td style="vertical-align: top;"><a name="READ_STRING" id="READ_STRING"></a>Reads the whole CLOB / TEXT / etc. from the stream into a string<br>
+        Declared, when <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> is defined and <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> is not defined.</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;"><span style="font-family: monospace;">otl_lob_stream&amp; operator&gt;&gt;<br>
+        (ACE_TString&amp; s);</span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+
+        <td style="vertical-align: top;">Reads the whole CLOB / TEXT / etc. from the stream into a string<br>
+        Declared, when <a href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is defined and <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> is not defined</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="SET_STRING_BUFFER" id="SET_STRING_BUFFER"></a>void setStringBuffer<br>
+        (const int chunk_size);</span></td>
+
+        <td style="vertical-align: top;">Sets an internal buffer of "chunk_size" to help reduce the number of calls to string::operator +=() in the operators &gt;&gt;() above. The bigger the buffer, the fewer the calls to the +=() to concatenate chunks of the CLOB value to the output string.</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_lob_stream&amp; operator&lt;&lt;<br>(const otl_long_string&amp; s);
+</pre>
+        </td>
+
+        <td style="vertical-align: top;"><a name="write" id="write"></a>Writes a chunk of the LOB&nbsp; into the stream.</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_lob_stream&amp; operator&lt;&lt;<br>(const <a href="otl3_long_string.htm#otl_long_unicode_string">otl_long_unicode_string</a>&amp; s);
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">Writes a chunk of the Unicode LOB&nbsp; into the stream.<br>
+        Declared, when <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> is not defined</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_lob_stream&amp; operator&gt;&gt;<br>(otl_long_string&amp; s);
+</pre>
+        </td>
+
+        <td style="vertical-align: top;"><a name="read" id="read"></a>Reads a chunk of LOB from the stream.</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_lob_stream&amp; operator&gt;&gt;<br>(<a href="otl3_long_string.htm#otl_long_unicode_string">otl_long_unicode_string</a>&amp; s);
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">Reads a chunk of Unicode LOB from the stream.<br>
+        Declared, when <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> is not defined.</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+int len();
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">Gets the length of the LOB to be read in bytes, or in Unicode characters.. In OTL/OCI8/8i/9i, the actual length of the LOB is available immediately after the intialization of the stream. In OTL/ODBC and OTL/DB2-CLI, the function returns 0 before the first chunk of the LOB is read, and it returns the actual length of the LOB after the&nbsp; first chunk of the LOB is read.<br>
+        <br>
+        This difference is due to the differences in behavior of&nbsp; the underlying database APIs. So, for writing portable [across multiple databases] code, it is recommended to use this function carefully.<br></td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+int eof();
+</pre>
+        </td>
+
+        <td style="vertical-align: top;"><a name="eof" id="eof"></a>Checks the stream for "end-of-file" condition</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+void close();
+</pre>
+        </td>
+
+        <td style="vertical-align: top;"><a name="close" id="close"></a>Closes the stream.</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;"><span style="font-family: monospace;">bool is_initialized();</span></td>
+
+        <td style="vertical-align: top;"><a name="is_initialized" id="is_initialized"></a>Checks if the LOB in the stream is initialized or not. Say, an Oracle PL/SQL block binds an output <span style="font-family: monospace;">:f2&lt;clob&gt;</span>, and, when the block gets executed, the actual CLOB doesn't get initialized. The function will return false in this case.</td>
+      </tr>
+    </tbody>
+  </table><br>
+  <pre>
+<font size="+2">}; // end of otl_lob_stream</font>
+</pre>The ODBC as well as DB2 CLI standards recommend that LOBs should be put at the end of&nbsp; INSERT/SELECT statements. For example:
+
+  <p>&nbsp;&nbsp;&nbsp; INSERT INTO my_tab (f1,f2,f3_lob,f4_lob)...<br>
+  &nbsp;&nbsp; SELECT f1,f2,f3_lob,f4_lob FROM my_tab...</p>
+
+  <p>The recommendation applies especially in the case of piece-wise data operations, that is, in the OTL LOB stream mode. At the same time, the standards say that it is up to the ODBC drivers/database APIs to either enforce or not to enforce that rule. The LOB's part of OCI8 in Oracle does not require that kind of thing, so it is really up to the developer to decide what to do. However, the general recommendation for writing portable code, that uses the LOB stream mode, would be to put LOBs at the end of the column lists in INSERT or SELECT statements.</p>
+
+  <p>In order to use the otl_lob_stream class for OTL/ODBC and OTL/DB2-CLI, a call to otl_stream::<a href="otl3_stream_class.htm#set_lob_stream_mode">set_lob_stream_mode</a>() is required.</p>
+
+  <p>Also, see example <a href="otl3_ex56.htm">56</a>, <a href="otl3_ex57.htm">57</a>, <a href="otl3_ex122.htm">122</a>, <a href="otl3_ex123.htm">123</a>, <a href="otl3_ex124.htm">124</a>, <a href="otl3_ex125.htm">125</a>, <a href="otl3_ex126.htm">126</a>, <a href="otl3_ex127.htm">127</a>, <a href="otl3_ex128.htm">128</a>, <a href="otl3_ex129.htm">129.</a></p>
+  <hr width="100%">
+
+  <center>
+    <p><a href="otl3_pl_tab.htm">Prev</a> <a href="otl3_iterators.htm">Next</a><a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com <script language="JavaScript" type="text/javascript">
+<!-- hide from oldgmailsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

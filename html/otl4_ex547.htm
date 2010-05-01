@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+
+  <title>OTL 4.0, Example 547 (Sybase SQL Server stored procedure)</title>
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</head>
+
+<body>
+  <h1 align="center">OTL 4.0, Example 547 (Sybase SQL Server stored procedure call)</h1>
+
+  <p>This example demonstrates a stored procedure call.</p>
+
+  <h2>Source Code</h2>
+  <pre>
+#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;<br>#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC<br>#include &lt;otlv4.h&gt;<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void stored_proc(void)<br>// invoking stored procedure<br>{ <br> <a href="otl3_stream_class.htm">otl_stream</a> o(1, // buffer size should be equal to 1 in case of stored procedure call<br>              "{call my_proc("<br>              " :A&lt;int,inout&gt;, "<br>              " :B&lt;char[31],out&gt;, "<br>              " :C&lt;char[31],in&gt; "<br>              ")}",<br>                 // stored procedure call<br>              db // connect object<br>             );<br><br> o.<a href=
+"otl3_stream_class.htm#set_commit">set_commit</a>(0); // set stream auto-commit off since<br>                  // the stream does not generate transaction<br><br> o&lt;&lt;1&lt;&lt;"Test String1"; // assigning :1 = 1, :3 = "Test String1"<br><br> int a;<br> char b[31];<br><br> o&gt;&gt;a&gt;&gt;b;<br> cout&lt;&lt;"A="&lt;&lt;a&lt;&lt;", B="&lt;&lt;b&lt;&lt;endl;<br><br>}<br><br>int main()<br>{<br> otl_connect::otl_initialize(); // initialize ODBC environment<br> try{<br>  db.rlogon("scott/tigger@freetds_sybsql"); // connect to ODBC<br>// It's recommended to use auto_commit_off() when OTL is used<br>// with FreeTDS/ODBC against Sybase in order to set the DB<br>// session's auto-commit to OFF. otl_connect::rlogon()'s auto-commit <br>// parameter has not effect. auto_commit_off() is a workaround, until<br>// a fix becomes available.<br>  db.auto_commit_off();<br>  otl_cursor::direct_exec(db,"drop procedure my_proc",0);<br>  otl_cursor::direct_exec<br>   (db,<br>    "CREATE PROCEDURE my_proc "<br>    "  @A int out, "<br>    "  @B varchar(60) out, "<br>    "  @C varchar(60) "<br>    "AS "<br>    "BEGIN "<br>    "  SELECT @A=@A+1"<br>    "  SELECT @B=@C "<br>    "END"<br>   );  // create stored procedure<br><br>  stored_proc(); // invoking stored procedure<br> }<br> catch(otl_exception&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.code&lt;&lt;endl; // print out error code<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>  cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br> }<br> db.logoff(); // disconnect from the data source<br> return 0;<br>} <br><br><br>
+</pre>
+
+  <h2>Output</h2>
+  <pre>
+ A=2, B=Test String1<br>
+</pre>
+  <hr width="100%">
+
+  <center>
+    <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a> <a href="home.htm">Go Home</a></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail</a> <script language="JavaScript" type="text/javascript">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

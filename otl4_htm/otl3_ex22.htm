@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>OTL 4.0, Example 22 (Simple Insert/Select)</TITLE>
+   <META NAME="Author" CONTENT="Sergei Kuchin">
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
+   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</HEAD>
+<BODY>
+
+<H1 ALIGN=CENTER>OTL 4.0, Example 22 (Simple Insert/Select)</H1>
+
+<H1><A NAME="example1"></A>Example 22 (Simple Insert/Select)</H1>
+
+<P>This example demonstrates a typical error in otl_stream stream operations,
+when datatypes of a bind variable and an actual variable in the program
+do not match.</P>
+
+<H2>Source Code</H2>
+
+<PRE>#include &lt;iostream&gt;
+using namespace std;
+
+#include &lt;stdio.h&gt;</PRE>
+
+<PRE>#define OTL_ODBC // Compile OTL 4.0/ODBC
+#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+
+<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+
+void insert()
+// insert rows into table
+{ 
+ <A HREF="otl3_stream_class.htm">otl_stream</A> o(50, // buffer size
+              &quot;insert into test_tab values(:f1&lt;float&gt;,:f2&lt;char[31]&gt;)&quot;, 
+                 // SQL statement
+              db // connect object
+             );
+ char tmp[32];
+
+ for(int i=1;i&lt;=100;++i){
+  sprintf(tmp,&quot;Name%d&quot;,i);
+  o&lt;&lt;(float)i&lt;&lt;tmp;
+ }
+}
+
+void select()
+{ 
+ <A HREF="otl3_stream_class.htm">otl_stream</A> i(50, // buffer size
+              &quot;select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:ff&lt;int&gt;*2&quot;,
+                 // SELECT statement
+              db // connect object
+             ); 
+   // create select stream
+ 
+ float f1;
+ char f2[31];
+
+ i&lt;&lt;8&lt;&lt;8; // assigning :f = 8; :ff = 8
+   // SELECT automatically executes when all input variables are
+   // assigned. First portion of output rows is fetched to the buffer
+
+ while(!i.eof()){ // while not end-of-data
+<A NAME="mismatch"></A>  i&gt;&gt;f2&gt;&gt;f1;
+  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;endl;
+ }
+
+ i&lt;&lt;4&lt;&lt;4; // assigning :f = 4, :ff = 4
+   // SELECT automatically executes when all input variables are
+   // assigned. First portion of output rows is fetched to the buffer
+
+ while(!i.eof()){ // while not end-of-data
+  i&gt;&gt;f1&gt;&gt;f2;
+  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;endl;
+ }
+
+}
+
+int main()
+{
+ <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize ODBC environment
+ try{
+
+  db.rlogon(&quot;UID=scott;PWD=tiger;DSN=my_db&quot;); // connect to ODBC
+
+  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
+</A>   (
+    db,
+    &quot;drop table test_tab&quot;,
+    otl_exception::disabled // disable OTL exceptions
+   ); // drop table
+
+  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
+</A>   (
+    db,
+    &quot;create table test_tab(f1 int, f2 varchar(30))&quot;
+    );  // create table
+
+  insert(); // insert records into table
+  select(); // select records from table
+
+ }
+
+ catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+  cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from Oracle
+
+ return 0;
+
+}
+</PRE>
+
+<H2>Output</H2>
+
+<PRE><A HREF="otl3_exc_list.htm#32000">Incompatible data types in stream operation
+</A>select * from test_tab where f1&gt;=?      and f1&lt;=?*2
+Column: 1&lt;DOUBLE&gt;, <A HREF="#mismatch">datatype in operator</A> &lt;&lt;/&gt;&gt;: CHAR
+
+
+
+
+
+<HR WIDTH="100%"></PRE>
+
+<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
+<A HREF="home.htm">Go Home</A> </P></CENTER>
+
+<P>Copyright &copy; 1996-2009, Sergei Kuchin, email: <A HREF="mailto:skuchin@aceweb.com">skuchin@aceweb.com</A>,
+<A HREF="mailto:skuchin@gmail.com">skuchin@yahogmail</A>
+<SCRIPT Language="JavaScript">
+<!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </SCRIPT>
+.</P>
+
+<P><I>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</BODY>
+</HTML>

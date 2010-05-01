@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+
+  <title>Example 50 (PL/SQL tables as parameters, Oracle 8)</title>
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</head>
+
+<body>
+  <h1 align="center">OTL 4.0, Example 50 (PL/SQL tables as parameters,<br>
+  Oracle 8)</h1>
+
+  <h1>Example 50 (PL/SQL tables as parameters, Oracle 8)</h1>
+
+  <p>This example demonstrates how to use OTL <a href="otl3_pl_tab.htm">template &amp; dynamic PL/SQL table containers</a> for reading/writing PL/SQL tables from/to the otl_stream.</p>
+
+  <h2>Source Code</h2>
+  <pre>
+#include &lt;iostream&gt;
+using namespace std;
+
+#include &lt;stdio.h&gt;
+</pre>
+  <pre>
+#define OTL_ORA8 // Compile OTL 4.0/OCI8
+#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
+</pre>
+  <pre>
+void plsql(void)
+{ 
+ otl_stream s(1, // buffer size needs to be set to 1 in this case
+                "begin "
+                "  pkg_test.prc_test(:t1&lt;int,inout[100]&gt;,:t2&lt;char[32],out[200]&gt;); "
+               "end;",
+              db // connect object
+             );
+
+ s.set_commit(0); // Since there is no transactions, unset the stream auto-commit
+
+ <a href="otl3_pl_tab.htm">otl_int_tab</a>&lt;100&gt; t1; // PL/SQL table of int[100]
+ <a href="otl3_pl_tab.htm">otl_cstr_tab</a>&lt;200,32&gt; t2; // PL/SQL table of char[200][32]
+</pre>
+  <pre>
+ t1.v[0]=1; // assign 1 to t1[0]
+ t1.set_non_null(0); // specify that the value is not null
+
+ t1.v[1]=2; // assign 2 to t1[1]
+ t1.set_non_null(1); // specify that the value is not null
+
+ t1.set_null(2); // set t1[2]=NULL
+ t1.set_len(3); // set t1's length to 3
+</pre>
+  <pre>
+ s&lt;&lt;t1; // write t1 into the stream, since it is input
+
+ s&gt;&gt;t1; // read t1 from the stream since it is input/output
+ s&gt;&gt;t2; // read t2 from the stream since it is output.
+</pre>
+  <pre>
+ cout&lt;&lt;"T1_Len="&lt;&lt;t1.len()&lt;&lt;endl;
+ for(int i=0;i&lt;t1.len();++i)
+  if(t1.is_null(i))
+   cout&lt;&lt;"T1["&lt;&lt;i&lt;&lt;"]=NULL"&lt;&lt;endl;
+  else
+   cout&lt;&lt;"T1["&lt;&lt;i&lt;&lt;"]="&lt;&lt;t1.v[i]&lt;&lt;endl;
+
+ cout&lt;&lt;endl&lt;&lt;endl&lt;&lt;"T2_Len="&lt;&lt;t2.len()&lt;&lt;endl;
+ for(int j=0;j&lt;t2.len();++j)
+  if(t2.is_null(j))
+   cout&lt;&lt;"T2["&lt;&lt;j&lt;&lt;"]=NULL"&lt;&lt;endl;
+  else
+   cout&lt;&lt;"T2["&lt;&lt;j&lt;&lt;"]="&lt;&lt;t2.v[j]&lt;&lt;endl;
+
+}
+
+
+int main()
+{
+ <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment
+ try{
+
+  db.rlogon("scott/tiger"); // connect to Oracle
+
+  otl_cursor::direct_exec
+   (db,
+    "CREATE OR REPLACE PACKAGE pkg_test IS "
+    "  TYPE my_numeric_table IS TABLE OF NUMBER INDEX BY BINARY_INTEGER; "
+    "  TYPE my_varchar_table IS TABLE OF VARCHAR2(31) INDEX BY BINARY_INTEGER; "
+    " "
+    "  PROCEDURE prc_test(v1 IN OUT my_numeric_table, v2 OUT my_varchar_table); "
+    " "
+    "END; "
+  );
+
+  otl_cursor::direct_exec
+   (db,
+    "CREATE OR REPLACE PACKAGE BODY pkg_test IS "
+    " "
+    "  PROCEDURE prc_test(v1 IN OUT my_numeric_table, v2 OUT my_varchar_table) "
+    "  IS "
+    "  BEGIN "
+    "    FOR i IN 1..v1.last LOOP "
+    "      v1(i) := v1(i)+100; "
+    "    END LOOP; "
+    "    v1(v1.last+1) := 0; "
+    "    v2(1) := 'Hello'; "
+    "    v2(2) := 'World'; "
+    "    v2(3) := '!!!'; "
+    "  END; "
+    "   "
+    "END; "
+  );
+
+
+  plsql();
+
+ }
+
+ catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from Oracle
+
+ return 0;
+
+}
+</pre>
+
+  <h2>Output</h2>
+  <pre>
+T1_Len=4
+T1[0]=101
+T1[1]=102
+T1[2]=NULL
+T1[3]=0
+
+
+T2_Len=3
+T2[0]=Hello
+T2[1]=World
+T2[2]=!!!
+
+
+
+
+
+
+</pre>
+  <hr width="100%">
+
+  <center>
+    <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a> <a href="home.htm">Go Home</a></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a> <script language="JavaScript" type="text/javascript">
+<!-- hide from oldgmailsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+#include <iostream.h>
+#include <stdio.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define OTL_ORA10G
+#define OTL_ORA8_PROC // Indicate that OTL/OCI8 is combined with Pro*C/C++
+#include <otlv32.h> // include the OTL 3.2 header file
+
+EXEC SQL INCLUDE SQLCA;
+typedef char CSTR[256];
+
+EXEC SQL BEGIN DECLARE SECTION;
+  EXEC SQL TYPE CSTR IS STRING(256);
+  CSTR UserId;
+EXEC SQL END DECLARE SECTION;
+
+void sqlerror(void)
+{
+ EXEC SQL WHENEVER SQLERROR CONTINUE;
+ fprintf(stderr,"\n%s\n",sqlca.sqlerrm.sqlerrmc);
+ EXEC SQL ROLLBACK RELEASE;
+ exit(1);
+}
+EXEC SQL WHENEVER SQLERROR DO sqlerror();
+
+otl_connect db; // connect object
+
+void insert()
+// insert rows into table
+{ 
+ otl_stream o(50, // buffer size
+              "insert into test_tab values(:f1<float>,:f2<char[31]>)", 
+                 // SQL statement
+              db // connect object
+             );
+ char tmp[32];
+
+ for(int i=1;i<=100;++i){
+  sprintf(tmp,"Name%d",i);
+  o<<(float)i<<tmp;
+ }
+}
+
+void select()
+{ 
+ otl_stream i(50, // buffer size
+              "select * from test_tab where f1>=:f<int> and f1<=:f*2",
+                 // SELECT statement
+              db // connect object
+             ); 
+   // create select stream
+ 
+ float f1;
+ char f2[31];
+
+ i<<8; // assigning :f = 8
+   // SELECT automatically executes when all input variables are
+   // assigned. First portion of output rows is fetched to the buffer
+
+ while(!i.eof()){ // while not end-of-data
+  i>>f1>>f2;
+  cout<<"f1="<<f1<<", f2="<<f2<<endl;
+ }
+
+ i<<4; // assigning :f = 4
+   // SELECT automatically executes when all input variables are
+   // assigned. First portion of output rows is fetched to the buffer
+
+ while(!i.eof()){ // while not end-of-data
+  i>>f1>>f2;
+  cout<<"f1="<<f1<<", f2="<<f2<<endl;
+ }
+
+}
+
+int main()
+{
+ OCIEnv* envhp; // OCI environment handle
+ OCISvcCtx* svchp; // OCI Service context handle
+ int retcode; // return code
+
+
+ strcpy(UserId,"scott/tiger");
+ EXEC SQL CONNECT :UserId; // connect to Oracle (primary connection)
+
+// The basic assumption in this example is that the program is single-
+// threaded and it makes only one database connection. 
+// For multi-threaded Pro*C/C++ applications as well as multi-
+// connection applications, the format of the SQLEvGet and SQLSvcCtxGet 
+// functions will be different from the format, used below in the text 
+// of this program.
+
+ retcode=SQLEnvGet(0,&envhp); // get an OCI formatted environment handle
+                              // from the primary connection
+ if(retcode!=SQL_SUCCESS){
+  cerr<<"Failed to get the environment handle!!!"<<endl;
+  return 1;
+ }
+
+ retcode=SQLSvcCtxGet(0,0,-1,&svchp); // get an OCI formatted service
+                                      // context handle from the
+                                      // primary connection
+ if(retcode!=SQL_SUCCESS){
+  cerr<<"Failed to get the service context handle!!!"<<endl;
+  return 1;
+ }
+
+ otl_connect::otl_initialize(); // initialize OCI environment
+ try{
+
+  db.rlogon(envhp,svchp); // attach to the primary Pro*C/C++ connection
+
+  otl_cursor::direct_exec
+   (
+    db,
+    "drop table test_tab",
+    otl_exception::disabled // disable OTL exceptions
+   ); // drop table
+
+  otl_cursor::direct_exec
+   (
+    db,
+    "create table test_tab(f1 number, f2 varchar2(30))"
+    );  // create table
+
+  insert(); // insert records into table
+  select(); // select records from table
+
+ }
+
+ catch(otl_exception& p){ // intercept OTL exceptions
+  cerr<<p.msg<<endl; // print out error message
+  cerr<<p.stm_text<<endl; // print out SQL that caused the error
+  cerr<<p.var_info<<endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // detach from the primary Pro*C/C++ connection
+
+ EXEC SQL COMMIT RELEASE;
+
+
+ return 0;
+
+}

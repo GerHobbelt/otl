@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+
+  <title>CREATE</title>
+</head>
+
+<body>
+  <h1>DDL</h1>
+  <pre>
+<a name="L1" id="L1"></a><a name="TRG_UID_TAB11" id="TRG_UID_TAB11"></a>
+</pre>
+
+  <h2><font color="#0000A0">CREATE</font> <font color="#0000A0">OR</font> <font color="#0000A0">REPLACE</font> TRIGGER trg_UID_tab1</h2>
+  <pre>
+
+<font color="#0000A0">AFTER</font> <font color="#0000A0">INSERT</font> <font color="#0000A0">OR</font> <font color="#0000A0">UPDATE</font>
+<font color="#0000A0">ON</font> <a name="REF3" id="REF3"></a><a href="pl000009.htm#TAB11">tab1</a>
+<font color="#0000A0">FOR</font> EACH row
+<i><font color="#804000">/* This is a sample of an INSERT/UPDATE
+   trigger which populates column F1 in table TAB1 
+   on INSERT and reset column F2 on update */</font></i>
+<font color="#0000A0">DECLARE</font>
+  lv_next_val <font color="#0000A0">NUMBER</font>;
+<font color="#0000A0">BEGIN</font>
+  <font color="#0000A0">IF</font> updating <font color="#0000A0">THEN</font>
+     <font color="#0000A0">IF</font> :old.f2=<a name="REF12" id="REF12"></a><a href="pl000004.htm#GC_MAGIC_DATE1">pkg1.gc_magic_date</a> <font color="#0000A0">THEN</font>
+        :<font color="#0000A0">NEW</font>.f2 := <font color="#800080">TRUNC</font>(<font color="#800080">SYSDATE</font>);
+     <font color="#0000A0">END</font> <font color="#0000A0">IF</font>;
+   <font color="#0000A0">ELSIF</font> inserting <font color="#0000A0">THEN</font>
+     lv_next_val := <a name="REF16" id="REF16"></a><a href="pl000004.htm#FCN_SEQ1_GET_NEXT1">pkg1.fcn_seq1_get_next</a>;
+     :<font color="#0000A0">NEW</font>.f1 := lv_next_val;
+     :<font color="#0000A0">NEW</font>.f2 := <font color="#800080">TRUNC</font>(<font color="#800080">SYSDATE</font>);
+  <font color="#0000A0">END</font> <font color="#0000A0">IF</font>;
+<font color="#0000A0">END</font>;
+/
+
+
+<script type="text/javascript">
+
+
+
+
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+
+
+
+
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</pre>
+</body>
+</html>

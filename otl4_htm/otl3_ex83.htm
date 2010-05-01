@@ -1,0 +1,230 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Sergei Kuchin">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+   <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+   <title>OTL 4.0, Example 83 (std::string, STL-compliant stream iterators)</title>
+</head>
+<body>
+
+<center>
+<h1>
+OTL 4.0, Example 83 (std::string, STL-compliant stream iterators, MyODBC
+2.50)</h1></center>
+
+<h1>
+Example 83 (std::string, STL-compliant stream iterators, MyODBC 2.50)</h1>
+This example demonstrates STL-compliant OTL/MyODBC stream itertors, std::strings,
+and ANSI C++ typecasts.
+<h2>
+Source Code</h2>
+
+<pre>#include &lt;iostream>
+#include &lt;vector>
+#include &lt;iterator>
+#include &lt;string>
+#include &lt;cstring>
+#include &lt;cstdlib></pre>
+
+<pre>#define OTL_ODBC_MYSQL // Compile OTL 4.0/MyODBC
+// #define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used
+#define OTL_STL // Turn on STL features
+#define OTL_ANSI_CPP // Turn on ANSI C++ typecasts
+#include &lt;otlv4.h> // include the OTL 4.0 header file
+
+using namespace std;
+
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
+
+// row container class
+class row{
+public:
+&nbsp;int f1;
+&nbsp;string f2;
+
+// default constructor
+&nbsp;row(){f1=0;}
+
+// destructor
+&nbsp;~row(){}
+
+// copy constructor
+&nbsp;row(const row&amp; row)
+&nbsp;{
+&nbsp; f1=row.f1;
+&nbsp; f2=row.f2;
+&nbsp;}
+&nbsp;
+// assignment operator
+&nbsp;row&amp; operator=(const row&amp; row)
+&nbsp;{
+&nbsp; f1=row.f1;
+&nbsp; f2=row.f2;
+&nbsp; return *this;
+&nbsp;}
+
+};
+
+// redefined operator>> for reading row&amp; from otl_stream
+otl_stream&amp; operator>>(otl_stream&amp; s, row&amp; row)
+{
+&nbsp;s>>row.f1>>row.f2;
+&nbsp;return s;
+}
+
+// redefined operator&lt;&lt; for writing row&amp; into otl_stream
+otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const row&amp; row)
+{
+&nbsp;s&lt;&lt;row.f1&lt;&lt;row.f2;
+&nbsp;return s;
+}
+
+// redefined operator&lt;&lt; writing row&amp; into ostream
+ostream&amp; operator&lt;&lt;(ostream&amp; s, const row&amp; row)
+{
+&nbsp;s&lt;&lt;"f1="&lt;&lt;row.f1&lt;&lt;", f2="&lt;&lt;row.f2;
+&nbsp;return s;
+}
+
+void insert()
+// insert rows into table
+{&nbsp;
+&nbsp;<a href="otl3_stream_class.htm">otl_stream</a> o(1, // buffer size should be == 1 on INSERT
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;int>,:f2&lt;char[31]>)",&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // INSERT statement
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );
+
+&nbsp;row r; // single row buffer
+&nbsp;vector&lt;row> vo; // vector of rows
+
+// populate the vector
+&nbsp;for(int i=1;i&lt;=100;++i){
+&nbsp; r.f1=i;
+&nbsp; r.f2="NameXXX";
+&nbsp; vo.push_back(r);
+&nbsp;}
+
+&nbsp;cout&lt;&lt;"vo.size="&lt;&lt;vo.size()&lt;&lt;endl;
+
+// insert vector into table
+&nbsp;copy(vo.begin(),&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vo.end(),&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="otl3_output_iterator.htm">otl_output_iterator</a>&lt;row>(o)
+&nbsp;&nbsp;&nbsp;&nbsp; );
+
+}
+
+void select(const int af1)
+{&nbsp;
+&nbsp;char stmbuf[1024];
+&nbsp;sprintf(stmbuf,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab where f1>=%d and f1&lt;=%d*2",
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; af1,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; af1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );
+
+&nbsp;<a href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size may be > 1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stmbuf, // SELECT statement
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;
+&nbsp;&nbsp; // create select stream
+&nbsp;
+&nbsp;vector&lt;row> v; // vector of rows
+
+
+// copy all rows to be fetched into the vector
+
+&nbsp;copy(<a href="otl3_input_iterator.htm">otl_input_iterator</a>&lt;row,ptrdiff_t>(i),&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="otl3_input_iterator.htm">otl_input_iterator</a>&lt;row,ptrdiff_t>(),
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; back_inserter(v));&nbsp;&nbsp;&nbsp;&nbsp;
+
+&nbsp;cout&lt;&lt;"Size="&lt;&lt;v.size()&lt;&lt;endl;
+
+// send the vector to cout
+&nbsp;copy(v.begin(), v.end(), ostream_iterator&lt;row>(cout, "\n"));
+
+}
+
+int main()
+{
+&nbsp;<a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment
+&nbsp;try{
+
+&nbsp; db.rlogon("UID=scott;PWD=tiger;DSN=mysql"); // connect to ODBC
+
+&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>&nbsp;&nbsp; (
+&nbsp;&nbsp;&nbsp; db,
+&nbsp;&nbsp;&nbsp; "drop table test_tab",
+&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions
+&nbsp;&nbsp; ); // drop table
+
+&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>&nbsp;&nbsp; (
+&nbsp;&nbsp;&nbsp; db,
+&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 varchar(30))"
+&nbsp;&nbsp;&nbsp; );&nbsp; // create table
+
+&nbsp; insert(); // insert records into table
+&nbsp; select(8); // select records from table
+
+&nbsp;}
+
+&nbsp;catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
+&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+&nbsp;}
+
+&nbsp;db.logoff(); // disconnect from ODBC
+
+&nbsp;return 0;
+
+}</pre>
+
+<h2>
+Output</h2>
+
+<pre>vo.size=100
+Size=9
+f1=8, f2=NameXXX
+f1=9, f2=NameXXX
+f1=10, f2=NameXXX
+f1=11, f2=NameXXX
+f1=12, f2=NameXXX
+f1=13, f2=NameXXX
+f1=14, f2=NameXXX
+f1=15, f2=NameXXX
+f1=16, f2=NameXXX
+
+
+
+<hr WIDTH="100%"></pre>
+
+<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a href="home.htm">Go
+Home</a></center>
+
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>.&nbsp;<script Language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script>
+
+<p><i>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

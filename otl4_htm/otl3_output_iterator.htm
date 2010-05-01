@@ -1,0 +1,226 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Author" content="Sergei Kuchin">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+   <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+   <title>OTL 4.0, STL-compliant iterators</title>
+</head>
+<body>
+
+<center>
+<h1>
+OTL 4.0, STL-compliant output iterator</h1></center>
+
+<h1>
+STL-compliant output iterator</h1>
+
+<h1>
+otl_output_iterator&lt;T></h1>
+
+<table CELLSPACING=0 CELLPADDING=0 WIDTH="100%" >
+<tr>
+<td ALIGN=LEFT><img SRC="iterator.gif" height=38 width=194></td>
+
+<td ALIGN=RIGHT><img SRC="type.gif" height=39 width=194></td>
+</tr>
+
+<tr>
+<td ALIGN=LEFT VALIGN=TOP><b>Category</b>: iterators</td>
+
+<td ALIGN=RIGHT VALIGN=TOP><b>Component type</b>: type</td>
+</tr>
+</table>
+
+<h3>
+Description</h3>
+<tt>otl_output_iterator</tt> is an <a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a> that performs output of objects of type <tt>T</tt> to a particular
+<a href="otl3_stream_class.htm">otl_stream</a>.
+Note that all of the restrictions of an <a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a> must be obeyed, including the restrictions on the ordering
+of <tt>operator*</tt> and <tt>operator++</tt> operations.
+<h3>
+Definition</h3>
+Defined in the OTL header file..
+<h3>
+Template parameters</h3>
+
+<table BORDER=2 >
+<tr>
+<th>Parameter&nbsp;</th>
+
+<th>Description&nbsp;</th>
+
+<th>Default&nbsp;</th>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>T</tt></td>
+
+<td VALIGN=TOP>The type of object that will be written to the <tt>otl_stream</tt>.
+The set of value types of an <tt>otl_output_iterator</tt> consists of a
+single type, <tt>T</tt>.&nbsp;</td>
+
+<td VALIGN=TOP>&nbsp;</td>
+</tr>
+</table>
+
+<h3>
+Model of</h3>
+<a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output Iterator</a>.
+<h3>
+Type requirements</h3>
+<tt>T</tt> must be a type such that <tt>otl_stream s;...; s &lt;&lt; T</tt>
+is a valid expression.
+<h3>
+Public base classes</h3>
+None.
+<h3>
+Members</h3>
+
+<table BORDER=2 >
+<tr>
+<th>Member&nbsp;</th>
+
+<th>Where defined&nbsp;</th>
+
+<th>Description&nbsp;</th>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>otl_output_iterator(otl_stream&amp;)</tt></td>
+
+<td VALIGN=TOP><tt>otl_output_iterator</tt></td>
+
+<td VALIGN=TOP>See below.&nbsp;</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>otl_output_iterator(const otl_output_iterator&amp;)</tt></td>
+
+<td VALIGN=TOP><a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a></td>
+
+<td VALIGN=TOP>The copy constructor&nbsp;</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>otl_output_iterator&amp; operator=(const otl_output_iterator&amp;)</tt></td>
+
+<td VALIGN=TOP><a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a></td>
+
+<td VALIGN=TOP>The assignment operator&nbsp;</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>otl_output_iterator&amp; operator=(const T&amp;)</tt></td>
+
+<td VALIGN=TOP><a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a></td>
+
+<td VALIGN=TOP>Used to implement the <a href="http://www.sgi.com/Technology/STL/OutputIterator.html">Output
+Iterator</a> requirement <tt>*i = t</tt>. <a href="#1">[1]</a></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>otl_output_iterator&amp; operator*()</tt></td>
+
+<td VALIGN=TOP><a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a></td>
+
+<td VALIGN=TOP>Used to implement the <a href="http://www.sgi.com/Technology/STL/OutputIterator.html">Output
+Iterator</a> requirement <tt>*i = t</tt>. <a href="#1">[1]</a></td>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>otl_output_iterator&amp; operator++()</tt></td>
+
+<td VALIGN=TOP><a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a></td>
+
+<td VALIGN=TOP>Preincrement&nbsp;</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>otl_output_iterator&amp; operator++(int)</tt></td>
+
+<td VALIGN=TOP><a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a></td>
+
+<td VALIGN=TOP>Postincrement&nbsp;</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>output_iterator_tag iterator_category(const otl_output_iterator&amp;)</tt></td>
+
+<td VALIGN=TOP><a href="http://www.sgi.com/tech/stl/iterator_tags.html">iterator
+tags</a></td>
+
+<td VALIGN=TOP>Returns the iterator's category.&nbsp;</td>
+</tr>
+</table>
+
+<h3>
+New members</h3>
+These members are not defined in the <a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a> requirements, but are specific to <tt>otl_output_iterator</tt>.
+<br>&nbsp;
+<table BORDER=2 >
+<tr>
+<th>Function&nbsp;</th>
+
+<th>Description&nbsp;</th>
+</tr>
+
+<tr>
+<td VALIGN=TOP><tt>otl_output_iterator(otl_stream&amp; s)</tt></td>
+
+<td VALIGN=TOP>Creates an <tt>otl_output_iterator</tt> such that assignment
+of <tt>t</tt> through it is equivalent to <tt>s &lt;&lt; t</tt>.&nbsp;</td>
+</tr>
+</table>
+
+<h3>
+Notes</h3>
+<a NAME="1"></a>[1] Note how assignment through an <tt>otl_output_iterator</tt>
+is implemented. In general, unary <tt>operator*</tt> must be defined so
+that it returns a proxy object, where the proxy object defines <tt>operator=</tt>
+to perform the output operation. In this case, for the sake of simplicity,
+the proxy object is the <tt>otl_output_iterator</tt> itself. That is, <tt>*i</tt>
+simply returns <tt>i</tt>, and <tt>*i = t</tt> is equivalent to <tt>i =
+t</tt>. You should not, however, rely on this behavior. It is an implementation
+detail, and it is not guaranteed to remain the same in future versions.
+<h3>
+See also</h3>
+<a href="otl3_input_iterator.htm">otl_input_iterator</a>, <a href="http://www.sgi.com/tech/stl/OutputIterator.html">Output
+Iterator</a>, <a href="http://www.sgi.com/tech/stl/InputIterator.html">Input
+Iterator</a>.
+<p>
+<hr WIDTH="100%">
+<center>
+<p><a href="otl3.htm">Contents</a> <a href="home.htm">Go Home</a></center>
+
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>.&nbsp;<script Language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script>
+
+<p><i>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

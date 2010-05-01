@@ -1,0 +1,203 @@
+<!DOCTYPE doctype PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, Examples for MS SQL / ODBC</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, Examples for MS SQL / ODBC</h1>
+
+    <div style="text-align: left;">
+      The examples below work with MS SQL Server via ODBC. In general, all of these examples should work with any MS SQL Server&nbsp; 7.0 and higher, when ODBC&nbsp; is enabled in OTL by setting #define <a href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>. For more examples, see the <a href="otl4_gen_odbc_examples.htm">Generic ODBC</a> examples.<br>
+      <br>
+
+      <ol>
+        <li><b><a href="otl3_ex24.htm">Example 24 (MS SQL Server stored procedure call)</a></b></li>
+
+        <li><b><a href="otl3_ex27.htm">Example 27 (TIMESTAMP_STRUCT and MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl3_ex28.htm">Example 28 (MS SQL Server and TEXT column)</a></b></li>
+
+        <li><b><a href="otl3_ex29.htm">Example 29 (MS SQL Server and IMAGE column)</a></b></li>
+
+        <li><b><a href="otl3_ex33.htm">Example 33 (MS SQL Server: otl_stream::describe_select() and result sets)</a></b></li>
+
+        <li><b><a href="otl3_ex55.htm">Example 55 (Datatype override in SELECT, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl3_ex67.htm">Example 67 (Simple Insert/Select and otl_stream::clean() function for OTL/ODBC and MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl3_ex74.htm">Example 74 (STL std::strings, ANSI C++ typecasts, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl3_ex77.htm">Example 77 (STL-compliant OTL/ODBC stream iterators, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl3_ex99.htm">Example 99 (otl_value&lt;T&gt;, ODBC / MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl3_ex103.htm">Example 103 (#define OTL_UNCAUGHT_EXCEPTION_ON, ODBC / MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl3_ex104.htm">Example 104 (#define OTL_EXTENDED_EXCEPTION, ODBC / MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl3_ex105.htm">Example 105 (OTL/ODBC and MS SQL Server's GUIDs)</a></b></li>
+
+        <li><b><a href="otl3_ex108.htm">Example 108 (OTL/ODBC and bulk operations with MS SQL Server's TEXT)</a></b></li>
+
+        <li><b><a href="otl3_ex112.htm">Example 112 (Group data type override in SELECT, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl3_ex120.htm">Example 120 (<font size="-1">OTL_VALUE_TEMPLATE_ON, OTL_USER_DEFINED_STRING_CLASS_ON</font>,&nbsp; ODBC / MS SQL</a></b></li>
+
+        <li><b><a href="otl3_ex124.htm">Example 124 (Insert/Update/Select with MS SQL Server TEXT&nbsp; in stream mode)</a></b></li>
+
+        <li><b><a href="otl3_ex125.htm">Example 125 (Insert/Update/Select with&nbsp; MS SQL Server IMAGE in stream mode)</a></b></li>
+
+        <li><b><a href="otl3_ex131.htm">Example 131 (Describe otl_stream's bind variables for MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex155.htm">Example 155 (set_transaction_isolation_level, ODBC, MS SQL)</a></b></li>
+
+        <li><b><a href="otl4_ex158.htm">Example 158 (external logon, ODBC, MS SQL)</a></b></li>
+
+        <li><b><a href="otl4_ex160.htm">Example 160 (otl_stream::clean(), cancelling SELECT's fetch sequence, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex163.htm">Example 163 (otl_stream::clean(), cancelling Result Set's fetch sequence, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex165.htm">Example 165 (otl_stream::clean(), cleaning the SELECT stream's error flags, MS SQL Server )</a></b></li>
+
+        <li><b><a href="otl4_ex168.htm">Example 168 (otl_stream::clean(), cleaning the Result Set stream's error flags, MS SQL Server )</a></b></li>
+
+        <li><b><a href="otl4_ex170.htm">Example 170 (#define's OTL_DEFAULT_XXX_NULL_TO_VAL, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex203.htm">Example 203 (otl_datetime container with Datetime values down to milliseconds in MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex206.htm">Example 206 (otl_exception, derived from a base class, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex209.htm">Example 209 (MS SQL Server and VARBINARY column)</a></b></li>
+
+        <li><b><a href="otl4_ex212.htm">Example 212 (OTL_ADD_NULL_TERMINATOR_STRING_SIZE,MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex223.htm">Example 223 (std::string and TEXTs, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex235.htm">Example 235 (SQL statement label, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex237.htm">Example 237 (OTL/ODBC, accessing the system data dictionary via ODBC functions, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex239.htm">Example 239 (OTL/ODBC, accessing the system data dictionary via ODBC functions, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex240.htm">Example 240 (OTL/ODBC, accessing the system data dictionary via ODBC functions, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex242.htm">Example 242 (64-bit integers (bigint), MS SQL Server, OTL/ODBC)</a></b></li>
+
+        <li><b><a href="otl4_ex247.htm">Example 247 (user defined string class and TEXTs, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex251.htm">Example 251 (OTL tracing, ODBC, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex255.htm">Example 255 (Explict bind variables in SELECT statement column definitions, ODBC, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex259.htm">Example 259 (#define OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO, ODBC, MS SQL Server)</a></b></li>
+
+        <li><b><a href="otl4_ex262.htm">Example 262 (OTL stream read iterator, simple SELECT, MS SQL / ODBC)</a></b></li>
+
+        <li><b><a href="otl4_ex263.htm">Example 263 (OTL stream read iterator, implicit result set, MS SQL / ODBC)</a></b></li>
+
+        <li><b><a href="otl4_ex291.htm">Example 291 (Strict numeric type checking on SELECTs)</a></b></li>
+
+        <li><b><a href="otl4_ex310.htm">Example 310 (Stream buffer size as <span style="font-style: italic;">int</span>, simple Insert/Select)</a></b></li>
+
+        <li><b><a href="otl4_ex317.htm">Example 317 (Insert/Update/Select with MS SQL Server TEXT&nbsp; in stream mode and otl_stream_read_iterator)</a></b></li>
+
+        <li><b><a href="otl4_ex318.htm">Example 318 (Insert/Update/Select with MS SQL Server IMAGE&nbsp; in stream mode and otl_stream_read_iterator)</a></b></li>
+
+        <li><b><a href="otl4_ex341.htm">Example 341 (OTL stream read iterator, "get by name" functions, MS SQL / ODBC)</a></b></li>
+
+        <li><b><a href="otl4_ex374.htm">Example 374 (Simple Insert/Select, otl_connect::operator&lt;&lt;, &lt;&lt;=, &gt;&gt;)</a></b></li>
+
+        <li><b><a href="otl4_ex381.htm">Example 381 (Insert/Update/Select, MS SQL TEXT in stream mode, and std:strings)</a></b></li>
+
+        <li><b><a href="otl4_ex389.htm">Example 389 (Insert/Update/Select with MS SQL Server TEXT&nbsp; in stream mode, without otl_lob_stream::set_len())</a></b></li>
+
+        <li><b><a href="otl4_ex390.htm">Example 390 (Insert/Update/Select with&nbsp; MS SQL Server IMAGE in stream mode, without otl_lob_stream::set_len())</a></b></li>
+
+        <li><b><a href="otl4_ex448.htm">Example 448 (Simple Insert/Select with VARBINARY datatype)</a></b></li>
+
+        <li><b><a href="otl4_ex449.htm">Example 449 (Simple Insert/Select with BINARY datatype)</a></b></li>
+
+        <li><b><a href="otl4_ex459.htm">Example 459 (Simple Insert/Select with VARBINARY datatype and otl_stream_read_iterator)</a></b></li>
+
+        <li><b><a href="otl4_ex460.htm">Example 460 (Simple Insert/Select with BINARY datatype and otl_stream_read_iterator)</a></b></li>
+
+        <li><b><a href="otl4_ex468.htm">Example 468 (MS SQL Server 2005 and VARCHAR(MAX))</a></b></li>
+
+        <li><b><a href="otl4_ex469.htm">Example 469 (MS SQL Server 2005 and VARBINARY(MAX))</a></b></li>
+
+        <li><b><a href="otl4_ex470.htm">Example 470 (MS SQL Server 2005, INSERT with OUTPUT clause)</a></b></li>
+
+        <li><b><a href="otl4_ex497.htm">Example 497 (Insert/Update/Select with MS SQL Server 2005 VARCHAR(MAX) in stream mode)</a></b></li>
+
+        <li><b><a href="otl4_ex498.htm">Example 498 (Insert/Update/Select with MS SQL Server 2005 VARBINARY(MAX) in stream mode)</a></b></li>
+
+        <li><b><a href="otl4_ex500.htm">Example 500 (Insert/Update/Select with MS SQL Server 2005 VARCHAR(MAX)&nbsp; in stream mode and otl_stream_read_iterator)</a></b></li>
+
+        <li value="61"><b><a href="otl4_ex501.htm">Example 501 (Insert/Update/Select with MS SQL Server 2005 VARBINARY(MAX)&nbsp; in stream mode and otl_stream_read_iterator)</a></b></li>
+
+        <li><b><a href="otl4_ex665.htm">Example 665 (XML as varchar_long/otl_long_string on SELECT, and varchar_long/otl_long_string on INSERT)</a></b></li>
+
+        <li><b><a href="otl4_ex666.htm">Example 666 (XML as varchar_long/std::string&nbsp; on SELECT and varchar_long/std::string on INSERT)</a></b></li>
+
+        <li><b><a href="otl4_ex675.htm">Example 675 (Simple Insert/Select/Update #define OTL_ODBC_MULTI_MODE)</a></b></li>
+
+        <li><b><a href="otl4_ex679.htm">Example 679 (Simple Insert/Select with smalldatetime)</a></b></li>
+
+        <li><b><a href="otl4_ex680.htm">Example 680 (Simple Insert/Select with MS SQL 2008 datetime2)</a></b></li>
+
+        <li><b><a href="otl4_ex681.htm">Example 681 (Simple Insert/Select with MS SQL 2008 date)</a></b></li>
+
+        <li><b><a href="otl4_ex682.htm">Example 682 (Simple Insert/Select with MS SQL 2008 time)</a></b></li>
+
+        <li><b><a href="otl4_ex683.htm">Example 683 (Simple Insert/Select with MS SQL 2008 datetimeoffset)</a></b></li>
+
+        <li><b><a href="otl4_ex684.htm">Example 684 (Insert/Update/Select with MS SQL Server 2008 VARBINARY(MAX) FILESTREAM in stream mode)</a></b></li>
+
+        <li><b><a href="otl4_ex688.htm">Example 688 (MS SQL 2005/2008 BACKUP command</a></b></li>
+
+        <li><b><a href="otl4_ex689.htm">Example 689 (MS SQL 2005/2008 DBCC command</a></b></li>
+
+        <li><b><a href="otl4_ex696.htm">Example 696 (Customizing the date format in OTL tracing via #define OTL_TRACE_FORMAT_DATETIME)</a></b></li>
+
+        <li><b><a href="otl4_ex697.htm">Example 697 (Skipping to the end of the row with otl_stream::skip_to_end_of_row())</a></b></li>
+      </ol>
+
+      <div style="margin-left: 2em">
+        <b><a href="otl4_ex252.htm"></a></b>
+      </div>
+    </div>
+  </center>
+
+  <center>
+    <hr width="100%">
+
+    <p><a href="otl3_const_sql.htm">Prev</a> <a href="otl3_compile.htm">Next</a><a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a><br>
+    <br></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com <script language="JavaScript" type="text/javascript">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

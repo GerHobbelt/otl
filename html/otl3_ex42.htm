@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.78 [en] (Win98; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, Example 42 (ODBC, OCI: LONG ==&gt; CLOB. How to use OTL namespaces)</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, Example 42 (ODBC, OCI: LONG ==&gt; CLOB. How to use OTL namespaces)</h1>
+  </center>
+
+  <h1><a name="example1" id="example1"></a>Example 42 (ODBC, OCI: TEXT ==&gt; CLOB. How to use OTL namespaces)</h1>This example demonstrates how to use more than one instance of the OTL library. The example opens connections to Oracle via OTL/ODBC as well as via OTL/OCI8. Then, a table with a LONG column gets created via ODBC, filled out with several rows, and the rows get copied over to a similar table via OCI8.
+
+  <p>This example also demonstrates how to use the <a href="otl3_long_string.htm">otl_long_string</a> class to carry over values from ODBC to OCI8.<br>
+  &nbsp;</p>
+
+  <h2>Source Code</h2>
+  <pre>
+#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;<br><br>#define OTL_ORA8 // Compile OTL 4.0/OCI8<br>#define OTL_ODBC // Compile OTL 4.0/ODBC<br>// In case when &lt;OTL_ORA8,OTL_ODBC&gt; or &lt;OTL_ORA7,OTL_ODBC&gt; pair is<br>// defined, the OTL header file generates namespaces oracle:: and odbc::<br>// respectively, in order to make the names of the otl_xxx classes<br>// unique. <br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br>const int long_text_max=70000; // maximum length of long strings.<br><br>odbc::<a href="otl3_connect_class.htm">otl_connect</a> db1; // connect object<br>oracle::otl_connect db2; // connect object<br><br>void insert1(void)<br>// insert rows into ODBC table<br>{ <br><br> <a href=
+"otl3_long_string.htm">otl_long_string</a> f2(long_text_max); // define long string variable<br> db1.<a href="otl3_connect_class.htm#set_max_long_size">set_max_long_size</a>(long_text_max); // set maximum long string size for connect object<br><br> odbc::<a href="otl3_stream_class.htm">otl_stream</a> o(1, // buffer size needs to be set to 1 for long strings<br>                   "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;varchar_long&gt;)", <br>                      // SQL statement<br>                    db1 // connect object<br>                   );<br><br> for(int i=1;i&lt;=20;++i){<br>  for(int j=0;j&lt;50000;++j)<br>   f2[j]='*';<br>  f2[50000]='?';<br>  f2.<a href=
+"otl3_long_string.htm#set_len">set_len</a>(50001);<br>  o&lt;&lt;i&lt;&lt;f2;<br> }<br>}<br><br>void insert2()<br>// insert rows into OCI table<br>{ <br><br> otl_long_string f2(long_text_max); // define long string variable<br> db2.set_max_long_size(long_text_max); // set maximum long string size for connect object<br> <br> int f1;<br><br>// INSERT statement for inserting rows into OCI table<br> oracle::otl_stream <br>  o(1, // buffer size has to be set to 1 for operations with LOBs<br>    "insert into test_tab2 values(:f1&lt;int&gt;,empty_clob()) "<br>    "returning f2 into :f2&lt;clob&gt; ",<br>        // SQL statement<br>     db2 // connect object<br>    );<br><br>// SELECT statement to read rows from OCI table<br> odbc::otl_stream <br>  i(1, // buffer size needs to be set to 1<br>    "select * from test_tab", // SELECT statement<br>    db1 // connect object<br>   ); <br><br> while(!i.eof()){<br>  i&gt;&gt;f1&gt;&gt;f2; // Reading one row from ODBC<br>  o&lt;&lt;f1&lt;&lt;f2; // Inserting one row into OCI<br> }<br><br>}<br><br>void select2()<br>// Select rows from OCI table<br>{ <br> otl_long_string f2(long_text_max); // define long string variable<br> db2.set_max_long_size(long_text_max); // set maximum long string size for connect object<br><br> oracle::otl_stream <br>  i(10, // buffer size. To read CLOBs, it can be set to a size greater than 1<br>    "select * from test_tab2 where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2",<br>        // SELECT statement<br>    db2 // connect object<br>   ); <br>   // create select stream<br> <br> float f1;<br><br> i&lt;&lt;8; // assigning :f = 8<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2[0]&lt;&lt;f2[f2.len()-1]&lt;&lt;", len="&lt;&lt;f2.len()&lt;&lt;endl;<br> }<br><br> i&lt;&lt;4; // assigning :f = 4<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2[0]&lt;&lt;f2[f2.<a href="otl3_long_string.htm#len">len</a>()-1]&lt;&lt;", len="&lt;&lt;f2.len()&lt;&lt;endl;<br> }<br><br>}<br><br>int main()<br>{<br> oracle::otl_connect::<a href="otl3_connect_class.htm">otl_initialize</a>(); // initialize OCI environment<br> odbc::otl_connect::otl_initialize(); // initialize ODBC environment<br> try{<br><br>  db1.<a href="otl3_connect_class.htm#rlogon">rlogon</a>("UID=scott;PWD=tiger;DSN=my_db"); // connect to ODBC<br>  db2.rlogon("scott/tiger"); // connect to OCI<br><br>  odbc::otl_cursor::direct_exec<br>   (<br>    db1,<br>    "drop table test_tab",<br>    odbc::otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  odbc::otl_cursor::<a href="otl3_const_sql.htm">direct_exec<br></a>   (<br>    db1,<br>    "create table test_tab(f1 number, f2 long)"<br>    );  // create table<br><br>  oracle::otl_cursor::direct_exec<br>   (<br>    db2,<br>    "drop table test_tab2",<br>    oracle::otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  oracle::otl_cursor::direct_exec<br>   (<br>    db2,<br>    "create table test_tab2(f1 number, f2 clob)"<br>    );  // create table<br><br>  insert1(); // insert records into MSSQL table<br>  insert2(); // Read the ODBC table and insert records <br>             // into OCI table<br>  select2(); // select records from the Oracle table.<br><br> }<br><br> catch(odbc::<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQlSTATE<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> catch(oracle::otl_exception&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db1.logoff(); // disconnect from ODBC<br> db2.logoff(); // disconnect from OCI<br><br> return 0;<br><br>}
+</pre>
+
+  <h2>Output</h2>
+  <pre>
+f1=8, f2=*?, len=50001<br>f1=9, f2=*?, len=50001<br>f1=10, f2=*?, len=50001<br>f1=11, f2=*?, len=50001<br>f1=12, f2=*?, len=50001<br>f1=13, f2=*?, len=50001<br>f1=14, f2=*?, len=50001<br>f1=15, f2=*?, len=50001<br>f1=16, f2=*?, len=50001<br>f1=4, f2=*?, len=50001<br>f1=5, f2=*?, len=50001<br>f1=6, f2=*?, len=50001<br>f1=7, f2=*?, len=50001<br>f1=8, f2=*?, len=50001<br><br><br><br><br><br><br><br><br>
+</pre>
+  <hr width="100%">
+
+  <center>
+    <a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com <script language="JavaScript" type="text/javascript">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>
