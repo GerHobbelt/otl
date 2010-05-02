@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.201,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.202,
 // Copyright (C) 1996-2009, Sergei Kuchin (skuchin@gmail.com)
 // 
 // This library is free software. Permission to use, copy, modify,
@@ -26,7 +26,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0400C9L)
+#define OTL_VERSION_NUMBER (0x0400CAL)
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning (disable:4351)
@@ -118,6 +118,10 @@ s.month<<"/"<<s.day<<"/"<<s.year                                \
 #endif
 
 #if defined(OTL_ORA11G)
+#define OTL_ORA10G_R2
+#endif
+
+#if defined(OTL_ORA11G_R2)
 #define OTL_ORA10G_R2
 #endif
 
@@ -2008,11 +2012,11 @@ public:
       buf_size=s.buf_size;
     }else{
       if(extern_buffer_flag){
-        v=new unsigned char[s.buf_size];
+        v=new unsigned char[s.buf_size+1];
         buf_size=s.buf_size;
       }else if(buf_size<s.buf_size){
         delete[] v;
-        v=new unsigned char[s.buf_size];
+        v=new unsigned char[s.buf_size+1];
         buf_size=s.buf_size;
       }
       length=s.length;
@@ -2034,7 +2038,7 @@ public:
     if(s.extern_buffer_flag)
       v=s.v;
     else{
-      v=new unsigned char[buf_size];
+      v=new unsigned char[buf_size+1];
       memcpy(v,s.v,length);
       if(length<buf_size&&s.v[length]==0)
         v[length]=0;
@@ -2124,7 +2128,7 @@ public:
     if(s.extern_buffer_flag)
       v=s.v;
     else{
-      v=new unsigned char[buf_size*sizeof(OTL_WCHAR)];
+      v=new unsigned char[(buf_size+1)*sizeof(OTL_WCHAR)];
       memcpy(v,s.v,length*sizeof(OTL_WCHAR));
       if(length<buf_size&&s.v[length]==0)
         (*this)[length]=0;
@@ -2143,11 +2147,11 @@ public:
       buf_size=s.buf_size;
     }else{
       if(extern_buffer_flag){
-        v=new unsigned char[s.buf_size*sizeof(OTL_WCHAR)];
+        v=new unsigned char[(s.buf_size+1)*sizeof(OTL_WCHAR)];
         buf_size=s.buf_size;
       }else if(buf_size<s.buf_size){
         delete[] v;
-        v=new unsigned char[s.buf_size*sizeof(OTL_WCHAR)];
+        v=new unsigned char[(s.buf_size+1)*sizeof(OTL_WCHAR)];
         buf_size=s.buf_size;
       }
       length=s.length;
@@ -5585,7 +5589,10 @@ public:
       else
         data_len=0;
     }
-#if defined(OTL_BIGINT) && (defined(OTL_ODBC)||defined(OTL_DB2_CLI))
+#if defined(OTL_BIGINT) && \
+    (defined(OTL_ODBC)||defined(OTL_DB2_CLI)||\
+     (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+      !defined(OTL_BIGINT_TO_STR)))
     else if(t2=='I'){
       data_type=otl_var_bigint;
       data_len=sizeof(OTL_BIGINT);
@@ -5835,7 +5842,10 @@ public:
                adb.get_max_long_size(),
                OTL_SCAST(const otl_stream_buffer_size_type,array_size),
                &adb.get_connect_struct());
-#if defined(OTL_BIGINT) && (defined(OTL_ODBC)||defined(OTL_DB2_CLI))
+#if defined(OTL_BIGINT) && \
+  (defined(OTL_ODBC)||defined(OTL_DB2_CLI)||\
+   (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+      !defined(OTL_BIGINT_TO_STR)))
      else if(t2=='I')
        v->init(false,
                otl_var_bigint,sizeof(OTL_BIGINT),
@@ -12989,7 +12999,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
     SQLINTEGER buflen=elem_size;
 #if defined(OTL_UNICODE)
     if(ftype==SQL_C_WCHAR||ftype==SQL_WLONGVARCHAR)
-      buflen=elem_size*sizeof(OTL_CHAR); // !!!
+      buflen=elem_size*sizeof(OTL_CHAR); 
 #endif
    status=SQLBindCol
     (cda,
@@ -22522,7 +22532,8 @@ public:
       char* tzc=otl_itoa(tz_hour,tz_str);
       *tzc=':';
       ++tzc;
-      otl_itoa(tz_minute,tzc);
+      tzc=otl_itoa(tz_minute,tzc);
+      size_t tz_len=tzc-tz_str;
       rc=OCIDateTimeConstruct 
         (connect->envhp,
          connect->errhp,
@@ -22537,7 +22548,7 @@ public:
          (ub4,otl_to_fraction(src_ptr->fraction,
                               src_ptr->frac_precision)),
          OTL_RCAST(text*,tz_str),
-         OTL_SCAST(size_t,(tzc-tz_str)));
+         tz_len);
     }
     if(rc!=0)return 0;
     return 1;
@@ -23498,6 +23509,11 @@ public:
    case otl_var_int:
     aelem_size=sizeof(int);
     break;
+#if defined(OTL_BIGINT) && defined(OTL_ORA11G_R2)
+   case otl_var_bigint:
+    aelem_size=sizeof(OTL_BIGINT);
+    break;
+#endif
    case otl_var_unsigned_int:
     aelem_size=sizeof(unsigned);
     break;
@@ -23505,7 +23521,7 @@ public:
     aelem_size=sizeof(short);
     break;
    case otl_var_long_int:
-    aelem_size=sizeof(double);
+    aelem_size=sizeof(long);
     break;
    default:
      aelem_size=override.get_col_size(ndx);
@@ -23867,6 +23883,11 @@ public:
    return extInt;
   case otl_var_long_int:
    return extInt;
+#if defined(OTL_BIGINT) && (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+    !defined(OTL_BIGINT_TO_STR))
+  case otl_var_bigint:
+   return extInt;
+#endif
 #if (defined(OTL_ORA8I)||defined(OTL_ORA9I))&&defined(OTL_ORA_TIMESTAMP)
   case otl_var_timestamp:
    return extTimestamp;
@@ -25728,6 +25749,12 @@ public:
   virtual otl_read_stream_interface& 
   operator>>(unsigned char* s) OTL_THROWS_OTL_EXCEPTION = 0;
 
+#if defined(OTL_BIGINT) && (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+    !defined(OTL_BIGINT_TO_STR))
+  virtual otl_read_stream_interface& 
+  operator>>(OTLBIGINT& f) OTL_THROWS_OTL_EXCEPTION = 0;
+#endif
+
   virtual otl_read_stream_interface& 
   operator>>(int& n) OTL_THROWS_OTL_EXCEPTION = 0;
 
@@ -26263,6 +26290,41 @@ public:
   inc_next_ov();
   return *this;
  }
+
+#if defined(OTL_BIGINT) && (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+    !defined(OTL_BIGINT_TO_STR))
+ OTL_ORA_REFCUR_COMMON_READ_STREAM& operator>>(OTL_BIGINT& n)
+   OTL_THROWS_OTL_EXCEPTION
+ {
+  check_if_executed();
+  if(eof_intern())return *this;
+  get_next();
+  if(!eof_intern()){
+#if defined(OTL_STRICT_NUMERIC_TYPE_CHECK_ON_SELECT)
+    int match_found=otl_numeric_convert_T2
+      (sl[cur_col].get_ftype(),
+       sl[cur_col].val(cur_row),
+       n);
+#else
+    int match_found=otl_numeric_convert_T
+      (sl[cur_col].get_ftype(),
+       sl[cur_col].val(cur_row),
+       n);
+#endif
+   if(!match_found){
+    if(check_type(otl_var_double,otl_var_int))
+      n=OTL_PCONV(OTL_BIGINT,double,sl[cur_col].val(cur_row));
+   }
+#if defined(OTL_DEFAULT_NUMERIC_NULL_TO_VAL)
+   if((*this).is_null())
+     n=OTL_SCAST(OTL_BIGINT,OTL_DEFAULT_NUMERIC_NULL_TO_VAL);
+#endif
+   look_ahead();
+  }
+  inc_next_ov();
+  return *this;
+ }
+#endif
 
  OTL_ORA_REFCUR_COMMON_READ_STREAM& operator>>(unsigned& u)
    OTL_THROWS_OTL_EXCEPTION
@@ -26891,6 +26953,19 @@ public:
   return *this;
  }
 
+#if defined(OTL_BIGINT) && (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+    !defined(OTL_BIGINT_TO_STR))
+ otl_inout_stream& operator>>(OTL_BIGINT& n)
+ {
+#if defined(OTL_NO_TMPL_MEMBER_FUNC_SUPPORT)
+  otl_ora8_inout_stream::operator>>(n);
+#else
+  otl_ora8_inout_stream::operator>><OTL_BIGINT,otl_var_bigint>(n);
+#endif
+  return *this;
+ }
+#endif
+
  otl_inout_stream& operator>>(int& n)
  {
 #if defined(OTL_NO_TMPL_MEMBER_FUNC_SUPPORT)
@@ -26900,6 +26975,19 @@ public:
 #endif
   return *this;
  }
+
+#if defined(OTL_BIGINT) && (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+    !defined(OTL_BIGINT_TO_STR))
+ otl_inout_stream& operator<<(const OTL_BIGINT n)
+ {
+#if defined(OTL_NO_TMPL_MEMBER_FUNC_SUPPORT)
+   otl_ora8_inout_stream::operator<<(n);
+#else
+  otl_ora8_inout_stream::operator<<<OTL_BIGINT,otl_var_bigint>(n);
+#endif
+  return *this;
+ }
+#endif
 
  otl_inout_stream& operator<<(const int n)
  {
@@ -27914,6 +28002,10 @@ public:
   OTL_D7(short,otl_var_short)
   OTL_D7(float,otl_var_float)
   OTL_D7(double,otl_var_double)
+#if defined(OTL_BIGINT) && (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+    !defined(OTL_BIGINT_TO_STR))
+  OTL_D7(OTL_BIGINT,otl_var_bigint)
+#endif
 #else
   template<OTL_TYPE_NAME T,const int T_type> OTL_D7(T,T_type)
 #endif
@@ -28200,6 +28292,10 @@ public:
   OTL_D8(short,otl_var_short)
   OTL_D8(float,otl_var_float)
   OTL_D8(double,otl_var_double)
+#if defined(OTL_BIGINT) && (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+    !defined(OTL_BIGINT_TO_STR))
+  OTL_D8(OTL_BIGINT,otl_var_bigint)
+#endif
 #else
   template<OTL_TYPE_NAME T,const int T_type> OTL_D8(T,T_type)
 #endif
@@ -30969,6 +31065,47 @@ public:
 
 #endif
 
+#if defined(OTL_BIGINT) && (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+    !defined(OTL_BIGINT_TO_STR))
+ OTL_ORA_COMMON_READ_STREAM& operator>>(OTL_BIGINT& n)
+   OTL_THROWS_OTL_EXCEPTION
+ {
+   last_oper_was_read_op=true;
+   switch(shell->stream_type){
+   case otl_no_stream_type:
+     break;
+   case otl_inout_stream_type:
+     last_eof_rc=(*io)->eof();
+     (*io)->operator>>(n);
+     break;
+   case otl_select_stream_type:
+     last_eof_rc=(*ss)->eof();
+#if defined(OTL_NO_TMPL_MEMBER_FUNC_SUPPORT)
+     (*ss)->operator>>(n);
+#else
+     (*ss)->operator>><OTL_BIGINT,otl_var_bigint>(n);
+#endif
+     break;
+   case otl_refcur_stream_type:
+     last_eof_rc=(*ref_ss)->eof();
+#if defined(OTL_NO_TMPL_MEMBER_FUNC_SUPPORT)
+     (*ref_ss)->operator>>(n);
+#else
+     (*ref_ss)->operator>><OTL_BIGINT,otl_var_bigint>(n);
+#endif
+     break;
+   }
+#if defined(OTL_DEFAULT_NUMERIC_NULL_TO_VAL)
+   if((*this).is_null())
+     n=OTL_SCAST(int,OTL_DEFAULT_NUMERIC_NULL_TO_VAL);
+#endif
+   OTL_TRACE_WRITE(n,"operator >>","OTL_BIGINT&")
+   inc_next_ov();
+   return *this;
+ }
+
+#endif
+
  OTL_ORA_COMMON_READ_STREAM& operator>>(int& n)
    OTL_THROWS_OTL_EXCEPTION
  {
@@ -31411,6 +31548,41 @@ public:
    return *this;
  }
 
+#endif
+
+#if defined(OTL_BIGINT) && (defined(OTL_ORA11G_R2)&&!defined(OTL_STR_TO_BIGINT)&&\
+    !defined(OTL_BIGINT_TO_STR))
+ otl_stream& operator<<(const OTL_BIGINT n)
+   OTL_THROWS_OTL_EXCEPTION
+ {
+   last_oper_was_read_op=false;
+   reset_end_marker();
+   OTL_TRACE_READ(n,"operator <<","OTL_BIGINT");
+   switch(shell->stream_type){
+   case otl_no_stream_type:
+     break;
+   case otl_inout_stream_type:
+     (*io)->operator<<(n);
+     break;
+   case otl_select_stream_type:
+#if defined(OTL_NO_TMPL_MEMBER_FUNC_SUPPORT)
+     (*ss)->operator<<(n);
+#else
+     (*ss)->operator<<<OTL_BIGINT,otl_var_bigint>(n);
+#endif
+     break;
+   case otl_refcur_stream_type:
+#if defined(OTL_NO_TMPL_MEMBER_FUNC_SUPPORT)
+    (*ref_ss)->operator<<(n);
+#else
+     (*ref_ss)->operator<<<OTL_BIGINT,otl_var_bigint>(n);
+#endif
+     if(!(*ov)&&(*ref_ss)->get_sl()) create_var_desc();
+     break;
+   }
+   inc_next_iov();
+   return *this;
+ }
 #endif
 
  otl_stream& operator<<(const int n)
