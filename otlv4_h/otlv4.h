@@ -1,6 +1,6 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.207,
-// Copyright (C) 1996-2009, Sergei Kuchin (skuchin@gmail.com)
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.214,
+// Copyright (C) 1996-2010, Sergei Kuchin (skuchin@gmail.com)
 // 
 // This library is free software. Permission to use, copy, modify,
 // and/or distribute this software for any purpose with or without fee
@@ -26,7 +26,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0400CFL)
+#define OTL_VERSION_NUMBER (0x0400D6L)
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning (disable:4351)
@@ -1308,6 +1308,7 @@ const int otl_error_code_17=32018;
 "SQLProcedures, SQLColumnPrivileges, SQLTablePrivileges, "      \
 "SQLPrimaryKeys, SQLProcedureColumns, SQLForeignKeys"
 
+
 const int otl_error_code_18=32019;
 #define otl_error_msg_18                                \
 "otl_stream::operator>>() should have been called "     \
@@ -1377,6 +1378,9 @@ const int otl_error_code_33=32034;
 
 const int otl_error_code_34=32035;
 #define otl_error_msg_34 "END-OF-ROW check failed"
+
+const int otl_error_code_35=32036;
+#define otl_error_msg_35 "otl_connect is not connected to the database"
 
 const int otl_oracle_date_size=7;
 
@@ -4185,10 +4189,10 @@ OTL_EXCEPTION_IS_DERIVED_FROM_STD_EXCEPTION cannot be used
 #endif
 #define OTL_EXCEPTION_DERIVED_FROM std::exception
 #define OTL_EXCEPTION_HAS_MEMBERS                       \
-    virtual const char* what() const                    \
-    {                                                   \
-      return reinterpret_cast<const char*>(msg);        \
-    } 
+  virtual const char* what() const throw()              \
+  {                                                     \
+    return reinterpret_cast<const char*>(this->msg);    \
+  } 
 
 #endif
 
@@ -5286,7 +5290,7 @@ public:
     bool in_comment=false;
     bool in_one_line_comment=false;
     char *c=stm;
-    
+    bool in_comment_column_override=false;
     hv[i]=0;
     while(*c){
       switch(*c){
@@ -5303,7 +5307,13 @@ public:
         }
         break;
       case '/':
-        if(c[1]=='*'&&!in_str){
+        if(c[1]=='*' && !in_str && c[2]==':' && c[3]=='#'){
+          in_comment_column_override=true;
+          *c=' ';
+          ++c;
+          *c=' ';
+          ++c;
+        }else if(c[1]=='*'&&!in_str){
           in_comment=true;
           ++c;
         }
@@ -5315,10 +5325,14 @@ public:
         }
         break;
       case '*':
-        if(c[1]=='/'&&in_comment){
+        if(c[1]=='/' && in_comment){
           in_comment=false;
           ++c;
-        }      
+        }else if(c[1]=='/' && in_comment_column_override){
+          *c=' ';
+          ++c;
+          *c=' ';
+        }
         break;
       case '\n':
         if(in_one_line_comment)
@@ -5337,9 +5351,15 @@ public:
           *v++=*c++;
         while(otl_isspace(*c)&&*c)
           ++c;
-        if(*c=='<'){
-          *c=' ';
-          while(*c!='>'&&*c!=','&&*c){
+        if(*c=='<' || (*c=='/' && c[1]=='*')){
+          if(*c=='<')
+            *c=' ';
+          else if(*c=='/'&&c[1]=='*'){
+            *c=' ';
+            ++c;
+            *c=' ';
+          }
+          while(*c!='>' && *c!=',' && *c!='*' && *c){
             *v++=*c;
             *c++=' ';
           }
@@ -5352,21 +5372,40 @@ public:
                 in_out=in;
             }else if(otl_to_upper(*c)=='O')
               in_out=out;
-            while(*c!='>'&&*c&&(*c!='[' && *c!='('))
+            while(*c!='>' && *c && *c!='*' && (*c!='[' && *c!='(') )
               *c++=' ';
+            if(*c=='*'){
+              *c=' ';
+              ++c;
+              *c=' ';
+            }
             if(*c=='[' || *c=='('){
               char tmp[32];
               char *t=tmp;
               *c++=' ';
-              while((*c!=']' && *c!=')')&&*c!='>'&&*c){
+              while((*c!=']' && *c!=')') && *c!='>' && *c!='*' && *c){
                 *t++=*c;
                 *c++=' ';
               }
+              if(*c=='*'){
+                *c=' ';
+                ++c;
+                *c=' ';
+              }
               *t='\0';
               apl_tab_size=atoi(tmp);
-              while(*c!='>'&&*c)
+              while(*c!='>' && *c!='*' && *c)
                 *c++=' ';
+              if(*c=='*'){
+                *c=' ';
+                ++c;
+                *c=' ';
+              }
             }
+          }else if(*c=='*' && c[1]=='/'){
+            *c=' ';
+            ++c;
+            *c=' ';
           }
           if(*c)*c=' ';
           *v='\0';
@@ -6320,7 +6359,7 @@ public:
  virtual int eof(void) = 0;
  virtual int len(void) = 0;
  virtual bool is_initialized(void) = 0;
- virtual void close(void) = 0;
+ virtual void close(bool dont_throw_size_doesnt_match_exception=false) = 0;
 
 private:
 
@@ -7956,16 +7995,20 @@ otl_uncaught_exception()){
     this->exec(OTL_SCAST(otl_stream_buffer_size_type,(cur_y+1)),
                rowoff,
                otl_sql_exec_from_cursor_class);
+    long curr_rpc=this->get_rpc();
     for(i=0;i<this->vl_len;++i){
-      temp_rc=this->vl[i]->get_var_struct().put_blob();
-      if(temp_rc==0){
-        if(this->adb)this->adb->increment_throw_count();
-        if(this->adb&&this->adb->get_throw_count()>1)return;
-        if(otl_uncaught_exception()) return; 
-        throw OTL_TMPL_EXCEPTION
-          (this->adb->get_connect_struct(),
-           this->stm_label?this->stm_label:
-           this->stm_text);
+      int otl_adapter_type=this->vl[i]->get_const_var_struct().get_otl_adapter();
+      if(!(otl_adapter_type==otl_ora8_adapter&&curr_rpc==0)){
+        temp_rc=this->vl[i]->get_var_struct().put_blob();
+        if(temp_rc==0){
+          if(this->adb)this->adb->increment_throw_count();
+          if(this->adb&&this->adb->get_throw_count()>1)return;
+          if(otl_uncaught_exception()) return; 
+          throw OTL_TMPL_EXCEPTION
+            (this->adb->get_connect_struct(),
+             this->stm_label?this->stm_label:
+             this->stm_text);
+        }
       }
     }
    if(auto_commit_flag)
@@ -11616,11 +11659,25 @@ public:
 #else
    case SQL_BIGINT: return SQL_C_DOUBLE;
 #endif
+#if defined(OTL_MAP_SQL_DECIMAL_TO_OTL_BIGINT) && !defined(OTL_BIGINT)
+#error OTL_BIGINT needs to be defined for OTL_MAP_SQL_DECIMAL_TO_OTL_BIGINT \
+to function
+#elif defined(OTL_MAP_SQL_DECIMAL_TO_OTL_BIGINT) && defined(OTL_BIGINT)
+   case SQL_DECIMAL: return SQL_C_SBIGINT;
+#else
    case SQL_DECIMAL: return SQL_C_DOUBLE;
+#endif
    case SQL_DOUBLE: return SQL_C_DOUBLE;
    case SQL_FLOAT: return SQL_C_DOUBLE;
    case SQL_INTEGER: return SQL_C_SLONG;
+#if defined(OTL_MAP_SQL_NUMERIC_TO_OTL_BIGINT) && !defined(OTL_BIGINT)
+#error OTL_BIGINT needs to be defined for OTL_MAP_SQL_NUMERIC_TO_OTL_BIGINT \
+to function
+#elif defined(OTL_MAP_SQL_NUMERIC_TO_OTL_BIGINT) && defined(OTL_BIGINT)
+   case SQL_NUMERIC: return SQL_C_SBIGINT;
+#else
    case SQL_NUMERIC: return SQL_C_DOUBLE;
+#endif
    case SQL_REAL: return SQL_C_DOUBLE;
    case SQL_SMALLINT: return SQL_C_SSHORT;
    case SQL_BIT: return SQL_C_SSHORT;
@@ -13882,6 +13939,9 @@ public:
 #if defined(OTL_FREETDS_ODBC_WORKAROUNDS)
   if(!auto_commit_) rollback();
 #endif
+#if defined(OTL_ROLLS_BACK_BEFORE_LOGOFF)
+  otl_odbc_connect::rollback();
+#endif
   otl_odbc_connect::logoff();
  }
 
@@ -14344,7 +14404,7 @@ public:
     return true;
  }
 
- void close(void) OTL_THROWS_OTL_EXCEPTION
+ void close(bool=false) OTL_THROWS_OTL_EXCEPTION
  {
   if(in_destructor){
    if(mode==otl_lob_stream_read_mode){
@@ -14497,11 +14557,14 @@ protected:
   }
 
   void throw_end_of_row()
+#if defined(__GNUC__) && (__GNUC__>=4)
+    __attribute__ ((noreturn))
+#endif
   {
-    throw otl_exception
-      (otl_error_msg_34,
-       otl_error_code_34,
-       this->get_stm_text());
+      throw otl_exception
+        (otl_error_msg_34,
+         otl_error_code_34,
+         this->get_stm_text());
   }
 
 public:
@@ -14531,6 +14594,8 @@ public:
   void check_end_of_row()
   {
     if(next_ov_ndx==0||(*next_ov_ndx)!=0)
+      throw_end_of_row();
+    if(next_iov_ndx==0||(*next_iov_ndx)!=0)
       throw_end_of_row();
   }
 
@@ -15049,6 +15114,14 @@ public:
   const char* sqlstm_label=0)
    OTL_THROWS_OTL_EXCEPTION
  {
+#if defined(OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION)
+   if(!db.connected){
+     throw otl_exception
+       (otl_error_msg_35,
+        otl_error_code_35,
+        sqlstm);
+   }
+#endif
    reset_end_marker();
    otl_stream_buffer_size_type temp_arr_size=arr_size;
    if(this->good()){
@@ -15382,6 +15455,12 @@ public:
  }
 
   otl_stream& operator>>(otl_stream& (*pf) (otl_stream&))
+  {
+    (*pf)(*this);
+    return *this;
+  }
+
+  otl_stream& operator<<(otl_stream& (*pf) (otl_stream&))
   {
     (*pf)(*this);
     return *this;
@@ -17973,6 +18052,9 @@ public:
   if(connected)
     sc.init(sc.get_max_size());
 #endif
+#if defined(OTL_ROLLS_BACK_BEFORE_LOGOFF)
+  otl_ora7_connect::rollback();
+#endif
   otl_ora7_connect::logoff();
  }
 
@@ -19348,6 +19430,9 @@ protected:
 
 
   void throw_end_of_row()
+#if defined(__GNUC__) && (__GNUC__>=4)
+    __attribute__ ((noreturn))
+#endif
   {
     throw otl_exception
       (otl_error_msg_34,
@@ -19409,6 +19494,8 @@ public:
   void check_end_of_row()
   {
     if(next_ov_ndx==0||(*next_ov_ndx)!=0)
+      throw_end_of_row();
+    if(next_iov_ndx==0||(*next_iov_ndx)!=0)
       throw_end_of_row();
   }
 
@@ -19988,6 +20075,14 @@ public:
   const char* sqlstm_label=0)
    OTL_THROWS_OTL_EXCEPTION
  {
+#if defined(OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION)
+   if(!db.connected){
+     throw otl_exception
+       (otl_error_msg_35,
+        otl_error_code_35,
+        sqlstm);
+   }
+#endif
    reset_end_marker();
    if(this->good()){
      const char* temp_stm_text=0;
@@ -20221,6 +20316,12 @@ public:
  }
 
   otl_stream& operator>>(otl_stream& (*pf) (otl_stream&))
+  {
+    (*pf)(*this);
+    return *this;
+  }
+
+  otl_stream& operator<<(otl_stream& (*pf) (otl_stream&))
   {
     (*pf)(*this);
     return *this;
@@ -24993,7 +25094,7 @@ public:
                     cursor->get_stm_text());
  }
 
- void close(void) OTL_THROWS_OTL_EXCEPTION
+ void close(bool dont_throw_size_doesnt_match_exception=false) OTL_THROWS_OTL_EXCEPTION
  {
   if(in_destructor){
    if(mode==otl_lob_stream_read_mode){
@@ -25011,7 +25112,9 @@ public:
     init(0,0,0,0,otl_lob_stream_zero_mode);
   }else{
    // write mode
-   if(!(offset==0&&lob_len==0)&&(offset-1)!=lob_len){
+   if(!(offset==0&&lob_len==0)&&
+      (offset-1)!=lob_len&&
+      !dont_throw_size_doesnt_match_exception){
      bind_var->get_var_struct().close_lob();     
      char var_info[256];
      char msg_buf[1024];
@@ -25368,9 +25471,12 @@ public:
    connect_struct.session_end();
    connect_struct.server_detach();
   }else{
+#if defined(OTL_ROLLS_BACK_BEFORE_LOGOFF)
+    otl_ora8_connect::rollback();
+#endif
     OTL_TRACE_FUNC(0x1,"otl_connect","logoff","")
       if(connect_struct.get_extern_lda())
-      connect_struct.logoff();
+        connect_struct.logoff();
     else{
       session_end();
       server_detach();
@@ -28959,6 +29065,9 @@ else if(strcmp(datatype,"TIMESTAMP")==0)
  }
 
   void throw_end_of_row()
+#if defined(__GNUC__) && (__GNUC__>=4)
+    __attribute__ ((noreturn))
+#endif
   {
     throw otl_exception
       (otl_error_msg_34,
@@ -28985,6 +29094,8 @@ public:
   void check_end_of_row()
   {
     if(next_ov_ndx==0||(*next_ov_ndx)!=0)
+      throw_end_of_row();
+    if(next_iov_ndx==0||(*next_iov_ndx)!=0)
       throw_end_of_row();
   }
 
@@ -30220,6 +30331,14 @@ public:
   const char* sqlstm_label=0)
    OTL_THROWS_OTL_EXCEPTION
  {
+#if defined(OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION)
+   if(!db.connected){
+     throw otl_exception
+       (otl_error_msg_35,
+        otl_error_code_35,
+        sqlstm);
+   }
+#endif
    reset_end_marker();
    if(this->good()){
      const char* temp_stm_text=0;
@@ -30506,6 +30625,12 @@ public:
  }
 
   otl_stream& operator>>(otl_stream& (*pf) (otl_stream&))
+  {
+    (*pf)(*this);
+    return *this;
+  }
+
+  otl_stream& operator<<(otl_stream& (*pf) (otl_stream&))
   {
     (*pf)(*this);
     return *this;

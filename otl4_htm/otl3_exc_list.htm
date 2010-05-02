@@ -1,7 +1,7 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-  <meta content="text/html; charset=iso-8859-1"
+  <meta content="text/html; charset=ISO-8859-1"
  http-equiv="Content-Type">
   <meta content="Sergei Kuchin" name="Author">
   <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
@@ -197,7 +197,10 @@ was found</font>
 <ul>
   <li> <b>Cause: </b>Stored procedure name, being passed into <a
  href="otl3_stream_class.htm#create_stored_proc_call">otl_stream::create_stored_proc_call</a>,
-cannot be found in the Oracle data dictionary.</li>
+cannot
+be
+found
+in the Oracle data dictionary.</li>
   <li> <b>Action: </b>Correct the stored procedure name, and try
 again.</li>
 </ul>
@@ -209,7 +212,8 @@ data type</font>
   <li> <b>Cause: </b>Data type of parameter of the stored procedure,
 specified
 in&nbsp; <a href="otl3_stream_class.htm#create_stored_proc_call">otl_stream::create_stored_proc_call</a>,
-is unsupported.</li>
+is
+unsupported.</li>
   <li> <a name="32015_action"></a><b>Action: </b>PL/SQL tables, as
 stored
 procedure
@@ -228,7 +232,10 @@ type</font>
 <ul>
   <li> <b>Cause: </b>Stored procedure name, being passed into <a
  href="otl3_stream_class.htm#create_stored_proc_call">otl_stream::create_stored_proc_call</a>,
-is of unsupported type..</li>
+is
+of
+unsupported
+type..</li>
   <li> <b>Action: </b>For more detail, see <a href="#32015_action">this</a>.</li>
 </ul>
 <a name="32017"></a><font size="+1"><b>Code=32017:</b> Stream buffer
@@ -283,7 +290,10 @@ otl_stream::operator int()</font>
   <li><b>Cause: </b>One of the otl_stream::operators &gt;&gt;()
 should have been called before calling <a
  href="otl3_stream_class.htm#operator_int">otl_stream::operator int</a>().
-Operator int() works only for streams that have some output (SELECT
+Operator
+int()
+works
+only for streams that have some output (SELECT
 statements, stored procedures returning result sets, etc.). Otherwise,
 the meaning of operator int() is not defined, so the operator returns
 incorrect values, or values that do not make any sense, and do not
@@ -355,10 +365,16 @@ tables, use the OTL stream interface. <br>
 otl_stream cannot be described</font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>: </b>otl_stream_read_iterator
-(in <a href="otl4_stream_read_iterator.htm#attach">attach</a>() or in <a
+(in
+
+
+    <a href="otl4_stream_read_iterator.htm#attach">attach</a>() or in <a
  href="otl4_stream_read_iterator.htm#describe">describe</a>()) calls
 otl_stream::<a href="otl3_stream_class.htm#describe_out_vars">describe_out_vars</a>()
-under the covers. When describe_out_vars() returns a 0 pointer back to
+under
+the
+covers.
+When describe_out_vars() returns a 0 pointer back to
 the caller function, it normally means that the underlying stream
 cannot desribe its output structure. Typically, this happens in the
 case of a stored procedure returning an implcit result set (ODBC,
@@ -380,11 +396,17 @@ position is out of range</font>
   <li><span style="font-weight: bold;"> Cause</span><b>: </b>OTL
 stream read iterator template class provides
 a JDBC-like <span style="font-style: italic;">getter </span>interface,
-which identifies output variables by their relative positions:
+which
+identifies
+output
+variables by their relative positions:
 1,2,3,... This exception gets thrown when the specified "pos" parameter
 (in <a href="otl4_stream_read_iterator.htm#get_functions">get</a>()
 functions or in <a href="otl4_stream_read_iterator.htm#is_null">is_null(</a>)
-function) is out of range.<br>
+function)
+is
+out
+of range.<br>
   </li>
 &nbsp;
   <li><b>Action: </b>Make<b> </b>sure that the specified pos is
@@ -410,7 +432,10 @@ is not compatible with the declared stream format.</li>
 supported in the LOB stream mode</font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>operator
-int() is not supported in the LOB
+int()
+is
+not
+supported in the LOB
 stream mode.</li>
 &nbsp;
   <li><b>Action: </b>An attempt was made to call operator int()
@@ -428,7 +453,10 @@ be used if otl_stream::<a
 been called before the iterator was attached to the stream</font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>otl_stream_read_iterator
-can only be used
+can
+only
+be
+used
 when the underlying otl_stream is in te LOB stream mode..</li>
 &nbsp;
   <li><b>Action: </b>Set the underlying stream to the LOB stream
@@ -439,14 +467,26 @@ mode.</li>
 variable name is not recognized&nbsp;</font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream read iterator template class
+stream
+read
+iterator
+template class
 provides
 a JDBC-like <span style="font-style: italic;">getter </span>interface,
-which identifies output columns / variables by their names This
+which
+identifies
+output
+columns / variables by their names This
 exception gets thrown when the specified "var_name" parameter
 (in <a href="otl4_stream_read_iterator.htm#get_by_name_functions">get</a>()
-functions or in <a href="otl4_stream_read_iterator.htm#is_null_by_name">is_null(</a>)
-function) is not recongnized.<br>
+functions
+or
+in
+    <a href="otl4_stream_read_iterator.htm#is_null_by_name">is_null(</a>)
+function)
+is
+not
+recongnized.<br>
   </li>
 &nbsp;
   <li><b>Action: </b>Make<b> </b>sure that the specified name
@@ -460,7 +500,10 @@ stream can be described by calling <a
 data type</b></font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream finds a column in a SELECT
+stream
+finds
+a
+column in a SELECT
 statement / stored procedure call (ODBC, DB2 CLI) / reference cursor
 (Oracle) of an unsupported data type. For example, OTL does not support
 Oracle Objects.<br>
@@ -488,7 +531,10 @@ needs to be used instead.</li>
 already open</b></font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream was already open when otl_stream::open() was called on the same
+stream
+was
+already
+open when otl_stream::open() was called on the same
 stream.<br>
   </li>
 &nbsp;
@@ -504,7 +550,10 @@ already open by calling otl_stream::good() on the stream:<br>
 already connected</b></font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-connect object was already connected to the database when
+connect
+object
+was
+already connected to the database when
 otl_connect::rlogon() was called on the same object.<br>
   </li>
 &nbsp;
@@ -523,10 +572,19 @@ database, make sure that the object is not already connected:<br>
 buffer size for TimesTen should be in [0..128] range</b></font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream uses the TimesTen TT_PREFETCH_COUNT under #define <a
+stream
+uses
+the
+TimesTen TT_PREFETCH_COUNT under #define <a
  href="otl3_compile.htm#OTL_ODBC_TIMESTEN_WIN">OTL_ODBC_TIMESTEN_WIN</a>,
-and <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_UNIX">OTL_ODBC_TIMESTEN_UNIX</a>,
-which has the range of [0..128].<br>
+and
+
+
+    <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_UNIX">OTL_ODBC_TIMESTEN_UNIX</a>,
+which
+has
+the
+range of [0..128].<br>
   </li>
 &nbsp;
   <li><b>Action: </b>The OTL stream size buffer needs to be changed to
@@ -538,8 +596,11 @@ a value in the range of [<span style="font-weight: bold;">0</span>..128].<br>
 needs to be connected to DB before using otl_subscriber</b></font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-connect object needs to be connected to the database, before <a
- href="otl4_subscriber.htm">otl_subscriber</a> objects can be used with
+connect
+object
+needs
+to be connected to the database, before <a href="otl4_subscriber.htm">otl_subscriber</a>
+objects can be used with
 the otl_connect object..<br>
   </li>
 &nbsp;
@@ -554,9 +615,15 @@ otl_connect object.<br>
 size should be 1 when refcur or plsql table is used</b></font>
 <ul>
   <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream uses a <a href="otl3_bind_variables.htm#refcur">refcur</a> bind
+stream
+uses
+a
+    <a href="otl3_bind_variables.htm#refcur">refcur</a> bind
 variable (in a combination with&nbsp; <a href="otl4_refcur_stream.htm">otl_refcur_stream</a>),
-or <a href="otl3_bind_variables.htm#pl_tab">PL/SQL tables</a>, and the
+or
+
+
+    <a href="otl3_bind_variables.htm#pl_tab">PL/SQL tables</a>, and the
 stream buffer size is larger than 1.<br>
   </li>
 &nbsp;
@@ -572,7 +639,10 @@ failed</b></font>
 was called to check the "end-of-row" condition. The condition was not
 met, and the function threw this exception. The "end-of-row" check
 addresses the "<a href="http://soci.sourceforge.net/doc/rationale.html">row-tearing</a>"
-problem in a SELECT statement, for example:<br>
+problem
+in
+a
+SELECT statement, for example:<br>
     <br>
     <span style="font-family: monospace;">otl_stream sql(10,"select a,
 b from some_table",db); // only TWO columns</span><br
@@ -634,11 +704,48 @@ sql&gt;&gt;a&gt;&gt;b&gt;&gt;<a
     </span>In case if the number of columns in the SELECT statement
 changes, and the actual loop is not changed, the check_end_of_row()
 function (or its alternative operator&gt;&gt;() form) will throw this
-exception.<br style="font-family: monospace;">
+exception.<br>
+    <br>
+Besides the row-tearing problem in SELECT statements, this OTL defined
+exception also addresses a similar "row-tearing" in INSERT / UPDATE
+/DELETE statements, or in calls to stored procedures / anonymous PL/SQL
+blocks, for example:<br>
+    <br>
+    <span style="font-family: monospace;">otl_stream sql(10,"INSERT
+INTO test_tab VALUES(:f1&lt;int&gt;,:f2&lt;int&gt;)",db); // only TWO
+column<br>
+    </span><span style="font-family: monospace;">int f1, f2;<br>
+    </span>...<br>
+    <span style="font-family: monospace;">sql&lt;&lt;f1&lt;&lt;f2&lt;&lt;endr;<br>
+    </span><span style="font-family: monospace;">sql&lt;&lt;f1&lt;&lt;f2;<br>
+sql&lt;&lt;f2&lt;&lt;endr;<br>
+    </span><br style="font-family: monospace;">
+As table layout, and code change over time,&nbsp; "end-of-row" check
+may play more important role in keeping the code base in good shape,
+and reduce code rot.<br style="font-family: monospace;">
 &nbsp; </li>
   <li><b>Action: </b>Modify your code so that the "end-of-row"
 condition is met at the end of reading each row in your SELECT
-statement, and try it again.</li>
+statement, and try it again.<br>
+  </li>
+</ul>
+<font size="+1"><b><a name="32036"></a>Code=32036: otl_connect is not
+connected to the database</b></font>
+<ul>
+  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>#define
+
+    <a
+ href="otl3_compile.htm#OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION">OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION</a>
+was enabled, OTL
+stream did the otl_connect-not-connected-to-database check (<span
+ style="font-family: monospace;">if(!otl_connect::connected)</span>),
+and the
+check returned true.<br>
+  </li>
+&nbsp;
+  <li><b>Action: </b>Make sure that the otl_connect object that is
+passed into the otl_stream open() call was connected to the database.<br>
+  </li>
 </ul>
 <center>
 <hr width="100%">
@@ -648,8 +755,8 @@ Home</a><br>
 <br>
 </p>
 </center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<p>Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
@@ -662,7 +769,14 @@ Home</a><br>
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i>
 </p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

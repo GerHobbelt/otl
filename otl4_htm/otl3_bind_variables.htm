@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
   <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
+ content="text/html; charset=ISO-8859-1">
   <meta name="Author" content="Sergei Kuchin">
   <meta name="GENERATOR"
  content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
@@ -33,7 +33,8 @@ from
 the one in ODBC/DB2-CLI. Oracle placeholders are names, prefixed with
 the
 colon, e.g. <b>:f1</b>, <b>:supervisor_name</b>, <b>:employee_id. </b>A
-placeholder may be referenced more than once in the same SQL statement.
+placeholder
+may be referenced more than once in the same SQL statement.
 </p>
 <p>In ODBC/DB2-CLI, placeholders are positional, presented as question
 marks, for example:
@@ -90,9 +91,12 @@ support for 64-bit
 integers, so OTL has to emulate it via string (&lt;char[XXX]&gt;) bind
 variables internally and does string-to-bigint and bigint-to-string
 conversion. See also (1) <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>,&nbsp;
-(2) <a href="otl3_compile.htm#OTL_BIGINT_TO_STR">OTL_BIGINT_TO_STR,</a>&nbsp;
-(3) <a href="otl3_compile.htm#OTL_STR_TO_BIGINT">OTL_STR_TO_BIGINT</a>.
-With OTL/OCIx all three #defines (1), (2), and (3) need to be defined
+(2)
+      <a href="otl3_compile.htm#OTL_BIGINT_TO_STR">OTL_BIGINT_TO_STR,</a>&nbsp;
+(3)
+      <a href="otl3_compile.htm#OTL_STR_TO_BIGINT">OTL_STR_TO_BIGINT</a>.
+With
+OTL/OCIx all three #defines (1), (2), and (3) need to be defined
 in order to make OTL compilable, because the bigint data type name, the
 bigint-to-string conversion code, and the string-to-bigint conversion
 code get expanded into the source code of the OTL header file in the
@@ -132,7 +136,8 @@ depends
 on the database backend and the ODBC driver; for DB2-CLI &gt;2. In
 Unicode
 OTL (see #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>),
-this type of bind variable declaration means a null terminated Unicode
+this
+type of bind variable declaration means a null terminated Unicode
 character string (two bytes per character). The <i>length </i>field
 of
 this declarator needs to include an extra byte / Unicode character, in
@@ -175,6 +180,7 @@ internal OCI datatype that is used to bind VARCHAR2/CHAR table columns
 / scalar PL/SQL procedure parameters works fine, except for PL/SQL
 tables of CHAR(XXX). PL/SQL engine does not like what OTL tries to bind
 with a PL/SQL table of CHAR(XXX). <span style="font-style: italic;">charz[]
+
       </span>should be used instead of char[] in cases like that.<br>
       </td>
     </tr>
@@ -242,7 +248,8 @@ want to map &lt;long&gt; to a signed 64-bit integer, use #define <a
 &lt;long&gt; is not recommended for use in portable 32/64-bit code that
 is supposed to work in Windows as well as Linux/Unix, across multiple
 database types (Oracle, MS SQL Server, DB2, etc). &lt;<a href="#bigint">bigint</a>&gt;
-is a more portable option.<br>
+is
+a more portable option.<br>
       <br>
 If you develop code for a single platform for a single database type,
 &lt;long&gt; is okay to use.<br>
@@ -263,7 +270,8 @@ and <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a></td>
       <td style="vertical-align: top;">Same as <a
  href="otl3_bind_variables.htm#char">char</a>[] + otl_connect::<a
  href="otl3_connect_class.htm#set_character_set">set_character_set(</a>SQLCS_NCHAR)
-for Oracle 8i/9i/10g only, under #define <a
+for
+Oracle 8i/9i/10g only, under #define <a
  href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>., or #define <a
  href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>. nchar[] is
 required only when both VARCHAR2/CHAR and NVARCHAR2/NCHAR need to be
@@ -276,9 +284,11 @@ declared&nbsp; in the same SQL statement, or PL/SQL block.</td>
       <td style="vertical-align: top;">Same as <a href="#clob">clob</a>
 + otl_connect::<a
  href="file:///D%7C/oscl/vc/doc/otl4/otl3_connect_class.htm#set_character_set">set_character_set(</a>SQLCS_NCHAR)
-for Oracle 8i/9i/10g only, under #define <a
+for
+Oracle 8i/9i/10g only, under #define <a
  href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>,
-or #define <a href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>.
+or
+#define <a href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>.
 nclob is required only when both CLOB and NCLOB need to be
 declared&nbsp; in the same SQL statement, or PL/SQL block. <br>
       </td>
@@ -291,11 +301,14 @@ CHAR (XXX) BYTE in SAP/MAX DB),
 SQL_VARBINARY (VARBINARY in MS SQL, Sybase 15, MySQL; BYTEA in
 PostgreSQL, VARCHAR(XXX) BYTE in SAP/MAX DB). Columns of this type can
 be written to / read from with <a href="otl3_long_string.htm">otl_long_string</a>()'s.
-The maximum allowed size is specific to each supported database type.
+The
+maximum allowed size is specific to each supported database type.
 Also, see #define <a
  href="otl3_compile.htm#OTL_MAP_SQL_VARBINARY_TO_RAW_LONG">OTL_MAP_SQL_VARBINARY_TO_RAW_LONG</a>,
-#define <a href="otl3_compile.htm#OTL_MAP_SQL_GUID_TO_CHAR">OTL_MAP_SQL_GUID_TO_CHAR</a>,
-#define <a href="otl3_compile.htm#OTL_MAP_SQL_BINARY_TO_CHAR">OTL_MAP_SQL_BINARY_TO_CHAR</a><a
+#define
+      <a href="otl3_compile.htm#OTL_MAP_SQL_GUID_TO_CHAR">OTL_MAP_SQL_GUID_TO_CHAR</a>,
+#define
+      <a href="otl3_compile.htm#OTL_MAP_SQL_BINARY_TO_CHAR">OTL_MAP_SQL_BINARY_TO_CHAR</a><a
  href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_MAP_SQL_BINARY_TO_CHAR"><br>
       </a> </td>
     </tr>
@@ -393,7 +406,8 @@ are introduced to distinguish between input and output variables:
 <pre>&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; call :rc&lt;int,out&gt; := my_func(:salary&lt;float,in&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :ID&lt;int,inout&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :name&lt;char[32],out&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )<br>&nbsp;&nbsp; }</pre>
 <pre>Old (OTL 2.0/ODBC) style:</pre>
 <pre>&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; call :1&lt;int,out&gt; := my_func(:2&lt;float,in&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :3&lt;int,inout&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :4&lt;char[32],out&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )<br>&nbsp;&nbsp; }</pre>
-In the bind variable declaration, spaces in the datatype section and in
+<a name="no_spaces"></a>In the bind variable declaration, spaces in the
+datatype section and in
 the access qualifier section ARE NOT allowed. The following code is
 invalid:
 <p><b>Example 1</b>
@@ -423,14 +437,17 @@ internal data types into C++ external data types by default. The
 default
 mapping can be overridden by <a
  href="otl3_stream_class.htm#set_column_type">otl_stream::set_column_type</a>()
-and <a href="otl3_stream_class.htm#set_all_column_types">otl_stream::set_all_column_types</a>()
-function calls. However, it is not as convenient as defining explicit
+and
+<a href="otl3_stream_class.htm#set_all_column_types">otl_stream::set_all_column_types</a>()
+function
+calls. However, it is not as convenient as defining explicit
 bind variables right in the text of the SQL statement.In OTL 4.0.73, a
 special kind of bind variables is introduced: explicit bind variables
 for defining data types of output columns in SELECT statements. The
 format for defining explicit bind variables in SELECT statement's
 columns is as follows: <span style="font-weight: bold;">:#N&lt;datatype&gt;</span>,
-where N is 1,2,3 (column's relative position in the SELECT
+where
+N is 1,2,3 (column's relative position in the SELECT
 statement)... SELECT
 output columns do not have a direct equivalent of <span
  style="font-style: italic;"><span style="font-weight: bold;">:VAR</span>
@@ -523,7 +540,8 @@ ODBC/DB2-CLI:<br>
 "<span style="font-family: monospace;">{ "<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " my_proc1(:f1&lt;int,in&gt;) "<br>
 </span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"&nbsp;&nbsp; :#1&lt;int,out&gt; "<br>
+"&nbsp;&nbsp;
+:#1&lt;int,out&gt; "<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;
 :#2&lt;char[31],out&gt; "<br>
 </span><span style="font-family: monospace;">&nbsp;&nbsp;
@@ -577,8 +595,35 @@ turn the old limit of 32767 back on, use #define <a
 </p>
 <p>For more detail, see examples <a href="otl3_ex49.htm">49</a>, <a
  href="otl3_ex52.htm">50,
-51, 52.</a>
+51, 52.</a><br>
 </p>
+<h3><big><a name="sql_neut_bvar"></a>Declaration of SQL tool neutral
+bind variables for Oracle</big></h3>
+<p>OTL 4.0.209 and higher supports an alternative bind variable
+notation that is neutral to SQL tools for Oracle. Neutral in this
+context means that the same SQL statements / PLSQL blocks can be
+executed both in the SQL tools and OTL. All OTL extended bind variable
+declarations are made SQL comments, for example:<br>
+</p>
+<pre>	INSERT INTO test_tab VALUES(:f1/*int*/,:f2/*char[31]*/);<br></pre>
+<p>In general, the regular <span style="font-family: monospace;">:var&lt;...&gt;</span>
+syntax can be converted to <span style="font-family: monospace;">:var/*...*/</span>.
+The same rule of "<a href="#no_spaces">no space characters</a> in
+between" still applies. The rule was made in order to keep the OTL SQL
+statement parser as light as possible (short of writing a full-blown
+SQL parser). OTL also has SELECT column <a href="#SELECT_OVERRIDE">override</a>
+syntax. The SELECT column override variables get replaced with spaces
+when the SQL statement, because they are not real placeholders. So, the
+SQL tool neutral syntax for the SELECT column override variables puts
+the variables into SQL comments, for example:<br>
+</p>
+<pre>	regular syntax ==&gt; SELECT f1, :#1&lt;int&gt; f2 :#2&lt;char[31]&gt; FROM test_tab WHERE f1=:f1&lt;int&gt;<br><br>	SQL neutral syntax ==&gt; SELECT f1 /*:#1&lt;int&gt;*/ f2 /*:#2&lt;char[31]&gt;*/ FROM test_tab WHERE f1=:f1/*int*/<br></pre>
+<p>The SELECT statement that uses the SQL neutral syntax for its bind
+variables can be copied and pasted into an SQL tool, and executed
+without any changes. "EXPLAIN PLAN" can be run on the SELECT statement.<br>
+</p>
+<pre></pre>
+<pre></pre>
 <center>
 <p></p>
 <hr width="100%">
@@ -586,8 +631,8 @@ turn the old limit of 32767 back on, use #define <a
  href="otl3.htm">Contents</a><a href="home.htm">Go
 Home</a></p>
 </center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<p>Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>
 <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)

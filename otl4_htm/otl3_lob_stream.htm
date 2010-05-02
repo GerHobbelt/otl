@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
   <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
+ content="text/html; charset=ISO-8859-1">
   <meta name="Author" content="Sergei Kuchin">
   <meta name="GENERATOR"
  content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
@@ -46,7 +46,8 @@ defined exception</a>.
   <tbody>
     <tr>
       <td style="vertical-align: top;"><span style="font-style: italic;">Function
-/ data member</span><br>
+/
+data member</span><br>
       </td>
       <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
       </td>
@@ -76,7 +77,8 @@ a call&nbsp; to otl_long_string::<a
 operator&lt;&lt;<br>
 (const std::string&amp; s);</td>
       <td style="vertical-align: top;"><a name="WRITE_STRING"></a>Writes
-the whole CLOB&nbsp; / TEXT /
+the
+whole CLOB&nbsp; / TEXT /
 VARCHAR(MAX), etc. into the stream.<br>
 Declared, when <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> is
 defined and <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> is
@@ -87,6 +89,7 @@ not defined<br>
       <td style="vertical-align: top;"><span
  style="font-family: monospace;">otl_lob_stream&amp; operator&lt;&lt;<br>
 (const ACE_TString&amp; s);</span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
       </span></td>
       <td style="vertical-align: top;">Writes the whole CLOB&nbsp; /
 TEXT /
@@ -111,6 +114,7 @@ not defined.</td>
       <td style="vertical-align: top;"><span
  style="font-family: monospace;">otl_lob_stream&amp; operator&gt;&gt;<br>
 (ACE_TString&amp; s);</span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
       </span></td>
       <td style="vertical-align: top;">Reads the whole CLOB / TEXT /
 etc. from
@@ -197,16 +201,21 @@ stream for "end-of-file" condition</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>void close();</pre>
+      <pre>void close<br>(bool dont_throw_size_doesnt_match_exception=false);</pre>
       </td>
       <td style="vertical-align: top;"> <a name="close"></a>Closes the
-stream.</td>
+stream. When the function's only parameter is set to true, the function
+doesn't throw <a href="otl3_exc_list.htm#CLOB_32008">"size doesn't
+match"</a> otl_exception under OTL/OCIx, where x&gt;=8 (OCI 8 and
+higher).<br>
+      </td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><span
  style="font-family: monospace;">bool is_initialized();</span></td>
       <td style="vertical-align: top;"> <a name="is_initialized"></a>Checks
-if the LOB in the stream is
+if
+the LOB in the stream is
 initialized or not. Say, an Oracle PL/SQL block binds an output <span
  style="font-family: monospace;">:f2&lt;clob&gt;</span>, and, when the
 block gets executed, the actual CLOB doesn't get initialized. The
@@ -240,7 +249,8 @@ the column lists in INSERT or SELECT statements.
 OTL/DB2-CLI,
 a call to otl_stream::<a
  href="otl3_stream_class.htm#set_lob_stream_mode">set_lob_stream_mode</a>()
-is required.
+is
+required.
 </p>
 <p>Also, see example <a href="otl3_ex56.htm">56</a>, <a
  href="otl3_ex57.htm">57</a>,
@@ -260,8 +270,8 @@ is required.
  href="otl3.htm">Contents</a><a href="home.htm">Go
 Home</a></p>
 </center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<p>Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from oldgmailsers
  var modDate = new Date(document.lastModified)
@@ -274,7 +284,14 @@ Home</a></p>
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i>
 </p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

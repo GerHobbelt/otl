@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
   <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
+ content="text/html; charset=ISO-8859-1">
   <meta name="Author" content="Sergei Kuchin">
   <meta name="GENERATOR"
  content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
@@ -104,7 +104,11 @@ MULTI_MODE</span><br>
 there is a need to connect via ODBC to more than one database type from
 the same time. For more detail see otl_connect::<a
  href="otl3_connect_class.htm#set_connection_mode">set_connection_mode</a>(),
-and OTL example <a href="otl4_ex675.htm">675</a>.<br>
+and
+OTL
+example
+
+      <a href="otl4_ex675.htm">675</a>.<br>
       </td>
     </tr>
     <tr>
@@ -381,7 +385,11 @@ together, the following two defines also need to be enabled: <a
 In 64-bit OCIs (OTL/ORAXXX) on LP64 platformts, #define <a
  href="otl3_compile.htm#OTL_ORA_MAP_BIGINT_TO_LONG">OTL_ORA_MAP_BIGINT_TO_LONG</a>
 can be used to map &lt;<a href="otl3_bind_variables.htm#bigint">bigint</a>&gt;
-to 64-bit longs on LP64 platforms,
+to
+64-bit
+longs
+on
+LP64 platforms,
 which is more efficient than the char[XXX] OCI binding for
 &lt;bigint&gt;. <br>
       <br>
@@ -446,7 +454,11 @@ _VARCHAR</b>.&nbsp;</font></td>
       <td style="vertical-align: top;">This #define works
 in a
 combination with #define <a href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a>.
-It should be used in the case of the DB2 CLI on the client side and the
+It
+should
+be
+used
+in the case of the DB2 CLI on the client side and the
 DB2 OS/390 on the server side, because all VARCHAR table columns that
 are
 &gt;= 255 bytes get reported by the DB2 CLI as SQL_LONG_VARCHARs
@@ -628,9 +640,10 @@ const&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 \</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-return reinterpret_cast&lt;const
-char*&gt;(msg);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \</span><br
- style="font-family: monospace;">
+return
+reinterpret_cast&lt;const
+char*&gt;(msg);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+\</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; } <br>
       </span><br style="font-family: monospace;">
 It means that <a href="otl3_exception_class.htm">otl_exception</a> is
@@ -688,6 +701,10 @@ otl_exception
 class. This simple technique allows the otl_exception class to have new
 members. This #define can be used in a combination with #define <a
  href="otl3_compile.htm#OTL_EXCEPTION_DERIVED_FROM">OTL_EXCEPTION_DERIVED_FROM</a>.
+
+
+
+
       </td>
     </tr>
     <tr>
@@ -712,7 +729,8 @@ contain only 2047 first bytes of the SQL statement, associated with the
 exception. If more bytes of the SQL statement text is needed, the
 #define can come handy.This #define can be used in a combination with
 #define <a href="#OTL_EXCEPTION_ENABLE_ERROR_OFFSET">OTL_EXCEPTION_ENABLE_ERROR_OFFSET</a>,
-for example:<br>
+for
+example:<br>
       <br>
       <span style="font-family: monospace;">#define
 OTL_EXCEPTION_ENABLE_ERROR_OFFSET<br>
@@ -920,7 +938,11 @@ TO_STRING</span><br>
       <td style="vertical-align: top;">This #define defines conversion
 the timestamp format (<a
  href="file:///D%7C/oscl/vc/doc/otl4/otl3_stream_class.htm#otl_datetime">otl_datetime</a>)
-to the string/varchar format, for example, PostgreSQL's timestamp with
+to
+the
+string/varchar
+format,
+for example, PostgreSQL's timestamp with
 time zone, or MS SQL Server 2008's datetimeoffset(7):<br>
       <br>
 for PostgreSQL:<br>
@@ -958,7 +980,11 @@ and #define <a href="#OTL_ODBC_TIMESTAMP_TO_STRING">OTL_ODBC_TIMESTAMP_TO_STRING
       <td style="vertical-align: top;">FreeTDS/ODBC doesn't seem to
 implement the database session's "auto-commit off" mode, so
 otl_connect's <a href="otl3_connect_class.htm#rlogon">auto_commit</a>&nbsp;
-has no effect. In order to work around this deficiency, this #define
+has
+no
+effect.
+In
+order to work around this deficiency, this #define
 should be used. When the #define is enabled, OTL executes "begin
 transaction" statement before each transaction. otl_connect::commit()
 or otl_connect::rollback() can be used to commit or roll back the
@@ -969,14 +995,22 @@ database sessions. For the time being, this #define is recommended for
 use with FreeTDS/ODBC against MS SQL. otl_connect::<a
  href="otl3_connect_class.htm#auto_commit_on">auto_commit_on</a>() /
 otl_connect::<a href="otl3_connect_class.htm#auto_commit_off">auto_commit_off</a>()
-functions don't work for MS SQL with FreeTDS/ODBC. Until a fix becomes
+functions
+don't
+work
+for
+MS SQL with FreeTDS/ODBC. Until a fix becomes
 available, it's not recommended to use them.<br>
       <br>
 Sybase is slightly d<span style="font-weight: bold;">i</span>fferent:
 otl_connect::<a href="otl3_connect_class.htm#auto_commit_on">auto_commit_on</a>()
 /
 otl_connect::<a href="otl3_connect_class.htm#auto_commit_off">auto_commit_off</a>()
-functions seem to work even though the otl_connect::rlogon()'s
+functions
+seem
+to
+work
+even though the otl_connect::rlogon()'s
 auto_commit doesn't work. After rlogon() has been called, it's
 recommended to call auto_commit_off(). See <a
  href="otl4_sybsql_freetds_examples.htm">Sybase
@@ -993,13 +1027,38 @@ FreeTDS/ODBC. <br>
 Also, FreeTDS/ODBC doesn't support "transaction isolation" level, that
 is, otl_connect::<a
  href="otl3_connect_class.htm#set_transaction_isolation_level">set_transaction_isolation_level</a>()
-has no effect. Until the feature is implemented in FreeTDS/ODBC, it's
+has
+no
+effect.
+Until
+the feature is implemented in FreeTDS/ODBC, it's
 recommended that explicit server side settings should be used instead.
 For example, MS SQL supports an explicit (NOLOCK) option on the FROM
 clause in a SELECT statement. Sybase has the "set transaction isolation
 level X" command to set an explicit, session-wide transaction isolation
 level.<span style="font-family: monospace;"><br>
       </span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a style="font-weight: bold;"
+ name="OTL_MAP_SQL_DECIMAL_TO_OTL_BIGINT"></a><span
+ style="font-weight: bold;">OTL_MAP_<br>
+SQL_DECIMAL_<br>
+TO_OTL_BIGINT</span><br>
+      </td>
+      <td style="vertical-align: top;">By default, OTL/ODBC;DB2-CLI
+maps internal SQL_DECIMAL to external SQL_C_DOUBLE on SELECT statements
+/ stored procedures with implicit result sets. This #define maps
+SQL_DECIMAL to SQL_C_SBIGINT when #define <a href="#OTL_BIGINT">OTL_BIGINT</a>
+is enabled, for example<span style="font-weight: bold;">:<br>
+      <br>
+      </span><span style="font-family: monospace;">#define OTL_BIGINT
+__int64</span><br style="font-family: monospace;">
+      <span style="font-family: monospace;">#define
+OTL_MAP_SQL_DECIMAL_TO_OTL_BIGINT</span><br
+ style="font-family: monospace;">
+      <br>
       </td>
     </tr>
     <tr>
@@ -1011,9 +1070,33 @@ TO_CHAR</span><br>
       <td style="vertical-align: top;">Before OTL 4.0.140, MS SQL GUIDs
 (uniqueidentifier) were mapped to char[XXX]. OTL 4.0.140 and
 higher&nbsp; maps the GUIDs to <a href="otl3_bind_variables.htm#raw">raw</a>[16],
-This #define should be used to map GUIDs to char[XXX] by default. Of
+This
+#define
+should
+be
+used to map GUIDs to char[XXX] by default. Of
 course, the new default mapping can be overridden manually Also, see
 example <a href="otl3_ex105.htm">105</a>.<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a
+ name="OTL_MAP_SQL_NUMERIC_TO_OTL_BIGINT"></a><span
+ style="font-weight: bold;">OTL_MAP_<br>
+SQL_NUMERIC_<br>
+TO_OTL_BIGINT</span><br>
+      </td>
+      <td style="vertical-align: top;">By default, OTL/ODBC;DB2-CLI
+maps internal SQL_NUMERIC to external SQL_C_DOUBLE on SELECT statement
+/ stored procedures with implicit result sets. This #define maps
+SQL_NUMERIC to SQL_C_SBIGINT when #define <a href="#OTL_BIGINT">OTL_BIGINT</a>
+is enabled, for example<span style="font-weight: bold;">:<br>
+      <br>
+      </span><span style="font-family: monospace;">#define OTL_BIGINT
+__int64</span><br style="font-family: monospace;">
+      <span style="font-family: monospace;">#define
+OTL_MAP_SQL_NUMERIC_TO_OTL_BIGINT</span><br>
+      <br style="font-family: monospace;">
       </td>
     </tr>
     <tr>
@@ -1099,7 +1182,11 @@ NUMERIC_TYPES</span><br>
       <td style="vertical-align: top;">This #define should be used in a
 combination with #define <a href="#OTL_ORA10G">OTL_ORA10G,</a> or <a
  href="#OTL_ORA10G_R2">OTL_ORA10G_R2,</a> or <a href="#OTL_ORA11G">OTL_ORA11G</a>.
-It disables the use of OCI10 native SQLT_BDOUBLE / SQLT_BFLOAT
+It
+disables
+the
+use
+of OCI10 native SQLT_BDOUBLE / SQLT_BFLOAT
 bindings, and reverts to <code>SQLT_FLT</code> bindings, which are
 compatible with older versions of the OCI. This define can be enabled
 when the Oracle Client 10g, or 11g is used against older versions of
@@ -1125,6 +1212,10 @@ efficient alternative to the char[XXX] binding and bigint-string /
 string-bigint conversion (see also the following #define's: <a
  href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>,&nbsp; <a
  href="otl3_compile.htm#OTL_BIGINT_TO_STR">OTL_BIGINT_TO_STR,</a>&nbsp;&nbsp;
+
+
+
+
       <a href="otl3_compile.htm#OTL_STR_TO_BIGINT">OTL_STR_TO_BIGINT</a>).<br>
       </td>
     </tr>
@@ -1188,7 +1279,11 @@ the following #define's need to enabled as well:<br>
       <td style="vertical-align: top;">This #define enables OCI9i/10g
 support for Oracle UTF8 character encodings (UTF8, AL32UTF8). This
 #define is mutually exclusive with #define <a href="#OTL_UNICODE">OTL_UNICODE</a>,
-which supports UTF-16. UTF-8 seems to be more popular <big>with Oracle
+which
+supports
+UTF-16.
+UTF-8
+seems to be more popular <big>with Oracle
 C++ <small>developers at least in Linux/Unix. The basic difference
 between UTF-8 and UTF-16 is that UTF-8 is byte oriented. It's okay to
 use a '\0' terminated array of unsigned chars with UTF-8 as opposed to
@@ -1224,8 +1319,8 @@ OTL_ORA7 // Compile OTL 4.0/OCI7</span><br
 sprintf(s,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 \</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"%02d/%02d/%04d %02d:%02d:%02d.%06ld",\</span><br
- style="font-family: monospace;">
+"%02d/%02d/%04d
+%02d:%02d:%02d.%06ld",\</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 tm.month,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 \</span><br style="font-family: monospace;">
@@ -1262,8 +1357,9 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 sscanf(s,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 \</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"%02d/%02d/%04d %02d:%02d:%02d.%06ld", \</span><br
- style="font-family: monospace;">
+"%02d/%02d/%04d
+%02d:%02d:%02d.%06ld",
+\</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &amp;tm.month,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 \</span><br style="font-family: monospace;">
@@ -1292,8 +1388,16 @@ sscanf(s,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
  style="font-family: monospace;">
       <br>
 #define </span><big><big><span style="font-weight: normal;"><small><small>OTL_ORA7_STRING_TO_TIMESTAMP
-and #define </small></small></span><span style="font-weight: normal;"><small><small>OTL_ORA7_TIMESTAMP_TO_STRING
-should be used together as shown in the example above. These #defines
+and
+#define
+
+
+      </small></small></span><span style="font-weight: normal;"><small><small>OTL_ORA7_TIMESTAMP_TO_STRING
+should
+be
+used
+together
+as shown in the example above. These #defines
 define string-to-timestamp and timestamp-to-string conversion so that
 operator&lt;&lt;/&gt;&gt;(otl_datetime&amp;) can be used transparently
 with :var&lt;char[XXX]&gt; bind variables. Also, see example <a
@@ -1324,8 +1428,8 @@ can be used:<br>
 swprintf(s,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 \</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-L"%02d/%02d/%04d %02d:%02d:%02d.%06ld",\</span><br
- style="font-family: monospace;">
+L"%02d/%02d/%04d
+%02d:%02d:%02d.%06ld",\</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 tm.month,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 \</span><br style="font-family: monospace;">
@@ -1362,8 +1466,9 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 swscanf(s,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 \</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-L"%02d/%02d/%04d %02d:%02d:%02d.%06ld", \</span><br
- style="font-family: monospace;">
+L"%02d/%02d/%04d
+%02d:%02d:%02d.%06ld",
+\</span><br style="font-family: monospace;">
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &amp;tm.month,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 \</span><br style="font-family: monospace;">
@@ -1442,6 +1547,10 @@ MAX_UNICODE_<br>
 VARCHAR_<br>
 SIZE</td>
       <td style="vertical-align: top;">When <a href="#OTL_UNICODE">OTL_UNICODE</a>,
+
+
+
+
       <a href="#OTL_ORA8I">OTL_ORA8I</a> / <a href="#OTL_ORA9I">OTL_ORA9I</a>
 are enabled, and the stream is instantiated with a SELECT statement
 that has two (or more) large VARCHAR2(4000), or NVARCHAR2(2000), Oracle
@@ -1499,7 +1608,15 @@ CREATE</span><br>
       </td>
       <td style="vertical-align: top;">This #define can only be used
 when one of the following is defined: <a href="#OTL_ORA8I">OTL_ORA8I</a>,
+
+
+
+
       <a href="#OTL_ORA9I">OTL_ORA9I</a>, <a href="#OTL_ORA10G">OTL_ORA10G</a>,
+
+
+
+
       <a href="#OTL_ORA10G_R2">OTL_ORA10G_R2</a>. The #define enables
 OCI Environment Handle initialization via OCIEnvCreate() instead of the
 older OCIInitialize() + OCIEnvInit() scheme. I don't want to go too
@@ -1518,7 +1635,11 @@ MODE</span><br>
       </td>
       <td style="vertical-align: top;">This define should be used in a
 combination with #define <a href="#OTL_ORA_OCI_ENV_CREATE">OTL_ORA_OCI_ENV_CREATE</a>.
-When OTL_ORA_OCI_ENV_CREATE_MODE is defined, it overrides the mode
+When
+OTL_ORA_OCI_ENV_CREATE_MODE
+is
+defined,
+it overrides the mode
 (OCI_DEFAULT/OCI_THREADED) in which OCI environment handles will be
 created. For example:<br>
       <br>
@@ -1587,6 +1708,25 @@ operator&lt;&lt;(const unsigned long) in the otl_stream class.</td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><span style="font-weight: bold;"><a
+ name="OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION"></a>OTL_STREAM_<br>
+THROWS_NOT_CONNECTED_<br>
+TO_DATABASE_<br>
+EXCEPTION</span><br>
+      </td>
+      <td style="vertical-align: top;">This #define enables a check for
+      <span style="font-family: monospace;">if(!otl_connect::connected)</span>
+flag in the otl_stream::open() function and in the otl_stream
+constructors. The reason is that some database APIs (OCI for some
+version of Oracle on some platforms (the scope is not quite clear))
+return unobvious error codes and error messages. Therefore, there is a
+need for a clear error code / message that OTL would throw the
+following OTL defined <a href="otl3_exc_list.htm#32036">exception</a>,
+instead of relying on the database API to return a clear error code /
+message. <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;"><a
  name="OTL_STRICT_NUMERIC_TYPE_CHECK_ON_SELECT"></a>OTL_STRICT_</span><br
  style="font-weight: bold;">
       <span style="font-weight: bold;">NUMERIC_TYPE_</span><br
@@ -1612,7 +1752,8 @@ itself. <br>
 In some cases, as it was mentioned in the previous paragraph, the
 internal-to-external numeric datatype mapping is not exact. In those
 case, the numeric [SELECT] column's datatype may be explicitly <a
- href="otl3_bind_variables.htm#SELECT_OVERRIDE">overriden</a> to ensure
+ href="otl3_bind_variables.htm#SELECT_OVERRIDE">overridden</a> to
+ensure
 the exact match between the internal and the external datatypes. Also,
 if the external and internal datatypes match exactly, OTL provides a
 small performance boost by avoiding any numeric datatype conversion. <br>
@@ -1778,7 +1919,11 @@ describe_next_out_var(void);<br>
  style="font-family: monospace;">};<br>
       <br>
       </span></small><small><span style="font-family: monospace;"></span></small>This
-interface is useful when there is a lot of common code for
+interface
+is
+useful
+when
+there is a lot of common code for
 fetching rows either via otrl_stream or via otl_refcur_stream.<br>
       <br>
       </td>
@@ -1857,7 +2002,21 @@ no references on dejanews either, no code samples). TIMESTAMPs, as
 parametrs
 in stored procedures, can be used with otl_datetime's. PL/SQL
 (index-by)
-table can be boud with "tables of DATEs", as usual. </td>
+table can be boud with "tables of DATEs", as usual. <br>
+      <br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-weight: bold;"><a
+ name="OTL_ROLLS_BACK_BEFORE_LOGOFF"></a>OTL_ROLLS_BACK_<br>
+BEFORE_LOGOFF</span><br>
+      </td>
+      <td style="vertical-align: top;">When this #define is enabled,
+OTL calls otl_connect::rollback() to roll back any uncommitted changes
+before calling otl_connect::logoff(). This kind of behavior is needed
+for compatibility with some third party libraries, frameworks, or
+transaction monitors.<br>
+      </td>
     </tr>
     <tr>
       <td style="vertical-align: top;"><font size="-1"><span
@@ -1906,7 +2065,11 @@ DB2-CLI), or stored procedures that return referenced cursors (Oracle).<br>
       <td style="vertical-align: top;">OTL/ODBC, OTL/DB2-CLI only. This
 #define enables the following function: otl_connect::<a
  href="otl3_connect_class.htm#set_throw_on_sql_success_with_info">set_throw_on_sql_success_with_info</a>().&nbsp;
-When the function sets the "throw flag", OTL&nbsp; throws an
+When
+the
+function
+sets
+the "throw flag", OTL&nbsp; throws an
 otl_exceptioin
 if SQLExecute() / SQLExecDirect() returns SQL_SUCCESS_WITH_INFO. By
 raising an exception on SQL_SUCCESS_WITH_INFO, OTL makes it possible
@@ -1935,7 +2098,11 @@ LINE_SUFFIX<br>
 STREAM_LABELS<br>
       </span></font></td>
       <td style="vertical-align: top;"><span style="font-weight: bold;"></span>These
-#defines enable OTL <span style="font-style: italic;">function call
+#defines
+enable
+OTL
+
+      <span style="font-style: italic;">function call
 tracing</span>. OTL tracing
 uses the C++ stream interface (ostream, fstream) to log OTL function
 calls with arguments, "<span style="font-style: italic;">this"</span>
@@ -1994,7 +2161,11 @@ running a Perl script on an OTL log file to mine for patterns.<br>
         </li>
         <li>#define OTL_TRACE_LINE_SUFFIX can be used to override the
 default OTL trace line suffix: "<span style="font-family: monospace;">\n</span>".
-If it is more convenient to have something different from the default,
+If
+it
+is
+more
+convenient to have something different from the default,
 say, for running a Perl script on an OTL log file to mine for patterns.<br>
           <br>
         </li>
@@ -2002,7 +2173,9 @@ say, for running a Perl script on an OTL log file to mine for patterns.<br>
 enable logging of otl_stream labels instead of SQL statement bodies.
 See The Oracle, DB2-CLI, and ODBC specific <a
  href="otl3_stream_class.htm#otl_stream_otl_stream">otl_stream </a>descriptions
-for more detail.<br>
+for
+more
+detail.<br>
         </li>
       </ul>
 #define
@@ -2022,7 +2195,11 @@ Also,&nbsp; see OTL examples for more detail. </td>
     <tr>
       <td style="vertical-align: top;"><font size="-1"><a name="OTL_STL"></a><b>OTL_STL</b>&nbsp;</font></td>
       <td style="vertical-align: top;">(for turning on <i>std::strings</i>,
-and STL-compliant OTL stream iterators: otl_input_iterator,
+and
+STL-compliant
+OTL
+stream
+iterators: otl_input_iterator,
 otl_output_iterator) </td>
     </tr>
     <tr>
@@ -2053,7 +2230,15 @@ pooling</a>). This #define requires #define OTL_STL to be defined first
 because STL containers were used in the implementation of the
 otl_stream
 pooling. For more detail, see examples <a href="otl3_ex113.htm">113</a>,
+
+
+
+
       <a href="otl3_ex114.htm">114</a>, <a href="otl3_ex115.htm">115</a>.
+
+
+
+
       </td>
     </tr>
     <tr>
@@ -2128,7 +2313,11 @@ OTL_UNICODE_STRING_TYPE_CAST_FROM_CHAR(s, c_ptr, len) {</span><span
  name="OTL_USER_DEFINED_STRING_CLASS_ON"></a><b>OTL_USER_DEFINED<br>
 _STRING_CLASS_ON</b></font></td>
       <td style="vertical-align: top;"><small><small><b> </b><big><big>(for
-defining a string class, other than STL's <i>std::string, </i>for
+defining
+a
+string
+class,
+other than STL's <i>std::string, </i>for
 reading
 from/writing to the otl_stream). This #define goes in pair with #define
       <b>USER_DEFINED_STRING_CLASS</b>,
@@ -2241,7 +2430,11 @@ Unicode <a href="otl3_exception_class.htm">otl_exception</a>'s <a
  href="otl3_exception_class.htm#unicode_sqlstate"><span
  style="font-style: italic;">sqlstate</span></a> data members, and an
 otl_connect::<a href="otl3_connect_class.htm#logon_odbc_unicode">rlogon</a>()
-function that accepts Unicode user id, password, and DSN. This #define
+function
+that
+accepts
+Unicode
+user id, password, and DSN. This #define
 should be enabled only when #define UNICODE / _UNICODE is enabled for
 ODBC / DB2 CLI, In other words, when Unicode ODBC driver functions are
 enabled. Also, it's recommened that this #define be used in a
@@ -2362,8 +2555,12 @@ NAMESPACE</span><br>
       </td>
       <td style="vertical-align: top;">When OTL is used with <a
  href="http://stlport.org">STL Port</a> (#define <a href="#OTL_STLPORT">OTL_STLPORT</a>),
-STL Port library may be configured not to expose some <span
- style="font-style: italic;">std::</span> functions like
+STL
+Port
+library
+may
+be configured not to expose some <span style="font-style: italic;">std::</span>
+functions like
 uncaught_exception() in its namespace _STL. In order to work around the
 problem, #define OTL OTL_UNCAUGHT_EXCEPTION_OWN_NAMESPACE is introduced:<br>
       <br>
@@ -2405,10 +2602,15 @@ for installations of Oracle, DB2, TimesTen, and Informix):<br>
       <td style="vertical-align: top;"><span style="font-weight: bold;">API</span><br>
       </td>
       <td style="vertical-align: top;"><span style="font-weight: bold;">API
-header files for&nbsp; Win</span>dows<br>
+header
+files
+for&nbsp;
+Win</span>dows<br>
       </td>
       <td style="vertical-align: top;"><span style="font-weight: bold;">API
-libraries for Windows<br>
+libraries
+for
+Windows<br>
       </span></td>
     </tr>
     <tr>
@@ -2645,8 +2847,8 @@ API manuals.<br>
  href="otl3.htm">Contents</a><a href="home.htm">Go
 Home</a></p>
 </center>
-Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a
+Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
  href="mailto:skuchin@gmail.com">skuchin@gmail.com&nbsp;&nbsp; </a>
 <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)

@@ -1,6 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
+
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
   <title>OTL 4.0, Example 669 (XML as varchar_/otl_long_unicode_string
 on SELECT, and varchar_long/otl_long_unicode_string on INSERT)</title>
   <meta name="Author" content="Sergei Kuchin">
@@ -38,15 +40,15 @@ SELECT, XML gets bound to varchar_long by default.<br>
  href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "create table test_tab(f1 int, f2 xml)"<br>    );  // create table<br><br>  insert(); // insert records into table<br>  select(); // select records from table<br><br> }<br><br> catch(<a
  href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from MS SQL<br><br> return 0;<br><br>}<br></pre>
 <h2>Output</h2>
-<pre>f1=8, f2=&lt;TAG&gt;MyXML8&lt;/TAG&gt;<br>f1=9, f2=&lt;TAG&gt;MyXML9&lt;/TAG&gt;<br>f1=10, f2=&lt;TAG&gt;MyXML10&lt;/TAG&gt;<br>f1=11, f2=&lt;TAG&gt;MyXML11&lt;/TAG&gt;<br>f1=12, f2=&lt;TAG&gt;MyXML12&lt;/TAG&gt;<br>f1=13, f2=&lt;TAG&gt;MyXML13&lt;/TAG&gt;<br>f1=14, f2=&lt;TAG&gt;MyXML14&lt;/TAG&gt;<br>f1=15, f2=&lt;TAG&gt;MyXML15&lt;/TAG&gt;<br>f1=16, f2=&lt;TAG&gt;MyXML16&lt;/TAG&gt;<br><hr
+<pre>f1=8, f2=&lt;TAG&gt;1111 2222 3333 4444 &lt;/TAG&gt;<br>f1=9, f2=&lt;TAG&gt;1111 2222 3333 4444 &lt;/TAG&gt;<br>f1=10, f2=&lt;TAG&gt;1111 2222 3333 4444 &lt;/TAG&gt;<br>f1=11, f2=&lt;TAG&gt;1111 2222 3333 4444 &lt;/TAG&gt;<br>f1=12, f2=&lt;TAG&gt;1111 2222 3333 4444 &lt;/TAG&gt;<br>f1=13, f2=&lt;TAG&gt;1111 2222 3333 4444 &lt;/TAG&gt;<br>f1=14, f2=&lt;TAG&gt;1111 2222 3333 4444 &lt;/TAG&gt;<br>f1=15, f2=&lt;TAG&gt;1111 2222 3333 4444 &lt;/TAG&gt;<br>f1=16, f2=&lt;TAG&gt;1111 2222 3333 4444 &lt;/TAG&gt;<br><hr
  width="100%"></pre>
 <center>
 <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
 <a href="home.htm">Go Home</a> </p>
 </center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
-<a href="mailto:skuchin@gmail.com">skuchin@yahogmail</a>
+<p>Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>
 <script language="JavaScript">
 <!-- hide from old browsers
  var modDate = new Date(document.lastModified)
@@ -58,7 +60,14 @@ SELECT, XML gets bound to varchar_long by default.<br>
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE. </i></p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
