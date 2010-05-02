@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.204,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.207,
 // Copyright (C) 1996-2009, Sergei Kuchin (skuchin@gmail.com)
 // 
 // This library is free software. Permission to use, copy, modify,
@@ -26,7 +26,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0400CCL)
+#define OTL_VERSION_NUMBER (0x0400CFL)
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning (disable:4351)
@@ -6523,6 +6523,7 @@ public:
     cur_col=-1;
     cur_in=0;
     executed=0;
+    eof_status=0;
     delay_next=0;
     this->cur_row=-1;
     this->row_count=0;
@@ -29260,10 +29261,79 @@ public:
 #else
    sprintf(temp_buf,"procedure %s",full_name);
 #endif
-   throw otl_exception
-    (otl_error_msg_13,
-     otl_error_code_13,
-     temp_buf);
+   {
+     // last ditch attemp to identify a global SP with no parms
+     bool global_sp_no_parms=false;
+     if(schema_name==0){
+       // schema name is not specified
+       otl_stream s2
+         (1,
+          "select 1 cnt "
+          "from user_procedures "
+          "where object_name=UPPER(:obj_name<char[50]>) "
+          "  and procedure_name is null "
+          "  and object_type='PROCEDURE' "
+          "union all "
+          "select 1 cnt "
+          "from user_synonyms syn "
+          "where syn.synonym_name=UPPER(:obj_name) "
+          "  and exists "
+          "   (select 'x' "
+          "    from all_procedures proc "
+          "	where proc.owner=syn.table_owner "
+          "	   and proc.object_name=syn.table_name) "
+          "union all "
+          "select 1 cnt "
+          "from all_synonyms syn "
+          "where syn.synonym_name=UPPER(:obj_name) "
+          "  and syn.owner='PUBLIC' "
+          "  and exists "
+          "   (select 'x' "
+          "    from all_procedures proc "
+          "	where proc.owner=syn.table_owner "
+          "	   and proc.object_name=syn.table_name)",
+          db);
+       s2<<proc_name;
+       global_sp_no_parms=!s2.eof();
+     }else{
+       // schema name is specified
+       otl_stream s2
+         (1,
+          "select object_name  "
+          "from all_procedures "
+          "where object_name=UPPER(:obj_name<char[50]>) "
+          "  and procedure_name is null "
+          "  and object_type='PROCEDURE' "
+          "  AND owner=UPPER(:owner<char[50]>) "
+          "union all "
+          "select synonym_name "
+          "from all_synonyms syn "
+          "where syn.synonym_name=UPPER(:obj_name) "
+          "  AND syn.owner=UPPER(:owner) "
+          "  and exists "
+          "   (select 'x' "
+          "    from all_procedures proc "
+          "	where proc.owner=syn.table_owner "
+          "	   and proc.object_name=syn.table_name)",
+          db);
+       s2<<proc_name;
+       s2<<schema_name;
+       global_sp_no_parms=!s2.eof();
+     }
+     if(global_sp_no_parms){
+       // procedure without any parameters
+       otl_strcat(sql_stm,"BEGIN ");
+       otl_strcat(sql_stm,full_name);
+       otl_strcat(sql_stm,"; END;");
+       stm_type=otl_constant_sql_type;
+       return;
+     }else{
+       throw otl_exception
+         (otl_error_msg_13,
+          otl_error_code_13,
+          temp_buf);
+     }
+   }
   }
 
   if(desc_len==1){
@@ -32235,21 +32305,12 @@ private:
           check(OCIAttrGet(row_desc, 
                            OCI_DTYPE_ROW_CHDES, 
                            OTL_RCAST(dvoid*,&row_id),
-                           &rowid_size, 
+                           &rowid_size,
                            OCI_ATTR_CHDES_ROW_ROWID, 
                            errhp));
-          
-          switch(table_op){
-          case OCI_OPCODE_INSERT: 
-            OnRowInsert( table_name, row_id ); 
-            continue;
-          case OCI_OPCODE_UPDATE: 
-            OnRowUpdate( table_name, row_id ); 
-            continue;
-          case OCI_OPCODE_DELETE: 
-            OnRowDelete( table_name, row_id ); 
-            continue;
-          }
+          if(table_op&OCI_OPCODE_INSERT)OnRowInsert(table_name,row_id); 
+          if(table_op&OCI_OPCODE_DELETE)OnRowDelete(table_name,row_id); 
+          if(table_op&OCI_OPCODE_UPDATE)OnRowUpdate(table_name,row_id);
         }
       }
     }catch(OTL_CONST_EXCEPTION otl_exception &e){

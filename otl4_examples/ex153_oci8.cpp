@@ -37,7 +37,7 @@ void stored_proc()
  int stm_type; 
  char refcur_placeholder[128];
 
-  otl_stream::create_stored_proc_call 
+ otl_stream::create_stored_proc_call 
    (db, // connect object
     s, // an external stream variable is needed here
     sql_stm, // output buffer for generating a stored procedure call
@@ -171,6 +171,24 @@ void stored_proc()
   print_proc_type(stm_type);
   cout<<endl;
   cout<<"REF.CUR.NAME7="<<refcur_placeholder<<endl;
+  cout<<endl;
+
+  otl_stream::create_stored_proc_call 
+   (db, // connect object
+    s, // an external stream variable is needed here
+    sql_stm, // output buffer for generating a stored procedure call
+    stm_type, // output paremeter, indicating what type of stored procedure
+    refcur_placeholder, // output parameter, which gets populated
+                        // in the case of a stored procedure that returns
+                        // a reference cursor.
+    "prc_glob",// stored procedure name
+    0  // package name
+   );
+  cout<<"SQL_STM8="<<sql_stm<<endl;
+  cout<<"STM_TYPE8=";
+  print_proc_type(stm_type);
+  cout<<endl;
+  cout<<"REF.CUR.NAME8="<<refcur_placeholder<<endl;
   cout<<endl;
 
 }
@@ -313,7 +331,13 @@ int main()
     " "   
     "END; "
    );
-
+  otl_cursor::direct_exec
+   (db,
+    "CREATE OR REPLACE PROCEDURE prc_glob IS "
+    "BEGIN "
+    "  NULL; "
+    "END;"
+    );
   stored_proc(); // generate a stored procedure call
 
  }

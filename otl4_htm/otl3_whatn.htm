@@ -23,7 +23,17 @@ New</title>
 4.0</h1>
   <h1 align="center">What's New</h1>
   <h1>Current release number of the OTL header file</h1>
-  <p>Current release number of the OTL header file is <font size="5">4.0.204.
+  <p>Current release number of the OTL header file is <font size="5">4.0.207.
+
+
+
+
+
+
+
+
+
+
   <script language="JavaScript">
 <!-- hide from old browsers
 
@@ -44,19 +54,29 @@ New</title>
   </script>
   </font>If you need the up-to-date version of the OTL
 header file, see the <a href="otl3_down.htm">download instructions</a>.&nbsp;
+
+
+
+
+
+
+
+
+
+
   </p>
-  <h1>OTL 4.0.204 is now released.</h1>
+  <h1>OTL 4.0.207 is now released (updated).</h1>
   <h1>For more detail, see the <a href="#summary">summary </a>of new
 features. <i>The <a href="otl4_htm.zip">archived version</a> of the
 OTL Web pages </i>is available.</h1>
-  <h1><a name="summary"></a><i>From OTL 3.0.0 to OTL 4.0.204: summary
+  <h1><a name="summary"></a><i>From OTL 3.0.0 to OTL 4.0.207: summary
 of new features and bug fixes</i></h1>
 </ul>
 <p style="margin-bottom: 0in;" align="center">&nbsp;</p>
 <dl>
   <dd>
-    <table style="page-break-before: always;" border="1" cellpadding="2"
- cellspacing="3" width="923">
+    <table style="page-break-before: always;" width="923" border="1"
+ cellpadding="2" cellspacing="3">
       <col width="816"> <col width="2"> <col width="80"> <tbody>
         <tr>
           <td width="816">
@@ -64,6 +84,90 @@ of new features and bug fixes</i></h1>
           </td>
           <td width="80">
           <p><font size="4"><b>Comment</b></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">20-Dec-2009: New (in OTL
+4.0.207):<br>
+          <br>
+          <ul>
+            <li>A few questions were asked whether OTL supported
+Unicode for MySQL / MyODBC or not. OTL/ODBC 4.0.207 has been
+successfully tested with MySQL / MyODBC 5.1 connector (which is the
+latest version at this point in time). A set on new <a
+ href="otl4_mysql_unicode_examples.htm">OTL code examples</a> has been
+added to demonstrate how OTL/ODBC works with MyODBC 5.1 connector and
+Unicode.<br>
+              <br>
+              <br>
+            </li>
+          </ul>
+13-Dec-2009: New (in OTL
+4.0.207):<br>
+          <br>
+          <ul>
+            <li>A problem was reported that otl_stream::<a
+ href="otl3_stream_class.htm#eof">eof</a>() doesn't return 1 after a
+call to otl_stream::<a href="otl3_stream_class.htm#clean">clean</a>()
+when the stream was instantiated with a SELECT statement. The problem
+is fixed in this release.<br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">12-Dec-2009. New (in OTL
+4.0.206):<br>
+          <br>
+          <ul>
+            <li>A problem was reported that otl_stream::<a
+ href="otl3_stream_class.htm#create_stored_proc_call">create_stored_proc_call</a>()
+function
+doesn't
+recognize&nbsp;
+PL/SQL
+global
+stored
+procedures with
+no parameters (Oracle). The bug is fixed in this release. Also, an
+example of a global stored procedure without any parameters was added
+to code example <a href="otl4_ex153.htm">153</a>.<br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">29-Nov-2009. New (in OTL
+4.0.205 updated):<br>
+          <br>
+          <ul>
+            <li>NEW GNU C++ COMPILER VERSION. G++ 4.4.2 was released
+back in mid-October. OTL 4.0.205 was verified to compile clean and
+tested with G++ 4.4.2.<br>
+            </li>
+          </ul>
+          <br>
+26-Nov-2009: New (in OTL
+4.0.205):<br>
+          <br>
+          <ul>
+            <li>A problem was reported that in OTL/OCI10-11, <a
+ href="otl4_subscriber.htm">otl_subscriber</a> class doesn't report
+simultaneous UPDATE / INSERT / DELETE events that are happening to the
+same row. The problem is fixed in this release.<br>
+              <br>
+Happy Thanksgiving to everybody in US!<br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
           </td>
         </tr>
         <tr>
@@ -94,7 +198,17 @@ has been successfully compiled and tested with DB2 9.7. DB2 9.7
 introduced new data type: timestamp(N), where N in [0..12]. OTL only
 supports precision up to 9 digits (nanoseconds). So, <a
  href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>::frac_pecision
-can be set as high as 9. I'll implement DB2 9.7 timestamp's precision
+can
+be
+set
+as
+high
+as
+9.
+I'll
+implement
+DB2
+9.7 timestamp's precision
 in [10..12] range at some point in the future when somebody requests
 the feature.<br>
               <br>
@@ -112,7 +226,11 @@ and <a href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a>
 are defined together:<br>
               <br>
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-operator "defined" requires an identifier<br>
+operator
+"defined"
+requires
+an
+identifier<br>
               <br>
               </span>The error is fixed in this release.<span
  style="font-family: monospace;"><br>
@@ -297,6 +415,16 @@ otherwise it is empty.<br>
 release introduces the following two new #defines that parameterize the
 data format in OTL trace statements: <a
  href="otl3_compile.htm#OTL_TRACE_FORMAT_DATETIME">OTL_TRACE_FORMAT_DATETIME</a>,
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_TRACE_FORMAT_DATETIME">OTL_TRACE_FORMAT_TZ_DATETIME</a>.<br>
               <br>
             </li>
@@ -304,6 +432,16 @@ data format in OTL trace statements: <a
 functions:<br>
               <ul>
                 <li><a href="otl3_stream_class.htm#skip_to_end_of_row">otl_stream::skip_to_end_of_row</a>,
+
+
+
+
+
+
+
+
+
+
                   <a href="otl4_refcur_stream.htm#skip_to_end_of_row">otl_refcur_stream::skip_to_end_of_row</a>.<small><small><br>
                   </small></small></li>
                 <li><a
@@ -369,7 +507,8 @@ WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</span><br
  style="font-family: monospace;">
               <span style="font-family: monospace;">// a.k.a. as <a
  href="http://www.openbsd.org/cgi-bin/cvsweb/%7Echeckout%7E/src/share/misc/license.template">Open
-BSD license<br>
+BSD
+license<br>
               <br>
               </a></span>See the OTL header file (otlv4.h) for more
 detail .<br>
@@ -568,7 +707,12 @@ missing:<br>
 otl_stream_read_iterator{<br>
               </span>...<br>
               <font style="font-family: monospace;" face="Arial">&nbsp;&nbsp;
-void get(const char* var_name, double&amp; n);<br>
+void
+get(const
+char*
+var_name,
+double&amp;
+n);<br>
               </font><font face="Arial">...</font><b><font face="Arial"><br>
               <br>
               </font></b><font face="Arial">The bug is fixed in this
@@ -604,7 +748,17 @@ mechanism broke some OTL/ODBC based C++ code. This release reinstates
 the old RPC, SQLRowCount() mechanism, and adds the following new
 #define to accommodate the PostgreSQL ODBC driver quirks: <a
  href="otl3_compile.htm#OTL_ODBC_ALTERNATE_RPC">OTL_ODBC_ALTERNATE_RPC</a>.
-Those who need precise RPC counts for PostgreSQL may want to enable
+Those
+who
+need
+precise
+RPC
+counts
+for
+PostgreSQL
+may
+want
+to enable
 the new #define.<br>
               <br>
             </li>
@@ -733,8 +887,18 @@ defined, that it takes 10 times longer than usual to retrieve Oracle
 TIMESTAMP values. The Oracle 10g JDBC driver seems to have the same
 problem. #define <a
  href="otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAMP">OTL_ORA7_STRING_TO_TIMESTAMP</a>/OTL_ORA7_TIMESTAMP_TO_STRING
-can be used as a workaround for the problem. See example <a
- href="otl4_ex473.htm">473</a> for more detail. The same technique can
+can
+be
+used
+as
+a
+workaround
+for
+the
+problem.
+See
+example <a href="otl4_ex473.htm">473</a>
+for more detail. The same technique can
 be used under #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>.</li>
           </ul>
           <br>
@@ -764,13 +928,29 @@ in this release.<br>
           <ul>
             <li>This release introduces the following new #define: <a
  href="otl3_compile.htm#OTL_ORA_MAP_BIGINT_TO_LONG">OTL_ORA_MAP_BIGINT_TO_LONG</a>.
-It enables mapping from &lt;<a href="otl3_bind_variables.htm#bigint">bigint</a>&gt;
-to singed 64-bit longs for 64-bit OCIs on LP64 platforms.<br>
+It
+enables
+mapping
+from
+&lt;<a href="otl3_bind_variables.htm#bigint">bigint</a>&gt;
+to
+singed
+64-bit longs for 64-bit OCIs on LP64 platforms.<br>
               <br>
             </li>
             <li><a href="otl3_compile.htm#OTL_ODBC_TIME_ZONE">OTL_ODBC_TIME_ZONE</a>,<u>
               </u><a
  href="otl3_compile.htm#OTL_ODBC_STRING_TO_TIMESTAMP">OTL_ODBC_STRING_TO_TIMESTAMP</a>,
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_ODBC_TIMESTAMP_TO_STRING">OTL_ODBC_TIMESTAMP_TO_STRING</a>
 were introduced a few releases ago as a way to work with TIMESTAMP WITH
 TIME ZONE (PostgreSQL, Oracle) / timestampoffset (MS SQL Server 2008)
@@ -802,8 +982,18 @@ tables). Comments and suggestions to improve the manual are welcome.<br>
             </li>
             <li>otl_stream::<a
  href="otl3_stream_class.htm#get_dirty_buf_len2">get_dirty_buf_len</a>()
-is extended to work with SELECT statements, Oracle PL/SQL reference
-cursors, and stored procedures that return implicit result sets: it
+is
+extended
+to
+work
+with
+SELECT
+statements,
+Oracle
+PL/SQL
+reference
+cursors,
+and stored procedures that return implicit result sets: it
 returns the number of rows in the stream buffer that are yet to be read.<br>
               <br>
             </li>
@@ -814,7 +1004,17 @@ re-execute the master PL/SQL block the reference cursor belongs to.
 otl_refcur_stream::rewind()
 can't be easily eliminated because it is derived from <a
  href="otl3_compile.htm#OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE">otl_read_stream_interface</a>,
-when #define <a
+when
+#define
+
+
+
+
+
+
+
+
+              <a
  href="otl3_compile.htm#OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE">OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE</a>
 is enabled. Instead, otl_refcur_stream::rewind() was made private in
 this release.<br>
@@ -846,7 +1046,17 @@ result. The bug is fixed in this release.<br>
             <li>The following Visaul C++ 8 compilation warning was
 reported for OTL 4.0.182, line 13840 under #define <a
  href="otl3_compile.htm#OTL_FUNC_THROW_SPEC_ON">OTL_FUNC_THROW_SPEC_ON</a>,
-and #define <a href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>:<br>
+and
+#define
+
+
+
+
+
+
+
+
+              <a href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>:<br>
               <br>
               <span style="font-family: monospace;">C4297: 'function' :
 function assumed not to throw an exception but does</span><br>
@@ -865,12 +1075,32 @@ The warning is fixed in this release.<br>
           <ul>
             <li>This release extends the functionality of the
 otl_stream::<a href="otl3_stream_class.htm#create_stored_proc_call">create_stored_proc_cal</a>l()
-function: it can handle stored procedures / functions that have more
+function:
+it
+can
+handle
+stored
+procedures
+/
+functions
+that
+have
+more
 than one output reference cursor parameters and also input / output
 parameters in addition to the reference cursor parameters. The
 following new global constant was added to indicate the new type ot
 stored procedures: <span style="font-family: monospace;"><a
  href="otl3_stream_class.htm#otl_mixed_refcur_stream_type">otl_mixed_refcur_stream_type</a>.
+
+
+
+
+
+
+
+
+
+
               </span>See also example <a href="otl4_ex153.htm">153</a>
 for more detail.<br>
               <br>
@@ -883,7 +1113,8 @@ for more detail.<br>
         <tr>
           <td width="816">
           <p style="font-weight: normal;"><font size="3"><a name="40181"></a>New
-(in OTL
+(in
+OTL
 4.0.181):</font></p>
           <ul>
             <li>
@@ -967,7 +1198,8 @@ int a, b;</span><br style="font-family: monospace;">
 sql&gt;&gt;a&gt;&gt;b&gt;&gt;<a
  href="otl3_stream_class.htm#check_end_of_row">endr</a>;<br>
               </span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
-// ...</span><br style="font-family: monospace;">
+//
+...</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">}<br>
               </span><span style="font-family: monospace;"><br>
               </span>In case if the number of columns in the SELECT
@@ -980,7 +1212,11 @@ I personally don't believe that the OTL design is too bad to cause
 "row-tearing" that is hard to troubleshoot. Usually,&nbsp; a SELECT
 statement has columns of more than one data type, so when the "row is
 torn", OTL will throw the usual "<a href="otl3_exc_list.htm#32000">incompatible
-data types in stream operation</a>" exception, and it will be obvious
+data
+types
+in
+stream
+operation</a>" exception, and it will be obvious
 that the code is wrong.<br>
               <br>
 Those developers, who think that the "row tearing" is a serious problem
@@ -1009,7 +1245,17 @@ continue to work as before.<br>
             <li>
               <p>This release introduces the following new function:
 otl_stream::<a href="otl3_stream_class.htm#get_dirty_buf_len">get_dirty_buf_len</a>().
-The feature was requested by a couple of developers (from Canada and
+The
+feature
+was
+requested
+by
+a
+couple
+of
+developers
+(from
+Canada and
 China).<br>
               </p>
             </li>
@@ -1143,7 +1389,17 @@ as well as their own code.</p>
             <li>
               <p>A bug was reported that otl_stream::<a
  href="otl3_stream_class.htm#create_stored_proc_call">create_stored_proc_call</a>()
-couldn't find a procedure / function name if the procedure / function
+couldn't
+find
+a
+procedure
+/
+function
+name
+if
+the
+procedure
+/ function
 is available via Oracle synonym mechanism. The bug is fixed in this
 release: otl_stream::<a
  href="otl3_stream_class.htm#create_stored_proc_call">create_stored_proc_call()</a>
@@ -1193,9 +1449,30 @@ following #define to enable the feature: <a
             <li>
               <p>This release introduces support for MS SQL 2008 (new
 #define <a href="otl3_compile.htm#OTL_ODBC_MSSQL_2008">OTL_ODBC_MSSQL_2008</a>,
-new <a href="otl3_connect_class.htm#OTL_MSSQL_2008_ODBC_CONNECT">OTL_MSSQL_2008_ODBC_CONNECT</a>
+new
+
+
+
+
+
+
+
+
+
+              <a
+ href="otl3_connect_class.htm#OTL_MSSQL_2008_ODBC_CONNECT">OTL_MSSQL_2008_ODBC_CONNECT</a>
 mode under #define <a href="otl3_compile.htm#OTL_ODBC_MULTI_MODE">OTL_ODBC_MULTI_MODE</a>).
-For more detail, see also examples <a href="otl4_ex679.htm">679</a>, <a
+For
+more
+detail,
+see
+also
+examples
+
+
+
+
+              <a href="otl4_ex679.htm">679</a>, <a
  href="otl4_ex680.htm">680</a>, <a href="otl4_ex681.htm">681</a>, <a
  href="otl4_ex682.htm">682</a>, <a href="otl4_ex683.htm">683</a>, <a
  href="otl4_ex684.htm">684</a>.</p>
@@ -1226,8 +1503,28 @@ WITH TIME ZONE. This version of OTL intrdoces the following new #define
 to address the need: <a href="otl3_compile.htm#OTL_ODBC_TIME_ZONE">OTL_ODBC_TIME_ZONE</a>,<u>
               </u><a
  href="otl3_compile.htm#OTL_ODBC_STRING_TO_TIMESTAMP">OTL_ODBC_STRING_TO_TIMESTAMP</a>,
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_ODBC_TIMESTAMP_TO_STRING">OTL_ODBC_TIMESTAMP_TO_STRING</a>.
-See example <a href="otl4_ex676.htm">676</a> for more detail. <br>
+See
+example
+
+
+
+
+
+
+
+
+              <a href="otl4_ex676.htm">676</a> for more detail. <br>
               <br>
 A problem was reported that some versions of the PostgreSQL ODBC driver
 don't populate the timestamp's fractional part. The new #defines can be
@@ -1267,11 +1564,32 @@ release.</p>
             <li>
               <p><a name="LOB_NULL_BUG"></a>A bug was reported that
 when OTL is used with <a href="otl3_compile.htm#OTL_DB2_CLI,">OTL_DB2_CLI</a>.,
-and an <a href="otl3_stream_class.htm">otl_stream</a> is opened in the
+and
+an
+
+
+
+
+
+
+
+
+              <a href="otl3_stream_class.htm">otl_stream</a> is opened
+in the
 LOB stream mode (otl_stream::<a
  href="otl3_stream_class.htm#set_lob_stream_mode">set_lob_stream_mode</a>(true)),
-NULL values, say, in an INSERT statement, don't get processed
-correctly. Instead of inserting a NULL, OTL inserts a non-NULL value
+NULL
+values,
+say,
+in
+an
+INSERT
+statement,
+don't
+get
+processed
+correctly.
+Instead of inserting a NULL, OTL inserts a non-NULL value
 from a row prior to the one with the NULL. The bug is specific to
 OTL/DB2-CLI. OTL introduced a tweak a couple of years ago that resets
 the "NULL indicator" / "length" fields for each bind variable / array
@@ -1286,7 +1604,13 @@ conditions. The bug is fixed in this release.</p>
             <li>
               <p>This release introduces the following #define: <a
  href="otl3_compile.htm#OTL_EXCEPTION_IS_DERIVED_FROM_STD_EXCEPTION">OTL_EXCEPTION_IS_DERIVED_FROM_STD_EXCEPTION</a>.
-The #define is a shortcut for "<a href="otl3_exception_class.htm">otl_exception</a>
+The
+#define
+is
+a
+shortcut
+for
+"<a href="otl3_exception_class.htm">otl_exception</a>
 is derived std::excetion".</p>
             </li>
             <li>
@@ -1327,8 +1651,18 @@ output parameter that precedes the clob/blob, for example:<br>
               <br>
 In case if the preceding output parameter is NULL (<font
  face="monospace">:f</font> is NULL), the clob (<font face="monospace">:c</font>)
-is empty . The bug is fixed in this release. If the same parameters (<font
- face="monospace">:f</font> and <font face="monospace">:c</font>) get
+is
+empty
+.
+The
+bug
+is
+fixed
+in
+this
+release.
+If the same parameters (<font face="monospace">:f</font>
+and <font face="monospace">:c</font>) get
 returned by a SELECT statement, such a bug doesn't exist.</p>
             </li>
           </ul>
@@ -1398,6 +1732,16 @@ set the OCI "Charset Form" correctly for NLS string columns (NVARCHAR2
 enabled, OTL doesn't compile with 64-bit Visual C++ 2008 under 64-bit
 Windows. OTL had a variable declared as SQLUINTEGER (unsigned 32-bit
 integer). The variable was used in a call to SQLExtendedFetch() as the <i>RowCountPtr
+
+
+
+
+
+
+
+
+
+
               </i>parameter<i>. </i>The manual for 32-bit Visual C++
 7.1 said that the <i>RowCountPtr </i>should be SQLUINTEGER*, and in
 the actual function signature the parameter is SQLULEN*:<br>
@@ -1429,9 +1773,13 @@ fFetchType,</font><br>
 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <font face="monospace">SQLLEN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 irow,</font><br>
 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <font face="monospace">SQLULEN&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; *pcrow,</font><br>
+&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+*pcrow,</font><br>
 &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <font face="monospace">SQLUSMALLINT
-&nbsp;&nbsp;&nbsp; &nbsp; *rgfRowStatus);</font><br>
+&nbsp;&nbsp;&nbsp;
+&nbsp;
+*rgfRowStatus);</font><br>
               <br>
 The discrepancy between the manual and the actual function signature
 has been corrected in the latest MSDN <a
@@ -1455,7 +1803,17 @@ enabled, <a href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>
 is attached to an <a href="otl3_stream_class.htm">otl_stream</a> that
 is opened in the LOB stream mode (otl_stream::<a
  href="otl3_stream_class.htm#set_lob_stream_mode">set_lob_stream_mode</a>(true)).
-The stream was opened with a SELECT statement that has a "TIMESTAMP"
+The
+stream
+was
+opened
+with
+a
+SELECT
+statement
+that
+has
+a "TIMESTAMP"
 column, and an "IMAGE" column. Visual C++ 8's runtime's assert on a
 call to strcat_s() fails. The problem is fixed in this release.</p>
             </li>
@@ -1542,7 +1900,17 @@ multiple database types at the same time. In order to address the
 issue, this release introduces #define <a
  href="otl3_compile.htm#OTL_ODBC_MULTI_MODE">OTL_ODBC_MULTI_MODE</a>,
 and otl_connect::<a href="otl3_connect_class.htm#set_connection_mode">set_connection_mode</a>().
-For more detail, see example <a href="otl4_ex675.htm">675</a>.</p>
+For
+more
+detail,
+see
+example
+
+
+
+
+
+              <a href="otl4_ex675.htm">675</a>.</p>
             </li>
           </ul>
           </td>
@@ -1603,6 +1971,16 @@ following code examples:</p>
                 </li>
                 <li>
                   <p>MS SQL with FreeTDS: <a href="otl4_ex667.htm">667</a>,
+
+
+
+
+
+
+
+
+
+
                   <a href="otl4_ex668.htm">668</a></p>
                 </li>
               </ul>
@@ -1700,6 +2078,16 @@ following command line options are enabled:</p>
                 </li>
                 <li>
                   <p style="margin-bottom: 0in;">-Wmissing-format-attribute
+
+
+
+
+
+
+
+
+
+
                   </p>
                 </li>
                 <li>
@@ -1761,7 +2149,18 @@ when OTL is used in a combination with FreeTDS/ODBC against MS SQL. It
 turned out that the feature wasn't implemnted in FreeTDS/ODBC. In order
 to work around the problem, this release introduces #define <a
  href="otl3_compile.htm#OTL_FREETDS_ODBC_WORKAROUNDS">OTL_FREETDS_ODBC_WORKAROUNDS</a>.
-See <a href="otl4_mssql_freetds_examples.htm">MS SQL Server / FreeTDS
+See
+
+
+
+
+
+
+
+
+
+              <a href="otl4_mssql_freetds_examples.htm">MS SQL Server /
+FreeTDS
 ODBC</a> examples for more detail. The new #define is recommended for
 use until a fix becomes available.<br>
               <br>
@@ -1769,8 +2168,19 @@ FreeTDS/ODBC seems to have a similar problem with
 otl_connect::rlogon()'s auto-commit with Sybase. However, the new
 #define is not recommended as a workaround for Sybase, because
 otl_connect::<a href="otl3_connect_class.htm#auto_commit_off%28%29">auto_commit_off</a>()
-and otl_connect::<a href="otl3_connect_class.htm#auto_commit_on">auto_commit_on</a>()
-functions seem to work with Sybase. Until a fix becomes available,
+and
+otl_connect::<a href="otl3_connect_class.htm#auto_commit_on">auto_commit_on</a>()
+functions
+seem
+to
+work
+with
+Sybase.
+Until
+a
+fix
+becomes
+available,
 auto_commit_on() / auto_commit_off() are recommended for use. See for <a
  href="otl4_sybsql_freetds_examples.htm">Sybase SQL Server / FreeTDS
 ODBC</a> examples more detail.<br>
@@ -1778,7 +2188,17 @@ ODBC</a> examples more detail.<br>
 Also, FreeTDS/ODBC doesn't seem to support "transaction isolation"
 level, that is, otl_connect::<a
  href="otl3_connect_class.htm#set_transaction_isolation_level">set_transaction_isolation_level</a>()
-has no effect. Until the feature is implemented in FreeTDS/ODBC, it's
+has
+no
+effect.
+Until
+the
+feature
+is
+implemented
+in
+FreeTDS/ODBC,
+it's
 recommended that explicit server side settings should be used instead.
 For example, MS SQL supports an explicit (NOLOCK) option on the FROM
 clause in a SELECT statement. Sybase has the "set transaction isolation
@@ -1915,7 +2335,17 @@ errors have been fixed in this release.</p>
             <li>
               <p>This release introduces the following code examples
 for Informix CLI: <a href="otl4_inf_examples.htm">examples 625-658</a>.
-OTL has supported Informix via Informix CLI for a few years. Informix
+OTL
+has
+supported
+Informix
+via
+Informix
+CLI
+for
+a
+few
+years. Informix
 CLI in Windows is indistinguishable from ODBC, so in Windows #define <a
  href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a> can used with Informix
 CLI. In Unix, #define <a href="otl3_compile.htm#OTL_INFORMIX_CLI">OTL_INFORMIX_CLI</a>
@@ -1950,8 +2380,18 @@ order to address user complaints about aborting / terminating programs
 in the case of a cascade of OTL exceptions, the following #define has
 been made the default in this release: #define <a
  href="otl3_compile.htm#OTL_UNCAUGHT_EXCEPTION_ON">OTL_UNCAUGHT_EXCEPTION_ON</a>.
-From the beginning, OTL, according to some C++ gurus who would <a
- href="otl3_whatn_1.htm#HIT_IN_HEAD">hit</a> me in the head, should not
+From
+the
+beginning,
+OTL,
+according
+to
+some
+C++
+gurus
+who
+would <a href="otl3_whatn_1.htm#HIT_IN_HEAD">hit</a>
+me in the head, should not
 have had "throwing destructors". See more detail on the history of the
 question <a href="http://kolpackov.net/projects/c++/eh/dtor-1.xhtml">here</a>.<br>
               <br>
@@ -1966,8 +2406,28 @@ problems with this new default setting, let me know, we would work
 something out.<br>
               <br>
 Those who do not want OTL destructors to "throw" can use </font>#define
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_DESTRUCTORS_DO_NOT_THROW">OTL_DESTRUCTORS_DO_NOT_THROW</a>,
-but they would have to call the close() function all otl_streams
+but
+they
+would
+have
+to
+call
+the
+close()
+function
+all
+otl_streams
 explicitly, before each stream goes out scope.</p>
             </li>
           </ul>
@@ -1990,12 +2450,32 @@ Oracle 9i database backend, the OCI10 native SQLT_BDOUBLE / SQLT_BFLOAT
 bindings don't work. The bug is fixed in this release, and the fix can
 be enabled with #define <a
  href="otl3_compile.htm#OTL_ORA_LEGACY_NUMERIC_TYPES">OTL_ORA_LEGACY_NUMERIC_TYPES</a>.
+
+
+
+
+
+
+
+
+
+
               </p>
             </li>
             <li>
               <p>A bug was reported that when #defines OTL_ORA8 / 8I/
 9I / 10G / 10G_R2 / 11G are used with <a href="otl3_lob_stream.htm">otl_lob_stream</a>,
-and when the value of a CLOB/BLOB in a table goes from, say a size &gt;
+and
+when
+the
+value
+of
+a
+CLOB/BLOB
+in
+a
+table
+goes from, say a size &gt;
 0 to the size of 0, the actual value doesn't get set to the size of 0.
 The bug fixed in this release.</p>
             </li>
@@ -2004,7 +2484,17 @@ The bug fixed in this release.</p>
 9I / 10G / 10G_R2 / 11G is defined along with #define <a
  href="otl3_compile.htm#OTL_ODBC_TIMESTEN_UNIX">OTL_ODBC_TIMESTEN_UNIX</a>
 / <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_WINDOWS">OTL_ODBC_TIMESTEN_WINDOWS</a>,
-and the resulting executable is linked with both the OCI and the
+and
+the
+resulting
+executable
+is
+linked
+with
+both
+the
+OCI
+and the
 TimesTen object libraries, the program's performance (the Oracle side
 in particular) degrades tenfold. The bug is fixed in this release.</p>
             </li>
@@ -2020,7 +2510,17 @@ is blank isntead of NCHAR, or NLOB. The bug is fixed in this release.</p>
             <li>
               <p>This release introduces the following new #define <a
  href="otl3_compile.htm#OTL_ODBC_ENTERPRISEDB">OTL_ODBC_ENTERPRISEDB</a>.
-The #define can be used with <a href="http://www.enterprisedb.com/">Enterprise
+The
+#define
+can
+be
+used
+with
+
+
+
+
+              <a href="http://www.enterprisedb.com/">Enterprise
 DB</a>, a commecial, Oracle compatible offshoot of <a
  href="http://postgesql.org/">PostgreSQL</a>. Also, see <a
  href="otl4_edb_examples.htm">examples</a> 586-624 for more detail.</p>
@@ -2041,6 +2541,16 @@ the following new #define to start the OTL/OCI11g series: #define <a
             </li>
             <li>
               <p>When <a href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>,
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>, <a
  href="otl3_compile.htm#OTL_STR_TO_BIGINT">OTL_STR_TO_BIGINT</a>, and <a
  href="otl3_compile.htm#OTL_BIGINT_TO_STR">OTL_BIGINT_TO_STR</a> are
@@ -2050,6 +2560,16 @@ bug is fixed in this release.</p>
             <li>
               <p>When <a
  href="otl3_compile.htm#OTL_DEFAULT_STRING_NULL_TO_VAL">OTL_DEFAULT_STRING_NULL_TO_VAL</a>,
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>
 are defined together, and <a href="otl4_refcur_stream.htm">otl_refcur_stream</a>
 is used, the default string value that the OTL_DEFAULT_STRING_NULL_VAL
@@ -2058,7 +2578,17 @@ to be returned is NULL. The bug is fixed in this release.</p>
             </li>
             <li>
               <p><a href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>::get(const
-int pos, unsigned char* s) was reported to have a compilation error on
+int
+pos,
+unsigned
+char*
+s)
+was
+reported
+to
+have
+a
+compilation error on
 an unspecified C++ compiler, on an unspecified platform. The proposed
 code change was merged into this release. .</p>
             </li>
@@ -2085,7 +2615,17 @@ generates the following error when compiling OTL:<br>
               <font face="monospace">Could not find a match for
 'operator otl_ora8_inout_stream::operator&gt;&gt;(float)</font></font></font></p>
               <p><font face="Arial"><font size="3"><span lang="en-US">There
-are similar errors in the rest of the numeric operators &gt;&gt;() of
+are
+similar
+errors
+in
+the
+rest
+of
+the
+numeric
+operators
+&gt;&gt;() of
 the same class. The error goes away when #define <a
  href="otl3_compile.htm#OTL_NO_TMPL_MEMBER_FUNC_SUPPORT">OTL_NO_TMPL_MEMBER_FUNC_SUPPORT</a>
 is enabled. The bug is fixed in this release by enabling the #define
@@ -2093,11 +2633,23 @@ for Borland C++ by default.</span></font></font></p>
             </li>
             <li>
               <p><font face="Arial"><font size="3"><span lang="en-US">Michael
+
+
+
+
+
+
+
+
+
+
               <a href="mailto:misha@ait.susu.ac.ru">Shishkin</a> from
 Russia contributed the <a href="otl4_subscriber.htm">otl_subscriber</a>
 class that uses the <a
  href="http://www.oracle.com/technology/oramag/oracle/06-mar/o26odpnet.html">Oracle
-Database Change Notification</a> Interface to implement a more
+Database
+Change
+Notification</a> Interface to implement a more
 convenient publish / subscribe mechanism compared to the straight OCI.
 The otl_subscriber class is optional and can be enabled via #define <a
  href="otl3_compile.htm#OTL_ORA_SUBSCRIBE">OTL_ORA_SUBSCRIBE</a>. See
@@ -2118,8 +2670,18 @@ also example <a href="otl4_ex585.htm">585</a>.</span></font></font></p>
 and #define _UNICODE / UNICODE (standard C/C++ #defines for Unicode
 applications) are enabled, and otl_connect::rlogon() is used with
 ODBC-like style connect strings (<font size="2">"UID=scott;PWD=tiger;DSN=mssql",
-etc.), the underlying SQLDriverConnect() call may crash the program,
-because the size of the output string buffer was specified in bytes
+etc.),
+the
+underlying
+SQLDriverConnect()
+call
+may
+crash
+the
+program,
+because
+the
+size of the output string buffer was specified in bytes
 instead of wide characters. The bug is fixed in this release:<br>
               <br>
 &nbsp;&nbsp; </font><font face="monospace"><font size="2"><i><b>Before
@@ -2145,6 +2707,16 @@ instead of wide characters. The bug is fixed in this release:<br>
 &nbsp;&nbsp;&nbsp;&nbsp; </font><font face="monospace"><font size="2">SQL_DRIVER_NOPROMPT);<br>
               <br>
 &nbsp;&nbsp; </font></font><font face="monospace"><font size="2"><i><b>Now
+
+
+
+
+
+
+
+
+
+
               </b></i></font></font><font face="monospace"><font
  size="2">(line 9678):<br>
               <br>
@@ -2177,6 +2749,16 @@ ref_cur_placeholder=0,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ...<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
               </font><font color="#ff0000"><font face="monospace">break;</font></font><font
  face="monospace"><br>
               <br>
@@ -2185,7 +2767,16 @@ ref_cur_placeholder=0,<br>
             <li>
               <p><font size="2">Following new #define is introduced: <a
  href="otl3_compile.htm#OTL_MAP_LONG_TO_SQL_C_SBIGINT">OTL_MAP_LONG_TO_SQL_C_SBIGINT</a>.
-It maps 64-bit longs into SQL_C_BIGINT instead of SQL_C_SLONG in
+It
+maps
+64-bit
+longs
+into
+SQL_C_BIGINT
+instead
+of
+SQL_C_SLONG
+in
 OTL/ODBC/DB2-CLI.</font></p>
             </li>
             <li>
@@ -2317,7 +2908,18 @@ around the bug.</p>
 following new #defines<a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_WIN">:
 OTL_ODBC_TIMESTEN_WIN</a>, <a
  href="otl3_compile.htm#OTL_ODBC_TIMESTEN_UNIX">OTL_ODBC_TIMESTEN_UNIX</a>.
-Code <a href="otl4_t10_examples.htm">examples</a> for TimesTen have
+Code
+
+
+
+
+
+
+
+
+
+              <a href="otl4_t10_examples.htm">examples</a> for TimesTen
+have
 been updated to reflect the new feature.</p>
             </li>
           </ul>
@@ -2370,7 +2972,17 @@ this release.</p>
               <p>(Updated): There is an open source ODBC driver for
 Linux/Unix/Windows for accessing MS SQL 7.0 / 2000 / 2005 and Sybase
 10.x / 11.x / 12.x / 15.x:. It's called <a href="http://freetds.org/">FreeTDS</a>.
-At this point time, the FreeTDS ODBC driver (version 0.63) is high
+At
+this
+point
+time,
+the
+FreeTDS
+ODBC
+driver
+(version
+0.63)
+is high
 enough quality to work with OTL. The following FreeTDS based sets of
 code examples have been added: <a
  href="otl4_mssql_freetds_examples.htm">MS SQL Server / FreeTDS ODBC,</a>
@@ -2431,7 +3043,17 @@ ODBC&nbsp; </a>have been updated. For more detail, see examples <a
 Handle" (OCI) exception when a PL/SQL block / stored procedure returns
 an uninitialized CLOB / BLOB locator, and when the CLOB / BLOB is being
 written to / read from via an <a href="otl3_lob_stream.htm">otl_lob_stream</a>.
-To address the problem, a new function has been added to the lob stream
+To
+address
+the
+problem,
+a
+new
+function
+has
+been
+added
+to the lob stream
 class: i<a href="otl3_lob_stream.htm#is_initialized">s_initialized</a>().</p>
             </li>
             <li>
@@ -2439,7 +3061,17 @@ class: i<a href="otl3_lob_stream.htm#is_initialized">s_initialized</a>().</p>
 the following new #define: #define <a
  href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>. See also
 examples for <a href="otl4_ora9_utf8_examples.htm">Oracle 9i, UTF8</a>,
-and <a href="otl4_ora10_utf8_examples.htm">Oracle 10g, UTF8</a>.</p>
+and
+
+
+
+
+
+
+
+
+
+              <a href="otl4_ora10_utf8_examples.htm">Oracle 10g, UTF8</a>.</p>
             </li>
           </ul>
           </td>
@@ -2507,7 +3139,17 @@ management.<br>
             <li>
               <p>#define <a
  href="otl3_compile.htm#OTL_TRACE_ENABLE_STREAM_LABELS">OTL_TRACE_ENABLE_STREAM_LABELS</a>.
-When this #define is enabled, OTL trace records SQL statement labels
+When
+this
+#define
+is
+enabled,
+OTL
+trace
+records
+SQL
+statement
+labels
 instead of the bodies of the SQL statements. It is useful for reducing
 the size of the OTL trace.</p>
             </li>
@@ -2718,8 +3360,13 @@ size of</big></big></font></font></font><font face="monospace"><font
  size="1"><big><big><br>
               </big></big></font></font><font color="#996633"><font
  face="monospace"><font size="1"><big><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// the TEXT to be written.</big></big></font></font></font><font
- face="monospace"><font size="1"><big><big><br>
+//
+the
+TEXT
+to
+be
+written.</big></big></font></font></font><font face="monospace"><font
+ size="1"><big><big><br>
 &nbsp;&nbsp;&nbsp; *lob&lt;&lt;f2; // writing first chunk of the TEXT
 into lob<br>
               <br>
@@ -2755,12 +3402,21 @@ of the row</i></big></big></font></font><font face="monospace"><font
             <big> </big>
             <p><big><big><font color="#996633">&nbsp; </font><font
  color="#996633"><font face="monospace"><font size="1"><big><big>lob2-&gt;set_len(5001+2123);
-// setting the total&nbsp; size of</big></big></font></font></font><font
- face="monospace"><font size="1"><big><big><br>
+//
+setting
+the
+total&nbsp;
+size
+of</big></big></font></font></font><font face="monospace"><font size="1"><big><big><br>
             </big></big></font></font><font color="#996633"><font
  face="monospace"><font size="1"><big><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-// the TEXT to be written.</big></big></font></font></font><font
- face="monospace"><font size="1"><big><big><br>
+//
+the
+TEXT
+to
+be
+written.</big></big></font></font></font><font face="monospace"><font
+ size="1"><big><big><br>
 &nbsp; *lob2&lt;&lt;f2; // writing first chunk of the TEXT into lob<br>
             <br>
 &nbsp; f2[2122]='?';<br>
