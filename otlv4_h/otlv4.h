@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.202,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.204,
 // Copyright (C) 1996-2009, Sergei Kuchin (skuchin@gmail.com)
 // 
 // This library is free software. Permission to use, copy, modify,
@@ -26,7 +26,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0400CAL)
+#define OTL_VERSION_NUMBER (0x0400CCL)
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning (disable:4351)
@@ -4426,7 +4426,9 @@ public:
    increment_throw_count();
   if(get_throw_count()>1)return;
    if(otl_uncaught_exception()) return; 
-   throw OTL_TMPL_EXCEPTION(connect_struct);
+   OTL_TMPL_EXCEPTION ex(connect_struct);
+   connect_struct.cleanup();
+   throw ex;
   }
  }
 
@@ -10319,6 +10321,9 @@ protected:
   int connection_type;
 
 public:
+
+
+  void cleanup(void){}
 
   OTL_HENV& get_henv(){return henv;}
   OTL_HDBC& get_hdbc(){return hdbc;}
@@ -16902,6 +16907,7 @@ public:
     return 0;
   }
 
+  void cleanup(void){}
 
  static int initialize(const int threaded_mode=0)
  {
@@ -21649,6 +21655,13 @@ public:
     threaded_mode=athreaded_mode;
   }
 #endif
+
+
+  void cleanup(void)
+  {
+    session_end();
+    server_detach();
+  }
 
   int get_session_begin_count() const
   {
@@ -30619,7 +30632,7 @@ public:
   if(describe_next_out_var()->ftype==otl_var_char){
 #if defined(OTL_UNICODE)
       OTL_CHAR tmp_str[100];
-#elif defined(OTL_UNICODE) && defined()
+#elif defined(OTL_UNICODE) && defined(OTL_UNICODE_CHAR_TYPE)
       OTL_UNICODE_CHAR_TYPE tmp_str[100];
 #else
       char tmp_str[100];
@@ -30715,7 +30728,7 @@ public:
     if(describe_next_in_var()->ftype==otl_var_char){
 #if defined(OTL_UNICODE)
       OTL_CHAR tmp_str[100];
-#elif defined(OTL_UNICODE) && defined()
+#elif defined(OTL_UNICODE) && defined(OTL_UNICODE_CHAR_TYPE)
       OTL_UNICODE_CHAR_TYPE tmp_str[100];
 #else
       char tmp_str[100];
