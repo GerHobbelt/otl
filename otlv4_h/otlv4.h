@@ -88,6 +88,11 @@
 // Oracle 11g Release 1
 //#define OTL_ORA11G
 
+// Uncomment the following line in order to include the OTL for
+// Oracle 11g Release 2
+//#define OTL_ORA11G_R2
+
+
 
 // The macro definitions may be also turned on via C++ compiler command line
 // option, e.g.: -DOTL_ODBC, -DOTL_ORA7, -DOTL_ORA8, -DOTL_ORA8I, -DOTL_ODBC_UNIX
@@ -493,13 +498,13 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   if(OTL_TRACE_LEVEL & 0x4){                    \
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;    \
     OTL_TRACE_STREAM<<"otl_stream(this=";       \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,this);    \
+	OTL_TRACE_STREAM<<OTL_RCAST(const void*,this); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<")::open(buffer_size=";   \
     OTL_TRACE_STREAM<<arr_size;                 \
     OTL_TRACE_STREAM<<", sqlstm=";              \
     OTL_TRACE_STREAM<<sqlstm;                   \
     OTL_TRACE_STREAM<<", connect=";             \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,&db);     \
+    OTL_TRACE_STREAM<<OTL_RCAST(const void*,&db); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<", implicit_select=";     \
     OTL_TRACE_STREAM<<implicit_select;          \
     if(sqlstm_label){                           \
@@ -516,13 +521,13 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   if(OTL_TRACE_LEVEL & 0x4){                            \
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;            \
     OTL_TRACE_STREAM<<"otl_stream(this=";               \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,this);            \
+	OTL_TRACE_STREAM<<OTL_RCAST(const void*,this); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<")::open(buffer_size=";           \
     OTL_TRACE_STREAM<<arr_size;                         \
     OTL_TRACE_STREAM<<", sqlstm=";                      \
     OTL_TRACE_STREAM<<sqlstm;                           \
     OTL_TRACE_STREAM<<", connect=";                     \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,&db);             \
+    OTL_TRACE_STREAM<<OTL_RCAST(const void*,&db); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     if(ref_cur_placeholder){                            \
       OTL_TRACE_STREAM<<", ref_cur_placeholder=";       \
       OTL_TRACE_STREAM<<ref_cur_placeholder;            \
@@ -541,7 +546,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   if(OTL_TRACE_LEVEL & 0x2){                              \
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;              \
     OTL_TRACE_STREAM<<"otl_cursor::direct_exec(connect="; \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,&connect);          \
+    OTL_TRACE_STREAM<<OTL_RCAST(const void*,&connect); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<",sqlstm=\"";                       \
     OTL_TRACE_STREAM<<sqlstm;                             \
     OTL_TRACE_STREAM<<"\",exception_enabled=";            \
@@ -556,7 +561,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   if(OTL_TRACE_LEVEL & 0x2){                               \
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;               \
     OTL_TRACE_STREAM<<"otl_cursor::syntax_check(connect="; \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,&connect);           \
+    OTL_TRACE_STREAM<<OTL_RCAST(const void*,&connect); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<",sqlstm=\"";                        \
     OTL_TRACE_STREAM<<sqlstm;                              \
     OTL_TRACE_STREAM<<"\"";                                \
@@ -571,7 +576,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;            \
     OTL_TRACE_STREAM<<class_name;                       \
     OTL_TRACE_STREAM<<"(this=";                         \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,this);            \
+    OTL_TRACE_STREAM<<OTL_RCAST(const void*,this); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<")::" func_name "(";              \
     OTL_TRACE_STREAM<<args;                             \
     OTL_TRACE_STREAM<<");";                             \
@@ -628,7 +633,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                    \
     OTL_TRACE_STREAM<<class_name;                               \
     OTL_TRACE_STREAM<<"(this=";                                 \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                    \
+    OTL_TRACE_STREAM<<OTL_RCAST(const void*,this); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<")::" func_name "(";                      \
     OTL_TRACE_STREAM<<"connect_str=\"";                         \
     OTL_TRACE_STREAM<<temp_connect_str;                         \
@@ -657,7 +662,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
     }                                                                   \
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                            \
     OTL_TRACE_STREAM<<class_name<<"(this=";                             \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                            \
+	OTL_TRACE_STREAM<<OTL_RCAST(const void*,this); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<")::" func_name "(";                              \
     OTL_TRACE_STREAM<<"connect_str=\"";                                 \
     OTL_TRACE_STREAM<<temp_connect_str;                                 \
@@ -686,7 +691,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                                    \
     OTL_TRACE_STREAM<<class_name;                                               \
     OTL_TRACE_STREAM<<"(this=";                                                 \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                                    \
+	OTL_TRACE_STREAM<<OTL_RCAST(const void*,this); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<")::" func_name "(";                                      \
     OTL_TRACE_STREAM<<"connect_str=\"";                                         \
     OTL_TRACE_STREAM<<temp_connect_str2;                                        \
@@ -706,7 +711,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                    \
     OTL_TRACE_STREAM<<class_name;                               \
     OTL_TRACE_STREAM<<L"(this=";                                \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                    \
+	OTL_TRACE_STREAM<<OTL_RCAST(const void*,this); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<L")::" func_name L"(";                    \
     OTL_TRACE_STREAM<<L"connect_str=\"";                        \
     OTL_TRACE_STREAM<<userid<<L"/***@"<<tnsname;                \
@@ -723,13 +728,13 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   if(OTL_TRACE_LEVEL & 0x8){                                                    \
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                                    \
     OTL_TRACE_STREAM<<"otl_stream(this=";                                       \
-    OTL_TRACE_STREAM<<this->master_stream_ptr_;                                 \
+	OTL_TRACE_STREAM<<OTL_SCAST(const void*,this->master_stream_ptr_); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<"), ";                                                    \
     OTL_TRACE_STREAM<<"fetched the first batch of rows, SQL Stm=";              \
     if(this->stm_label)                                                         \
-      OTL_TRACE_STREAM<<this->stm_label;                                        \
+	  OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_label); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     else                                                                        \
-      OTL_TRACE_STREAM<<this->stm_text;                                         \
+	  OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<", RPC=";                                                 \
     OTL_TRACE_STREAM<<row_count;                                                \
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                                    \
@@ -739,10 +744,10 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   if(OTL_TRACE_LEVEL & 0x8){                                                    \
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                                    \
     OTL_TRACE_STREAM<<"otl_stream(this=";                                       \
-    OTL_TRACE_STREAM<<this->master_stream_ptr_;                                 \
+	OTL_TRACE_STREAM<<OTL_SCAST(const void*,this->master_stream_ptr_); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<"), ";                                                    \
     OTL_TRACE_STREAM<<"fetched the first batch of rows, SQL Stm=";              \
-    OTL_TRACE_STREAM<<this->stm_text;                                           \
+	OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     OTL_TRACE_STREAM<<", RPC=";                                                 \
     OTL_TRACE_STREAM<<row_count;                                                \
     OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                                    \
@@ -756,13 +761,13 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
    if(OTL_TRACE_LEVEL & 0x8 && cur_row==0){                                     \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                                   \
      OTL_TRACE_STREAM<<"otl_stream(this=";                                      \
-     OTL_TRACE_STREAM<<this->master_stream_ptr_;                                \
+	 OTL_TRACE_STREAM<<OTL_SCAST(const void*,this->master_stream_ptr_); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<"), ";                                                   \
      OTL_TRACE_STREAM<<"fetched the next batch of rows, SQL Stm=" ;             \
      if(this->stm_label)                                                        \
-       OTL_TRACE_STREAM<<this->stm_label;                                       \
+	   OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_label); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      else                                                                       \
-       OTL_TRACE_STREAM<<this->stm_text;                                        \
+	   OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<", RPC=";                                                \
      OTL_TRACE_STREAM<<row_count;                                               \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                                   \
@@ -771,13 +776,13 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
    if(OTL_TRACE_LEVEL & 0x8 && cur_row==1){                                     \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                                   \
      OTL_TRACE_STREAM<<"otl_stream(this=";                                      \
-     OTL_TRACE_STREAM<<this->master_stream_ptr_;                                \
+	 OTL_TRACE_STREAM<<OTL_SCAST(const void*,this->master_stream_ptr_); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<"), ";                                                   \
      OTL_TRACE_STREAM<<"fetched the next batch of rows, SQL Stm=" ;             \
      if(this->stm_label)                                                        \
-       OTL_TRACE_STREAM<<this->stm_label;                                       \
+	   OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_label); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      else                                                                       \
-       OTL_TRACE_STREAM<<this->stm_text;                                        \
+	   OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<", RPC=";                                                \
      OTL_TRACE_STREAM<<row_count;                                               \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                                   \
@@ -787,10 +792,10 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
    if(OTL_TRACE_LEVEL & 0x8 && cur_row==0){                                     \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                                   \
      OTL_TRACE_STREAM<<"otl_stream(this=";                                      \
-     OTL_TRACE_STREAM<<this->master_stream_ptr_;                                \
+	 OTL_TRACE_STREAM<<OTL_SCAST(const void*,this->master_stream_ptr_); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<"), ";                                                   \
      OTL_TRACE_STREAM<<"fetched the next batch of rows, SQL Stm=" ;             \
-     OTL_TRACE_STREAM<<this->stm_text;                                          \
+	 OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<", RPC=";                                                \
      OTL_TRACE_STREAM<<row_count;                                               \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                                   \
@@ -799,10 +804,10 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
    if(OTL_TRACE_LEVEL & 0x8 && cur_row==1){                                     \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                                   \
      OTL_TRACE_STREAM<<"otl_stream(this=";                                      \
-     OTL_TRACE_STREAM<<this->master_stream_ptr_;                                \
+	 OTL_TRACE_STREAM<<OTL_SCAST(const void*,this->master_stream_ptr_); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<"), ";                                                   \
      OTL_TRACE_STREAM<<"fetched the next batch of rows, SQL Stm=" ;             \
-     OTL_TRACE_STREAM<<this->stm_text;                                          \
+	 OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<", RPC=";                                                \
      OTL_TRACE_STREAM<<row_count;                                               \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                                   \
@@ -816,12 +821,12 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
    if(OTL_TRACE_LEVEL & 0x8){                                   \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                   \
      OTL_TRACE_STREAM<<"otl_stream(this=";                      \
-     OTL_TRACE_STREAM<<override->get_master_stream_ptr();       \
+	 OTL_TRACE_STREAM<<OTL_SCAST(const void*,override->get_master_stream_ptr()); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<"), executing SQL Stm=";                 \
      if(this->stm_label)                                        \
-       OTL_TRACE_STREAM<<this->stm_label;                       \
+	   OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_label); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      else                                                       \
-       OTL_TRACE_STREAM<<this->stm_text;                        \
+	   OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<", buffer size=";                        \
      OTL_TRACE_STREAM<<this->array_size;                        \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                   \
@@ -831,9 +836,9 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
    if(OTL_TRACE_LEVEL & 0x8){                                   \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                   \
      OTL_TRACE_STREAM<<"otl_stream(this=";                      \
-     OTL_TRACE_STREAM<<override->get_master_stream_ptr();       \
+	 OTL_TRACE_STREAM<<OTL_SCAST(const void*,override->get_master_stream_ptr()); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<"), executing SQL Stm=";                 \
-     OTL_TRACE_STREAM<<this->stm_text;                          \
+	 OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      OTL_TRACE_STREAM<<", buffer size=";                        \
      OTL_TRACE_STREAM<<this->array_size;                        \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                   \
@@ -847,12 +852,12 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
     if(OTL_TRACE_LEVEL & 0x8){                                  \
       OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                  \
       OTL_TRACE_STREAM<<"otl_stream(this=";                     \
-      OTL_TRACE_STREAM<<this->master_stream_ptr_;               \
+	  OTL_TRACE_STREAM<<OTL_SCAST(const void*,this->master_stream_ptr_); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
       OTL_TRACE_STREAM<<"), executing SQL Stm=";                \
      if(this->stm_label)                                        \
-       OTL_TRACE_STREAM<<this->stm_label;                       \
+	   OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_label); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
      else                                                       \
-       OTL_TRACE_STREAM<<this->stm_text;                        \
+	   OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
       OTL_TRACE_STREAM<<", current batch size=";                \
       OTL_TRACE_STREAM<<(cur_y+1);                              \
       OTL_TRACE_STREAM<<", row offset=";                        \
@@ -864,9 +869,9 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
     if(OTL_TRACE_LEVEL & 0x8){                                  \
       OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                  \
       OTL_TRACE_STREAM<<"otl_stream(this=";                     \
-      OTL_TRACE_STREAM<<this->master_stream_ptr_;               \
+	  OTL_TRACE_STREAM<<OTL_SCAST(const void*,this->master_stream_ptr_); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
       OTL_TRACE_STREAM<<"), executing SQL Stm=";                \
-      OTL_TRACE_STREAM<<this->stm_text;                         \
+	  OTL_TRACE_STREAM<<OTL_SCAST(const char*,this->stm_text); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
       OTL_TRACE_STREAM<<", current batch size=";                \
       OTL_TRACE_STREAM<<(cur_y+1);                              \
       OTL_TRACE_STREAM<<", row offset=";                        \
@@ -884,7 +889,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
     if(temp_vdesc){                                             \
       OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                  \
       OTL_TRACE_STREAM<<"otl_stream(this=";                     \
-      OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                  \
+	  OTL_TRACE_STREAM<<OTL_RCAST(const void*,this); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
       OTL_TRACE_STREAM<<")::" function "(" type ": ";           \
       OTL_TRACE_STREAM<<"ftype=";                               \
       OTL_TRACE_STREAM<<temp_vdesc->ftype;                      \
@@ -913,7 +918,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
      if (temp_vdesc){                                           \
        OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                 \
        OTL_TRACE_STREAM<<"otl_stream(this=";                    \
-       OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                 \
+	   OTL_TRACE_STREAM<<OTL_RCAST(const void*,this); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
        OTL_TRACE_STREAM<<")::" function "(" type " : ";         \
        OTL_TRACE_STREAM<<"ftype=";                              \
        OTL_TRACE_STREAM<<temp_vdesc->ftype;                     \
@@ -1418,7 +1423,7 @@ const int otl_error_code_34=32035;
 #define otl_error_msg_34 "END-OF-ROW check failed"
 
 const int otl_error_code_35=32036;
-#define otl_error_msg_35 "otl_long_string::c_str(): length is too large to allow us to add a NUL sentinal"
+#define otl_error_msg_35 "otl_long_string::c_str(): length is too large to allow us to add a NUL sentinel"
 
 const int otl_error_code_36=32037;
 #define otl_error_msg_36 "otl_long_string: array index is out of permissible range"
@@ -2048,17 +2053,21 @@ public:
      v=0;
      length=0;
      extern_buffer_flag=0;
-     // TODO: sanity check: input_length == 0 ?
+     OTL_ASSERT(input_length == 0); // sanity check
    }else{
      extern_buffer_flag=0;
      length=input_length;
-     // TODO: sanity check: input_length <= buffer_size ?
      buf_size=buffer_size;
-     v=new unsigned char[buffer_size]; /* [i_a] same alloc behaviour as copy constructor: unified behaviour so less off-by-one error risk */
-     memset(v,0,buffer_size); // [i_a] init all alloced bytes!
+	 OTL_ASSERT(buf_size >= input_length);
+     v=new unsigned char[buf_size+1]; /* [i_a] same alloc behaviour as copy constructor: unified behaviour so less off-by-one error risk */
+     memset(v,0,buf_size+1); // [i_a] init all alloced bytes!
    }
  }
 
+  /*
+  [i_a] the problem with 'external' buffers is that we don't know whether the size specified is ex- or inclusive
+  NUL sentinel; we'll assume it's EXclusive here.
+  */
  otl_long_string
  (const void* external_buffer,
   const int buffer_size,
@@ -2069,7 +2078,7 @@ public:
     buf_size(buffer_size),
     this_is_last_piece_(false)
  {
-     // TODO: sanity check: input_length < buffer_size ?
+    OTL_ASSERT(buf_size >= input_length);
  }
 
   otl_long_string& operator=(const otl_long_string& s)
@@ -2081,23 +2090,25 @@ public:
         delete[] v;
       v=s.v;
       length=s.length;
-      extern_buffer_flag=s.extern_buffer_flag;
+      extern_buffer_flag=1;
       buf_size=s.buf_size;
+	  OTL_ASSERT(buf_size >= length);
     }else{
       // src has internal buffer --> copy by value!
       if(extern_buffer_flag){
-        v=new unsigned char[s.buf_size+1];
-        buf_size=s.buf_size;
-        extern_buffer_flag=0; // discard 'external' flag to prevent memleaks
+		buf_size=s.buf_size;
+        v=new unsigned char[buf_size+1];
+        //extern_buffer_flag=0; // discard 'external' flag to prevent memleaks
       }else if(buf_size<s.buf_size){
         delete[] v;
-        v=new unsigned char[s.buf_size+1];
-        buf_size=s.buf_size;
+		buf_size=s.buf_size;
+        v=new unsigned char[buf_size+1];
       }
       length=s.length;
       extern_buffer_flag=0; // same code as before, but clearer this way
       memcpy(v,s.v,length);
-      if(length<buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
+	  OTL_ASSERT(buf_size >= length);
+      //if(length<=buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
         v[length]=0;
     }
     return *this;
@@ -2110,13 +2121,16 @@ public:
     buf_size(s.buf_size),
     this_is_last_piece_(s.this_is_last_piece_)
   {
+    OTL_ASSERT(buf_size >= length);
     if(s.extern_buffer_flag)
       // src has external buffer --> copy by reference!
       v=s.v;
     else{
+      // src has internal buffer --> copy by value!
       v=new unsigned char[buf_size+1];
       memcpy(v,s.v,length);
-      if(length<buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
+	  OTL_ASSERT(buf_size >= length);
+      // if(length<=buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
         v[length]=0;
     }
   }
@@ -2126,13 +2140,17 @@ public:
    if(!extern_buffer_flag)delete[] v;
   }
 
-  void set_len(const int alen=0) /* [i_a] */
+  void set_len(int alen=0) /* [i_a] */
       OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
-    if (alen < 0 || alen >= buf_size) // || alen > this->length ? to prevent nilling beyond what is currently set
+    if (alen < 0 || alen > buf_size) // || alen > this->length ? to prevent nilling beyond what is currently set
           throw_otl_out_of_range_exception(otl_error_msg_36, otl_error_code_36);
 #endif
+	if (alen < 0)
+		alen = 0;
+	else if (alen > buf_size)
+		alen = buf_size;
     length=alen;
   }
   int len(void) const {return length;}
@@ -2152,40 +2170,53 @@ public:
       OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
-      if (ndx < 0 || ndx >= buf_size)
+      if (ndx < 0 || ndx > buf_size)
           throw_otl_out_of_range_exception(otl_error_msg_36, otl_error_code_36);
 #endif
+	  OTL_ASSERT(ndx >= 0);
+	  OTL_ASSERT(ndx <= buf_size);
       return v[ndx];
   }
 #endif
 
-  virtual void null_terminate_string(const int alen) /* [i_a] */
+  virtual void null_terminate_string(int alen) /* [i_a] */
       OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
-    if (alen < 0 || alen >= buf_size)
+    if (alen < 0 || alen > buf_size)
           throw_otl_out_of_range_exception(otl_error_msg_36, otl_error_code_36);
 #endif
+	if (alen < 0)
+		alen = 0;
+	else if (alen > buf_size)
+		alen = buf_size;
     // write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
-    if (v[alen])
+	if (v[alen])
+	{
+		OTL_ASSERT(!extern_buffer_flag);
         v[alen]=0;
+	}
   }
 
 #if !defined(OTL_UNICODE) /* due to C++ not accepting polymorphism for return type, we'd better get rid of this one when we're in unicode mode to prevent possible screwups */
   /* virtual */ unsigned char *c_str() /* [i_a] no use to put 'virtual' here; different return types, so unicode gets wc_str() */
       OTL_THROWS_EX_OUT_OF_RANGE
   {
-    if (length < buf_size)
-    {
+    OTL_ASSERT(length <= buf_size);
+    //if (length <= buf_size)
+    //{
         // write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
-        if (v[length])
+		if (v[length])
+		{
+			OTL_ASSERT(!extern_buffer_flag);
             v[length] = 0;
+		}
         return v;
-    }
-#if defined(OTL_SANITY_CHECKS_ENABLED)
-    throw_otl_out_of_range_exception(otl_error_msg_35, otl_error_code_35);
-#endif
-    return NULL;
+    //}
+//#if defined(OTL_SANITY_CHECKS_ENABLED)
+//    throw_otl_out_of_range_exception(otl_error_msg_35, otl_error_code_35);
+//#endif
+//    return NULL;
   }
 #endif
 
@@ -2224,20 +2255,27 @@ public:
     extern_buffer_flag=0;
     length=input_length;
     buf_size=buffer_size;
-    v=new unsigned char[buffer_size*sizeof(OTL_CHAR)]; /* [i_a] same alloc behaviour as copy constructor: unified behaviour so less off-by-one error risk */
-    memset(v,0,buffer_size*sizeof(OTL_CHAR)); // [i_a] init all alloced bytes!
+	OTL_ASSERT(buffer_size >= input_length);
+    v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)]; /* [i_a] OTL_CHAR instead of OTL_WCHAR --> all unicode chars stored in here are assumed to be 'unsigned short' so NOT wchar_t on UNIX (which is 'unsigned long') */
+    memset(v,0,(buf_size+1)*sizeof(OTL_CHAR)); // [i_a] init all allocated bytes!
   }
 
+  /*
+  [i_a] the problem with 'external' buffers is that we don't know whether the size specified is ex- or inclusive
+  NUL sentinel; we'll assume it's EXclusive here.
+  */
   otl_long_unicode_string
   (const void* external_buffer,
    const int buffer_size,
    const int input_length=0)
     : otl_long_string(external_buffer,buffer_size,input_length)
   {
-    extern_buffer_flag=1;
-    length=input_length;
-    buf_size=buffer_size;
-    v=OTL_RCAST(unsigned char*, OTL_CCAST(void*, external_buffer));
+    // [i_a] these actions have already been done in otl_long_string(...)
+	OTL_ASSERT(buffer_size >= input_length);
+    OTL_ASSERT(extern_buffer_flag==1);
+    OTL_ASSERT(length==input_length);
+    OTL_ASSERT(buf_size==buffer_size);
+    OTL_ASSERT(v==OTL_RCAST(unsigned char*, OTL_CCAST(void*, external_buffer)));
   }
 
   otl_long_unicode_string(const otl_long_unicode_string& s) : otl_long_string(0,0)
@@ -2245,14 +2283,15 @@ public:
     this->buf_size=s.buf_size;
     this->this_is_last_piece_=s.this_is_last_piece_;
     this->extern_buffer_flag=s.extern_buffer_flag;
-    this->v=0;
+    //this->v=0;
     this->length=s.length;
+	OTL_ASSERT(buf_size >= length);
     if(s.extern_buffer_flag)
       v=s.v;
     else{
-      v=new unsigned char[(buf_size+1)*sizeof(OTL_WCHAR)];
-      memcpy(v,s.v,length*sizeof(OTL_WCHAR));
-      if(length<buf_size&&s.v[length]==0)
+      v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
+      memcpy(v,s.v,length*sizeof(OTL_CHAR));
+      // if(length<=buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
         (*this)[length]=0;
     }
   }
@@ -2265,22 +2304,23 @@ public:
         delete[] v;
       v=s.v;
       length=s.length;
-      extern_buffer_flag=s.extern_buffer_flag;
+      extern_buffer_flag=1;
       buf_size=s.buf_size;
     }else{
       if(extern_buffer_flag){
-        v=new unsigned char[(s.buf_size+1)*sizeof(OTL_WCHAR)];
-        buf_size=s.buf_size;
-        extern_buffer_flag=0; // discard 'external' flag to prevent memleaks
+		buf_size=s.buf_size;
+        v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
+        //extern_buffer_flag=0; // discard 'external' flag to prevent memleaks
       }else if(buf_size<s.buf_size){
         delete[] v;
-        v=new unsigned char[(s.buf_size+1)*sizeof(OTL_WCHAR)];
-        buf_size=s.buf_size;
+		buf_size=s.buf_size;
+        v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
       }
       length=s.length;
       extern_buffer_flag=0; // same code as before, but clearer this way
+	  OTL_ASSERT(buf_size >= length);
       memcpy(v,s.v,length*sizeof(OTL_CHAR));
-      if(length<buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
+      //if(length<=buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
         (*this)[length]=0;
     }
     return *this;
@@ -2292,7 +2332,7 @@ public:
       OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
-      if (ndx < 0 || ndx >= buf_size)
+      if (ndx < 0 || ndx > buf_size)
           throw_otl_out_of_range_exception(otl_error_msg_36, otl_error_code_36);
 #endif
       return OTL_RCAST(OTL_CHAR*,v)[ndx];
@@ -2302,28 +2342,39 @@ public:
       OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
-      if (alen < 0 || alen >= buf_size)
+      if (alen < 0 || alen > buf_size)
           throw_otl_out_of_range_exception(otl_error_msg_36, otl_error_code_36);
 #endif
+	  if (alen < 0)
+		  alen = 0;
+	  else if (alen > buf_size)
+		  alen = buf_size;
       // write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
     if (OTL_RCAST(OTL_CHAR*,v)[alen])
+	{
+		OTL_ASSERT(!extern_buffer_flag);
         OTL_RCAST(OTL_CHAR*,v)[alen]=0;
+	}
   }
 
   /* virtual */ OTL_CHAR *c_str() /* [i_a] for orthogonality's sake - same i/f as regular otl string now */
       OTL_THROWS_EX_OUT_OF_RANGE
   {
-    if (length < buf_size)
-    {
+    OTL_ASSERT(length <= buf_size);
+    //if (length < buf_size)
+    //{
         // write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
         if (OTL_RCAST(OTL_CHAR*,v)[length])
+		{
+			OTL_ASSERT(!extern_buffer_flag);
             OTL_RCAST(OTL_CHAR*,v)[length] = 0;
+		}
         return OTL_RCAST(OTL_CHAR*,v);
-    }
-#if defined(OTL_SANITY_CHECKS_ENABLED)
-    throw_otl_out_of_range_exception(otl_error_msg_35, otl_error_code_35);
-#endif
-    return NULL;
+    //}
+//#if defined(OTL_SANITY_CHECKS_ENABLED)
+//    throw_otl_out_of_range_exception(otl_error_msg_35, otl_error_code_35);
+//#endif
+//    return NULL;
   }
 
   // for diagnostics/validation purposes: 1: regular, 2/4: unicode, ...
@@ -5242,6 +5293,7 @@ public:
    const int binding_type)
   {
     bool rc=true;
+	OTL_ASSERT(v.get_ftype() != otl_var_raw); // [i_a] shouldn't this one sit in the next condition with var_long and varchar_long?
     if(((v.get_ftype()==otl_var_varchar_long||v.get_ftype()==otl_var_raw_long) &&
         (v.get_const_var_struct().get_otl_adapter()==otl_ora7_adapter||
          v.get_const_var_struct().get_otl_adapter()==otl_ora8_adapter) &&
@@ -7004,6 +7056,10 @@ public:
     break;
 #if defined(OTL_USER_DEFINED_STRING_CLASS_ON) || \
     defined(OTL_STL) || defined(OTL_ACE)
+  case otl_var_raw:
+	OTL_ASSERT(sl[cur_col].get_ftype() != otl_var_raw); // [i_a] shouldn't this one join the section below?
+	break;
+
   case otl_var_varchar_long:
   case otl_var_raw_long:
     if(!eof_intern()){
@@ -7290,8 +7346,9 @@ public:
          int len2=sl[cur_col].get_len(this->cur_row);
          if(len2>s.get_buf_size())
            len2=s.get_buf_size();
+		 OTL_ASSERT(s.get_char_width() == 1); // make sure the otl_long_string supports the correct character width (regular)!
          otl_memcpy(s.v,c,len2,sl[cur_col].get_ftype());
-         //s.null_terminate_string(len2);
+         s.null_terminate_string(len2); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
          s.set_len(len2);
          look_ahead();
        }
@@ -7301,12 +7358,12 @@ public:
    {
        if(!eof_intern()){
          if(sl[cur_col].get_var_struct().get_otl_adapter()==otl_ora8_adapter){
-#if defined(OTL_UNICODE)
-           int len2=0;
+#if defined(OTL_UNICODE) // [i_a] the only differences is the absence of the use of the length 'sl[cur_col].get_len(this->cur_row)' in here. Is this correct for ORA8 in Unicode mode only?
+  		   int len2=0;
            OTL_CHAR* source=OTL_RCAST(OTL_CHAR*,sl[cur_col].val(this->cur_row));
            OTL_ASSERT(s.get_char_width() == sizeof(OTL_CHAR)); // make sure the otl_long_string supports UNICODE!
            OTL_CHAR* target=OTL_RCAST(OTL_CHAR*,s.v);
-           while(*source && len2<s.get_buf_size()-1){
+           while(*source && len2<s.get_buf_size()){
              *target++=*source++;
              ++len2;
            }
@@ -7316,8 +7373,9 @@ public:
 #else
            unsigned char* c=OTL_RCAST(unsigned char*,sl[cur_col].val(this->cur_row));
            int len2=sl[cur_col].get_len(this->cur_row);
-           if(len2>=s.get_buf_size())
-             len2=s.get_buf_size()-1;
+           if(len2>s.get_buf_size())
+             len2=s.get_buf_size();
+		   OTL_ASSERT(s.get_char_width() == sizeof(OTL_CHAR)); // make sure the otl_long_string supports the correct character width (Unicode or regular)!
            otl_memcpy(s.v,c,len2,sl[cur_col].get_ftype());
            s.null_terminate_string(len2);
            s.set_len(len2);
@@ -7326,8 +7384,8 @@ public:
          }else{
            unsigned char* c=OTL_RCAST(unsigned char*,sl[cur_col].val(this->cur_row));
            int len2=sl[cur_col].get_len(this->cur_row);
-           if(len2>=s.get_buf_size())
-             len2=s.get_buf_size()-1;
+           if(len2>s.get_buf_size())
+             len2=s.get_buf_size();
            otl_memcpy(s.v,c,len2,sl[cur_col].get_ftype());
            s.null_terminate_string(len2);
            s.set_len(len2);
@@ -7346,14 +7404,14 @@ public:
            if(len2>s.get_buf_size())
              len2=s.get_buf_size();
            otl_memcpy(s.v,c+sizeof(short int),len2,sl[cur_col].get_ftype());
-           //s.null_terminate_string(len2);
+		   s.null_terminate_string(len2); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
            s.set_len(len2);
          }else{
            int len2=sl[cur_col].get_len(this->cur_row);
            if(len2>s.get_buf_size())
              len2=s.get_buf_size();
            otl_memcpy(s.v,c,len2,sl[cur_col].get_ftype());
-           //s.null_terminate_string(len2);
+		   s.null_terminate_string(len2); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
            s.set_len(len2);
          }
          look_ahead();
@@ -7376,11 +7434,11 @@ public:
               this->stm_label?this->stm_label:
               this->stm_text);
          }
-         if(sl[cur_col].get_ftype()==otl_var_clob){ // [i_a]
-           if(len>=s.get_buf_size())
-             len=s.get_buf_size()-1;
-           s.null_terminate_string(len);
-         }
+         //if(sl[cur_col].get_ftype()==otl_var_clob){ // [i_a]
+           if(len>s.get_buf_size())
+             len=s.get_buf_size();
+		   s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
+         //}
          s.set_len(len);
          look_ahead();
        }
@@ -7681,6 +7739,7 @@ public:
            var_info);
       }
       this->vl[cur_in]->set_not_null(0);
+	  OTL_ASSERT(this->vl[cur_in]->get_ftype()==otl_var_raw); // [i_a] this must be true due to the 'case' we're in: superfluous check in the if() below...
       if((this->vl[cur_in]->get_var_struct().get_otl_adapter()==otl_ora7_adapter||
           this->vl[cur_in]->get_var_struct().get_otl_adapter()==otl_ora8_adapter) &&
          this->vl[cur_in]->get_ftype()==otl_var_raw){
@@ -7975,6 +8034,7 @@ public:
        if(this->vl[i]->get_var_struct().otl_adapter==otl_odbc_adapter){
          this->vl[i]->get_var_struct().lob_stream_mode=lob_stream_mode;
          this->vl[i]->get_var_struct().vparam_type=this->vl[i]->get_param_type();
+		 OTL_ASSERT(this->vl[i]->get_ftype() != otl_var_raw); // [i_a] shouldn't this one join the conditional below?
          if(this->vl[i]->get_ftype()==otl_var_varchar_long||
             this->vl[i]->get_ftype()==otl_var_raw_long){
            this->vl[i]->set_not_null(0);
@@ -8346,6 +8406,10 @@ otl_uncaught_exception()){
        break;
 #if defined(OTL_USER_DEFINED_STRING_CLASS_ON) || \
      defined(OTL_STL) || defined(OTL_ACE)
+	 case otl_var_raw:
+		 OTL_ASSERT(this->vl[cur_x]->get_ftype() != otl_var_raw); // [i_a] shouldn't this one join the cases below?
+		 break;
+
      case otl_var_varchar_long:
      case otl_var_raw_long:
        {
@@ -8862,7 +8926,7 @@ otl_uncaught_exception()){
      {
        unsigned char* c=OTL_RCAST(unsigned char*,this->vl[cur_x]->val(cur_y));
        int len=s.len();
-       //this->vl[cur_x]->set_not_null(cur_y);
+       //this->vl[cur_x]->set_not_null(cur_y); -- [i_a] moved down
        if(len>this->vl[cur_x]->actual_elem_size()){
          otl_var_info_var
            (this->vl[cur_x]->get_name(),
@@ -8938,6 +9002,7 @@ otl_uncaught_exception()){
  {
   if(this->vl_len>0){
    get_next();
+   OTL_ASSERT(this->vl[cur_x]->get_ftype() != otl_var_raw); // [i_a] how about this one in the condition below?
    if(((s.get_ora_lob() &&
         this->vl[cur_x]->get_ftype()==otl_var_blob)||
        this->vl[cur_x]->get_ftype()==otl_var_clob)||
@@ -9238,6 +9303,7 @@ public:
      if(this->vl[i]->get_var_struct().get_otl_adapter()==otl_odbc_adapter){
        this->vl[i]->get_var_struct().set_lob_stream_mode(this->lob_stream_mode);
        this->vl[i]->get_var_struct().set_vparam_type(this->vl[i]->get_param_type());
+	   OTL_ASSERT(this->vl[i]->get_ftype() != otl_var_raw); // [i_a] how about this one in the condition below?
        if(this->vl[i]->get_ftype()==otl_var_varchar_long||
           this->vl[i]->get_ftype()==otl_var_raw_long){
          this->vl[i]->set_not_null(0);
@@ -9436,6 +9502,10 @@ public:
     break;
 #if defined(USER_DEFINED_STRING_CLASS) || \
     defined(OTL_STL) || defined(OTL_ACE)
+  case otl_var_raw:
+	  OTL_ASSERT(in_vl[cur_in_x]->get_ftype() != otl_var_raw); // [i_a] how about this one join the cases below?
+	  break;
+
   case otl_var_varchar_long:
   case otl_var_raw_long:
     {
@@ -9743,12 +9813,12 @@ public:
       if(len>s.get_buf_size())
         len=s.get_buf_size();
       otl_memcpy(s.v,c,len,in_vl[cur_in_x]->get_ftype());
-      if(in_vl[cur_in_x]->get_ftype()==otl_var_varchar_long){ // [i_a]
-        if(len>=s.get_buf_size()){
-          len=s.get_buf_size()-1;
-        }
-        s.null_terminate_string(len);
-      }
+      //if(in_vl[cur_in_x]->get_ftype()==otl_var_varchar_long){ // [i_a]
+      //  if(len>s.get_buf_size()){
+      //    len=s.get_buf_size();
+      //  }
+		s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
+      //}
       s.set_len(len);
       null_fetched=is_null_intern();
     }
@@ -9767,11 +9837,11 @@ public:
            this->stm_label?this->stm_label:
            this->stm_text);
       }
-      if(in_vl[cur_in_x]->get_ftype()==otl_var_clob){ // [i_a]
-        if(len>=s.get_buf_size())
-          len=s.get_buf_size()-1;
-        s.null_terminate_string(len);
-      }
+      //if(in_vl[cur_in_x]->get_ftype()==otl_var_clob){ // [i_a]
+        if(len>s.get_buf_size())
+          len=s.get_buf_size();
+		s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
+      //}
       s.set_len(len);
       null_fetched=is_null_intern();
     }
@@ -9805,6 +9875,7 @@ public:
   (otl_lob_stream_generic& s)
  {
   if(eof())return *this;
+  OTL_ASSERT(in_vl[cur_in_x]->get_ftype() != otl_var_raw); // [i_a] how about this one in the var_raw_long condition below?
   if((s.get_ora_lob() &&
       in_vl[cur_in_x]->get_ftype()==otl_var_clob)||
      in_vl[cur_in_x]->get_ftype()==otl_var_blob){
@@ -11558,6 +11629,7 @@ public:
      return 0;
    }
   }
+  OTL_ASSERT(ftype != otl_var_raw); // [i_a] how about this one added to the condition below?
   if(ftype==otl_var_raw_long)
     temp_len=s.len();
   else
@@ -11605,6 +11677,7 @@ public:
   int chunkLen=0;
   if(!lob_stream_flag&&!lob_stream_mode)return 1;
   int buf_size=s.get_buf_size()*sizeof(OTL_CHAR);
+  OTL_ASSERT(ftype != otl_var_raw); // [i_a] how about this one added to the condition below?
   if(ftype==otl_var_raw_long)
     buf_size=s.get_buf_size();
   rc=SQLGetData
@@ -11621,11 +11694,13 @@ public:
    }else if(retLen>buf_size||retLen==SQL_NO_TOTAL)
      chunkLen=s.get_buf_size();
    else{
+     OTL_ASSERT(ftype != otl_var_raw); // [i_a] and once more?
      if(ftype==otl_var_raw_long)
        chunkLen=OTL_SCAST(int,retLen);
      else
        chunkLen=OTL_SCAST(int,retLen)/sizeof(OTL_CHAR);
    }
+   // [i_a] isn't the next piece of code pretty weird considering that at EOF, every length equals chcunkLen further below, or are those #if's missing there?
 #if defined(OTL_UNICODE)
    if(lob_ftype==SQL_C_WCHAR)
     s.set_len(chunkLen-1);
@@ -11634,6 +11709,7 @@ public:
     s.set_len(chunkLen-1);
 #endif
    else
+		   // [i_a] end of 'weird code' section
     s.set_len(chunkLen);
    if(lob_len==0&&aoffset==1&&
       retLen!=SQL_NULL_DATA&&
@@ -11717,6 +11793,7 @@ public:
   p_len=new OTL_SQLLEN[aarray_size];
   memset(p_v,0,byte_size);
   for(i=0;i<aarray_size;++i){
+   OTL_ASSERT(ftype != otl_var_raw); // [i_a] how about this one added to the var_raw_long condition below?
    if(ftype==otl_var_char)
     p_len[i]=OTL_SCAST(OTL_SQLLEN,SQL_NTS);
    else if(ftype==otl_var_varchar_long||ftype==otl_var_raw_long)
@@ -11754,6 +11831,10 @@ public:
        p_len[ndx]=OTL_SCAST(OTL_SQLLEN,len);
 #endif
      break;
+   case otl_var_raw:
+	   OTL_ASSERT(ftype != otl_var_raw); // [i_a] how about this one?
+	   break;
+
    case otl_var_raw_long:
      if(lob_stream_mode &&
         (vparam_type==otl_input_param||
@@ -13259,7 +13340,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
     SQLINTEGER buflen=elem_size;
 #if defined(OTL_UNICODE)
     if(ftype==SQL_C_WCHAR||ftype==SQL_WLONGVARCHAR)
-      buflen=elem_size*sizeof(OTL_CHAR);
+      buflen=elem_size*sizeof(OTL_CHAR); // !!!
 #endif
    status=SQLBindCol
     (cda,
@@ -18840,6 +18921,10 @@ public:
     break;
 #if defined(USER_DEFINED_STRING_CLASS) || \
     defined(OTL_STL) || defined(OTL_ACE)
+  case otl_var_raw:
+	  OTL_ASSERT(sl[cur_col].get_ftype() != otl_var_raw); // [i_a] how about this one?
+	  break;
+
   case otl_var_varchar_long:
   case otl_var_raw_long:
     if(!eof()){
@@ -18955,12 +19040,12 @@ public:
         if(len>s.get_buf_size())
           len=s.get_buf_size();
         otl_memcpy(s.v,c,len,sl[cur_col].get_ftype());
-        if(sl[cur_col].get_ftype()==otl_var_varchar_long){ // [i_a]
-          if(len>=s.get_buf_size()){
-            len=s.get_buf_size()-1;
-          }
-          s.null_terminate_string(len);
-        }
+        //if(sl[cur_col].get_ftype()==otl_var_varchar_long){ // [i_a]
+        //  if(len>s.get_buf_size()){
+        //    len=s.get_buf_size();
+        //  }
+		  s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
+        //}
         s.set_len(len);
         look_ahead();
       }
@@ -18974,7 +19059,7 @@ public:
         if(len>s.get_buf_size())
           len=s.get_buf_size();
         otl_memcpy(s.v,c+sizeof(short int),len,sl[cur_col].get_ftype());
-        //s.null_terminate_string(len);
+		s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
         s.set_len(len);
         look_ahead();
       }
@@ -23249,7 +23334,7 @@ public:
   // (write_blob() et al) which are also way too (1-based) SQL minded to my taste,
   // but that's an edit I'll leave for another day. I hoped the transition between
   // 0-based C/C++ thinking 1-based SQL would've been nicer, but the way it is,
-  // it ... is. The laternative makes a mess in a few of the other routines, so
+  // it ... is. The alternative makes a mess in a few of the other routines, so
   // that kinda balances out this little agony here.
   int rc;
 #if defined(OTL_UNICODE)
@@ -23297,6 +23382,10 @@ public:
     offset+=amt;
   }while(rc==OCI_NEED_DATA);
   len=offset-1;
+#if defined(OTL_UNICODE) // [i_a] shouldn't the new 'len' be corrected back to unicode chars as ORA thinks 'bytes' up there?
+  if(ftype==otl_var_clob)
+	  len/=sizeof(OTL_CHAR);
+#endif
   if(rc!=OCI_SUCCESS){
     len=0;
     return 0; // uh? '0'? shouldn't this be '1' (failure)
@@ -23420,9 +23509,10 @@ public:
      OTL_SCAST(ub1,nls_flag?SQLCS_NCHAR:connect->get_char_set()));
 
 #if defined(OTL_UNICODE)
-  if(ftype==otl_var_clob && aoffset>1 && amt==byte_buf_size)
+  if(ftype==otl_var_clob && aoffset>1 && amt==byte_buf_size) // [i_a] this code is even weirder as it only kicks in when the buffer is 100% filled, which doesn't have to be when you have a larger string buffer than the size of the blob actually is...
     amt/=sizeof(OTL_CHAR);
 #endif
+  // [i_a] as a result, because 'amt' is not split between dual purposes: byte offset of ORA and character count of OTL string, unicode strings get uncorrected 'amt' lengths in various circumstances. :-S
 
 #if defined(OTL_ORA_UTF8)
   switch(rc){
@@ -26468,6 +26558,10 @@ public:
     break;
 #if defined(USER_DEFINED_STRING_CLASS) || \
     defined(OTL_STL) || defined(OTL_ACE)
+  case otl_var_raw:
+	  OTL_ASSERT(sl[cur_col].get_ftype() != otl_var_raw); // [i_a] how about this one?
+	  break;
+
   case otl_var_varchar_long:
   case otl_var_raw_long:
     if(!eof_intern()){
@@ -26864,11 +26958,11 @@ OTL_ORA_REFCUR_COMMON_READ_STREAM& operator>>(otl_long_string& s)
        if(len>s.get_buf_size())
          len=s.get_buf_size();
        otl_memcpy(s.v,c,len,sl[cur_col].get_ftype());
-       if(sl[cur_col].get_ftype()==otl_var_varchar_long){ // [i_a]
-         if(len>=s.get_buf_size())
-           len=s.get_buf_size()-1;
-         s.null_terminate_string(len);
-       }
+       //if(sl[cur_col].get_ftype()==otl_var_varchar_long){ // [i_a]
+       //  if(len>s.get_buf_size())
+       //    len=s.get_buf_size();
+	   s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
+       //}
        s.set_len(len);
        look_ahead();
      }
@@ -26885,12 +26979,12 @@ OTL_ORA_REFCUR_COMMON_READ_STREAM& operator>>(otl_long_string& s)
          throw otl_exception(adb->get_connect_struct(),
                              stm_label?stm_label:stm_text);
        }
-       if(sl[cur_col].get_ftype()==otl_var_clob){ // [i_a]
-         if(len>=s.get_buf_size()){
-           len=s.get_buf_size()-1;
+       //if(sl[cur_col].get_ftype()==otl_var_clob){ // [i_a]
+         if(len>s.get_buf_size()){
+           len=s.get_buf_size();
          }
-         s.null_terminate_string(len);
-       }
+		 s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
+       //}
        s.set_len(len);
        look_ahead();
      }
@@ -26902,7 +26996,7 @@ OTL_ORA_REFCUR_COMMON_READ_STREAM& operator>>(otl_long_string& s)
        if(len2>s.get_buf_size())
          len2=s.get_buf_size();
        otl_memcpy(s.v,c+sizeof(short int),len2,sl[cur_col].get_ftype());
-       //s.null_terminate_string(len2);
+	   s.null_terminate_string(len2); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
        s.set_len(len2);
        look_ahead();
      }
@@ -28192,6 +28286,10 @@ public:
     break;
 #if defined(USER_DEFINED_STRING_CLASS) || \
     defined(OTL_STL) || defined(OTL_ACE)
+  case otl_var_raw:
+	  OTL_ASSERT(sl[cur_col].get_ftype() != otl_var_raw); // [i_a] how about this one?
+	  break;
+
   case otl_var_varchar_long:
   case otl_var_raw_long:
     if(!eof_intern()){
@@ -28403,12 +28501,12 @@ public:
         if(len>s.get_buf_size())
           len=s.get_buf_size();
         otl_memcpy(s.v,c,len,sl[cur_col].get_ftype());
-        if(sl[cur_col].get_ftype()==otl_var_varchar_long){ // [i_a]
-          if(len>=s.get_buf_size()){
-            len=s.get_buf_size()-1;
-          }
-          s.null_terminate_string(len); // [i_a] ONLY for varchar_long !!!
-        }
+        //if(sl[cur_col].get_ftype()==otl_var_varchar_long){ // [i_a]
+        //  if(len>s.get_buf_size()){
+        //    len=s.get_buf_size();
+        //  }
+		  s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
+        //}
         s.set_len(len);
         look_ahead();
       }
@@ -28422,7 +28520,7 @@ public:
         if(len>s.get_buf_size())
           len=s.get_buf_size();
         otl_memcpy(s.v,c+sizeof(short int),len,sl[cur_col].get_ftype());
-        //s.null_terminate_string(len);
+		s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
         s.set_len(len);
         look_ahead();
       }
@@ -28442,12 +28540,12 @@ public:
           throw otl_exception(adb->get_connect_struct(),
                               stm_label?stm_label:stm_text);
         }
-        if(sl[cur_col].get_ftype()==otl_var_clob){ // [i_a]
-          if(len>=s.get_buf_size()){
-            len=s.get_buf_size()-1;
+        //if(sl[cur_col].get_ftype()==otl_var_clob){ // [i_a]
+          if(len>s.get_buf_size()){
+            len=s.get_buf_size();
           }
-          s.null_terminate_string(len);
-        }
+		  s.null_terminate_string(len); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
+        //}
         s.set_len(len);
         look_ahead();
       }
@@ -33463,6 +33561,10 @@ public:
     otl_var_desc& curr_var=out_vars_[pos-1];
     unsigned char* curr_ptr=out_vars_arr_[pos-1];
     switch(curr_var.ftype){
+	case otl_var_raw:
+		OTL_ASSERT(curr_var.get_ftype() != otl_var_raw); // [i_a] how about this one?
+		break;
+
     case otl_var_varchar_long:
     case otl_var_raw_long:
     case otl_var_blob:
