@@ -1,41 +1,41 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-   <TITLE>OTL 4.0, Example 6  (Simple Insert/Select with LONG RAW)</TITLE>
-   <META NAME="Author" CONTENT="Sergei Kuchin">
-   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
-   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-</HEAD>
-<BODY>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
 
-<H1 ALIGN=CENTER>OTL 4.0, Example 6 (Simple Insert/Select with LONG RAW)</H1>
-
-<H1><A NAME="example1"></A>Example 6 (Simple Insert/Select with LONG RAW)</H1>
-
-<P>This example demonstrates simple INSERT and SELECT statements with the
-LONG RAW datatype as well as constant SQL statements.</P>
-
-<H2>Source Code</H2>
-
-<PRE>#include &lt;iostream&gt;
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <title>OTL 4.0, Example 6 (Simple Insert/Select with LONG RAW)</title>
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+  </head>
+  <body>
+    <h1 align="CENTER">OTL 4.0, Example 6 (Simple Insert/Select with
+      LONG RAW)</h1>
+    <h1><a name="example1"></a>Example 6 (Simple Insert/Select with LONG
+      RAW)</h1>
+    <p>This example demonstrates simple INSERT and SELECT statements
+      with the
+      LONG RAW datatype as well as constant SQL statements.</p>
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;
 using namespace std;
 
-#include &lt;stdio.h&gt;</PRE>
-
-<PRE>#define OTL_ORA7 // Compile OTL 4.0/OCI7
+#include &lt;stdio.h&gt;</pre>
+    <pre>#define OTL_ORA7 // Compile OTL 4.0/OCI7
 #include &lt;otlv4.h&gt; // include the OTL 4.0 header file
 
-<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
 
 void insert()
 // insert rows into table
-{ </PRE>
+{ </pre>
+    <pre> <a href="otl3_long_string.htm">otl_long_string</a> f2(70000); // define long string variable
+ db.<a href="otl3_connect_class.htm#set_max_long_size">set_max_long_size</a>(70000); // set maximum long string size for connect object
 
-<PRE> <A HREF="otl3_long_string.htm">otl_long_string</A> f2(70000); // define long string variable
- db.<A HREF="otl3_connect_class.htm#set_max_long_size">set_max_long_size</A>(70000); // set maximum long string size for connect object
-
- <A HREF="otl3_stream_class.htm">otl_stream</A> o(1, // buffer size has to be set to 1 for operations with LOBs
-              &quot;insert into test_tab values(:f1&lt;int&gt;,:f2&lt;<A HREF="otl3_bind_variables.htm#raw_long">raw_long</A>&gt;)&quot;,
+ <a href="otl3_stream_class.htm">otl_stream</a> o(1, // buffer size has to be set to 1 for operations with LOBs
+              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;<a href="otl3_bind_variables.htm#raw_long">raw_long</a>&gt;)",
                  // SQL statement
               db // connect object
              );
@@ -45,7 +45,7 @@ void insert()
   for(int j=0;j&lt;50000;++j)
    f2[j]='*';
   f2[50000]='?';
-  f2.<A HREF="otl3_long_string.htm#set_len">set_len</A>(50001);
+  f2.<a href="otl3_long_string.htm#set_len">set_len</a>(50001);
   o&lt;&lt;i&lt;&lt;f2;
  }
 
@@ -53,11 +53,11 @@ void insert()
 
 void select()
 { 
- <A HREF="otl3_long_string.htm">otl_long_string</A> f2(70000); // define long string variable
- db.<A HREF="otl3_connect_class.htm#set_max_long_size">set_max_long_size</A>(70000); // set maximum long string size for connect object
+ <a href="otl3_long_string.htm">otl_long_string</a> f2(70000); // define long string variable
+ db.<a href="otl3_connect_class.htm#set_max_long_size">set_max_long_size</a>(70000); // set maximum long string size for connect object
 
- <A HREF="otl3_stream_class.htm">otl_stream</A> i(1, // buffer size needs to be set to 1 for operations with LOBs
-              &quot;select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2&quot;,
+ <a href="otl3_stream_class.htm">otl_stream</a> i(1, // buffer size needs to be set to 1 for operations with LOBs
+              "select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2",
                  // SELECT statement
               db // connect object
              ); 
@@ -71,7 +71,7 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i&gt;&gt;f1&gt;&gt;f2;
-  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2[0]&lt;&lt;f2[f2.<A HREF="otl3_long_string.htm#len">len</A>()-1]&lt;&lt;&quot;, len=&quot;&lt;&lt;f2.<A HREF="otl3_long_string.htm#len">len</A>()&lt;&lt;endl;
+  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2[0]&lt;&lt;f2[f2.<a href="otl3_long_string.htm#len">len</a>()-1]&lt;&lt;", len="&lt;&lt;f2.<a href="otl3_long_string.htm#len">len</a>()&lt;&lt;endl;
  }
 
  i&lt;&lt;4; // assigning :f = 4
@@ -80,29 +80,29 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i&gt;&gt;f1&gt;&gt;f2;
-  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2[0]&lt;&lt;f2[f2.len()-1]&lt;&lt;&quot;, len=&quot;&lt;&lt;f2.len()&lt;&lt;endl;
+  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2[0]&lt;&lt;f2[f2.len()-1]&lt;&lt;", len="&lt;&lt;f2.len()&lt;&lt;endl;
  }
 
 }
 
 int main()
 {
- <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize OCI environment
+ <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment
  try{
 
-  db.rlogon(&quot;scott/tiger&quot;); // connect to Oracle
+  db.rlogon("scott/tiger"); // connect to Oracle
 
-  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
-</A>   (
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
     db,
-    &quot;drop table test_tab&quot;,
+    "drop table test_tab",
     otl_exception::disabled // disable OTL exceptions
    ); // drop table
 
-  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
-</A>   (
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
     db,
-    &quot;create table test_tab(f1 number, f2 long raw)&quot;
+    "create table test_tab(f1 number, f2 long raw)"
     );  // create table
 
   insert(); // insert records into table
@@ -110,7 +110,7 @@ int main()
 
  }
 
- catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+ catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
   cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
   cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
   cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
@@ -121,11 +121,9 @@ int main()
  return 0;
 
 }
-</PRE>
-
-<H2>Output</H2>
-
-<PRE>f1=8, f2=*?, len=50001
+</pre>
+    <h2>Output</h2>
+    <pre>f1=8, f2=*?, len=50001
 f1=9, f2=*?, len=50001
 f1=10, f2=*?, len=50001
 f1=11, f2=*?, len=50001
@@ -143,33 +141,32 @@ f1=8, f2=*?, len=50001
 
 
 
-<HR WIDTH="100%"></PRE>
-
-<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
-<A HREF="home.htm">Go Home</A> </P></CENTER>
-
-<P>Copyright &copy; 1996-2010, Sergei Kuchin, email: <A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A>,
-<A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com/A>.
-<SCRIPT Language="JavaScript">
-<!-- hide from old browsers
- var modDate = new Date(document.lastModified)
- document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
- //-->
- </SCRIPT>
-</P>
-
-<P><I>Permission to use, copy, modify and redistribute this document for
-any purpose is hereby granted without fee, provided that the above copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
-
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+<hr width="100%"></pre>
+    <center>
+      <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+        <a href="home.htm">Go Home</a> </p>
+    </center>
+    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><a
+        href="mailto:skuchin@gmail.com">. </a></p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
+    <a href="mailto:skuchin@gmail.com">
+      <script type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+      <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
-</script>
-</BODY>
-</HTML>
+</script></a>
+  </body>
+</html>

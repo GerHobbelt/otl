@@ -1,6 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
+
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
   <title>OTL 4.0, Example 465 (Simple Insert/Select with BYTEA and
 otl_stream_read-iterator)</title>
   <meta name="Author" content="Sergei Kuchin">
@@ -22,7 +24,7 @@ the BYTEA datatype as well as constant SQL statements.</p>
  href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a> // required with PG ODBC on Windows<br>#endif<br>#define OTL_STREAM_READ_ITERATOR_ON<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
  href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{ </pre>
 <pre> <a href="otl3_long_string.htm">otl_long_string</a> f2(700); // define long string variable<br> <a
- href="otl3_stream_class.htm">otl_stream</a> o(1, // buffer size can be &gt; 1 for PostgreSQL 8.1 and higher<br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size can be &gt; 1 for PostgreSQL 8.1 and higher<br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;<a
  href="otl3_bind_variables.htm#raw">raw</a>[700]&gt;)",<br>                 // SQL statement<br>              db // connect object<br>             );<br> for(int i=1;i&lt;=20;++i){<br>  for(int j=0;j&lt;699;++j)<br>   f2[j]='*';<br>  f2[699]='?';<br>  f2.<a
  href="otl3_long_string.htm#set_len">set_len</a>(700);<br>  o&lt;&lt;i&lt;&lt;f2;<br> }<br><br>}<br><br>void select()<br>{ <br> <a
  href="otl3_long_string.htm">otl_long_string</a> f2(700); // define long string variable<br> <a
@@ -54,7 +56,7 @@ the BYTEA datatype as well as constant SQL statements.</p>
 <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
 <a href="home.htm">Go Home</a> </p>
 </center>
-<p>Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
  href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>
 <script language="JavaScript">
@@ -68,7 +70,14 @@ the BYTEA datatype as well as constant SQL statements.</p>
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE. </i></p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

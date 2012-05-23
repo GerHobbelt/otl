@@ -56,12 +56,13 @@ void select()
    cout<<"f1="<<f1<<", f2="<<f2<<endl;
   } 
  }catch(otl_exception& p){
-  cerr<<"===> A database exception is caught: "<<endl;
-  cerr<<p.msg<<endl; // print out error message
-  cerr<<p.stm_text<<endl; // print out SQL that caused the error
-  cerr<<p.var_info<<endl; // print out the variable that caused the error
-  cerr<<"===> Cleaning up the stream's error flags"<<endl;
-  i.clean();
+   cout<<"STREAM ERROR STATE="<<i.get_error_state()<<endl;
+   cerr<<"===> A database exception is caught: "<<endl;
+   cerr<<p.msg<<endl; // print out error message
+   cerr<<p.stm_text<<endl; // print out SQL that caused the error
+   cerr<<p.var_info<<endl; // print out the variable that caused the error
+   cerr<<"===> Cleaning up the stream's error flags"<<endl;
+   i.clean();
  }
 
  cout<<"====> Starting another fetch sequence..."<<endl;

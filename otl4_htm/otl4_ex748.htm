@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=ISO-8859-1">
+    <title>OTL 4.0, Example 748 (VARCHAR column bound as RAW[XXX]
+      reading/writing std::strings that have null terminators ('\0') in
+      the middle)</title>
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+  </head>
+  <body>
+    <h1 align="CENTER">OTL 4.0, Example 748 (VARCHAR column bound as
+      RAW[XXX] for reading/writing std::strings that have null
+      terminators ('\0') in the middle)</h1>
+    <p>This example demonstrates a technique that allows to read / write
+      std::string values that have null terminators in the middle.<br>
+    </p>
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;<br>using namespace std;
+
+#include &lt;stdio.h&gt;<br><br>#define OTL_STL<br>#define OTL_ORA8 // Compile OTL 4.0/OCI8 
+#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+<br>string str_val("123456" "\0" "7890", 11); // std::string with a null terminator in the middle.
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
+
+void insert()
+// insert rows into table
+{ 
+ <a href="otl3_stream_class.htm">otl_stream</a> o(10, // buffer size
+              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;raw[30]&gt;)", 
+                 // SQL statement
+              db // connect object
+             );
+
+ for(int i=1;i&lt;=4;++i){
+  o&lt;&lt;i&lt;&lt;str_val;
+ }
+}
+
+void select()
+{ 
+ <a href="otl3_stream_class.htm">otl_stream</a> i(10, // buffer size
+              "select f1, f2 :#2&lt;raw[30]&gt; "<br>              "from test_tab "<br>              "where f2&gt;=:f2in&lt;raw[30]&gt;",
+                 // SELECT statement
+              db // connect object
+             ); 
+   // create select stream
+ 
+ int f1;
+ string f2;
+
+ i&lt;&lt;str_val; // assigning :f2in = str_val
+   // SELECT automatically executes when all input variables are
+   // assigned. First portion of output rows is fetched to the buffer
+
+ while(!i.eof()){ // while not end-of-data
+  i&gt;&gt;f1&gt;&gt;f2;
+  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2=";
+  for(size_t j=0;j&lt;f2.length();++j)<br>    if(f2[j]==0)<br>      cout&lt;&lt;"\\0";<br>    else<br>      cout&lt;&lt;f2[j];<br>  cout&lt;&lt;endl;<br> }
+
+}
+
+int main()
+{
+ <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize the database API environment
+ try{
+
+  db.rlogon("scott/tiger"); // connect to the database
+
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
+    db,
+    "drop table test_tab",
+    otl_exception::disabled // disable OTL exceptions
+   ); // drop table
+
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
+    db,
+    "create table test_tab(f1 int, f2 varchar(30))"
+    );  // create table
+
+  insert(); // insert records into table
+  select(); // select records from table
+
+ }
+
+ catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from the database
+
+ return 0;
+
+}
+</pre>
+    <h2>Output</h2>
+    <pre>f1=1, f2=123456\07890<br>f1=2, f2=123456\07890<br>f1=3, f2=123456\07890<br>f1=4, f2=123456\07890
+
+<hr width="100%"></pre>
+    <center>
+      <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+        <a href="home.htm">Go Home</a> </p>
+    </center>
+    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><a
+        href="mailto:skuchin@gmail.com">. </a></p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
+    <a href="mailto:skuchin@gmail.com">
+      <script type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+      <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script></a>
+  </body>
+</html>

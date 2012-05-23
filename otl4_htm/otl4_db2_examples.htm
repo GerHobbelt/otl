@@ -1,185 +1,182 @@
 <!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=ISO-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, Examples for DB2 CLI</title>
-</head>
-<body>
-<center>
-<h1> OTL 4.0, Examples for DB2 CLI</h1>
-<div style="text-align: left;">The examples below work with DB2&nbsp; /
-CLI. In general, all of these examples should work with any DB2 version
-6.1 and higher, when DB2 CLI&nbsp; is enabled in OTL by setting
-#define <a href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a>.&nbsp;</div>
-</center>
-<ol>
-  <li><b><a href="otl3_ex89.htm">Example 89 (Simple
-Insert/Select/Update)</a></b></li>
-  <li><b><a href="otl3_ex90.htm">Example 90 ("Incompatible
-datatypes
-in stream operation" exception)</a></b></li>
-  <li><b><a href="otl3_ex91.htm">Example 91 (otl_datetime container
-and DATE/TIME/TIMESTAMP table columns)</a></b></li>
-  <li><b><a href="otl3_ex92.htm">Example 92 (otl_long_string
-container and CLOB column)</a></b></li>
-  <li><b><a href="otl3_ex93.htm">Example 93 (otl_long_string
-container and BLOB column)</a></b></li>
-  <li><b><a href="otl3_ex94.htm">Example 94 (std::string and
-STL-compliant stream iterators)</a></b></li>
-  <li><b><a href="otl3_ex95.htm">Example 95
-(otl_stream::describe_select() with a simple Select)</a></b></li>
-  <li><b><a href="otl3_ex96.htm">Example 96 (otl_stream and NULLs)</a></b></li>
-  <li><b><a href="otl3_ex100.htm">Example
-100 (otl_value&lt;T&gt;,
-DB2-CLI)</a></b></li>
-  <li><b><a href="otl3_ex109.htm">Example
-109 (OTL/DB2-CLI and bulk
-operations with DB2's CLOB)</a></b></li>
-  <li><b><a href="otl3_ex115.htm">Example
-115 (OTL stream pooling,
-DB2-CLI)</a></b></li>
-  <li><b><a href="otl3_ex118.htm">Example
-118
-(otl_stream::set_flush(), DB2-CLI)</a></b></li>
-  <li><b><a href="otl3_ex121.htm">Example
-121 (<font size="-1">OTL_VALUE_TEMPLATE_ON,
-OTL_USER_DEFINED_STRING_CLASS_ON</font>, DB2-CLI)</a></b></li>
-  <li><b><a href="otl3_ex126.htm">Example
-126 (Insert/Update/Select
-with DB2 CLOB&nbsp; in stream mode)</a></b></li>
-  <li><b><a href="otl3_ex127.htm">Example
-127 (Insert/Update/Select
-with DB2 BLOB in stream mode)</a></b></li>
-  <li><b><a href="otl3_ex132.htm">Example
-132 (Describe
-otl_stream's
-bind variables for DB2)</a></b></li>
-  <li><b><a href="otl4_ex154.htm">Example
-154 (set_transaction_isolation_level,
-DB2-CLI)</a></b></li>
-  <li><b><a href="otl4_ex157.htm">Example
-157 (external logon, DB2-CLI)</a></b></li>
-  <li><b><a href="otl4_ex161.htm">Example
-161 (otl_stream::clean(),
-cancelling SELECT's fetch sequence, DB2 )</a></b></li>
-  <li><b><a href="otl4_ex166.htm">Example
-166 (otl_stream::clean(),
-cleaning the SELECT stream's error flags, DB2 )</a></b></li>
-  <li><b><a href="otl4_ex171.htm">Example
-171 (#define's
-OTL_DEFAULT_XXX_NULL_TO_VAL, DB2)</a></b></li>
-  <li><b><a href="otl4_ex202.htm">Example
-202 (otl_datetime container with
-TIMESTAMP values down to microseconds in DB2)</a></b></li>
-  <li><b><a href="otl4_ex207.htm">Example
-207 (otl_exception,
-derived from a base class, DB2)</a></b></li>
-  <li><b><a href="otl4_ex213.htm">Example
-213
-(OTL_ADD_NULL_TERMINATOR_STRING_SIZE, DB2)</a></b></li>
-  <li><b><a href="otl4_ex217.htm">Example
-217 (otl_stream::cancel() and DB2-CLI)</a></b></li>
-  <li><b><a href="otl4_ex224.htm">Example
-224 (std::string and
-CLOBs, DB2)</a></b></li>
-  <li><b><a href="otl4_ex236.htm">Example
-236 (SQL statement label,
-DB2)</a></b></li>
-  <li><b><a href="otl4_ex238.htm">Example
-238 (OTL/DB2-CLI,
-accessing the system data dictionary via DB2 CLI functions, DB2)</a></b></li>
-  <li><b><a href="otl4_ex243.htm">Example
-243 (64-bit integers (bigint), DB2, OTL/DB2-CLI)</a></b></li>
-  <li><b><a href="otl4_ex248.htm">Example
-248 (user defined string class and CLOBs, DB2)</a></b></li>
-  <li><b><a href="otl4_ex252.htm">Example
-252 (OTL tracing, DB2 CLI)</a></b></li>
-  <li><b><a href="otl4_ex256.htm">Example
-256 (Explict bind variables in SELECT statement column definitions, DB2)</a></b></li>
-  <li><b><a href="otl4_ex264.htm">Example
-264 (OTL stream read iterator, simple SELECT, DB2 CLI)</a></b></li>
-  <li><b><a href="otl4_ex290.htm">Example
-290 (Strict numeric type checking on SELECTs)</a></b></li>
-  <li><b><a href="otl4_ex309.htm">Example 309 (Stream buffer size as <span
- style="font-style: italic;">int</span>, simple Insert/Select)</a></b></li>
-  <li><b><a href="otl4_ex319.htm">Example 319 (Insert/Update/Select
-with DB2 CLOB&nbsp; in stream mode and
-otl_stream_read_iterator)</a></b></li>
-  <li><b><a href="otl4_ex320.htm">Example 320 (Insert/Update/Select
-with DB2 BLOB&nbsp; in stream mode and
-otl_stream_read_iterator)</a></b></li>
-  <li><b><a href="otl4_ex340.htm">Example 340 (OTL stream read
-iterator, "get by name" functions, DB2 CLI)</a></b></li>
-  <li><b><a href="otl4_ex373.htm">Example 373 (Simple Insert/Select,
-otl_connect::operator&lt;&lt;, &lt;&lt;=, &gt;&gt;)</a></b></li>
-  <li><b><a href="otl4_ex380.htm">Example 380
-(Insert/Update/Select, DB2 CLOBs in stream mode, and
-std:strings)</a></b></li>
-  <li><b><a href="otl4_ex387.htm">Example 387 (Insert/Update/Select
-with DB2 CLOB&nbsp; in stream mode, without otl_lob_stream::set_len())</a></b></li>
-  <li><a href="otl4_ex388.htm"><b>Example 388 (Insert/Update/Select
-with DB2 BLOB in stream mode, </b><b>without otl_lob_stream::set_len()</b><b>)</b></a></li>
-  <li><b><a href="otl4_ex471.htm">Example 471 (DB2, stored procedure
-with output parameters and a return code)</a></b></li>
-  <li><b><a href="otl4_ex472.htm">Example 472 (Insert/Implicit Result
-Set (Stored
-Proc)/Update)</a></b></li>
-  <li><b><a href="otl4_ex671.htm">Example 671 (XML as
-varchar_long/otl_long_string on SELECT, and
-varchar_long/otl_long_string on
-INSERT)</a></b></li>
-  <li><b><a href="otl4_ex672.htm">Example 672 (XML as
-varchar_long/std::string&nbsp; on SELECT and varchar_long/std::string
-on INSERT)</a></b></li>
-  <li><b><a href="otl4_ex694.htm">Example 694
-(Customizing the date
-format in OTL tracing via #define OTL_TRACE_FORMAT_DATETIME)</a></b></li>
-  <li><b><a href="otl4_ex695.htm">Example 695 (Skipping to the end of
-the row with otl_stream::skip_to_end_of_row())</a></b></li>
-  <li> <b><a href="otl4_ex712.htm">Example 712 (END-OF_ROW check)</a></b></li>
-</ol>
-<ul>
-  <ul>
-  </ul>
-</ul>
-<center>
-<hr width="100%">
-<p><a href="otl3_const_sql.htm">Prev</a> <a href="otl3_compile.htm">Next</a><a
- href="otl3.htm">Contents</a><a href="home.htm">Go Home</a></p>
-</center>
-<p>Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com
-<script language="JavaScript"><!-- hide from old browsers
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=ISO-8859-1">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, Examples for DB2 CLI</title>
+  </head>
+  <body>
+    <center>
+      <h1> OTL 4.0, Examples for DB2 CLI</h1>
+      <div style="text-align: left;">The examples below work with
+        DB2&nbsp; / CLI. In general, all of these examples should work
+        with any DB2 version 6.1 and higher, when DB2 CLI&nbsp; is
+        enabled in OTL by setting #define <a
+          href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a>.&nbsp;</div>
+    </center>
+    <ol>
+      <li><b><a href="otl3_ex89.htm">Example 89 (Simple
+            Insert/Select/Update)</a></b></li>
+      <li><b><a href="otl3_ex90.htm">Example 90 ("Incompatible datatypes
+            in stream operation" exception)</a></b></li>
+      <li><b><a href="otl3_ex91.htm">Example 91 (otl_datetime container
+            and DATE/TIME/TIMESTAMP table columns)</a></b></li>
+      <li><b><a href="otl3_ex92.htm">Example 92 (otl_long_string
+            container and CLOB column)</a></b></li>
+      <li><b><a href="otl3_ex93.htm">Example 93 (otl_long_string
+            container and BLOB column)</a></b></li>
+      <li><b><a href="otl3_ex94.htm">Example 94 (std::string and
+            STL-compliant stream iterators)</a></b></li>
+      <li><b><a href="otl3_ex95.htm">Example 95
+            (otl_stream::describe_select() with a simple Select)</a></b></li>
+      <li><b><a href="otl3_ex96.htm">Example 96 (otl_stream and NULLs)</a></b></li>
+      <li><b><a href="otl3_ex100.htm">Example 100 (otl_value&lt;T&gt;,
+            DB2-CLI)</a></b></li>
+      <li><b><a href="otl3_ex109.htm">Example 109 (OTL/DB2-CLI and bulk
+            operations with DB2's CLOB)</a></b></li>
+      <li><b><a href="otl3_ex115.htm">Example 115 (OTL stream pooling,
+            DB2-CLI)</a></b></li>
+      <li><b><a href="otl3_ex118.htm">Example 118
+            (otl_stream::set_flush(), DB2-CLI)</a></b></li>
+      <li><b><a href="otl3_ex121.htm">Example 121 (<font size="-1">OTL_VALUE_TEMPLATE_ON,
+
+
+
+              OTL_USER_DEFINED_STRING_CLASS_ON</font>, DB2-CLI)</a></b></li>
+      <li><b><a href="otl3_ex126.htm">Example 126 (Insert/Update/Select
+            with DB2 CLOB&nbsp; in stream mode)</a></b></li>
+      <li><b><a href="otl3_ex127.htm">Example 127 (Insert/Update/Select
+            with DB2 BLOB in stream mode)</a></b></li>
+      <li><b><a href="otl3_ex132.htm">Example 132 (Describe otl_stream's
+            bind variables for DB2)</a></b></li>
+      <li><b><a href="otl4_ex154.htm">Example 154
+            (set_transaction_isolation_level, DB2-CLI)</a></b></li>
+      <li><b><a href="otl4_ex157.htm">Example 157 (external logon,
+            DB2-CLI)</a></b></li>
+      <li><b><a href="otl4_ex161.htm">Example 161 (otl_stream::clean(),
+            cancelling SELECT's fetch sequence, DB2 )</a></b></li>
+      <li><b><a href="otl4_ex166.htm">Example 166 (otl_stream::clean(),
+            cleaning the SELECT stream's error flags, DB2 )</a></b></li>
+      <li><b><a href="otl4_ex171.htm">Example 171 (#define's
+            OTL_DEFAULT_XXX_NULL_TO_VAL, DB2)</a></b></li>
+      <li><b><a href="otl4_ex202.htm">Example 202 (otl_datetime
+            container with TIMESTAMP values down to microseconds in DB2)</a></b></li>
+      <li><b><a href="otl4_ex207.htm">Example 207 (otl_exception,
+            derived from a base class, DB2)</a></b></li>
+      <li><b><a href="otl4_ex213.htm">Example 213
+            (OTL_ADD_NULL_TERMINATOR_STRING_SIZE, DB2)</a></b></li>
+      <li><b><a href="otl4_ex217.htm">Example 217 (otl_stream::cancel()
+            and DB2-CLI)</a></b></li>
+      <li><b><a href="otl4_ex224.htm">Example 224 (std::string and
+            CLOBs, DB2)</a></b></li>
+      <li><b><a href="otl4_ex236.htm">Example 236 (SQL statement label,
+            DB2)</a></b></li>
+      <li><b><a href="otl4_ex238.htm">Example 238 (OTL/DB2-CLI,
+            accessing the system data dictionary via DB2 CLI functions,
+            DB2)</a></b></li>
+      <li><b><a href="otl4_ex243.htm">Example 243 (64-bit integers, DB2,
+            OTL/DB2-CLI)</a></b></li>
+      <li><b><a href="otl4_ex248.htm">Example 248 (user defined string
+            class and CLOBs, DB2)</a></b></li>
+      <li><b><a href="otl4_ex252.htm">Example 252 (OTL tracing, DB2 CLI)</a></b></li>
+      <li><b><a href="otl4_ex256.htm">Example 256 (Explict bind
+            variables in SELECT statement column definitions, DB2)</a></b></li>
+      <li><b><a href="otl4_ex264.htm">Example 264 (OTL stream read
+            iterator, simple SELECT, DB2 CLI)</a></b></li>
+      <li><b><a href="otl4_ex290.htm">Example 290 (Strict numeric type
+            checking on SELECTs)</a></b></li>
+      <li><b><a href="otl4_ex309.htm">Example 309 (Stream buffer size as
+            <span style="font-style: italic;">int</span>, simple
+            Insert/Select)</a></b></li>
+      <li><b><a href="otl4_ex319.htm">Example 319 (Insert/Update/Select
+            with DB2 CLOB&nbsp; in stream mode and
+            otl_stream_read_iterator)</a></b></li>
+      <li><b><a href="otl4_ex320.htm">Example 320 (Insert/Update/Select
+            with DB2 BLOB&nbsp; in stream mode and
+            otl_stream_read_iterator)</a></b></li>
+      <li><b><a href="otl4_ex340.htm">Example 340 (OTL stream read
+            iterator, "get by name" functions, DB2 CLI)</a></b></li>
+      <li><b><a href="otl4_ex373.htm">Example 373 (Simple Insert/Select,
+            otl_connect::operator&lt;&lt;, &lt;&lt;=, &gt;&gt;)</a></b></li>
+      <li><b><a href="otl4_ex380.htm">Example 380 (Insert/Update/Select,
+            DB2 CLOBs in stream mode, and std:strings)</a></b></li>
+      <li><b><a href="otl4_ex387.htm">Example 387 (Insert/Update/Select
+            with DB2 CLOB&nbsp; in stream mode, without
+            otl_lob_stream::set_len())</a></b></li>
+      <li><a href="otl4_ex388.htm"><b>Example 388 (Insert/Update/Select
+            with DB2 BLOB in stream mode, </b><b>without
+            otl_lob_stream::set_len()</b><b>)</b></a></li>
+      <li><b><a href="otl4_ex471.htm">Example 471 (DB2, stored procedure
+            with output parameters and a return code)</a></b></li>
+      <li><b><a href="otl4_ex472.htm">Example 472 (Insert/Implicit
+            Result Set (Stored Proc)/Update)</a></b></li>
+      <li><b><a href="otl4_ex671.htm">Example 671 (XML as
+            varchar_long/otl_long_string on SELECT, and
+            varchar_long/otl_long_string on INSERT)</a></b></li>
+      <li><b><a href="otl4_ex672.htm">Example 672 (XML as
+            varchar_long/std::string&nbsp; on SELECT and
+            varchar_long/std::string on INSERT)</a></b></li>
+      <li><b><a href="otl4_ex694.htm">Example 694 (Customizing the date
+            format in OTL tracing via #define OTL_TRACE_FORMAT_DATETIME)</a></b></li>
+      <li><b><a href="otl4_ex695.htm">Example 695 (Skipping to the end
+            of the row with otl_stream::skip_to_end_of_row())</a></b></li>
+      <li> <b><a href="otl4_ex712.htm">Example 712 (END-OF_ROW check)</a></b></li>
+      <li><b><a href="otl4_ex722.htm">Example 722 (OTL/DB2-CLI and bulk
+            operations with DB2's BLOB)</a></b></li>
+      <li><b><a href="otl4_ex727.htm">Example 727 (MERGE statement, DB2)</a></b></li>
+      <li><b><a href="otl4_ex730.htm">Example 730 (Large numbers (larger
+            than singed 64-bit int))</a></b></li>
+      <li><b><a href="otl4_ex738.htm">Example 738 (get_dirty_buf_len()
+            with INSERT and SELECT)</a></b></li>
+      <li><b><a href="otl4_ex744.htm">Example 744 (Extened / customized
+            numeric data type support)</a></b></li>
+      <li><b><a href="otl4_ex749.htm">Example 749 (VARCHAR column bound
+            as RAW[XXX] for reading/writing std::strings that have null
+            terminators ('\0') in the middle)</a></b></li>
+    </ol>
+    <ul>
+      <ul>
+      </ul>
+    </ul>
+    <center>
+      <hr width="100%">
+      <p><a href="otl3_const_sql.htm">Prev</a> <a
+          href="otl3_compile.htm">Next</a><a href="otl3.htm">Contents</a><a
+          href="home.htm">Go Home</a></p>
+    </center>
+    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com
+        <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
  </script></a>.</p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for any purpose is hereby granted without fee, provided that the above
-copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
-AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
-EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.<br>
-</i> </p>
-<script type="text/javascript">
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.<br>
+      </i> </p>
+    <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
+  </body>
 </html>

@@ -128,7 +128,7 @@ int main()
   otl_cursor::direct_exec
    (
     db,
-    "create table test_tab(f1 int, f2 varchar(30)) type=innoDB"
+    "create table test_tab(f1 int, f2 varchar(30))"
     );  // create table
 
   insert(); // insert records into the table

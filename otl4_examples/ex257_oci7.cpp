@@ -60,7 +60,7 @@ const OTL_BIGINT BIGINT_VAL1=12345678901234000LL;
 // below is compiler specific.
 #define OTL_STR_TO_BIGINT(str,n)                \
 {                                               \
-  n=strtoll(str,0,10);                          \
+  n=strtoll(str,nullptr,10);                    \
 }
 
 // Defining a bigint-to-string conversion 

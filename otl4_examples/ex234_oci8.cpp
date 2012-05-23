@@ -18,7 +18,7 @@ void select()
               "select * from test_tabxxx where f1>=:f<int> and f1<=:f*2",
                  // SELECT statement
               db, // connect object
-              0, // it's not a "reference cursor"
+              nullptr, // it's not a "reference cursor"
               "SQL Stm #1"
              ); 
    // create select stream

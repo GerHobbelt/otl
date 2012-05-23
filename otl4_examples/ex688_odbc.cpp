@@ -2,6 +2,7 @@
 using namespace std;
 
 #include <stdio.h>
+#include <string.h>
 
 // function that recognizes BACKUP and DBCC commands, and returns "true".
 inline bool sql_statement_with_diag_rec_output(const char* stm_text)

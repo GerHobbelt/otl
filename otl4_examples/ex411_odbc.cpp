@@ -99,7 +99,7 @@ public:
 
   int length(void) const 
   {
-    return (int)strlen(buf);
+    return static_cast<int>(strlen(buf));
   }
 
 protected:
@@ -114,8 +114,11 @@ ostream& operator<<(ostream& s,const super_fast_string& str)
   return s;
 }
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #define OTL_VALUE_TEMPLATE_ON // Turn on otl_value<T>
 #define OTL_USER_DEFINED_STRING_CLASS_ON
 #define USER_DEFINED_STRING_CLASS super_fast_string

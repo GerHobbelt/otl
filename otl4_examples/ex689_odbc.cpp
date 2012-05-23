@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+#include <string.h>
 #include <stdio.h>
 
 // function that recognizes BACKUP and DBCC commands, and returns "true".
