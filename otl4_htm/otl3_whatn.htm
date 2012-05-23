@@ -23,7 +23,7 @@ New</title>
 4.0</h1>
   <h1 align="center">What's New</h1>
   <h1>Current release number of the OTL header file</h1>
-  <p>Current release number of the OTL header file is <font size="5">4.0.202.
+  <p>Current release number of the OTL header file is <font size="5">4.0.204.
   <script language="JavaScript">
 <!-- hide from old browsers
 
@@ -45,11 +45,11 @@ New</title>
   </font>If you need the up-to-date version of the OTL
 header file, see the <a href="otl3_down.htm">download instructions</a>.&nbsp;
   </p>
-  <h1>OTL 4.0.202 is now released.</h1>
+  <h1>OTL 4.0.204 is now released.</h1>
   <h1>For more detail, see the <a href="#summary">summary </a>of new
 features. <i>The <a href="otl4_htm.zip">archived version</a> of the
 OTL Web pages </i>is available.</h1>
-  <h1><a name="summary"></a><i>From OTL 3.0.0 to OTL 4.0.202: summary
+  <h1><a name="summary"></a><i>From OTL 3.0.0 to OTL 4.0.204: summary
 of new features and bug fixes</i></h1>
 </ul>
 <p style="margin-bottom: 0in;" align="center">&nbsp;</p>
@@ -64,6 +64,62 @@ of new features and bug fixes</i></h1>
           </td>
           <td width="80">
           <p><font size="4"><b>Comment</b></font></p>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">22-Oct-2009. New (in
+OTL.4.204):<br>
+          <br>
+          <ul>
+            <li>A problem was reported in OTL/OCI8-11 (under #define
+OTL_ORA8-11). The problem is that <a href="otl3_connect_class.htm">otl_connect</a>
+leaks memory when used in a series of unsuccessful rlogon() calls
+(database connection requests are unsuccessful because, say, TNS name
+couldn't be resolved, or the database account credentials are invalid).
+The problem is fixed in this release.<br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">1-Oct-2009. New (in
+OTL4.0.203):<br>
+          <br>
+          <ul>
+            <li>DB2 UDB 9.7 was released this past summer. This release
+has been successfully compiled and tested with DB2 9.7. DB2 9.7
+introduced new data type: timestamp(N), where N in [0..12]. OTL only
+supports precision up to 9 digits (nanoseconds). So, <a
+ href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>::frac_pecision
+can be set as high as 9. I'll implement DB2 9.7 timestamp's precision
+in [10..12] range at some point in the future when somebody requests
+the feature.<br>
+              <br>
+            </li>
+          </ul>
+29-Sep-2009. New (in
+OTL4.0.203):<br>
+          <br>
+          <ul>
+            <li>The following GNU C++ compilation error was reported
+when <a href="otl3_compile.htm#OTL_ORA11G">OTL_ORA11G</a>, <a
+ href="otl3_compile.htm#OTL_ORA7_TIMESTAMP_TO_STRING">OTL_ORA7_TIMESTAMP_TO_STRING</a>
+              <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>,
+and <a href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a>
+are defined together:<br>
+              <br>
+              <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+operator "defined" requires an identifier<br>
+              <br>
+              </span>The error is fixed in this release.<span
+ style="font-family: monospace;"><br>
+              </span></li>
+          </ul>
+          <small></small></td>
+          <td style="vertical-align: top;"><br>
           </td>
         </tr>
         <tr>
