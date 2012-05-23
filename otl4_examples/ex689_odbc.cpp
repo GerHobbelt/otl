@@ -36,7 +36,7 @@ int main()
 
   otl_nocommit_stream stm; 
    // the OTL "nocommit" stream doesn't generate any COMMITs,
-   // which is needed for the DBCC command.
+   // which is needed for the BACKUP command.
 
   short int rec_ndx=1; // diagnostic record index
   SQLCHAR sql_state[1000]; // "SQL state" buffer
@@ -53,7 +53,7 @@ int main()
     // SQLExecDirect() function call.
 
   bool done;
-  // get all diagnostic records from the DBCC command
+  // get all diagnostic records from the BACKUP command
   do{
     done=stm.get_next_diag_rec
            (rec_ndx,

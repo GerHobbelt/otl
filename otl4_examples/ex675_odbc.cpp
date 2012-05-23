@@ -116,7 +116,7 @@ int main()
 // ===================== TimesTen via ODBC ======================================
 
   db.set_connection_mode(OTL_TIMESTEN_ODBC_CONNECT);
-  db.rlogon("scott/tiger@TT_tt1121_32");
+  db.rlogon("scott/tiger@TT_tt70_32");
 
   otl_cursor::direct_exec
    (

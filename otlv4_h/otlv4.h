@@ -33,6 +33,9 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdarg.h>
+#include <iomanip>
+
 
 //======================= CONFIGURATION #DEFINEs ===========================
 
@@ -818,18 +821,31 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
 #define OTL_TRACE_READ(val,function,type)               \
   if(OTL_TRACE_LEVEL & 0x10){                           \
     otl_var_desc* temp_vdesc=describe_next_in_var();    \
-    OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;            \
-    OTL_TRACE_STREAM<<"otl_stream(this=";               \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,this);            \
-    OTL_TRACE_STREAM<<")::" function "(" type ": ";     \
-    OTL_TRACE_STREAM<<"ftype=";                         \
-    OTL_TRACE_STREAM<<temp_vdesc->ftype;                \
-    OTL_TRACE_STREAM<<", placeholder=";                 \
-    OTL_TRACE_STREAM<<temp_vdesc->name;                 \
-    OTL_TRACE_STREAM<<", value=";                       \
-    OTL_TRACE_STREAM<<val;                              \
-    OTL_TRACE_STREAM <<");";                            \
-    OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;            \
+	if (temp_vdesc != NULL) /* [i_a] fix */             \
+	{                                                   \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;          \
+      OTL_TRACE_STREAM<<"otl_stream(this=";             \
+      OTL_TRACE_STREAM<<OTL_RCAST(void*,this);          \
+      OTL_TRACE_STREAM<<")::" function "(" type ": ";   \
+      OTL_TRACE_STREAM<<"ftype=";                       \
+      OTL_TRACE_STREAM<<temp_vdesc->ftype;              \
+      OTL_TRACE_STREAM<<", placeholder=";               \
+      OTL_TRACE_STREAM<<temp_vdesc->name;               \
+      OTL_TRACE_STREAM<<", value=";                     \
+      OTL_TRACE_STREAM<<val;                            \
+      OTL_TRACE_STREAM <<");";                          \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;          \
+	}                                                   \
+	else                                                \
+	{                                                   \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;          \
+	  OTL_TRACE_STREAM<<"loading superfluous input variable";   \
+	  OTL_TRACE_STREAM<<"::" function "(" type ": ";    \
+      OTL_TRACE_STREAM<<", value=";                     \
+      OTL_TRACE_STREAM<<val;                            \
+      OTL_TRACE_STREAM<<");";                           \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;          \
+	}                                                   \
   }
 #endif
 
@@ -837,6 +853,8 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
 #define OTL_TRACE_WRITE(val,function,type)              \
    if(OTL_TRACE_LEVEL & 0x10){                          \
      otl_var_desc* temp_vdesc=describe_next_out_var();  \
+	if (temp_vdesc != NULL) /* [i_a] fix */             \
+	{                                                   \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;           \
      OTL_TRACE_STREAM<<"otl_stream(this=";              \
      OTL_TRACE_STREAM<<OTL_RCAST(void*,this);           \
@@ -852,6 +870,20 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
        OTL_TRACE_STREAM<<val;                           \
      OTL_TRACE_STREAM<<");";                            \
      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;           \
+	}                                                   \
+	else                                                \
+	{                                                   \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;          \
+	  OTL_TRACE_STREAM<<"writing superfluous output variable";   \
+	  OTL_TRACE_STREAM<<"::" function "(" type " : ";    \
+      OTL_TRACE_STREAM<<", value=";                     \
+     if(this->is_null())                                \
+       OTL_TRACE_STREAM<<"NULL";                        \
+     else                                               \
+       OTL_TRACE_STREAM<<val;                           \
+      OTL_TRACE_STREAM<<");";                           \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;          \
+	}                                                   \
    }
 #endif
 
@@ -967,9 +999,11 @@ const int otl_unsupported_type=-10000;
 
 #if defined OTL_FUNC_THROW_SPEC_ON
 #define OTL_THROWS_OTL_EXCEPTION throw(otl_exception)
+#define OTL_THROWS_OTL_EXCEPTION_EX throw(otl_exception_ex) /* [i_a] hack to ensure otl_long_string et al can throw exceptions while preventing a cyclic dependency at compile time in this code */
 #define OTL_NO_THROW throw()
 #else
 #define OTL_THROWS_OTL_EXCEPTION
+#define OTL_THROWS_OTL_EXCEPTION_EX 
 #define OTL_NO_THROW
 #endif
 
@@ -1161,7 +1195,7 @@ using namespace std;
 #endif
 
 
-#endif
+#endif // OTL_STL_NOSTD_NAMESPACE
 
 #include <string>
 #include <iterator>
@@ -1178,7 +1212,16 @@ using namespace std;
 #endif
 #endif
 
+#else
+
+// [i_a] 'non-STL' OTL still uses it in OTL_TRACE_READ et al and we provide an otl_datetime to ostream
+// function for that, so we need to know the std namespace:
+#ifndef STD_NAMESPACE_PREFIX
+#define STD_NAMESPACE_PREFIX std::
 #endif
+
+#endif
+
 
 //======================= END OF CONFIGURATION ==============================
 
@@ -1319,6 +1362,13 @@ const int otl_error_code_33=32034;
 const int otl_error_code_34=32035;
 #define otl_error_msg_34 "END-OF-ROW check failed"
 
+const int otl_error_code_35=32036;
+#define otl_error_msg_35 "otl_long_string::c_str(): length is too large to allow us to add a NUL sentinal"
+
+const int otl_error_code_36=32037;
+#define otl_error_msg_36 "otl_long_string: array index is out of permissible range"
+
+
 const int otl_oracle_date_size=7;
 
 const int otl_explicit_select=0;
@@ -1333,6 +1383,11 @@ const unsigned int otl_all_date2str=2;
 
 const int otl_num_str_size=60;
 const int otl_date_str_size=60;
+
+/* [i_a] forwards references required to shut up the compiler */
+class otl_exception_ex;
+static void throw_otl_exception_ex(const char *msg, int code)
+	  OTL_THROWS_OTL_EXCEPTION_EX;
 
 class otl_select_struct_override{
 public:
@@ -1516,7 +1571,7 @@ inline bool otl_str_case_insensitive_equal(const char* s1, const char* s2)
 inline unsigned int otl_to_fraction
 (unsigned int fraction,int frac_prec)
 {
-  if(fraction==0||frac_prec==0)return fraction;
+  if(fraction==0||frac_prec==0)return 0; /* fraction */; /* [i_a] part of fix; see [otl_odbc_date_scale] */
   int degree_diff=9-frac_prec;
   for(int i=0;i<degree_diff;++i)
     fraction*=10;
@@ -1526,12 +1581,20 @@ inline unsigned int otl_to_fraction
 inline unsigned int otl_from_fraction
 (unsigned int fraction,int frac_prec)
 {
-  if(fraction==0||frac_prec==0)return fraction;
+  if(fraction==0||frac_prec==0)return 0 /* fraction */; /* [i_a] part of fix; see [otl_odbc_date_scale] */
   int degree_diff=9-frac_prec;
   for(int i=0;i<degree_diff;++i)
     fraction/=10;
   return fraction;
 }
+
+inline unsigned int otl_clip_fraction /* [i_a] clip fraction to top N significant decimal digits */
+(unsigned int fraction,int frac_prec)
+{
+  if(fraction==0||frac_prec==0)return 0;
+  return otl_to_fraction(otl_from_fraction(fraction, frac_prec), frac_prec);
+}
+
 
 #define OTL_NO_STM_TEXT "#No Stm Text available#"
 
@@ -1544,8 +1607,8 @@ public:
   int hour;
   int minute;
   int second;
-  unsigned long fraction;
-  int frac_precision;
+  unsigned long fraction; // [usec]
+  int frac_precision;	// 0..9
 
 #if defined(OTL_ORA_TIMESTAMP) || defined(OTL_ODBC_TIME_ZONE)
   short int tz_hour;
@@ -1917,7 +1980,7 @@ public:
      length=input_length;
      buf_size=buffer_size;
      v=new unsigned char[buffer_size+1];
-     memset(v,0,buffer_size);
+     memset(v,0,buffer_size+1); // [i_a] init all alloced bytes!
    }
  }
 
@@ -1955,7 +2018,7 @@ public:
       length=s.length;
       extern_buffer_flag=s.extern_buffer_flag;
       memcpy(v,s.v,length);
-      if(length<buf_size&&s.v[length]==0)
+      if(length<buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source; why not drop in a sentinel anyway if buf_size allows?
         v[length]=0;
     }
     return *this;
@@ -1973,7 +2036,7 @@ public:
     else{
       v=new unsigned char[buf_size];
       memcpy(v,s.v,length);
-      if(length<buf_size&&s.v[length]==0)
+      if(length<buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source; why not drop in a sentinel anyway if buf_size allows?
         v[length]=0;
     }
   }
@@ -1996,11 +2059,30 @@ public:
     return this_is_last_piece_;
   }
 
-  unsigned char& operator[](int ndx){return v[ndx];}
+  unsigned char& operator[](int ndx) /* [i_a] */
+	  OTL_THROWS_OTL_EXCEPTION_EX
+  {
+	  if (ndx < 0 || ndx >= buf_size)
+		  throw_otl_exception_ex(otl_error_msg_36, otl_error_code_36);
+	  return v[ndx];
+  }
 
-  virtual void null_terminate_string(const int alen)
+  virtual void null_terminate_string(const int alen) /* [i_a] */
+	  OTL_THROWS_OTL_EXCEPTION_EX
   {
     (*this)[alen]=0;
+  }
+
+  unsigned char *c_str() /* [i_a] */
+	  OTL_THROWS_OTL_EXCEPTION_EX
+  {
+	if (length < buf_size)
+	{
+		v[length] = 0;
+		return v;
+	}
+	throw_otl_exception_ex(otl_error_msg_35, otl_error_code_35);
+	return NULL;
   }
 
   int get_buf_size() const
@@ -2033,7 +2115,7 @@ public:
     length=input_length;
     buf_size=buffer_size;
     v=new unsigned char[(buffer_size+1)*sizeof(OTL_WCHAR)];
-    memset(v,0,buffer_size*sizeof(OTL_WCHAR));
+    memset(v,0,(buffer_size+1)*sizeof(OTL_WCHAR)); // [i_a] init all alloced bytes!
   }
   
   otl_long_unicode_string
@@ -2060,7 +2142,7 @@ public:
     else{
       v=new unsigned char[buf_size*sizeof(OTL_WCHAR)];
       memcpy(v,s.v,length*sizeof(OTL_WCHAR));
-      if(length<buf_size&&s.v[length]==0)
+      if(length<buf_size /*&&s.v[length]==0*/) // [i_a] same as above: always sentinel if space allows
         (*this)[length]=0;
     }
   }
@@ -2087,7 +2169,7 @@ public:
       length=s.length;
       extern_buffer_flag=s.extern_buffer_flag;
       memcpy(v,s.v,length*sizeof(OTL_WCHAR));
-      if(length<buf_size&&s.v[length]==0)
+      if(length<buf_size /*&&s.v[length]==0*/) // [i_a] same as above: always sentinel if space allows
         (*this)[length]=0;
     }
     return *this;
@@ -2095,19 +2177,36 @@ public:
 
   virtual ~otl_long_unicode_string(){}
   
-  OTL_CHAR& operator[](int ndx)
+  OTL_CHAR& operator[](int ndx) /* [i_a] */
+	  OTL_THROWS_OTL_EXCEPTION_EX
   {
+	  if (ndx < 0 || ndx >= buf_size)
+		  throw_otl_exception_ex(otl_error_msg_36, otl_error_code_36);
     return OTL_RCAST(OTL_CHAR*,v)[ndx];
   }
 
-  virtual void null_terminate_string(const int alen)
+  virtual void null_terminate_string(const int alen) /* [i_a] */
+	  OTL_THROWS_OTL_EXCEPTION_EX
   {
     (*this)[alen]=0;
   }
 
+  OTL_WCHAR *c_str() /* [i_a] for orthogonality's sake - same i/f as regular otl string now */
+	  OTL_THROWS_OTL_EXCEPTION_EX
+  {
+	if (length < buf_size)
+	{
+		OTL_RCAST(OTL_CHAR*,v)[length] = 0;
+		return OTL_RCAST(OTL_CHAR*,v);
+	}
+	throw_otl_exception_ex(otl_error_msg_35, otl_error_code_35);
+	return NULL;
+  }
 };
 
 #endif
+
+
 
 inline const char* otl_var_type_name(const int ftype)
 {
@@ -2359,6 +2458,44 @@ inline void otl_strcat(char* trg,const char* src)
     ++src;
   }
   *trg=0;
+}
+
+inline void otl_snprintf(char* dst, size_t dstlen, const char *fmt, ...) /* [i_a] kept around; handy as this is portable */
+{
+	if (dstlen > 0)
+	{
+		va_list a;
+	                   
+		va_start(a, fmt);
+#if defined(_MSC_VER)
+#if (_MSC_VER >= 1400)
+	    _vsnprintf_s(dst, dstlen, _TRUNCATE, fmt, a);
+#else
+	    _vsnprintf(dst, dstlen, fmt, a);
+#endif
+#else
+	    vsnprintf(dst, dstlen, fmt, a);
+#endif
+		va_end(a);
+		dst[dstlen - 1] = 0;
+	}
+}
+
+inline void otl_vsnprintf(char* dst, size_t dstlen, const char *fmt, va_list args) /* [i_a] */
+{
+	if (dstlen > 0)
+	{
+#if defined(_MSC_VER)
+#if (_MSC_VER >= 1400)
+	    _vsnprintf_s(dst, dstlen, _TRUNCATE, fmt, args);
+#else
+	    _vsnprintf(dst, dstlen, fmt, args);
+#endif
+#else
+	    vsnprintf(dst, dstlen, fmt, args);
+#endif
+	    dst[dstlen - 1] = 0;
+	}
 }
 
 #if defined(OTL_UNICODE) && !defined(OTL_ODBC)
@@ -3318,15 +3455,47 @@ STD_NAMESPACE_PREFIX ostream& operator<<
  return s;
 }
 
+#endif
+
+/* [i_a] the next one is also used in OTL_TRACE_READ() */
+#if ((defined(OTL_STL)||defined(OTL_VALUE_TEMPLATE_ON)) && defined(OTL_VALUE_TEMPLATE)) || defined(OTL_TRACE_LEVEL)
+
+#if !defined(STD_NAMESPACE_PREFIX)
+#error X
+#endif
+
 inline STD_NAMESPACE_PREFIX ostream& operator<<(
  STD_NAMESPACE_PREFIX ostream& s, 
- const otl_value<otl_datetime>& var)
+ const otl_datetime& var)
+{
+#if defined(OTL_TIMESTAMP_TO_OSTREAM)
+	s = OTL_TIMESTAMP_TO_OSTREAM(s, var);
+#else
+	/* USA format timestamp m/d/y, no timezone info (even if there is some available. This is backwards compatible. */
+   s<<STD_NAMESPACE_PREFIX setfill('0')
+	<<STD_NAMESPACE_PREFIX setw(2)<<var.month
+	<<"/"<<STD_NAMESPACE_PREFIX setw(2)<<var.day
+	<<"/"<<STD_NAMESPACE_PREFIX setw(4)<<var.year
+	<<" "<<STD_NAMESPACE_PREFIX setw(2)<<var.hour
+	<<":"<<STD_NAMESPACE_PREFIX setw(2)<<var.minute
+	<<":"<<STD_NAMESPACE_PREFIX setw(2)<<var.second
+	<<STD_NAMESPACE_PREFIX setfill(' ');
+#endif
+   return s;
+}
+
+#endif
+
+#if (defined(OTL_STL)||defined(OTL_VALUE_TEMPLATE_ON)) && defined(OTL_VALUE_TEMPLATE)
+
+inline STD_NAMESPACE_PREFIX ostream& operator<<(
+ STD_NAMESPACE_PREFIX ostream& s, 
+ const otl_value<otl_datetime>& var) /* [i_a] */
 {
  if(var.ind)
    s<<"NULL";
  else{
-   s<<var.v.month<<"/"<<var.v.day<<"/"<<var.v.year<<" "
-    <<var.v.hour<<":"<<var.v.minute<<":"<<var.v.second;
+   s<<var.v;
  }
  return s;
 }
@@ -6298,9 +6467,13 @@ protected:
 
 public:
 
-  int get_select_row_count() const 
+  int get_select_row_count() const /* [i_a] is used for get_dirty_buf_len() only! is NOT the number of rows returned by SELECT */
   {
     return this->cur_row==-1?0:this->cur_size-this->cur_row; 
+  }
+  int get_row_count() const /* [i_a] */
+  {
+	  return this->row_count; 
   }
   int get_sl_len() const {return sl_len;}
   otl_tmpl_variable<TVariableStruct>* get_sl(){return sl;}
@@ -6462,6 +6635,24 @@ public:
  int eof_intern(void)
  {
   return !eof_status;
+ }
+
+ /* [i_a] fix */
+ void skip_to_end_of_row()
+ {
+  check_if_executed();
+  if(eof_intern())return;
+  // get_next() + look_ahead()
+  while(cur_col<sl_len-1){
+   ++cur_col;
+   null_fetched=sl[cur_col].is_null(this->cur_row);
+  }
+  eof_status=this->next();
+  cur_col=0;
+  if(!eof_intern()){
+   cur_col=-1;
+  }
+  ++_rfc;
  }
 
 
@@ -8964,6 +9155,23 @@ public:
   return null_fetched;
  }
 
+ /* [i_a] fix */
+ void skip_to_end_of_row()
+ {
+  if(eof())return;
+  // get_in_next():
+  if(iv_len==0)return;
+  if(in_y_len==0)return;
+  if(cur_in_y<in_y_len-1){
+   ++cur_in_y;
+   cur_in_x=0;
+  }else{
+   cur_in_y=0;
+   cur_in_x=0;
+   in_y_len=0;
+  }
+ }
+
  void get_in_next(void)
  {
   if(iv_len==0)return;
@@ -9741,7 +9949,6 @@ inline size_t otl_strlen(const SQLWCHAR* s)
 #endif
 
 typedef OTL_SQL_TIMESTAMP_STRUCT otl_time;
-const int otl_odbc_date_prec=23;
 #if defined(OTL_ODBC_MSSQL_2008)
 const int otl_odbc_date_scale=7;
 #elif defined(OTL_ODBC_MSSQL_2005)
@@ -9749,6 +9956,22 @@ const int otl_odbc_date_scale=3;
 #else
 const int otl_odbc_date_scale=0;
 #endif
+inline const int otl_odbc_date_prec(int override_len = 0)
+{
+	static int tslen = 23;
+	if (override_len)
+	{
+		tslen = override_len; // preferred: 19+(otl_odbc_date_scale!=0?1+otl_odbc_date_scale:0);
+	}
+	return tslen;
+}
+/*
+ [i_a] ^^^^^^^^^^^^^^^^^^^^^^^^ was: 23 
+
+ part of fix for http://connect.microsoft.com/SQLServer/feedback/ViewFeedback.aspx?FeedbackID=331868
+ see also ms-help://MS.VSCC.v90/MS.MSDNQTR.v90.en/odbc/html/541b83ab-b16d-4714-bcb2-3c3daa9a963b.htm 
+ --> 'Column Size' comments for SQLBindParameter(...)
+*/
 
 const int OTL_MAX_MSG_ARR=512;
 
@@ -10560,6 +10783,10 @@ public:
    status=SQLAllocConnect(henv, &hdbc);
 #endif
    if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)return 0;
+  }
+  else /* [i_a] */
+  {
+	  status=SQL_SUCCESS;
   }
 
 #ifndef OTL_ODBC_MYSQL
@@ -12461,7 +12688,10 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
  {
 #if (ODBCVER >= 0x0300)
 #else
-  OTL_SQLUINTEGER irows;
+  /*
+    [i_a] 'irows' is used below: see there for URLs to why OTL_SQLULEN
+  */
+  OTL_SQLULEN irows;
 #endif
   if(direct_exec_flag){
    return 1;
@@ -12483,9 +12713,15 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 #else
    if(last_iters>1||iters>1||_rpc>1){
      last_iters=iters;
+	 /*
+	 [i_a] parameter 2 + 3 type OTL_SQLULEN:
+	 see
+	 http://osdir.com/ml/db.unixodbc.devel/2005-07/msg00013.html
+	 http://support.microsoft.com/default.aspx?scid=kb;en-us;298678
+	 */
      status=SQLParamOptions
        (cda,
-        OTL_SCAST(OTL_SQLUINTEGER,iters),
+        OTL_SCAST(OTL_SQLULEN,iters),
         &irows); 
      if(status!=SQL_SUCCESS&&
         status!=SQL_SUCCESS_WITH_INFO)
@@ -12743,12 +12979,12 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 #elif defined(OTL_ODBC_MULTI_MODE)
      (connection_type==OTL_MSSQL_2005_ODBC_CONNECT||
       connection_type==OTL_MSSQL_2008_ODBC_CONNECT) ? 0 :
-     (sqltype==SQL_TYPE_TIMESTAMP?otl_odbc_date_prec:aelem_size),
+     (sqltype==SQL_TYPE_TIMESTAMP?otl_odbc_date_prec():aelem_size),
 #else
-     sqltype==SQL_TYPE_TIMESTAMP?otl_odbc_date_prec:aelem_size,
+     sqltype==SQL_TYPE_TIMESTAMP?otl_odbc_date_prec():aelem_size,
 #endif
 #else
-     sqltype==SQL_TIMESTAMP?otl_odbc_date_prec:aelem_size,
+     sqltype==SQL_TIMESTAMP?otl_odbc_date_prec():aelem_size,
 #endif
 #if (ODBCVER >= 0x0300)
      sqltype==SQL_TYPE_TIMESTAMP ? 
@@ -12769,7 +13005,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
     int temp_column_size=0;
 #if (ODBCVER >= 0x0300)
     if(sqltype==SQL_TYPE_TIMESTAMP)
-      temp_column_size=otl_odbc_date_prec;
+      temp_column_size=otl_odbc_date_prec();
 #if defined(OTL_UNICODE)
     else if(ftype==SQL_C_WCHAR)
       temp_column_size=(aelem_size-1)*sizeof(OTL_CHAR);
@@ -12781,7 +13017,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
       temp_column_size=aelem_size;
 #else
     if(sqltype==SQL_TIMESTAMP)
-      temp_column_size=otl_odbc_date_prec;
+      temp_column_size=otl_odbc_date_prec();
     else if(ftype==SQL_C_CHAR)
       temp_column_size=aelem_size-1;
     else
@@ -13696,7 +13932,7 @@ public:
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     try{
       logoff();
-    }catch(otl_exception&){
+    }catch(OTL_CONST_EXCEPTION otl_exception&){
     }
 #endif
   }
@@ -14015,7 +14251,7 @@ public:
    try{
      if(!closed_flag)
        close();
-   }catch(otl_exception&){
+   }catch(OTL_CONST_EXCEPTION otl_exception&){
    }
 #else
    if(!closed_flag)
@@ -14434,6 +14670,78 @@ public:
   }else
    return 0;
  }
+
+  /* [i_a] fix */
+  void skip_to_end_of_row()
+  {
+    if(next_ov_ndx==0)
+      return;
+	if((*ov_len)==0)return;
+	last_oper_was_read_op=true;
+	switch(shell->stream_type){
+	case otl_odbc_no_stream:
+		break;
+	case otl_odbc_io_stream:
+		last_eof_rc=(*io)->eof();
+		(*io)->skip_to_end_of_row();
+		break;
+	case otl_odbc_select_stream:
+		last_eof_rc=(*ss)->eof();
+		(*ss)->skip_to_end_of_row();
+		break;
+	}
+	while ((*next_ov_ndx)<(*ov_len)-1)
+		++(*next_ov_ndx);
+	// (*next_ov_ndx)=0;
+  }
+
+  void get_next()
+  {
+	if((*ov_len)==0)return;
+	last_oper_was_read_op=true;
+	switch(shell->stream_type){
+	case otl_odbc_no_stream:
+		break;
+	case otl_odbc_io_stream:
+		last_eof_rc=(*io)->eof();
+		(*io)->get_next();
+		break;
+	case otl_odbc_select_stream:
+		last_eof_rc=(*ss)->eof();
+		(*ss)->get_next();
+		break;
+	}
+	if ((*next_ov_ndx)<(*ov_len)-1)
+		++(*next_ov_ndx);
+  }
+
+  int get_row_count() const 
+  {
+	if((*ss)){
+		(*adb)->reset_throw_count();
+		return (*ss)->get_row_count();
+	}
+    return 0;
+  }
+  int get_sl_len() const 
+  {
+	if((*ss))
+	{
+		(*adb)->reset_throw_count();
+		return (*ss)->get_sl_len();
+	}
+	return 0;
+  }
+  long get_rfc() const 
+  {
+	if((*ss))
+	{
+		(*adb)->reset_throw_count();
+		return (*ss)->get_rfc();
+	}
+    return 0;
+  }
+  /* [i_a] fix END */
 
   operator int(void) OTL_THROWS_OTL_EXCEPTION
   {
@@ -15267,6 +15575,95 @@ public:
    return *this;
  }
 
+ /* [i_a] swapped order of appearance of 
+          otl_datetime >> and << operators 
+		  so OTL_TRACE_WRITE() in the << can 
+		  use it; using a forward function reference 
+		  here is no use as MSVC2008 just complains
+		  in another way then (unless we'd complete
+		  move that function implementation out of 
+		  here, which is 
+  */
+ otl_stream& operator<<(const otl_datetime& s)
+   OTL_THROWS_OTL_EXCEPTION
+ {
+   otl_time tmp;
+   last_oper_was_read_op=false;
+   reset_end_marker();
+#if defined(OTL_ODBC_TIMESTAMP_TO_STRING)
+    if(describe_next_in_var()->ftype==otl_var_char){
+#if defined(OTL_UNICODE)
+#if defined(OTL_UNICODE_CHAR_TYPE)
+     OTL_UNICODE_CHAR_TYPE tmp_str[100];
+#else
+      OTL_CHAR tmp_str[100];
+#endif
+#else
+      char tmp_str[100];
+#endif      
+     OTL_ODBC_TIMESTAMP_TO_STRING(s,tmp_str);
+     OTL_TRACE_READ
+       (s, /* [i_a] */
+        "operator <<",
+        "otl_datetime&");
+     (*this)<<tmp_str;
+     return *this;
+    }else{
+		int scale =         /* [i_a] */
+#if (ODBCVER >= 0x0300)
+#if defined(OTL_ODBC_MULTI_MODE)
+     (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2008_ODBC_CONNECT)? 7 : 
+      (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2005_ODBC_CONNECT)? 3 :
+      otl_odbc_date_scale;
+#else
+     otl_odbc_date_scale;
+#endif
+#else
+     otl_odbc_date_scale;
+#endif
+      tmp.year=OTL_SCAST(SQLSMALLINT,s.year);
+      tmp.month=OTL_SCAST(SQLSMALLINT,s.month);
+      tmp.day=OTL_SCAST(SQLSMALLINT,s.day);
+      tmp.hour=OTL_SCAST(SQLSMALLINT,s.hour);
+      tmp.minute=OTL_SCAST(SQLSMALLINT,s.minute);
+      tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
+      tmp.fraction=otl_clip_fraction(otl_to_fraction(s.fraction,s.frac_precision), scale); /* [i_a] fix, see comment at [otl_odbc_date_scale] */
+      (*this)<<tmp;  
+      OTL_TRACE_READ(s, /* [i_a] */
+                     "operator <<", /* [i_a] wrong text fix */
+                     "otl_datetime&");
+      inc_next_iov();
+      return *this;
+    }
+#else
+		int scale =                     /* [i_a] */
+#if (ODBCVER >= 0x0300)
+#if defined(OTL_ODBC_MULTI_MODE)
+     (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2008_ODBC_CONNECT)? 7 : 
+      (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2005_ODBC_CONNECT)? 3 :
+      otl_odbc_date_scale;
+#else
+     otl_odbc_date_scale;
+#endif
+#else
+     otl_odbc_date_scale;
+#endif
+    tmp.year=OTL_SCAST(SQLSMALLINT,s.year);
+    tmp.month=OTL_SCAST(SQLSMALLINT,s.month);
+    tmp.day=OTL_SCAST(SQLSMALLINT,s.day);
+    tmp.hour=OTL_SCAST(SQLSMALLINT,s.hour);
+    tmp.minute=OTL_SCAST(SQLSMALLINT,s.minute);
+    tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
+    tmp.fraction=otl_clip_fraction(otl_to_fraction(s.fraction,s.frac_precision), scale); /* [i_a] fix, see comment at [otl_odbc_date_scale] */
+    (*this)<<tmp;  
+    OTL_TRACE_READ(s, /* [i_a] */
+                   "operator <<",
+                   "otl_datetime&");
+    inc_next_iov();
+    return *this;
+#endif
+ }
+
  otl_stream& operator>>(otl_datetime& s)
    OTL_THROWS_OTL_EXCEPTION
  {
@@ -15291,20 +15688,10 @@ public:
 #else
     OTL_ODBC_STRING_TO_TIMESTAMP(tmp_str,s);
 #endif
-#if defined(OTL_ODBC_TIME_ZONE)
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction
-        <<" "<<s.tz_hour<<":"<<s.tz_minute,
+      (s, /* [i_a] */
        "operator >>",
        "otl_datetime&");
-#else
-    OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
-       "operator >>",
-       "otl_datetime&");
-#endif
     return *this;
   }else{
     otl_time tmp;
@@ -15358,80 +15745,11 @@ public:
 
 #endif
   OTL_TRACE_WRITE
-    (s.month<<"/"<<s.day<<"/"
-     <<s.year<<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+    (s, /* [i_a] */
      "operator >>",
      "otl_datetime&");
   inc_next_ov();
   return *this;
- }
-
- otl_stream& operator<<(const otl_datetime& s)
-   OTL_THROWS_OTL_EXCEPTION
- {
-   otl_time tmp;
-   last_oper_was_read_op=false;
-   reset_end_marker();
-#if defined(OTL_ODBC_TIMESTAMP_TO_STRING)
-    if(describe_next_in_var()->ftype==otl_var_char){
-#if defined(OTL_UNICODE)
-#if defined(OTL_UNICODE_CHAR_TYPE)
-     OTL_UNICODE_CHAR_TYPE tmp_str[100];
-#else
-      OTL_CHAR tmp_str[100];
-#endif
-#else
-      char tmp_str[100];
-#endif      
-     OTL_ODBC_TIMESTAMP_TO_STRING(s,tmp_str);
-#if defined(OTL_ODBC_TIME_ZONE)
-     OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction
-        <<" "<<s.tz_hour<<":"<<s.tz_minute,
-        "operator <<",
-        "otl_datetime&");
-#else
-     OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
-        "operator <<",
-        "otl_datetime&");
-#endif
-     (*this)<<tmp_str;
-     return *this;
-    }else{
-      tmp.year=OTL_SCAST(SQLSMALLINT,s.year);
-      tmp.month=OTL_SCAST(SQLSMALLINT,s.month);
-      tmp.day=OTL_SCAST(SQLSMALLINT,s.day);
-      tmp.hour=OTL_SCAST(SQLSMALLINT,s.hour);
-      tmp.minute=OTL_SCAST(SQLSMALLINT,s.minute);
-      tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
-      tmp.fraction=otl_to_fraction(s.fraction,s.frac_precision);
-      (*this)<<tmp;  
-      OTL_TRACE_READ(s.month<<"/"<<s.day<<"/"<<s.year
-                     <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
-                     "operator >>",
-                     "otl_datetime&");
-      inc_next_iov();
-      return *this;
-    }
-#else
-    tmp.year=OTL_SCAST(SQLSMALLINT,s.year);
-    tmp.month=OTL_SCAST(SQLSMALLINT,s.month);
-    tmp.day=OTL_SCAST(SQLSMALLINT,s.day);
-    tmp.hour=OTL_SCAST(SQLSMALLINT,s.hour);
-    tmp.minute=OTL_SCAST(SQLSMALLINT,s.minute);
-    tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
-    tmp.fraction=otl_to_fraction(s.fraction,s.frac_precision);
-    (*this)<<tmp;  
-    OTL_TRACE_READ(s.month<<"/"<<s.day<<"/"<<s.year
-                   <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
-                   "operator <<",
-                   "otl_datetime&");
-    inc_next_iov();
-    return *this;
-#endif
  }
 
 #if !defined(OTL_UNICODE)
@@ -16208,10 +16526,10 @@ public:
    {
      char temp_str[otl_bigint_str_size];
      _i64toa(n,temp_str,10);
-     OTL_TRACE_READ(temp_str,"operator >>","BIGINT")
+     OTL_TRACE_READ(temp_str,"operator <<","BIGINT") /* [i_a] text fix */
    }
 #elif !defined(_MSC_VER) && defined(OTL_TRACE_LEVEL)
-   OTL_TRACE_READ(n,"operator >>","BIGINT");
+   OTL_TRACE_READ(n,"operator <<","BIGINT"); /* [i_a] text fix */
 #endif
    switch(shell->stream_type){
    case otl_odbc_no_stream:
@@ -17759,7 +18077,7 @@ public:
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     try{
       logoff();
-    }catch(otl_exception&){
+    }catch(OTL_CONST_EXCEPTION otl_exception&){
     }
 #endif
   }
@@ -18158,9 +18476,13 @@ private:
 
 public:
 
-  int get_select_row_count() const 
+  int get_select_row_count() const /* [i_a] is used for get_dirty_buf_len() only! is NOT the number of rows returned by SELECT */
   {
     return this->cur_row==-1?0:this->cur_size-this->cur_row;
+  }
+  int get_row_count() const /* [i_a] */
+  {
+	  return this->row_count; 
   }
 
  void cleanup(void)
@@ -20131,8 +20453,7 @@ public:
     OTL_ORA7_STRING_TO_TIMESTAMP(tmp_str,s);
 #endif
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      (s, /* [i_a] */
        "operator >>",
        "otl_datetime&");
     return *this;
@@ -20159,8 +20480,7 @@ public:
     s.second=tmp.second-1;
 #endif
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      (s, /* [i_a] */
        "operator >>",
        "otl_datetime&")
       inc_next_ov();
@@ -20189,8 +20509,7 @@ public:
   s.second=tmp.second-1;
 #endif
   OTL_TRACE_WRITE
-    (s.month<<"/"<<s.day<<"/"<<s.year
-     <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+    (s, /* [i_a] */
      "operator >>",
      "otl_datetime&")
   inc_next_ov();
@@ -20208,8 +20527,7 @@ public:
      char tmp_str[100];
      OTL_ORA7_TIMESTAMP_TO_STRING(s,tmp_str);
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (s, /* [i_a] */
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp_str;
@@ -20224,8 +20542,7 @@ public:
      tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
      tmp.second=OTL_SCAST(unsigned char, (s.second+1));
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (s, /* [i_a] */
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp;
@@ -20242,8 +20559,7 @@ public:
      tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
      tmp.second=OTL_SCAST(unsigned char, (s.second+1));
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (s, /* [i_a] */
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp;
@@ -24519,7 +24835,7 @@ public:
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
    try{
      close();
-   }catch(otl_exception&){
+   }catch(OTL_CONST_EXCEPTION otl_exception&){
    }
 #else
    close();
@@ -24965,7 +25281,7 @@ public:
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     try{
       logoff();
-    }catch(otl_exception&){
+    }catch(OTL_CONST_EXCEPTION otl_exception&){
     }
 #else
     logoff();
@@ -27241,9 +27557,13 @@ protected:
 
 public:
 
-  int get_select_row_count() const 
+  int get_select_row_count() const /* [i_a] is used for get_dirty_buf_len() only! is NOT the number of rows returned by SELECT */
   {
     return this->cur_row==-1?0:this->cur_size-this->cur_row;
+  }
+  int get_row_count() const /* [i_a] */
+  {
+	  return this->row_count; 
   }
 
   long get_rfc() const {return _rfc;}
@@ -28594,36 +28914,11 @@ else if(strcmp(datatype,"TIMESTAMP")==0)
    OTL_STRCPY_S(out_buf,out_buf_sz,"timestamp");
 #endif
   else if(strcmp(datatype,"VARCHAR2")==0)
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-   sprintf_s(out_buf,out_buf_sz,"char[%d]",varchar_size);
-#else
-   sprintf(out_buf,"char[%d]",varchar_size);
-#endif
-#else
-   sprintf(out_buf,"char[%d]",varchar_size);
-#endif
+   otl_snprintf(out_buf,out_buf_sz,"char[%d]",varchar_size); /* [i_a] */
   else if(strcmp(datatype,"CHAR")==0)
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-   sprintf_s(out_buf,out_buf_sz,"char[%d]",varchar_size);
-#else
-   sprintf(out_buf,"char[%d]",varchar_size);
-#endif
-#else
-   sprintf(out_buf,"char[%d]",varchar_size);
-#endif
+   otl_snprintf(out_buf,out_buf_sz,"char[%d]",varchar_size); /* [i_a] */
    else if(strcmp(datatype,"REF CURSOR")==0)
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-   sprintf_s(out_buf,out_buf_sz,"refcur,out[%d]",refcur_buf_size);
-#else
-   sprintf(out_buf,"refcur,out[%d]",refcur_buf_size);
-#endif
-#else
-   sprintf(out_buf,"refcur,out[%d]",refcur_buf_size);
-#endif
-
+   otl_snprintf(out_buf,out_buf_sz,"refcur,out[%d]",refcur_buf_size); /* [i_a] */
  }
 
   void throw_end_of_row()
@@ -28788,35 +29083,11 @@ public:
   int i;
 
   if(package_name==0)
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-    sprintf_s(full_name,sizeof(full_name),"%s",proc_name);
-#else
-    sprintf(full_name,"%s",proc_name);
-#endif
-#else
-    sprintf(full_name,"%s",proc_name);
-#endif
+    otl_snprintf(full_name,sizeof(full_name),"%s",proc_name); /* [i_a] */
   else
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-    sprintf_s(full_name,sizeof(full_name),"%s.%s",package_name,proc_name);
-#else
-    sprintf(full_name,"%s.%s",package_name,proc_name);
-#endif
-#else
-    sprintf(full_name,"%s.%s",package_name,proc_name);
-#endif
+    otl_snprintf(full_name,sizeof(full_name),"%s.%s",package_name,proc_name); /* [i_a] */
   if(schema_name_included&&schema_name!=0){
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-    sprintf_s(temp_buf,sizeof(temp_buf),"%s.%s",schema_name,full_name);
-#else
-    sprintf(temp_buf,"%s.%s",schema_name,full_name);
-#endif
-#else
-    sprintf(temp_buf,"%s.%s",schema_name,full_name);
-#endif
+    otl_snprintf(temp_buf,sizeof(temp_buf),"%s.%s",schema_name,full_name); /* [i_a] */
     OTL_STRCPY_S(full_name,sizeof(full_name),temp_buf);
   }
 
@@ -28920,15 +29191,7 @@ public:
   }
 
   if(desc_len==0){
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-   sprintf_s(temp_buf,sizeof(temp_buf),"procedure %s",full_name);
-#else
-   sprintf(temp_buf,"procedure %s",full_name);
-#endif
-#else
-   sprintf(temp_buf,"procedure %s",full_name);
-#endif
+   otl_snprintf(temp_buf,sizeof(temp_buf),"procedure %s",full_name); /* [i_a] */
    throw otl_exception
     (otl_error_msg_13,
      otl_error_code_13,
@@ -28951,15 +29214,7 @@ public:
      // procedure with one parameter of refcur type
         if(strcmp(desc.get_ptr()[0].get_ptr()->in_out,"IN")==0){
       // refcur parameter should be either OUT or IN OUT, not IN.
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-      sprintf_s(temp_buf,sizeof(temp_buf),"procedure %s",full_name);
-#else
-      sprintf(temp_buf,"procedure %s",full_name);
-#endif
-#else
-      sprintf(temp_buf,"procedure %s",full_name);
-#endif
+      otl_snprintf(temp_buf,sizeof(temp_buf),"procedure %s",full_name); /* [i_a] */
       throw otl_exception
        (otl_error_msg_15,
         otl_error_code_15,
@@ -28980,32 +29235,14 @@ public:
        (temp_buf,sizeof(temp_buf),desc.get_ptr()[0].get_ptr()->data_type,
         varchar_size,all_num2type,refcur_buf_size);
      if(temp_buf[0]==0){
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-      sprintf_s(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s",
+      otl_snprintf(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s", /* [i_a] */
                 full_name,desc.get_ptr()[0].get_ptr()->arg_name);
-#else
-      sprintf(temp_buf,"procedure %s, parameter %s",
-              full_name,desc.get_ptr()[0].get_ptr()->arg_name);
-#endif
-#else
-      sprintf(temp_buf,"procedure %s, parameter %s",
-              full_name,desc.get_ptr()[0].get_ptr()->arg_name);
-#endif
       throw otl_exception
        (otl_error_msg_14,
         otl_error_code_14,
         temp_buf,0);
      }
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-     sprintf_s(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[0].get_ptr()->bind_var,temp_buf);
-#else
-     sprintf(temp_buf2,desc.get_ptr()[0].get_ptr()->bind_var,temp_buf);
-#endif
-#else
-     sprintf(temp_buf2,desc.get_ptr()[0].get_ptr()->bind_var,temp_buf);
-#endif
+     otl_snprintf(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[0].get_ptr()->bind_var,temp_buf); /* [i_a] */
      otl_strcat(sql_stm,"BEGIN ");
      otl_strcat(sql_stm,full_name);
      otl_strcat(sql_stm,"(");
@@ -29033,38 +29270,16 @@ public:
        (temp_buf,sizeof(temp_buf),desc.get_ptr()[0].get_ptr()->data_type,
         varchar_size,all_num2type,refcur_buf_size);
      if(temp_buf[0]==0){
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-       sprintf_s(temp_buf,sizeof(temp_buf),
+       otl_snprintf(temp_buf,sizeof(temp_buf), /* [i_a] */
                  "procedure %s, parameter %s",
                  full_name,
                  desc.get_ptr()[0].get_ptr()->arg_name);
-#else
-      sprintf(temp_buf,
-              "procedure %s, parameter %s",
-              full_name,
-              desc.get_ptr()[0].get_ptr()->arg_name);
-#endif
-#else
-      sprintf(temp_buf,
-              "procedure %s, parameter %s",
-              full_name,
-              desc.get_ptr()[0].get_ptr()->arg_name);
-#endif
       throw otl_exception
        (otl_error_msg_14,
         otl_error_code_14,
         temp_buf,0);
      }
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-     sprintf_s(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[0].get_ptr()->bind_var,temp_buf);
-#else
-     sprintf(temp_buf2,desc.get_ptr()[0].get_ptr()->bind_var,temp_buf);
-#endif
-#else
-     sprintf(temp_buf2,desc.get_ptr()[0].get_ptr()->bind_var,temp_buf);
-#endif
+     otl_snprintf(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[0].get_ptr()->bind_var,temp_buf); /* [i_a] */
      otl_strcat(sql_stm,"BEGIN ");
      otl_strcat(sql_stm,temp_buf2);
      otl_strcat(sql_stm," ");
@@ -29099,15 +29314,7 @@ public:
   }
   if(refcur_flag){
    if(!refcur_outpar){
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-    sprintf_s(temp_buf,sizeof(temp_buf),"procedure %s",full_name);
-#else
-    sprintf(temp_buf,"procedure %s",full_name);
-#endif
-#else
-    sprintf(temp_buf,"procedure %s",full_name);
-#endif
+    otl_snprintf(temp_buf,sizeof(temp_buf),"procedure %s",full_name); /* [i_a] */
     throw otl_exception
      (otl_error_msg_15,
       otl_error_code_15,
@@ -29136,18 +29343,8 @@ public:
         varchar_size,all_num2type,refcur_buf_size);
      if(temp_buf[0]==0&&
         strcmp(desc.get_ptr()[i].get_ptr()->data_type,"REF CURSOR")!=0){
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-      sprintf_s(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s",
+      otl_snprintf(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s", /* [i_a] */
                 full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#else
-      sprintf(temp_buf,"procedure %s, parameter %s",
-              full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#endif
-#else
-      sprintf(temp_buf,"procedure %s, parameter %s",
-              full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#endif
       throw otl_exception
        (otl_error_msg_14,
         otl_error_code_14,
@@ -29159,34 +29356,12 @@ public:
      else if(strcmp(desc.get_ptr()[i].get_ptr()->data_type,"REF CURSOR")==0&&
              stm_type==otl_mixed_refcur_stream_type){
        desc.get_ptr()[i].get_ptr()->bind_var[strlen(desc.get_ptr()[i].get_ptr()->bind_var)-5]=0;
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-       sprintf_s(temp_buf2,sizeof(temp_buf2),
+       otl_snprintf(temp_buf2,sizeof(temp_buf2), /* [i_a] */
                  "%s<%s> := ",
                  desc.get_ptr()[i].get_ptr()->bind_var,
                  temp_buf);
-#else
-       sprintf(temp_buf2,
-               "%s<%s> := ",
-               desc.get_ptr()[i].get_ptr()->bind_var,
-               temp_buf);
-#endif
-#else
-       sprintf(temp_buf2,
-               "%s<%s> := ",
-               desc.get_ptr()[i].get_ptr()->bind_var,
-               temp_buf);
-#endif
      }else
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-       sprintf_s(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#else
-     sprintf(temp_buf2,desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#endif
-#else
-     sprintf(temp_buf2,desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#endif
+       otl_snprintf(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[i].get_ptr()->bind_var,temp_buf); /* [i_a] */
      otl_strcat(sql_stm,temp_buf2);
     }
     
@@ -29204,18 +29379,8 @@ public:
         varchar_size,all_num2type,refcur_buf_size);
      if(temp_buf[0]==0&&
         strcmp(desc.get_ptr()[i].get_ptr()->data_type,"REF CURSOR")!=0){
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-       sprintf_s(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s",
+       otl_snprintf(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s", /* [i_a] */
                  full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#else
-      sprintf(temp_buf,"procedure %s, parameter %s",
-              full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#endif
-#else
-      sprintf(temp_buf,"procedure %s, parameter %s",
-              full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#endif
       throw otl_exception
        (otl_error_msg_14,
         otl_error_code_14,
@@ -29227,34 +29392,12 @@ public:
      else if(strcmp(desc.get_ptr()[i].get_ptr()->data_type,"REF CURSOR")==0&&
              stm_type==otl_mixed_refcur_stream_type){
        desc.get_ptr()[i].get_ptr()->bind_var[strlen(desc.get_ptr()[i].get_ptr()->bind_var)-2]=0;
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-       sprintf_s(temp_buf2,sizeof(temp_buf2),
+       otl_snprintf(temp_buf2,sizeof(temp_buf2), /* [i_a] */
                  "%s<%s>",
                  desc.get_ptr()[i].get_ptr()->bind_var,
                  temp_buf);
-#else
-       sprintf(temp_buf2,
-               "%s<%s>",
-               desc.get_ptr()[i].get_ptr()->bind_var,
-               temp_buf);
-#endif
-#else
-       sprintf(temp_buf2,
-               "%s<%s>",
-               desc.get_ptr()[i].get_ptr()->bind_var,
-               temp_buf);
-#endif
      }else
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-       sprintf_s(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#else
-     sprintf(temp_buf2,desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#endif
-#else
-     sprintf(temp_buf2,desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#endif
+       otl_snprintf(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[i].get_ptr()->bind_var,temp_buf); /* [i_a] */
      otl_strcat(sql_stm,temp_buf2);
     }
 
@@ -29281,32 +29424,14 @@ public:
         (temp_buf,sizeof(temp_buf),desc.get_ptr()[i].get_ptr()->data_type,
          varchar_size,all_num2type,refcur_buf_size);
       if(temp_buf[0]==0){
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-        sprintf_s(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s",
+        otl_snprintf(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s", /* [i_a] */
                   full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#else
-        sprintf(temp_buf,"procedure %s, parameter %s",
-                full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#endif
-#else
-        sprintf(temp_buf,"procedure %s, parameter %s",
-                full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#endif
         throw otl_exception
           (otl_error_msg_14,
            otl_error_code_14,
            temp_buf,0);
       }
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-      sprintf_s(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#else
-      sprintf(temp_buf2,desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#endif
-#else
-      sprintf(temp_buf2,desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#endif
+      otl_snprintf(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[i].get_ptr()->bind_var,temp_buf); /* [i_a] */
       otl_strcat(sql_stm,temp_buf2);
     }
     // procedure/function's name
@@ -29321,32 +29446,14 @@ public:
         (temp_buf,sizeof(temp_buf),desc.get_ptr()[i].get_ptr()->data_type,
          varchar_size,all_num2type,refcur_buf_size);
       if(temp_buf[0]==0){
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-        sprintf_s(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s",
+        otl_snprintf(temp_buf,sizeof(temp_buf),"procedure %s, parameter %s", /* [i_a] */
                   full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#else
-        sprintf(temp_buf,"procedure %s, parameter %s",
-                full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#endif
-#else
-        sprintf(temp_buf,"procedure %s, parameter %s",
-                full_name,desc.get_ptr()[i].get_ptr()->arg_name);
-#endif
         throw otl_exception
           (otl_error_msg_14,
            otl_error_code_14,
            temp_buf,0);
       }
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400)
-      sprintf_s(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#else
-      sprintf(temp_buf2,desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#endif
-#else
-      sprintf(temp_buf2,desc.get_ptr()[i].get_ptr()->bind_var,temp_buf);
-#endif
+      otl_snprintf(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[i].get_ptr()->bind_var,temp_buf); /* [i_a] */
       otl_strcat(sql_stm,temp_buf2);
     }
     if(i<desc_len-1&&desc.get_ptr()[i].get_ptr()->position!=0)
@@ -30178,8 +30285,7 @@ public:
        (*io)->operator>>(s);
 #if defined(OTL_ORA_TIMESTAMP)
        OTL_TRACE_WRITE
-         (s.month<<"/"<<s.day<<"/"<<s.year
-          <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+         (s, /* [i_a] */
           "operator >>",
           "otl_datetime&");
 #endif
@@ -30191,8 +30297,7 @@ public:
        (*ss)->operator>>(s);
 #if defined(OTL_ORA_TIMESTAMP)
        OTL_TRACE_WRITE
-         (s.month<<"/"<<s.day<<"/"<<s.year
-          <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+         (s, /* [i_a] */
           "operator >>",
           "otl_datetime&");
 #endif
@@ -30204,8 +30309,7 @@ public:
        (*ref_ss)->operator>>(s);
 #if defined(OTL_ORA_TIMESTAMP)
        OTL_TRACE_WRITE
-         (s.month<<"/"<<s.day<<"/"<<s.year
-          <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+         (s, /* [i_a] */
           "operator >>",
           "otl_datetime&");
 #endif
@@ -30230,9 +30334,8 @@ public:
      {
        (*io)->operator<<(n);
 #if defined(OTL_ORA_TIMESTAMP)
-       OTL_TRACE_READ(n.month<<"/"<<n.day<<"/"<<n.year
-                      <<" "<<n.hour<<":"<<n.minute<<":"<<n.second<<"."<<n.fraction,
-                      "operator >>",
+       OTL_TRACE_READ(n, /* [i_a] */
+                      "operator <<", /* [i_a] text fix */
                       "otl_datetime&");
 #endif
        break;
@@ -30241,9 +30344,8 @@ public:
      {
        (*ss)->operator<<(n);
 #if defined(OTL_ORA_TIMESTAMP)
-       OTL_TRACE_READ(n.month<<"/"<<n.day<<"/"<<n.year
-                      <<" "<<n.hour<<":"<<n.minute<<":"<<n.second<<"."<<n.fraction,
-                      "operator >>",
+       OTL_TRACE_READ(n, /* [i_a] */
+                      "operator <<", /* [i_a] text fix */
                       "otl_datetime&");
 #endif
        break;
@@ -30253,9 +30355,8 @@ public:
        (*ref_ss)->operator<<(n);
        if(!(*ov)&&(*ref_ss)->get_sl()) create_var_desc();
 #if defined(OTL_ORA_TIMESTAMP)
-       OTL_TRACE_READ(n.month<<"/"<<n.day<<"/"<<n.year
-                      <<" "<<n.hour<<":"<<n.minute<<":"<<n.second<<"."<<n.fraction,
-                      "operator >>",
+       OTL_TRACE_READ(n, /* [i_a] */
+                      "operator <<", /* [i_a] text fix */
                       "otl_datetime&");
 #endif
        break;
@@ -30295,8 +30396,7 @@ public:
     OTL_ORA7_STRING_TO_TIMESTAMP(tmp_str,s);
 #endif
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      (s, /* [i_a] */
        "operator >>",
        "otl_datetime&");
     return *this;
@@ -30323,8 +30423,7 @@ public:
     s.second=tmp.second-1;
 #endif
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      (s, /* [i_a] */
        "operator >>",
        "otl_datetime&")
       inc_next_ov();
@@ -30355,8 +30454,7 @@ public:
   s.second=tmp.second-1;
 #endif
   OTL_TRACE_WRITE
-    (s.month<<"/"<<s.day<<"/"
-     <<s.year<<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+    (s, /* [i_a] */
      "operator >>",
      "otl_datetime&");
   inc_next_ov();
@@ -30386,8 +30484,7 @@ public:
 #endif
       OTL_ORA7_TIMESTAMP_TO_STRING(s,tmp_str);
       OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (s, /* [i_a] */
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp_str;
@@ -30402,8 +30499,7 @@ public:
      tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
      tmp.second=OTL_SCAST(unsigned char, (s.second+1));
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (s, /* [i_a] */
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp;
@@ -30420,8 +30516,7 @@ public:
   tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
   tmp.second=OTL_SCAST(unsigned char, (s.second+1));
   OTL_TRACE_READ
-    (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-     <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+    (s, /* [i_a] */
      "operator <<",
      "otl_datetime&");
   (*this)<<tmp;
@@ -31651,7 +31746,7 @@ protected:
       throw otl_exception(db->get_connect_struct());
   }
 
-  virtual void OnException(otl_exception& e) = 0;
+  virtual void OnException(OTL_CONST_EXCEPTION otl_exception& e) = 0;
   virtual void OnDeRegistration(void) = 0;
 
   //--- DB events:
@@ -31764,7 +31859,7 @@ private:
                          0, 
                          OCI_ATTR_CHDES_TABLE_OPFLAGS, 
                          errhp));
-        bool all_rows=table_op & OCI_OPCODE_ALLROWS;
+        bool all_rows=!!(table_op & OCI_OPCODE_ALLROWS);   /* [i_a] 'ub4' : forcing value to bool 'true' or 'false' (performance warning) */
         switch(table_op){
         case OCI_OPCODE_ALLROWS:
           OnTableInvalidate(table_name);
@@ -31830,7 +31925,7 @@ private:
           }
         }
       }
-    }catch( otl_exception &e ){
+    }catch(OTL_CONST_EXCEPTION otl_exception &e){
       OnException(e);
     }
   }
@@ -33324,5 +33419,23 @@ private:
 #if defined(OTL_ORA_TEXT_ON)&&defined(text)
 #undef text
 #endif
+
+
+/* [i_a] wrappers required to allow exception throwing code above this point in the code */
+class otl_exception_ex: public otl_exception
+{
+public:
+	otl_exception_ex(const char *msg, int code, const char *sqlstmt = 0, const char *varinfo = 0)
+		: otl_exception(msg, code, sqlstmt, varinfo)
+	{
+	}
+};
+
+static void throw_otl_exception_ex(const char *msg, int code)
+	  OTL_THROWS_OTL_EXCEPTION_EX
+{
+	throw otl_exception_ex(msg, code);
+}
+
 
 #endif

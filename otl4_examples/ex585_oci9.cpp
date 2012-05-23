@@ -81,9 +81,9 @@ private:
 
 // The functions below override the pure virtual (interface)
 // functions of the otl_subscriber interface 
-  virtual void OnException(const otl_exception& e) 
+  virtual void OnException(otl_exception& e) 
   { 
-    Log( "Event Exception", reinterpret_cast<const char*>(e.msg) ); 
+    Log( "Event Exception", reinterpret_cast<char*>(e.msg) ); 
   }
 
   virtual void OnDeRegistration(void)
@@ -188,6 +188,12 @@ int main()
      otl_exception::disabled 
     ); // disable OTL exceptions
   db.direct_exec("create table test_tab(f1 number)" );
+/* [i_a]
+..\..\otl4_examples\ex585_oci9.cpp(191) : error C2259: 'TSubscriber' : cannot instantiate abstract class
+        due to following members:
+        'void otl_subscriber::OnException(const otl_exception &)' : is abstract
+        p:\prj\3actual\otl\otlv4_h\otlv4.h(31749) : see declaration of 'otl_subscriber::OnException'
+*/
   TSubscriber subs(&db);
   subs.subscribe();
   //------------------------
