@@ -100,6 +100,16 @@ public:
     buf[len]=0;
   }
 
+  void append(char* temp_buf, int len)
+  {
+    size_t cur_len=length();
+    for(int i=0;i<len;++i)
+      buf[cur_len+i]=temp_buf[i];
+    buf[cur_len+len]=0;
+  }
+
+
+
   char& operator[](int ndx)
   {
     return buf[ndx];

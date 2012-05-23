@@ -24,7 +24,19 @@
       href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
       href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><br>
     <i><font size="+1"><br>
-      </font></i><i><font size="+1">Q. OTL: how does OTL handle NULLs?</font></i>
+      </font></i><i><font size="+1"><a name="MULTI_RS_SUPPORT"></a>Q.
+        OTL: How does OTL handle stored procedures that return multiple
+        implicit result sets (when used with ODBC, MS SNAC, or DB2 CLI)?<br>
+        <br>
+      </font></i>As of the OTL version 4.0.264, the answer is No. OTL
+    can only handle a stored procedure that returns one <a
+      href="otl3_stream_class.htm#implicit_select">implicit</a> result
+    set. Essentially, in the case of a stored procedure that returns an
+    implicit result set, the <a href="otl3_stream_class.htm">otl_stream</a>
+    class handles the implicit result set as a SELECT statement. Such
+    stored procedures are limited to having only input parameters.<br>
+    <br>
+    <i><font size="+1">Q. OTL: how does OTL handle NULLs?</font></i>
     <ul>
       <li>Call otl_stream::<a href="otl3_stream_class.htm#is_null">is_null</a>()
 to
@@ -33,6 +45,7 @@ whether
 the
 value
 that
+
 
 
         was just read from the stream is NULL or not.<br>
@@ -233,6 +246,7 @@ href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL">OTL_US
     <p>The answer is Yes. Starting with version 4.0.0, OTL supports
       PostgreSQL via ODBC. See "<a href="otl3_whatn.htm#NEW_OTL400">what's
 
+
         new in OTL 4</a>" for more detail. <br>
       &nbsp; </p>
     <p><i><font size="+1">Q. OTL: can it work with DB2, Call Level
@@ -262,6 +276,7 @@ href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL">OTL_US
       xaoEnv() and xaoSvcCtx() functions need to be invoked in order to
       get OCI8 compatible environment and service context handles. After
       that, otl_connect::<a href="otl3_connect_class.htm#attach8">rlogon</a>()
+
 
 
       can be called to create an OTL connection from the handles. It is
@@ -318,6 +333,7 @@ href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL">OTL_US
     <p>For more detail, see "<a href="otl3_long_string.htm#LOB_and_NULL">Large
 
 
+
         Objects and NULLs</a>." </p>
     <p><i><font size="+1">Q. How to read/write date&amp;time information
           from/to the <a href="otl3_stream_class.htm">otl_stream</a>?</font></i>
@@ -347,6 +363,7 @@ href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL">OTL_US
           std::strings that have NULL characters ('\0') in the middle?</font></i>
     </p>
     Yes, it can. Only instead of <a href="otl3_bind_variables.htm#char">char</a>[XXX]
+
 
     binding, <a href="otl3_bind_variables.htm#raw">raw</a>[XXX] binding
     needs to be used. Also, see code examples <a href="otl4_ex747.htm">747</a>

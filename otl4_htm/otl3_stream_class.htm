@@ -124,6 +124,7 @@ ref_cur_placeholder=0
 
 
 
+
                   </td>
                   <td style="vertical-align: top;">If the stream returns
                     a referenced cursor, this parameter is used to
@@ -217,6 +218,7 @@ ref_cur_placeholder=0
 
 
 
+
             function.<br>
             <br>
             <b> </b><big><a name="implicit_select"></a><font size="-1"><big>OTL
@@ -238,6 +240,7 @@ used
 
 
 
+
                   with this constructor:</big></font></big>
             <ul>
               <big> </big>
@@ -247,7 +250,8 @@ used
               <big> </big>
               <li><big> <font size="-1"><big><b>otl_implicit_select</b>
                       -- to indicate that the stream is a stored
-                      procedure call that returns a result set.</big></font></big></li>
+                      procedure call that returns one result set.<br>
+                    </big></font></big></li>
             </ul>
             <p><a name="SP_RS"></a>When otl_implicit_select is used,
               only input parameters are allowed in the corresponding
@@ -440,6 +444,7 @@ used
 
 
 
+
             function.<br>
             <br>
             <br>
@@ -500,6 +505,7 @@ used
               monospace;">bool get_error_state();</span><br>
           </td>
           <td style="vertical-align: top;"><a name="get_error_state"></a>Get
+
 
 
 
@@ -569,6 +575,7 @@ that
 
 
 
+
                 represent types of&nbsp; OTL streams. In the context of
                 create_stored_proc_call(), this constant indicates a
                 call to a stored procedure, which has no parameters, and
@@ -598,6 +605,7 @@ that
 
 
 
+
                 represent types of&nbsp; OTL streams. In the context of
                 create_stored_proc_call(), this constant indicates a
                 call to a stored procedure, which has reference
@@ -619,8 +627,10 @@ that
 
 
 
+
                 text. Also, otl_stream::<a
                   href="otl3_stream_class.htm#describe_vars">describe_in_vars</a>()
+
 
 
 
@@ -639,6 +649,7 @@ stream
 input
 and
 output
+
 
 
 
@@ -770,6 +781,7 @@ output
 
 
 
+
                     This can be important for performance.</td>
                 </tr>
               </tbody>
@@ -838,10 +850,12 @@ output
 
 
 
+
             </i>parameter, if set to 1, cleans up the otl_stream's
             internal error flag that usually gets set when the stream
             throws an <a href="otl3_exception_class.htm">otl_exception</a>.See
 examples
+
 
 
 
@@ -920,6 +934,7 @@ OCI
 and
 ODBC/DB2-CLI
 are
+
 
 
 
@@ -1049,6 +1064,7 @@ are
             processed in the last execution of the statement. For INSERT
             statements, it may be less or equal to the stream <a
               href="otl3_stream_class.htm#buffer_size">buffer size</a>.For
+
 
 
 
@@ -1358,6 +1374,7 @@ are
 
 
 
+
             the output column list in:<br>
             <ul>
               <li>straight SELECT statement (OCIx, ODBC, and DB2-CLI)</li>
@@ -1469,12 +1486,14 @@ are
 
 
 
+
                       code</span></td>
                   <td style="vertical-align: top;"><span
                       style="font-weight: bold; font-style: italic;">Explanation</span></td>
                 </tr>
                 <tr>
                   <td style="vertical-align: top;"><font size="-1"><b>otl_var_bigint
+
 
 
 
@@ -1529,6 +1548,7 @@ are
 
 
 
+
                         <br>
                       </b></font></td>
                   <td style="vertical-align: top;">11<br>
@@ -1538,6 +1558,7 @@ are
                 </tr>
                 <tr>
                   <td style="vertical-align: top;"><font size="-1"><b>otl_var_db2date
+
 
 
 
@@ -1580,6 +1601,7 @@ floating
 
 
 
+
                       point number</font></td>
                 </tr>
                 <tr>
@@ -1587,6 +1609,7 @@ floating
                   <td style="vertical-align: top;">3<br>
                   </td>
                   <td style="vertical-align: top;"><font size="-1">4-byte
+
 
 
 
@@ -1614,11 +1637,13 @@ floating
 
 
 
+
                       integer (for 32-bit, and LLP64 C++ compilers),
                       signed 64-bit integer (for LP-64 C++ compilers)</font></td>
                 </tr>
                 <tr>
                   <td style="vertical-align: top;"><font size="-1"><b>otl_var_ltz_timestamp
+
 
 
 
@@ -1825,6 +1850,7 @@ s);
 
 
 
+
               </span><br>
             </p>
           </td>
@@ -1916,6 +1942,7 @@ s);
 
 
 
+
             operator&gt;&gt;(ACE_TString&amp; s);</td>
           <td style="vertical-align: top;">reads the following types
             into ACE_TStrings (under #define <a
@@ -1927,6 +1954,7 @@ s);
         </tr>
         <tr>
           <td style="vertical-align: top; font-family: monospace;">otl_stream&amp;
+
 
 
 
@@ -1955,12 +1983,14 @@ s);
 
 
 
+
             operator&gt;&gt;(int&amp; n);</td>
           <td style="vertical-align: top;">reads a signed 32-bit integer<br>
           </td>
         </tr>
         <tr>
           <td style="vertical-align: top; font-family: monospace;">otl_stream&amp;
+
 
 
 
@@ -1980,12 +2010,14 @@ s);
 
 
 
+
             operator&gt;&gt;(short&amp; sh);</td>
           <td style="vertical-align: top;">reads a signed 16-bit integer<br>
           </td>
         </tr>
         <tr>
           <td style="vertical-align: top; font-family: monospace;">otl_stream&amp;
+
 
 
 
@@ -2006,6 +2038,7 @@ s);
 
 
 
+
             operator&gt;&gt;(float&amp; f);</td>
           <td style="vertical-align: top;">reads a 4-byte floating point
             value<br>
@@ -2013,6 +2046,7 @@ s);
         </tr>
         <tr>
           <td style="vertical-align: top; font-family: monospace;">otl_stream&amp;
+
 
 
 
@@ -2028,6 +2062,7 @@ s);
           <td style="vertical-align: top; font-family: monospace;"><a
               name="64_bit_integer_write"></a>otl_stream&amp;
             operator&gt;&gt;(<a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>&amp;
+
 
 
 
@@ -2061,6 +2096,7 @@ s);
 
 
 
+
             d);</td>
           <td style="vertical-align: top;">when #define <a
               href="otl3_compile.htm#OTL_UBIGINT">OTL_UBIGINT</a> is
@@ -2070,6 +2106,7 @@ s);
         <tr>
           <td style="vertical-align: top;"><span style="font-family:
               monospace;"><a name="OTL_NUMERIC_TYPE_WRITE"></a>otl_stream&amp;
+
 
 
 
@@ -2099,8 +2136,10 @@ s);
 
 
 
+
             operator&gt;&gt;(<a
               href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&amp;
+
 
 
 
@@ -2119,7 +2158,9 @@ s);
 
 
 
+
             operator&gt;&gt;(<a href="otl3_pl_tab.htm">otl_XXX_tab</a>&lt;&#8230;&gt;&amp;
+
 
 
 
@@ -2153,6 +2194,7 @@ s);
 
 
 
+
             refcur);</td>
           <td style="vertical-align: top;">reads a reference cursor
             descriptor to a variable of&nbsp; the <a
@@ -2166,6 +2208,7 @@ s);
             operator&lt;&lt;(const unsigned char* s);</td>
           <td style="vertical-align: top;"><a name="operator_ll"></a>Write
 objects
+
 
 
 
@@ -2212,6 +2255,7 @@ objects
 
 
 
+
             <a href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a><br>
             <br>
             Writes a Unicode character<br>
@@ -2233,6 +2277,7 @@ objects
               (const OTL_UNICODE_STRING_TYPE&amp; s);</span> </td>
           <td style="vertical-align: top;"><a name="unicode_string_ll"></a>under
 #define
+
 
 
 
@@ -2330,6 +2375,7 @@ objects
 
 
 
+
           </td>
         </tr>
         <tr>
@@ -2358,6 +2404,7 @@ objects
 
 
 
+
             operator&lt;&lt;(const int n);</td>
           <td style="vertical-align: top;">Writes an signed int into the
             stream<br>
@@ -2365,6 +2412,7 @@ objects
         </tr>
         <tr>
           <td style="vertical-align: top; font-family: monospace;">otl_stream&amp;
+
 
 
 
@@ -2384,6 +2432,7 @@ objects
 
 
 
+
             operator&lt;&lt;(const short sh);</td>
           <td style="vertical-align: top;">Writes a short int into the
             stream<br>
@@ -2391,6 +2440,7 @@ objects
         </tr>
         <tr>
           <td style="vertical-align: top; font-family: monospace;">otl_stream&amp;
+
 
 
 
@@ -2410,6 +2460,7 @@ objects
 
 
 
+
             operator&lt;&lt;(const float f);</td>
           <td style="vertical-align: top;">Writes a float into the
             stream<br>
@@ -2417,6 +2468,7 @@ objects
         </tr>
         <tr>
           <td style="vertical-align: top; font-family: monospace;">otl_stream&amp;
+
 
 
 
@@ -2466,6 +2518,7 @@ operator&lt;&lt;(const
 
 
 
+
             <a href="otl3_stream_class.htm#otl_null">otl_null</a>
             &amp;n);</td>
           <td style="vertical-align: top;">Writes NULL into the stream.<br>
@@ -2490,6 +2543,7 @@ operator&lt;&lt;(const
         <tr>
           <td style="vertical-align: top;"><span style="font-family:
               monospace;"><a name="OTL_NUMERIC_TYPE_READ"></a>otl_stream&amp;
+
 
 
 
@@ -2611,6 +2665,7 @@ operator&lt;&lt;(const
 
 
 
+
                     zone minute</td>
                 </tr>
               </tbody>
@@ -2664,6 +2719,7 @@ operator&lt;&lt;(const
 
 
 
+
             </i>parameter can be set to the following values:
             <ul>
               <li>otl_all_num2str, e.g.:
@@ -2705,6 +2761,7 @@ default
 
 
 
+
             mapping of output column data types.<br>
             <br>
             <i>column_ndx</i> is the relative index of the columns in
@@ -2739,8 +2796,10 @@ default
 
 
 
+
                     data type</td>
                   <td style="vertical-align: top; font-style: italic;">Default
+
 
 
 
@@ -2750,6 +2809,7 @@ default
                     data type</td>
                   <td style="vertical-align: top; font-style: italic;">Data
 type
+
 
 
 
@@ -2842,6 +2902,7 @@ UPDATE
 
 
 
+
             / DELETE statements, when the stream buffer size is set to a
             value &gt; 1, the stream buffer logical rows. When the
             buffer gets full, the stream automatically flushes the
@@ -2899,6 +2960,7 @@ UPDATE
 
 
 
+
             to the end of the current row, for example:<br>
             &nbsp;&nbsp;&nbsp;&nbsp; <br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family:
@@ -2910,10 +2972,12 @@ UPDATE
 
 
 
+
               s&gt;&gt;f1;<br>
               &nbsp;&nbsp;&nbsp;&nbsp; ...<br>
               &nbsp;&nbsp;&nbsp;&nbsp; s.skip_to_end_of_row(); <br>
             </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
 
 
 
@@ -2949,6 +3013,7 @@ UPDATE
 
 
 
+
             the "end-of-row" condition. The function throws the "<a
               href="otl3_exc_list.htm#32035">END-OF-ROW check failed</a>"
             otl_exception if the condition is not met. The function
@@ -2971,6 +3036,7 @@ UPDATE
 
 
 
+
               (*pf) (otl_stream&amp;));</span><br>
           </td>
           <td style="vertical-align: top;">This operator calls the (*pf)
@@ -2979,6 +3045,7 @@ UPDATE
             <br>
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 s&gt;&gt;f1&gt;&gt;f2&gt;&gt;endr;
+
 
 
 
@@ -3010,6 +3077,7 @@ s&gt;&gt;f1&gt;&gt;f2&gt;&gt;endr;
             <br>
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 o&lt;&lt;f1&lt;&lt;f2&lt;&lt;endr;
+
 
 
 
