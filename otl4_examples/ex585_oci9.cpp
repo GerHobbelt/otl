@@ -10,7 +10,9 @@
 using namespace std;
 #include <time.h> // clock()
 
+#if !defined(OTL_ORA10G_R2)
 #define OTL_ORA10G_R2 // Compile OTL 4.0/OCI10gR2
+#endif
 #define OTL_ORA_SUBSCRIBE // Enable the otl_subscriber interface
 
 // The following two #define's are required for 

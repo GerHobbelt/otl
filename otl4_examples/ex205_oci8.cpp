@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 #include <stdio.h>
+#include <string.h>
 
 const int BASE_EXCEPTION=1; // "Base exception" class Id.
 const int DB_BASE_EXCEPTION=2; // "DB Base exception" class Id.
@@ -10,7 +11,11 @@ const int DB_BASE_EXCEPTION=2; // "DB Base exception" class Id.
 class my_base_exception{
 public:
 
-  my_base_exception(){}
+  my_base_exception()
+  {
+    large_string_copy[0]=0;
+  }
+
   virtual ~my_base_exception(){}
 
   virtual int getType(void) const
@@ -27,6 +32,25 @@ public:
   {
     return reinterpret_cast<const unsigned char*>("");
   }
+
+  virtual const char* getErrorSQLStm(void) const
+  {
+    return reinterpret_cast<const char*>("");
+  }
+
+  virtual const char* getErrorVarInfo(void) const
+  {
+    return reinterpret_cast<const char*>("");
+  }
+
+  virtual const char* getErrorLargeString(void) const
+  {
+    return large_string_copy;
+  }
+
+protected:
+
+  char large_string_copy[100];
 
 };
 
@@ -55,7 +79,43 @@ public:
   virtual const unsigned char* getErrorMessage(void) const      \
   {                                                             \
     return this->msg;                                           \
+  }                                                             \
+                                                                \
+  virtual const char* getErrorSQLStm(void) const                \
+  {                                                             \
+    return this->stm_text;                                      \
+  }                                                             \
+                                                                \
+  virtual const char* getErrorVarInfo(void) const               \
+  {                                                             \
+    return this->var_info;                                      \
   }
+
+
+#define OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW(str,len)       \
+{                                                                            \
+  copy_str(this->large_string_copy,str,len,sizeof(this->large_string_copy)); \
+}
+
+void copy_str(char* dest,const void* src, int len, int buf_size)
+{
+  int temp_len=len;
+  if(temp_len>buf_size-1)
+    temp_len=buf_size-1;
+#if defined(_MSC_VER)
+#if (_MSC_VER >= 1400) // VC++ 8.0 or higher
+  strncpy_s(dest,buf_size,reinterpret_cast<const char*>(src),temp_len);
+  dest[temp_len+1]=0;
+#else
+  strncpy(dest,reinterpret_cast<const char*>(src),temp_len);
+  dest[temp_len+1]=0;
+#endif
+#else
+  strncpy(dest,reinterpret_cast<const char*>(src),temp_len);
+  dest[temp_len+1]=0;
+#endif
+ 
+}
 
 #include <otlv4.h> // include the OTL 4.0 header file
 
@@ -65,64 +125,32 @@ void insert()
 // insert rows into table
 { 
  otl_stream o(50, // buffer size
-              "insert into test_tab values(:f1<float>,:f2<char[31]>)", 
+              "insert into test_tab values(:f1<int>,:f2<char[31]>)", 
                  // SQL statement
               db // connect object
              );
- char tmp[32];
+ char tmp[100];
 
  for(int i=1;i<=100;++i){
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1400) // VC++ 8.0 or higher
-  sprintf_s(tmp,sizeof(tmp),"Name%d",i);
+  sprintf_s(tmp,sizeof(tmp),"12345678901234567890123456789012345_%d",i);
 #else
-  sprintf(tmp,"Name%d",i);
+  sprintf(tmp,"12345678901234567890123456789012345_%d",i);
 #endif
 #else
-  sprintf(tmp,"Name%d",i);
+  sprintf(tmp,"12345678901234567890123456789012345_%d",i);
 #endif
-  o<<static_cast<float>(i)<<tmp;
+  o<<i<<tmp;
  }
-}
-
-void select()
-{ 
- otl_stream i(50, // buffer size
-              "select * from test_tab where f1>=:f<int> and f1<=:f*2",
-                 // SELECT statement
-              db // connect object
-             ); 
-   // create select stream
- 
- float f1;
- char f2[31];
-
- i<<8; // assigning :f = 8
-   // SELECT automatically executes when all input variables are
-   // assigned. First portion of output rows is fetched to the buffer
-
- while(!i.eof()){ // while not end-of-data
-  i>>f2>>f1; // a typo: f2 instead of f1
-  cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
-
- i<<4; // assigning :f = 4
-   // SELECT automatically executes when all input variables are
-   // assigned. First portion of output rows is fetched to the buffer
-
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2;
-  cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
-
 }
 
 int main()
 {
- otl_connect::otl_initialize(); // initialize OCI environment
+ otl_connect::otl_initialize(); // initialize the database environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("scott/tiger"); // connect to the database
 
   otl_cursor::direct_exec
    (
@@ -134,11 +162,10 @@ int main()
   otl_cursor::direct_exec
    (
     db,
-    "create table test_tab(f1 number, f2 varchar2(30))"
+    "create table test_tab(f1 int, f2 varchar(30))"
     );  // create table
 
   insert(); // insert records into table
-  select(); // select records from table
 
  }
  catch(my_base_exception& ex){ // intercept the base exception
@@ -150,13 +177,25 @@ int main()
      cerr<<"Message: "
          <<reinterpret_cast<const char*>(ex.getErrorMessage())
          <<endl; // print out the error message
+     cerr<<"SQL Stm: "
+         <<ex.getErrorSQLStm()
+         <<endl; // print out the SQL Statement
+     cerr<<"Var Info: "
+         <<ex.getErrorVarInfo()
+         <<endl; // print out the bind variable information
+     if(ex.getErrorCode()==32005){
+       // OTL defined exception
+       cerr<<"Large Input String: "
+           <<ex.getErrorLargeString()
+           <<endl;
+     }
    }else{
      // otherwise, do something else
      cerr<<"Base exception was caught..."<<endl;
    }
  }
 
- db.logoff(); // disconnect from Oracle
+ db.logoff(); // disconnect from the database
 
  return 0;
 

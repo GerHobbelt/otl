@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
   <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
+ content="text/html; charset=ISO-8859-1">
   <meta name="Author" content="Sergei Kuchin">
   <meta name="GENERATOR"
  content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
@@ -29,7 +29,7 @@ and a TEXT column.
  href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert(void)<br>// insert rows into table<br>{&nbsp;<br><br>&nbsp;<a
  href="otl3_long_string.htm">otl_long_string</a> f2(7000); // define long string variable<br>&nbsp;db.<a
  href="otl3_connect_class.htm#set_max_long_size">set_max_long_size</a>(7000); // set maximum long string size for connect object<br><br>&nbsp;<a
- href="otl3_stream_class.htm">otl_stream</a> o(1, // PostgreSQL 8.1 and higher, the buffer can be &gt; 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(50, // PostgreSQL 8.1 and higher, the buffer can be &gt; 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;<a
  href="otl3_bind_variables.htm#varchar_long">varchar_long</a>&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // INSERT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br><br><br>&nbsp;for(int i=1;i&lt;=10;++i){<br>&nbsp; for(int j=0;j&lt;5000;++j)<br>&nbsp;&nbsp; f2[j]='*';<br>&nbsp; f2[5000]='?';<br>&nbsp; f2.<a
  href="otl3_long_string.htm#set_len">set_len</a>(5001);<br>&nbsp; o&lt;&lt;i&lt;&lt;f2;<br>&nbsp;}<br>}<br><br>void select(void)<br>{&nbsp;<br>&nbsp;otl_long_string f2(7000); // define long string variable<br>&nbsp;db.set_max_long_size(7000); // set maximum long string size for connect object<br><br>&nbsp;otl_stream i(10, // PostgreSQL 8.1 and higher, the buffer can be &gt; 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;int f1;<br><br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2[0]&lt;&lt;f2[f2.len()-1]&lt;&lt;", len="&lt;&lt;f2.len()&lt;&lt;endl;<br>&nbsp;}<br><br>}</pre>
 <pre>int main()<br>{<br>&nbsp;<a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment<br>&nbsp;try{<br><br>&nbsp;&nbsp; db.rlogon("UID=scott;PWD=tiger;DSN=postgresql"); // connect to ODBC<br>//&nbsp; db.rlogon("scott/tiger@postgresql"); // connect to ODBC, alternative format<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of connect string<br>&nbsp; <a
@@ -43,7 +43,7 @@ Output</h2>
 <center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
  href="home.htm">Go
 Home</a></center>
-<p>Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
  href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from old browsers
@@ -57,7 +57,14 @@ Home</a></center>
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i>
 </p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

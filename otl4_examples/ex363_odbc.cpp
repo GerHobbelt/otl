@@ -87,7 +87,7 @@ int main()
  otl_connect::otl_initialize(); // initialize the database API environment
  try{
 
-  db.rlogon("scott/tiger@sapdbsql2"); // connect to the database
+  db.rlogon("SCOTT/TIGER@sapdbsql2"); // connect to the database
 
   otl_cursor::direct_exec
    (

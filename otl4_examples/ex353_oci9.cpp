@@ -91,9 +91,9 @@ void select()
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
   cout<<"f1="<<f1<<", f2=";
-   for(int j=0;f2[j]!=0;++j)
-     cout<<" "<<f2[j];
-   cout<<endl;
+  for(size_t j=0;j<f2.length();++j)
+    cout<<" "<<f2[j];
+  cout<<endl;
  }
 
 }

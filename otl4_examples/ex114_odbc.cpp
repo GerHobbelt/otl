@@ -4,6 +4,7 @@ using namespace std;
 
 #define OTL_ODBC // Compile OTL 4/ODBC
 #define OTL_STL // turn on OTL in the STL compliance mode
+#define OTL_STREAM_POOL_USES_STREAM_LABEL_AS_KEY // Use sqlstm_label if available
 #define OTL_STREAM_POOLING_ON 
  // turn on OTL stream pooling.
  // #define OTL_STREAM_POOLING_ON line 
@@ -57,7 +58,9 @@ void select()
  otl_stream i1(50, // buffer size
                "select * from test_tab where f1>=:f11<int> and f1<=:f12<int>*2",
                  // SELECT statement
-              db // connect object
+               db, // connect object
+               otl_explicit_select,
+               "SEL01" // sql stream label
              ); 
    // create select stream
  

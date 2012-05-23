@@ -77,13 +77,13 @@ int main()
     "drop table test_tab2",
     otl_exception::disabled // disable OTL exceptions
    ); // drop table
-
+  db.commit();
   otl_cursor::direct_exec
    (
     db,
     "create table test_tab2(f1 int, f2 date)"
     );  // create table
-
+  db.commit();
   insert(); // insert records into table
   select(); // select records from table
 

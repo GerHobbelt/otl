@@ -6,7 +6,7 @@ using namespace std;
 #include <stdlib.h>
 
 #define OTL_ODBC_MULTI_MODE // Compile OTL 4.0/ODBC multi-mode
-// #define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used
+//#define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used
 #include <otlv4.h> // include the OTL 4.0 header file
 
 otl_connect db; // connect object

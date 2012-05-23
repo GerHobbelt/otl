@@ -126,7 +126,7 @@ int main()
   otl_cursor::direct_exec
    (
     db,
-    "create table test_tab(f1 number, f2 varchar2(30))"
+    "create table test_tab(f1 number, f2 varchar2(40))"
     );  // create table
 
   insert(); // insert records into table

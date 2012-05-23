@@ -69,7 +69,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  main_db.rlogon("UID=scott;PWD=tiger;DSN=mssql"); // connect to ODBC
+  main_db.rlogon("UID=scott;PWD=tiger;DSN=mssql2008"); // connect to ODBC
 
   otl_cursor::direct_exec
    (

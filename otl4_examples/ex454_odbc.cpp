@@ -19,7 +19,7 @@ void insert()
 { 
 
  otl_long_string f2(700); // define long string variable
- otl_stream o(1, // buffer size
+ otl_stream o(50, // buffer size
               "insert into test_tab values(:f1<int>,:f2<raw[700]>)",
                  // SQL statement
               db // connect object

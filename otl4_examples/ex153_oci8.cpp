@@ -137,7 +137,7 @@ void stored_proc()
                         // a reference cursor.
     "my_proc4", // stored function name
     "my_pkg", // PL/SQL package name
-    0, // schema name
+    nullptr, // schema name
     false, // schema name not included
     2001, // varchar paratemer default size
     otl_var_double, // default type to map NUMERIC parameters to
@@ -160,7 +160,7 @@ void stored_proc()
                         // a reference cursor.
     "my_func3", // stored function name
     "my_pkg", // PL/SQL package name
-    0, // schema name
+    nullptr, // schema name
     false, // schema name not included
     2001, // varchar paratemer default size
     otl_var_double, // default type to map NUMERIC parameters to
@@ -182,7 +182,7 @@ void stored_proc()
                         // in the case of a stored procedure that returns
                         // a reference cursor.
     "prc_glob",// stored procedure name
-    0  // package name
+    nullptr  // package name
    );
   cout<<"SQL_STM8="<<sql_stm<<endl;
   cout<<"STM_TYPE8=";
