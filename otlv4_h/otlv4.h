@@ -1,12 +1,23 @@
-// ==============================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.199,
-// Copyright (C) Sergei Kuchin, 1996,2009
-// Author: Sergei Kuchin
-// This library is free software. Permission to use, copy,
-// modify and redistribute it for any purpose is hereby granted
-// without fee, provided that the above copyright notice appear
-// in all copies.
-// ==============================================================
+// =================================================================================
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.201,
+// Copyright (C) 1996-2009, Sergei Kuchin (skuchin@gmail.com)
+//
+// This library is free software. Permission to use, copy, modify,
+// and/or distribute this software for any purpose with or without fee
+// is hereby granted, provided that the above copyright notice and
+// this permission notice appear in all copies.
+//
+// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+// WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+// ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+// WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+// ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+// OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
+// a.k.a. as Open BSD license
+// (http://www.openbsd.org/cgi-bin/cvsweb/~checkout~/src/share/misc/license.template
+// =================================================================================
 
 #ifndef __OTL_H__
 #define __OTL_H__
@@ -15,7 +26,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0400C7L)
+#define OTL_VERSION_NUMBER (0x0400C9L)
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning (disable:4351)
@@ -50,7 +61,7 @@
 //#define OTL_DB2_CLI
 
 // Uncomment the following line in order to include the OTL for
-// Oracle 7: 
+// Oracle 7:
 //#define OTL_ORA7
 
 // Uncomment the following line in order to include the OTL for
@@ -88,6 +99,26 @@
 #define OTL_UNCAUGHT_EXCEPTION_ON
 #endif
 
+#if !defined(OTL_TRACE_LEVEL)
+
+#define OTL_TRACE_FORMAT_TZ_DATETIME(s)
+#define OTL_TRACE_FORMAT_DATETIME(s)
+
+#else
+
+#if !defined(OTL_TRACE_FORMAT_DATETIME)
+
+#define OTL_TRACE_FORMAT_TZ_DATETIME(s)                         \
+s.month<<"/"<<s.day<<"/"<<s.year                                \
+<<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction    \
+<<" "<<s.tz_hour<<":"<<s.tz_minute
+
+#define OTL_TRACE_FORMAT_DATETIME(s)                            \
+s.month<<"/"<<s.day<<"/"<<s.year                                \
+<<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction
+
+#endif
+#endif
 
 #if defined(OTL_ORA11G)
 #define OTL_ORA10G_R2
@@ -184,7 +215,7 @@ typedef int otl_stream_buffer_size_type;
 #if defined(OTL_ODBC_UNIX) && !defined(OTL_ODBC)
 #define OTL_ODBC
 #endif
- 
+
 #if defined(OTL_BIND_VAR_STRICT_TYPE_CHECKING_ON)
 #define OTL_CHECK_BIND_VARS                     \
   if(strcmp(type_arr,"INT")==0||                \
@@ -378,7 +409,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
 #if (defined(OTL_ORA7) || defined(OTL_ORA8) ||          \
      defined(OTL_ORA8I) || defined(OTL_ORA9I) ) &&      \
      defined(OTL_BIGINT) &&                             \
-     (defined(OTL_ODBC) || defined(OTL_DB2_CLI)) 
+     (defined(OTL_ODBC) || defined(OTL_DB2_CLI))
 #error OTL_BIGINT is not supported when OTL_ORAXX and OTL_ODBC \
 (or OTL_DB2_CLI) are defined together
 #endif
@@ -818,72 +849,67 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
 #endif
 
 #if !defined(OTL_TRACE_READ)
-#define OTL_TRACE_READ(val,function,type)               \
-  if(OTL_TRACE_LEVEL & 0x10){                           \
-    otl_var_desc* temp_vdesc=describe_next_in_var();    \
-	if (temp_vdesc != NULL) /* [i_a] fix */             \
-	{                                                   \
-      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;          \
-      OTL_TRACE_STREAM<<"otl_stream(this=";             \
-      OTL_TRACE_STREAM<<OTL_RCAST(void*,this);          \
-      OTL_TRACE_STREAM<<")::" function "(" type ": ";   \
-      OTL_TRACE_STREAM<<"ftype=";                       \
-      OTL_TRACE_STREAM<<temp_vdesc->ftype;              \
-      OTL_TRACE_STREAM<<", placeholder=";               \
-      OTL_TRACE_STREAM<<temp_vdesc->name;               \
-      OTL_TRACE_STREAM<<", value=";                     \
-      OTL_TRACE_STREAM<<val;                            \
-      OTL_TRACE_STREAM <<");";                          \
-      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;          \
-	}                                                   \
-	else                                                \
-	{                                                   \
-      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;          \
-	  OTL_TRACE_STREAM<<"loading superfluous input variable";   \
-	  OTL_TRACE_STREAM<<"::" function "(" type ": ";    \
-      OTL_TRACE_STREAM<<", value=";                     \
-      OTL_TRACE_STREAM<<val;                            \
-      OTL_TRACE_STREAM<<");";                           \
-      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;          \
-	}                                                   \
+
+#define OTL_TRACE_READ(val,function,type)                       \
+  if(OTL_TRACE_LEVEL & 0x10){                                   \
+    otl_var_desc* temp_vdesc=describe_next_in_var();            \
+    if(temp_vdesc){                                             \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                  \
+      OTL_TRACE_STREAM<<"otl_stream(this=";                     \
+      OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                  \
+      OTL_TRACE_STREAM<<")::" function "(" type ": ";           \
+      OTL_TRACE_STREAM<<"ftype=";                               \
+      OTL_TRACE_STREAM<<temp_vdesc->ftype;                      \
+      OTL_TRACE_STREAM<<", placeholder=";                       \
+      OTL_TRACE_STREAM<<temp_vdesc->name;                       \
+      OTL_TRACE_STREAM<<", value=";                             \
+      OTL_TRACE_STREAM<<val;                                    \
+      OTL_TRACE_STREAM <<");";                                  \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                  \
+    }else{                                                      \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                  \
+      OTL_TRACE_STREAM<<"loading superfluous input variable";   \
+      OTL_TRACE_STREAM<<"::" function "(" type ": ";            \
+      OTL_TRACE_STREAM<<", value=";                             \
+      OTL_TRACE_STREAM<<val;                                    \
+      OTL_TRACE_STREAM<<");";                                   \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                  \
+    }                                                           \
   }
 #endif
 
 #if !defined(OTL_TRACE_WRITE)
-#define OTL_TRACE_WRITE(val,function,type)              \
-   if(OTL_TRACE_LEVEL & 0x10){                          \
-     otl_var_desc* temp_vdesc=describe_next_out_var();  \
-	if (temp_vdesc != NULL) /* [i_a] fix */             \
-	{                                                   \
-     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;           \
-     OTL_TRACE_STREAM<<"otl_stream(this=";              \
-     OTL_TRACE_STREAM<<OTL_RCAST(void*,this);           \
-     OTL_TRACE_STREAM<<")::" function "(" type " : ";   \
-     OTL_TRACE_STREAM<<"ftype=";                        \
-     OTL_TRACE_STREAM<<temp_vdesc->ftype;               \
-     OTL_TRACE_STREAM<<", placeholder=";                \
-     OTL_TRACE_STREAM<<temp_vdesc->name;                \
-     OTL_TRACE_STREAM<<", value=";                      \
-     if(this->is_null())                                \
-       OTL_TRACE_STREAM<<"NULL";                        \
-     else                                               \
-       OTL_TRACE_STREAM<<val;                           \
-     OTL_TRACE_STREAM<<");";                            \
-     OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;           \
-	}                                                   \
-	else                                                \
-	{                                                   \
-      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;          \
-	  OTL_TRACE_STREAM<<"writing superfluous output variable";   \
-	  OTL_TRACE_STREAM<<"::" function "(" type " : ";    \
-      OTL_TRACE_STREAM<<", value=";                     \
-     if(this->is_null())                                \
-       OTL_TRACE_STREAM<<"NULL";                        \
-     else                                               \
-       OTL_TRACE_STREAM<<val;                           \
-      OTL_TRACE_STREAM<<");";                           \
-      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;          \
-	}                                                   \
+#define OTL_TRACE_WRITE(val,function,type)                      \
+   if(OTL_TRACE_LEVEL & 0x10){                                  \
+     otl_var_desc* temp_vdesc=describe_next_out_var();          \
+     if (temp_vdesc){                                           \
+       OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                 \
+       OTL_TRACE_STREAM<<"otl_stream(this=";                    \
+       OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                 \
+       OTL_TRACE_STREAM<<")::" function "(" type " : ";         \
+       OTL_TRACE_STREAM<<"ftype=";                              \
+       OTL_TRACE_STREAM<<temp_vdesc->ftype;                     \
+       OTL_TRACE_STREAM<<", placeholder=";                      \
+       OTL_TRACE_STREAM<<temp_vdesc->name;                      \
+       OTL_TRACE_STREAM<<", value=";                            \
+       if(this->is_null())                                      \
+         OTL_TRACE_STREAM<<"NULL";                              \
+       else                                                     \
+         OTL_TRACE_STREAM<<val;                                 \
+       OTL_TRACE_STREAM<<");";                                  \
+       OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                 \
+     }else{                                                     \
+       OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                 \
+       OTL_TRACE_STREAM<<"writing superfluous output variable"; \
+       OTL_TRACE_STREAM<<"::" function "(" type " : ";          \
+       OTL_TRACE_STREAM<<", value=";                            \
+       if(this->is_null())                                      \
+         OTL_TRACE_STREAM<<"NULL";                              \
+       else                                                     \
+         OTL_TRACE_STREAM<<val;                                 \
+       OTL_TRACE_STREAM<<");";                                  \
+       OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                 \
+     }                                                          \
    }
 #endif
 
@@ -997,13 +1023,13 @@ const int otl_unsupported_type=-10000;
 
 #define OTL_CONST_EXCEPTION const
 
-#if defined OTL_FUNC_THROW_SPEC_ON
+#if defined(OTL_FUNC_THROW_SPEC_ON)
 #define OTL_THROWS_OTL_EXCEPTION throw(otl_exception)
 #define OTL_THROWS_OTL_EXCEPTION_EX throw(otl_exception_ex) /* [i_a] hack to ensure otl_long_string et al can throw exceptions while preventing a cyclic dependency at compile time in this code */
 #define OTL_NO_THROW throw()
 #else
 #define OTL_THROWS_OTL_EXCEPTION
-#define OTL_THROWS_OTL_EXCEPTION_EX 
+#define OTL_THROWS_OTL_EXCEPTION_EX
 #define OTL_NO_THROW
 #endif
 
@@ -1096,7 +1122,7 @@ public:
 private:
 
  int length_;
- 
+
 };
 
 #endif
@@ -1104,20 +1130,20 @@ private:
 #if defined(OTL_UNCAUGHT_EXCEPTION_ON)
 #include <exception>
 #if !defined(OTL_STLPORT)
-inline bool otl_uncaught_exception()           
-{                                               
-  return std::uncaught_exception();             
+inline bool otl_uncaught_exception()
+{
+  return std::uncaught_exception();
 }
 #else
 inline bool otl_uncaught_exception()
-{                                             
-  return __std_alias::uncaught_exception(); 
+{
+  return __std_alias::uncaught_exception();
 }
 #endif
 #else
 inline bool otl_uncaught_exception()
-{                                             
-  return false; 
+{
+  return false;
 }
 #endif
 
@@ -1166,7 +1192,7 @@ using namespace std;
 #if defined(OTL_STL)
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1200)
-#pragma warning (disable:4786) 
+#pragma warning (disable:4786)
 #pragma warning (disable:4290)
 #pragma warning (disable:4996)
 #endif
@@ -1308,15 +1334,15 @@ const int otl_error_code_20=32021;
 
 const int otl_error_code_21=32022;
 #define otl_error_msg_21                                        \
-"otl_stream_read_iterator: otl_stream cannot be described" 
+"otl_stream_read_iterator: otl_stream cannot be described"
 
 const int otl_error_code_22=32023;
 #define otl_error_msg_22                                \
-"otl_stream_read_iterator: position is out of range" 
+"otl_stream_read_iterator: position is out of range"
 
 const int otl_error_code_23=32024;
 #define otl_error_msg_23                        \
-"otl_stream_read_iterator: incompatible types in get()" 
+"otl_stream_read_iterator: incompatible types in get()"
 
 const int otl_error_code_24=32025;
 #define otl_error_msg_24 \
@@ -1330,34 +1356,34 @@ const int otl_error_code_25=32026;
 
 const int otl_error_code_26=32027;
 #define otl_error_msg_26                                \
-"otl_stream_read_iterator: variable name is not recognized " 
+"otl_stream_read_iterator: variable name is not recognized "
 
 const int otl_error_code_27=32028;
-#define otl_error_msg_27 "Unsupported column data type" 
+#define otl_error_msg_27 "Unsupported column data type"
 
 const int otl_error_code_28=32029;
 #define otl_error_msg_28 \
-"RAW value cannot be read with otl_lob_stream, use otl_long_string instead" 
+"RAW value cannot be read with otl_lob_stream, use otl_long_string instead"
 
 const int otl_error_code_29=32030;
 #define otl_error_msg_29 \
-"otl_stream is already open" 
+"otl_stream is already open"
 
 const int otl_error_code_30=32031;
 #define otl_error_msg_30 \
-"otl_connect is already connected" 
+"otl_connect is already connected"
 
 const int otl_error_code_31=32032;
 #define otl_error_msg_31 \
-"SELECT otl_stream buffer size for TimesTen should be in [0..128] range" 
+"SELECT otl_stream buffer size for TimesTen should be in [0..128] range"
 
 const int otl_error_code_32=32033;
 #define otl_error_msg_32 \
-"otl_connect object needs to be connected to DB before using otl_subscriber" 
+"otl_connect object needs to be connected to DB before using otl_subscriber"
 
 const int otl_error_code_33=32034;
 #define otl_error_msg_33 \
-"otl_stream buffer size should be 1 when refcur or plsql table is used" 
+"otl_stream buffer size should be 1 when refcur or plsql table is used"
 
 const int otl_error_code_34=32035;
 #define otl_error_msg_34 "END-OF-ROW check failed"
@@ -1424,7 +1450,7 @@ public:
     all_mask=0;
     lob_stream_mode=false;
   }
-  
+
   void add_override(const int andx, const int atype, const int asize=0)
   {
     if(len==otl_var_list_size){
@@ -1448,7 +1474,7 @@ public:
     col_type[len-1]=OTL_SCAST(short,atype);
     col_size[len-1]=asize;
   }
-  
+
   int find(const int ndx) const
   {
     int i;
@@ -1457,12 +1483,12 @@ public:
         return i;
     return -1;
   }
-  
+
   void set_all_column_types(const unsigned int amask=0)
   {
     all_mask=amask;
   }
-  
+
   int getLen(void) const
   {
     return len;
@@ -1504,7 +1530,7 @@ private:
   short int* col_type;
   int* col_size;
   int len;
-  
+
   unsigned int all_mask;
   bool lob_stream_mode;
 
@@ -1572,6 +1598,18 @@ inline unsigned int otl_to_fraction
 (unsigned int fraction,int frac_prec)
 {
   if(fraction==0||frac_prec==0)return 0; /* fraction */; /* [i_a] part of fix; see [otl_odbc_date_scale] */
+
+#if 0 /* [i_a] this code is wrong as it destroys the fraction conversion. What _should_ have happened instead is that the fraction is FORCIBLY clipped by the time it enters the backend: see the use of the otl_clip_fraction() function below */
+  int fraction_degree=otl_decimal_degree(fraction);
+  if(fraction_degree>frac_prec){
+    // in case if the actual fraction value is beyond the "fraction
+    // precision" range, truncate the value
+    int excess_decimal_digits=fraction_degree-frac_prec;
+    for(int iter=1;iter<=excess_decimal_digits;++iter)
+      fraction/=10;
+  }
+#endif
+
   int degree_diff=9-frac_prec;
   for(int i=0;i<degree_diff;++i)
     fraction*=10;
@@ -1641,7 +1679,7 @@ public:
   const unsigned long afraction=0,
   const int afrac_precision=0
 #if defined(OTL_ORA_TIMESTAMP)||defined(OTL_ODBC_TIME_ZONE)
-  , 
+  ,
   const short int atz_hour=0,
   const short int atz_minute=0
 #endif
@@ -2040,7 +2078,7 @@ public:
         v[length]=0;
     }
   }
-  
+
   virtual ~otl_long_string()
   {
    if(!extern_buffer_flag)delete[] v;
@@ -2053,7 +2091,7 @@ public:
   {
     this_is_last_piece_=this_is_last_piece;
   }
-  
+
   bool is_last_piece() const
   {
     return this_is_last_piece_;
@@ -2117,9 +2155,9 @@ public:
     v=new unsigned char[(buffer_size+1)*sizeof(OTL_WCHAR)];
     memset(v,0,(buffer_size+1)*sizeof(OTL_WCHAR)); // [i_a] init all alloced bytes!
   }
-  
+
   otl_long_unicode_string
-  (const void* external_buffer, 
+  (const void* external_buffer,
    const int buffer_size,
    const int input_length=0)
     : otl_long_string(external_buffer,buffer_size,input_length)
@@ -2176,7 +2214,7 @@ public:
   }
 
   virtual ~otl_long_unicode_string(){}
-  
+
   OTL_CHAR& operator[](int ndx) /* [i_a] */
 	  OTL_THROWS_OTL_EXCEPTION_EX
   {
@@ -2233,16 +2271,16 @@ inline const char* otl_var_type_name(const int ftype)
   const char* const_LOB_STREAM="otl_lob_stream*&";
   const char* const_USER_DEFINED="User-defined type (object type, VARRAY, Nested Table)";
 #if defined(OTL_ORA_UNICODE)||defined(OTL_ORA_UTF8)
-  const char* const_NCHAR="NCHAR"; 
+  const char* const_NCHAR="NCHAR";
   const char* const_NCLOB="NCLOB";
 #endif
-  
+
   switch(ftype){
 #if defined(OTL_ORA_UNICODE)||defined(OTL_ORA_UTF8)
   case otl_var_nchar:
-    return const_NCHAR; 
+    return const_NCHAR;
   case otl_var_nclob:
-    return const_NCLOB; 
+    return const_NCLOB;
 #endif
   case otl_var_char:
     return const_CHAR;
@@ -2465,7 +2503,7 @@ inline void otl_snprintf(char* dst, size_t dstlen, const char *fmt, ...) /* [i_a
 	if (dstlen > 0)
 	{
 		va_list a;
-	                   
+
 		va_start(a, fmt);
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1400)
@@ -2752,7 +2790,7 @@ inline void otl_var_info_col2
 {
   char buf1[128];
   char name[128];
-  
+
   otl_itoa(pos,name);
   OTL_STRCPY_S(buf1,sizeof(buf1),otl_var_type_name(ftype));
   OTL_STRCPY_S(var_info,var_info_sz,"Column: ");
@@ -2780,7 +2818,7 @@ inline void otl_var_info_col3
 {
   char buf1[128];
   char name[128];
-  
+
   otl_itoa(pos,name);
   OTL_STRCPY_S(buf1,sizeof(buf1),otl_var_type_name(ftype));
   OTL_STRCPY_S(var_info,var_info_sz,"Column: ");
@@ -2936,7 +2974,7 @@ inline int otl_numeric_convert_T2(const int ftype,const void* val,T& n)
   rc=0;
   break;
  }
- return rc;  
+ return rc;
 }
 
 #else
@@ -2972,7 +3010,7 @@ inline int otl_numeric_convert_T(const int ftype,const void* val,T& n)
   rc=0;
   break;
  }
- return rc;  
+ return rc;
 }
 #endif
 
@@ -2980,12 +3018,12 @@ inline int otl_numeric_convert_T(const int ftype,const void* val,T& n)
 
 class otl_ltstr{
 public:
- 
+
  bool operator()(const OTL_STRING_CONTAINER& s1, const OTL_STRING_CONTAINER& s2) const
  {
   return strcmp(s1.c_str(), s2.c_str()) < 0;
  }
- 
+
 };
 
 const int otl_max_default_pool_size=32;
@@ -3047,20 +3085,20 @@ public:
     cnt(0)
  {
  }
- 
+
   otl_stream_pool_entry(const otl_stream_pool_entry& sc):
     s(),
     cnt(0)
  {
    copy(sc);
  }
- 
+
  otl_stream_pool_entry& operator=(const otl_stream_pool_entry& sc)
  {
    copy(sc);
    return *this;
  }
- 
+
  virtual ~otl_stream_pool_entry(){}
 
   int get_cnt() const
@@ -3093,7 +3131,7 @@ private:
 
 class otl_stream_pool{
 public:
- 
+
  typedef otl_stream_pool_entry cache_entry_type;
 #if defined(OTL_ACE)
  typedef
@@ -3169,7 +3207,7 @@ public:
  otl_stream_shell_generic* find(const OTL_STRING_CONTAINER& stmtxt)
  {
   otl_stream_shell_generic* s;
-  
+
 #if defined(OTL_ACE)
   ace_map_entry* ce=0;
   int found=sc.find(stmtxt,ce);
@@ -3270,7 +3308,7 @@ public:
     sc_type::iterator elemN=sc.end();
     int min_cnt=0;
     ace_map_entry* min_entry=0;
-    
+
     for(sc_type::iterator i=elem0;i!=elemN;++i){
      if(i==elem0){ // first element
       min_entry=&(*i);
@@ -3326,7 +3364,7 @@ public:
     sc_type::iterator elemN=sc.end();
     int min_cnt=0;
     sc_type::iterator min_entry;
-    
+
     for(sc_type::iterator i=elem0;i!=elemN;++i){
      if(i==elem0){ // first element
       min_entry=i;
@@ -3354,7 +3392,7 @@ public:
   }
 #endif
  }
- 
+
  virtual ~otl_stream_pool()
  {
   init();
@@ -3373,7 +3411,7 @@ private:
  {
    return *this;
  }
- 
+
 };
 
 #endif
@@ -3445,7 +3483,7 @@ public:
 
 template <OTL_TYPE_NAME TData>
 STD_NAMESPACE_PREFIX ostream& operator<<
-  (STD_NAMESPACE_PREFIX ostream& s, 
+  (STD_NAMESPACE_PREFIX ostream& s,
    const otl_value<TData>& var)
 {
  if(var.ind)
@@ -3465,7 +3503,7 @@ STD_NAMESPACE_PREFIX ostream& operator<<
 #endif
 
 inline STD_NAMESPACE_PREFIX ostream& operator<<(
- STD_NAMESPACE_PREFIX ostream& s, 
+ STD_NAMESPACE_PREFIX ostream& s,
  const otl_datetime& var)
 {
 #if defined(OTL_TIMESTAMP_TO_OSTREAM)
@@ -3488,36 +3526,45 @@ inline STD_NAMESPACE_PREFIX ostream& operator<<(
 
 #if (defined(OTL_STL)||defined(OTL_VALUE_TEMPLATE_ON)) && defined(OTL_VALUE_TEMPLATE)
 
+#if defined(OTL_DISABLE_OPERATOR_GT_GT_FOR_OTL_VALUE_OTL_DATETIME)
+#else
 inline STD_NAMESPACE_PREFIX ostream& operator<<(
- STD_NAMESPACE_PREFIX ostream& s, 
+ STD_NAMESPACE_PREFIX ostream& s,
  const otl_value<otl_datetime>& var) /* [i_a] */
 {
  if(var.ind)
    s<<"NULL";
  else{
-   s<<var.v;
+#if !defined(OTL_TRACE_LEVEL)
+   s<<var.v.month<<"/"<<var.v.day<<"/"<<var.v.year
+    <<" "<<var.v.hour<<":"<<var.v.minute
+    <<":"<<var.v.second<<"."<<var.v.fraction;
+#else
+   s<<OTL_TRACE_FORMAT_DATETIME(var.v);
+#endif
  }
  return s;
 }
+#endif
 
 #endif
 
 template <OTL_TYPE_NAME T>
 class otl_auto_array_ptr{
 public:
-  
+
   otl_auto_array_ptr():
     ptr(0),
     arr_size_(0)
   {
   }
-  
+
   otl_auto_array_ptr(const int arr_size):
     ptr(new T[arr_size]),
     arr_size_(arr_size)
   {
   }
-  
+
   void double_size(void)
   {
     int old_arr_size=arr_size_;
@@ -3528,7 +3575,7 @@ public:
     delete[] ptr;
     ptr=temp_ptr;
   }
-  
+
   virtual ~otl_auto_array_ptr()
   {
     delete[] ptr;
@@ -3638,17 +3685,17 @@ public:
     do_not_destroy(false)
   {
   }
-  
+
   void assign(T* var)
   {
     ptr=var;
  }
-  
+
   void disconnect(void)
   {
     ptr=0;
   }
-  
+
   void destroy(void)
   {
     if(do_not_destroy)
@@ -3656,7 +3703,7 @@ public:
     delete ptr;
     ptr=0;
  }
-  
+
   ~otl_Tptr()
   {
     destroy();
@@ -3707,7 +3754,7 @@ public:
  }
 
  otl_tmpl_nocommit_stream
- (const otl_stream_buffer_size_type arr_size, 
+ (const otl_stream_buffer_size_type arr_size,
   const char* sqlstm,
   OTLConnect& pdb,
   const char* ref_cur_placeholder=0)
@@ -4244,7 +4291,7 @@ private:
 #define OTL_TMPL_CURSOR                   \
     otl_tmpl_cursor                       \
    <TExceptionStruct,TConnectStruct,      \
-    TCursorStruct,TVariableStruct>      
+    TCursorStruct,TVariableStruct>
 
 #define OTL_TMPL_OUT_STREAM            \
   otl_tmpl_out_stream                  \
@@ -4279,7 +4326,7 @@ OTL_EXCEPTION_IS_DERIVED_FROM_STD_EXCEPTION cannot be used
     virtual const char* what() const                    \
     {                                                   \
       return reinterpret_cast<const char*>(msg);        \
-    } 
+    }
 
 #endif
 
@@ -4287,7 +4334,7 @@ template <OTL_TYPE_NAME TExceptionStruct,
           OTL_TYPE_NAME TConnectStruct,
           OTL_TYPE_NAME TCursorStruct>
 #if defined(OTL_EXCEPTION_DERIVED_FROM)
-class otl_tmpl_exception: 
+class otl_tmpl_exception:
   public OTL_EXCEPTION_DERIVED_FROM,
   public TExceptionStruct{
 #else
@@ -4306,7 +4353,7 @@ public:
 #endif
   char var_info[256];
 
-  otl_tmpl_exception() 
+  otl_tmpl_exception()
 #if defined(__GNUC__) && (__GNUC__>=3)
     throw()
 #else
@@ -4389,7 +4436,7 @@ public:
   OTL_TRACE_EXCEPTION(this->code,this->msg,this->stm_text,this->var_info)
  }
 
- virtual ~otl_tmpl_exception() 
+ virtual ~otl_tmpl_exception()
 #if defined(__GNUC__) && (__GNUC__>=3)
     throw()
 #else
@@ -4516,7 +4563,7 @@ public:
    connected=0;
    increment_throw_count();
   if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw OTL_TMPL_EXCEPTION(connect_struct);
   }
  }
@@ -4531,7 +4578,7 @@ public:
   if(get_throw_count()>0)
    return;
   increment_throw_count();
-  if(otl_uncaught_exception()) return; 
+  if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(connect_struct);
  }
 
@@ -4544,7 +4591,7 @@ public:
   if(retcode)return;
   increment_throw_count();
   if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(connect_struct);
  }
 
@@ -4557,7 +4604,7 @@ public:
   if(retcode)return;
   increment_throw_count();
   if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(connect_struct);
  }
 
@@ -4570,7 +4617,7 @@ public:
   if(retcode)return;
   increment_throw_count();
   if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(connect_struct);
  }
 
@@ -4583,7 +4630,7 @@ public:
   if(retcode)return;
   increment_throw_count();
   if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(connect_struct);
  }
 
@@ -4624,8 +4671,8 @@ protected:
 
 public:
 
-  TVariableStruct& get_var_struct(){return var_struct;}  
-  const TVariableStruct& get_const_var_struct() const {return var_struct;}  
+  TVariableStruct& get_var_struct(){return var_struct;}
+  const TVariableStruct& get_const_var_struct() const {return var_struct;}
   int get_bound() const {return bound;}
   int get_param_type() const {return param_type;}
   int get_ftype() const {return ftype;}
@@ -4790,7 +4837,7 @@ public:
   pos=apos;
  }
 
-  
+
  void set_null(int ndx)
  {
   var_struct.set_null(ndx);
@@ -4805,7 +4852,7 @@ public:
   {
     var_struct.set_len(len,ndx);
   }
-  
+
  int get_len(int ndx=0)
  {
   return var_struct.get_len(ndx);
@@ -4893,7 +4940,7 @@ protected:
   int connected;
   char* stm_text;
   char* stm_label;
-  
+
  TCursorStruct cursor_struct;
  int vl_len;
  otl_tmpl_variable<TVariableStruct>** vl;
@@ -4920,12 +4967,12 @@ public:
   const char* get_stm_label() const
   {
     return stm_label;
-  }  
+  }
 
   const char* get_stm_text() const
   {
     return stm_text;
-  }  
+  }
 
   void set_connected(const int aconnected)
   {
@@ -5029,7 +5076,7 @@ public:
   }
   if(this->adb)this->adb->increment_throw_count();
   if(this->adb&&this->adb->get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(cursor_struct);
  }
 
@@ -5055,7 +5102,7 @@ public:
   }
   this->adb->increment_throw_count();
   adb=0;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(cursor_struct);
  }
 
@@ -5067,12 +5114,12 @@ public:
   case 0:
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return;
-    if(otl_uncaught_exception()) return; 
+    if(otl_uncaught_exception()) return;
     throw OTL_TMPL_EXCEPTION(cursor_struct,stm_label?stm_label:stm_text);
   case 2:
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return;
-    if(otl_uncaught_exception()) return; 
+    if(otl_uncaught_exception()) return;
     char var_info[1];
     var_info[0]=0;
     throw OTL_TMPL_EXCEPTION
@@ -5105,13 +5152,13 @@ public:
             const int rowoff/*=0*/,
             const int otl_sql_exec_from_class/*=otl_sql_exec_from_cursor_class*/)
  {
-  if(!connected)return; 
+  if(!connected)return;
   retcode=cursor_struct.exec(iters,rowoff,otl_sql_exec_from_class);
   _rpc=cursor_struct.get_rpc();
   if(retcode)return;
   if(this->adb)this->adb->increment_throw_count();
   if(this->adb&&this->adb->get_throw_count()>1)return;
-  if(otl_uncaught_exception()) return; 
+  if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(cursor_struct,stm_label?stm_label:stm_text);
  }
 
@@ -5126,8 +5173,8 @@ public:
         v.get_array_size()>1) ||
        ((v.get_ftype()==otl_var_blob||v.get_ftype()==otl_var_clob)&&
         v.get_const_var_struct().get_otl_adapter()==otl_ora8_adapter&&
-        v.get_array_size()>1 && 
-        binding_type==otl_inout_binding)) 
+        v.get_array_size()>1 &&
+        binding_type==otl_inout_binding))
       rc=false;
     return rc;
   }
@@ -5148,7 +5195,7 @@ public:
        sizeof(var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return;
-    if(otl_uncaught_exception()) return; 
+    if(otl_uncaught_exception()) return;
     throw OTL_TMPL_EXCEPTION
      (otl_error_msg_16,
       otl_error_code_16,
@@ -5170,7 +5217,7 @@ public:
   }
   if(this->adb)this->adb->increment_throw_count();
   if(this->adb&&this->adb->get_throw_count()>1)return;
-  if(otl_uncaught_exception()) return; 
+  if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(cursor_struct,stm_label?stm_label:stm_text);
  }
 
@@ -5189,7 +5236,7 @@ public:
        sizeof(var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return;
-    if(otl_uncaught_exception()) return; 
+    if(otl_uncaught_exception()) return;
     throw OTL_TMPL_EXCEPTION
      (otl_error_msg_16,
       otl_error_code_16,
@@ -5205,7 +5252,7 @@ public:
   if(retcode)return;
   if(this->adb)this->adb->increment_throw_count();
   if(this->adb&&this->adb->get_throw_count()>1)return;
-  if(otl_uncaught_exception()) return; 
+  if(otl_uncaught_exception()) return;
   throw OTL_TMPL_EXCEPTION(cursor_struct,stm_label?stm_label:stm_text);
  }
 
@@ -5216,7 +5263,7 @@ public:
   if(v.get_pos()) bind(v.get_pos(),v);
  }
 
-  
+
   static long direct_exec
   (OTL_TMPL_CONNECT& connect,
    const char* sqlstm,
@@ -5256,7 +5303,7 @@ public:
     cur.cursor_struct.set_parse_only(1);
     cur.parse(sqlstm);
   }
-  
+
  int eof(void){return eof_data;}
 
  int describe_column
@@ -5270,7 +5317,7 @@ public:
   if(retcode)return 1;
   if(this->adb)this->adb->increment_throw_count();
   if(this->adb&&this->adb->get_throw_count()>1)return 0;
-  if(otl_uncaught_exception()) return 0; 
+  if(otl_uncaught_exception()) return 0;
   throw OTL_TMPL_EXCEPTION(cursor_struct,stm_label?stm_label:stm_text);
  }
 
@@ -5375,7 +5422,7 @@ public:
     bool in_comment=false;
     bool in_one_line_comment=false;
     char *c=stm;
-    
+
     hv[i]=0;
     while(*c){
       switch(*c){
@@ -5407,7 +5454,7 @@ public:
         if(c[1]=='/'&&in_comment){
           in_comment=false;
           ++c;
-        }      
+        }
         break;
       case '\n':
         if(in_one_line_comment)
@@ -5520,7 +5567,7 @@ public:
     }
     len=i;
  }
-  
+
  virtual ~otl_tmpl_ext_hv_decl()
  {int i;
   for(i=0;hv[i]!=0;++i)
@@ -5667,7 +5714,7 @@ public:
 #endif
   }
 #endif
-  
+
   OTL_CHECK_BIND_VARS
 
   int rc=1;
@@ -5828,16 +5875,16 @@ public:
    char t3=' ';
    char t4=' ';
    char t5=' ';
-   
+
    int size=0;
-   
+
    char *c=name,*c1=s;
    while(*c1!=' '&&*c1)
      *c++=*c1++;
    *c=0;
    while(*c1==' '&&*c1)
      ++c1;
-   
+
 #if defined(OTL_BIND_VAR_STRICT_TYPE_CHECKING_ON)
    char* ct=c1;
    char* tac=type_arr;
@@ -5879,7 +5926,7 @@ public:
        // minimum size of <char[XXX]> should be at 2
        return 0;
    }
-   
+
 #if defined(OTL_ORA_UNICODE)||defined(OTL_ORA_UTF8)
    if(type=='N'&&t2=='C'&&t3=='H'){
      char tmp[32];
@@ -5898,8 +5945,8 @@ public:
 #endif
    }
 #endif
-   
-   
+
+
    if(status==in && (vstat==in||vstat==io))
      ;
    else if(status==out && (vstat==out||vstat==io||vstat==def))
@@ -5908,17 +5955,17 @@ public:
      ;
    else
      return 0;
-   
+
    OTL_CHECK_BIND_VARS
-     
+
      int pl_tab_flag=0;
-   
+
    if(apl_tab_size){
      array_size=apl_tab_size;
      pl_tab_flag=1;
    }else
      array_size=prev_array_size;
-   
+
    otl_tmpl_variable<TVariableStruct>* v=
      new otl_tmpl_variable<TVariableStruct>;
    v->copy_name(name);
@@ -6117,7 +6164,7 @@ public:
    vl=0;
    return;
   }
-  otl_auto_array_ptr<otl_tmpl_variable<TVariableStruct>*> 
+  otl_auto_array_ptr<otl_tmpl_variable<TVariableStruct>*>
     loc_ptr(container_size_);
   otl_tmpl_variable<TVariableStruct>** tmp_vl=loc_ptr.get_ptr();
   int i=0;
@@ -6205,18 +6252,18 @@ protected:
   int row_count;
   int array_size;
   int prefetch_array_size;
-  
+
   TSelectCursorStruct select_cursor_struct;
   otl_select_struct_override local_override;
   void* master_stream_ptr_;
 
 public:
- 
+
  otl_tmpl_select_cursor
  (OTL_TMPL_CONNECT& pdb,
   void* master_stream_ptr,
   const otl_stream_buffer_size_type arr_size=1,
-  const char* sqlstm_label=0): 
+  const char* sqlstm_label=0):
    OTL_TMPL_CURSOR(pdb),
    cur_row(-1),
    cur_size(0),
@@ -6245,7 +6292,7 @@ public:
  }
 
  otl_tmpl_select_cursor()
-   : OTL_TMPL_CURSOR(),   
+   : OTL_TMPL_CURSOR(),
      master_stream_ptr_(0)
  {
  }
@@ -6282,7 +6329,7 @@ public:
   if(!rc){
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return 0;
-   if(otl_uncaught_exception()) return 0; 
+   if(otl_uncaught_exception()) return 0;
    throw OTL_TMPL_EXCEPTION
      (this->cursor_struct,
       this->stm_label?
@@ -6296,7 +6343,7 @@ public:
   {
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-    if(otl_uncaught_exception()) return 0; 
+    if(otl_uncaught_exception()) return 0;
 
     throw OTL_TMPL_EXCEPTION
       (this->cursor_struct,
@@ -6325,7 +6372,7 @@ public:
 private:
 
  otl_tmpl_select_cursor
- (const otl_tmpl_select_cursor&): 
+ (const otl_tmpl_select_cursor&):
    OTL_TMPL_CURSOR(),
    cur_row(-1),
    cur_size(0),
@@ -6469,12 +6516,11 @@ public:
 
   int get_select_row_count() const /* [i_a] is used for get_dirty_buf_len() only! is NOT the number of rows returned by SELECT */
   {
-    return this->cur_row==-1?0:this->cur_size-this->cur_row; 
+    return this->cur_row==-1?0:this->cur_size-this->cur_row;
   }
-  int get_row_count() const /* [i_a] */
-  {
-	  return this->row_count; 
-  }
+
+  int get_prefetched_row_count() const {return this->row_count;}
+  int get_row_count() const {return this->row_count;}
   int get_sl_len() const {return sl_len;}
   otl_tmpl_variable<TVariableStruct>* get_sl(){return sl;}
   otl_column_desc* get_sl_desc(){return sl_desc;}
@@ -6533,7 +6579,7 @@ public:
    this->stm_text=0;
    eof_status=1;
    override=aoverride;
-   
+
    {
      size_t len=strlen(sqlstm)+1;
      this->stm_text=new char[len];
@@ -6550,7 +6596,7 @@ public:
          );
      hvd.alloc_host_var_list(this->vl,this->vl_len,pdb);
    }
-   
+
    try{
      this->parse();
      if(!this->select_cursor_struct.get_implicit_cursor()){
@@ -6598,7 +6644,7 @@ public:
   executed=1;
   delay_next=0;
  }
-  
+
   void clean(void)
   {
     _rfc=0;
@@ -6655,6 +6701,21 @@ public:
   ++_rfc;
  }
 
+
+ void skip_to_end_of_row()
+ {
+   check_if_executed();
+   if(eof_intern())return;
+   while(cur_col<sl_len-1){
+     ++cur_col;
+     null_fetched=sl[cur_col].is_null(this->cur_row);
+   }
+   eof_status=this->next();
+   cur_col=0;
+   if(!eof_intern())
+     cur_col=-1;
+  ++_rfc;
+ }
 
  void bind_all(void)
  {int i;
@@ -6731,12 +6792,12 @@ public:
    for(j=0;j<sl_len;++j)
      sl_desc[j]=sl_desc_tmp[j];
  }
-  
+
   void check_if_executed_throw(void)
   {
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return;
-    if(otl_uncaught_exception()) return; 
+    if(otl_uncaught_exception()) return;
     throw OTL_TMPL_EXCEPTION
       (otl_error_msg_2,
        otl_error_code_2,
@@ -6768,7 +6829,7 @@ public:
       sizeof(var_info));
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return 0;
-  if(otl_uncaught_exception()) return 0; 
+  if(otl_uncaught_exception()) return 0;
    throw OTL_TMPL_EXCEPTION
      (otl_error_msg_0,
       otl_error_code_0,
@@ -6789,7 +6850,7 @@ public:
       sizeof(var_info));
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw OTL_TMPL_EXCEPTION
      (otl_error_msg_0,
       otl_error_code_0,
@@ -6913,7 +6974,7 @@ public:
       if(rc==0){
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw OTL_TMPL_EXCEPTION
           (this->adb->get_connect_struct(),
            this->stm_label?this->stm_label:
@@ -6955,7 +7016,7 @@ public:
   {
     check_in_var();
     if(check_in_type(otl_var_char,1)){
-      
+
       int overflow;
       otl_strcpy4
         (OTL_RCAST(unsigned char*,this->vl[cur_in]->val()),
@@ -6975,7 +7036,7 @@ public:
            sizeof(temp_var_info));
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw OTL_TMPL_EXCEPTION
           (otl_error_msg_4,
            otl_error_code_4,
@@ -6983,9 +7044,7 @@ public:
            this->stm_text,
       temp_var_info);
       }
-      
       this->vl[cur_in]->set_not_null(0);
-      
     }
     get_in_next();
     return *this;
@@ -7041,7 +7100,7 @@ public:
         if(rc==0){
           if(this->adb)this->adb->increment_throw_count();
           if(this->adb&&this->adb->get_throw_count()>1)return *this;
-          if(otl_uncaught_exception()) return *this; 
+          if(otl_uncaught_exception()) return *this;
           throw OTL_TMPL_EXCEPTION
             (this->adb->get_connect_struct(),
              this->stm_label?this->stm_label:
@@ -7142,7 +7201,7 @@ public:
    if(rc==0){
      if(this->adb)this->adb->increment_throw_count();
      if(this->adb&&this->adb->get_throw_count()>1)return *this;
-     if(otl_uncaught_exception()) return *this; 
+     if(otl_uncaught_exception()) return *this;
      throw OTL_TMPL_EXCEPTION
        (this->adb->get_connect_struct(),
         this->stm_label?this->stm_label:
@@ -7220,7 +7279,7 @@ public:
            otl_memcpy(s.v,c+sizeof(short int),len2,sl[cur_col].get_ftype());
            s.set_len(len2);
          }else{
-           int len2=sl[cur_col].get_len(this->cur_row);           
+           int len2=sl[cur_col].get_len(this->cur_row);
            if(len2>s.get_buf_size())
              len2=s.get_buf_size();
            otl_memcpy(s.v,c,len2,sl[cur_col].get_ftype());
@@ -7240,7 +7299,7 @@ public:
          if(rc==0){
            if(this->adb)this->adb->increment_throw_count();
            if(this->adb&&this->adb->get_throw_count()>1)return *this;
-           if(otl_uncaught_exception()) return *this; 
+           if(otl_uncaught_exception()) return *this;
            throw OTL_TMPL_EXCEPTION
              (this->adb->get_connect_struct(),
               this->stm_label?this->stm_label:
@@ -7252,7 +7311,7 @@ public:
          if(sl[cur_col].get_ftype()==otl_var_clob)
            s.null_terminate_string(len);
          look_ahead();
-       }      
+       }
      }
      break;
    default:
@@ -7266,7 +7325,7 @@ public:
           sizeof(tmp_var_info));
        if(this->adb)this->adb->increment_throw_count();
        if(this->adb&&this->adb->get_throw_count()>1)return *this;
-       if(otl_uncaught_exception()) return *this; 
+       if(otl_uncaught_exception()) return *this;
        throw OTL_TMPL_EXCEPTION
          (otl_error_msg_0,
           otl_error_code_0,
@@ -7317,7 +7376,7 @@ public:
       sizeof(tmp_var_info));
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return *this;
-   if(otl_uncaught_exception()) return *this; 
+   if(otl_uncaught_exception()) return *this;
    throw OTL_TMPL_EXCEPTION
     (otl_error_msg_0,
      otl_error_code_0,
@@ -7339,7 +7398,7 @@ public:
        sizeof(var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-    if(otl_uncaught_exception()) return 0; 
+    if(otl_uncaught_exception()) return 0;
     throw OTL_TMPL_EXCEPTION
       (otl_error_msg_0,
        otl_error_code_0,
@@ -7373,7 +7432,7 @@ public:
   {
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
     throw OTL_TMPL_EXCEPTION
       (otl_error_msg_1,
        otl_error_code_1,
@@ -7455,7 +7514,7 @@ public:
        sizeof(tmp_var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw OTL_TMPL_EXCEPTION
      (otl_error_msg_4,
       otl_error_code_4,
@@ -7475,6 +7534,32 @@ public:
  {
   check_in_var();
   switch(this->vl[cur_in]->get_ftype()){
+  case otl_var_varchar_long:
+    {
+      unsigned char* c=OTL_RCAST(unsigned char*,this->vl[cur_in]->val(0));
+      int len=OTL_CCAST(otl_long_string*,&s)->len();
+      this->vl[cur_in]->set_not_null(0);
+      if(len>this->vl[cur_in]->actual_elem_size()){
+        otl_var_info_var
+          (this->vl[cur_in]->get_name(),
+           this->vl[cur_in]->get_ftype(),
+           otl_var_long_string,
+           var_info,
+           sizeof(var_info));
+        if(this->adb)this->adb->increment_throw_count();
+        if(this->adb&&this->adb->get_throw_count()>1)return *this;
+        if(otl_uncaught_exception()) return *this;
+        throw OTL_TMPL_EXCEPTION
+          (otl_error_msg_5,
+           otl_error_code_5,
+           this->stm_label?this->stm_label:
+           this->stm_text,
+           var_info);
+      }
+      otl_memcpy(c,s.v,len,this->vl[cur_in]->get_ftype());
+      this->vl[cur_in]->set_len(len,0);
+    }
+    break;
   case otl_var_raw_long:
     {
       unsigned char* c=OTL_RCAST(unsigned char*,this->vl[cur_in]->val(0));
@@ -7488,7 +7573,7 @@ public:
            sizeof(var_info));
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw OTL_TMPL_EXCEPTION
           (otl_error_msg_5,
            otl_error_code_5,
@@ -7514,7 +7599,7 @@ public:
            sizeof(var_info));
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw OTL_TMPL_EXCEPTION
           (otl_error_msg_5,
            otl_error_code_5,
@@ -7551,7 +7636,7 @@ public:
   {
     check_in_var();
     if(check_in_type(otl_var_char,1)){
-      
+
       int overflow;
       otl_strcpy
         (OTL_RCAST(unsigned char*,this->vl[cur_in]->val()),
@@ -7570,7 +7655,7 @@ public:
            sizeof(temp_var_info));
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw OTL_TMPL_EXCEPTION
           (otl_error_msg_4,
            otl_error_code_4,
@@ -7578,9 +7663,9 @@ public:
            this->stm_text,
       temp_var_info);
       }
-      
+
       this->vl[cur_in]->set_not_null(0);
-      
+
     }
     get_in_next();
     return *this;
@@ -7610,7 +7695,7 @@ public:
        sizeof(temp_var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw OTL_TMPL_EXCEPTION
      (otl_error_msg_4,
       otl_error_code_4,
@@ -7663,7 +7748,7 @@ public:
    if(rc==0){
      if(this->adb)this->adb->increment_throw_count();
      if(this->adb&&this->adb->get_throw_count()>1)return *this;
-     if(otl_uncaught_exception()) return *this; 
+     if(otl_uncaught_exception()) return *this;
      throw OTL_TMPL_EXCEPTION
        (this->adb->get_connect_struct(),
         this->stm_label?this->stm_label:
@@ -7678,7 +7763,7 @@ public:
 private:
 
  otl_tmpl_select_stream
- (const otl_tmpl_select_stream&): 
+ (const otl_tmpl_select_stream&):
    OTL_TMPL_SELECT_CURSOR(),
    sl_desc(0),
    sl(0),
@@ -7728,7 +7813,7 @@ protected:
 
 public:
 
-  int get_dirty_buf_len() const 
+  int get_dirty_buf_len() const
   {
     if(cur_y==0)
       return 0;
@@ -7918,7 +8003,7 @@ public:
       if(temp_rc==0){
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return;
-        if(otl_uncaught_exception()) return; 
+        if(otl_uncaught_exception()) return;
         throw OTL_TMPL_EXCEPTION
           (this->adb->get_connect_struct(),
            this->stm_label?this->stm_label:
@@ -7934,12 +8019,12 @@ public:
 #if defined(OTL_STL) && defined(OTL_UNCAUGHT_EXCEPTION_ON)
   if(otl_uncaught_exception()){
    clean();
-   return; 
+   return;
   }
 #elif defined(OTL_UNCAUGHT_EXCEPTION_ON)
    if(otl_uncaught_exception()){
      clean();
-     return; 
+     return;
   }
 #endif
 
@@ -7955,12 +8040,12 @@ public:
    if(
 otl_uncaught_exception()){
     clean();
-    return; 
+    return;
    }
 #elif defined(OTL_UNCAUGHT_EXCEPTION_ON)
    if(otl_uncaught_exception()){
      clean();
-     return; 
+     return;
    }
 #endif
    throw OTL_TMPL_EXCEPTION
@@ -7981,7 +8066,7 @@ otl_uncaught_exception()){
       if(rc==0){
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return;
-        if(otl_uncaught_exception()) return; 
+        if(otl_uncaught_exception()) return;
         throw OTL_TMPL_EXCEPTION
           (this->adb->get_connect_struct(),
            this->stm_label?this->stm_label:
@@ -8005,7 +8090,7 @@ otl_uncaught_exception()){
      clean();
      if(this->adb)this->adb->increment_throw_count();
      if(this->adb&&this->adb->get_throw_count()>1)return;
-     if(otl_uncaught_exception()) return; 
+     if(otl_uncaught_exception()) return;
      throw OTL_TMPL_EXCEPTION
        (this->adb->get_connect_struct(),
         this->stm_label?this->stm_label:
@@ -8023,7 +8108,7 @@ otl_uncaught_exception()){
       if(temp_rc==0){
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return;
-        if(otl_uncaught_exception()) return; 
+        if(otl_uncaught_exception()) return;
         throw OTL_TMPL_EXCEPTION
           (this->adb->get_connect_struct(),
            this->stm_label?this->stm_label:
@@ -8042,7 +8127,7 @@ otl_uncaught_exception()){
 
  virtual void clean(const int clean_up_error_flag=0)
  {
-   if(clean_up_error_flag){             
+   if(clean_up_error_flag){
      this->retcode=1;
      this->in_exception_flag=0;
    }
@@ -8084,7 +8169,7 @@ otl_uncaught_exception()){
       sizeof(var_info));
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return 0;
-   if(otl_uncaught_exception()) return 0; 
+   if(otl_uncaught_exception()) return 0;
    throw OTL_TMPL_EXCEPTION
      (otl_error_msg_0,
       otl_error_code_0,
@@ -8154,7 +8239,7 @@ otl_uncaught_exception()){
  {
    if(this->vl_len>0){
      get_next();
-     
+
      switch(this->vl[cur_x]->get_ftype()){
      case otl_var_char:
        {
@@ -8175,7 +8260,7 @@ otl_uncaught_exception()){
            in_exception_flag=1;
            if(this->adb)this->adb->increment_throw_count();
            if(this->adb&&this->adb->get_throw_count()>1)return *this;
-           if(otl_uncaught_exception()) return *this; 
+           if(otl_uncaught_exception()) return *this;
            throw OTL_TMPL_EXCEPTION
              (otl_error_msg_4,
               otl_error_code_4,
@@ -8204,7 +8289,7 @@ otl_uncaught_exception()){
               sizeof(var_info));
            if(this->adb)this->adb->increment_throw_count();
            if(this->adb&&this->adb->get_throw_count()>1)return *this;
-           if(otl_uncaught_exception()) return *this; 
+           if(otl_uncaught_exception()) return *this;
            throw OTL_TMPL_EXCEPTION
              (otl_error_msg_5,
               otl_error_code_5,
@@ -8212,7 +8297,7 @@ otl_uncaught_exception()){
               this->stm_text,
               var_info);
          }
-         
+
          otl_memcpy(c,
                     OTL_RCAST(unsigned char*,
                               OTL_CCAST(char*,s.c_str())),
@@ -8234,7 +8319,7 @@ otl_uncaught_exception()){
               sizeof(var_info));
            if(this->adb)this->adb->increment_throw_count();
            if(this->adb&&this->adb->get_throw_count()>1)return *this;
-           if(otl_uncaught_exception()) return *this; 
+           if(otl_uncaught_exception()) return *this;
            throw OTL_TMPL_EXCEPTION
              (otl_error_msg_5,
               otl_error_code_5,
@@ -8250,7 +8335,7 @@ otl_uncaught_exception()){
 #endif
      default:
        check_type(otl_var_char,1);
-     } // switch     
+     } // switch
      check_buf();
    }
    return *this;
@@ -8309,7 +8394,7 @@ otl_uncaught_exception()){
                sizeof(var_info));
             if(this->adb)this->adb->increment_throw_count();
             if(this->adb&&this->adb->get_throw_count()>1)return *this;
-            if(otl_uncaught_exception()) return *this; 
+            if(otl_uncaught_exception()) return *this;
             throw OTL_TMPL_EXCEPTION
               (otl_error_msg_5,
                otl_error_code_5,
@@ -8337,7 +8422,7 @@ otl_uncaught_exception()){
                sizeof(var_info));
             if(this->adb)this->adb->increment_throw_count();
             if(this->adb&&this->adb->get_throw_count()>1)return *this;
-            if(otl_uncaught_exception()) return *this; 
+            if(otl_uncaught_exception()) return *this;
             throw OTL_TMPL_EXCEPTION
               (otl_error_msg_5,
                otl_error_code_5,
@@ -8421,7 +8506,7 @@ otl_uncaught_exception()){
      in_exception_flag=1;
      if(this->adb)this->adb->increment_throw_count();
      if(this->adb&&this->adb->get_throw_count()>1)return *this;
-     if(otl_uncaught_exception()) return *this; 
+     if(otl_uncaught_exception()) return *this;
      throw OTL_TMPL_EXCEPTION
       (otl_error_msg_4,
        otl_error_code_4,
@@ -8496,7 +8581,7 @@ otl_uncaught_exception()){
           sizeof(tmp_var_info));
        if(this->adb)this->adb->increment_throw_count();
        if(this->adb&&this->adb->get_throw_count()>1)return *this;
-       if(otl_uncaught_exception()) return *this; 
+       if(otl_uncaught_exception()) return *this;
        throw OTL_TMPL_EXCEPTION
         (otl_error_msg_4,
          otl_error_code_4,
@@ -8552,12 +8637,12 @@ otl_uncaught_exception()){
       otl_strcpy
        (OTL_RCAST(unsigned char*,this->vl[cur_x]->val(i2)),
         OTL_RCAST(unsigned char*,
-                  OTL_CCAST(char*,(*OTL_RCAST(STD_NAMESPACE_PREFIX 
+                  OTL_CCAST(char*,(*OTL_RCAST(STD_NAMESPACE_PREFIX
                                               vector<OTL_STRING_CONTAINER>*,
                                               vec.get_p_v()))[i2].c_str())),
         overflow,
         this->vl[cur_x]->get_elem_size(),
-        OTL_SCAST(int,(*OTL_RCAST(STD_NAMESPACE_PREFIX 
+        OTL_SCAST(int,(*OTL_RCAST(STD_NAMESPACE_PREFIX
                                   vector<OTL_STRING_CONTAINER>*,
                                   vec.get_p_v()))[i2].length())
        );
@@ -8571,7 +8656,7 @@ otl_uncaught_exception()){
           sizeof(temp_var_info));
        if(this->adb)this->adb->increment_throw_count();
        if(this->adb&&this->adb->get_throw_count()>1)return *this;
-       if(otl_uncaught_exception()) return *this; 
+       if(otl_uncaught_exception()) return *this;
        throw OTL_TMPL_EXCEPTION
         (otl_error_msg_4,
          otl_error_code_4,
@@ -8680,7 +8765,7 @@ otl_uncaught_exception()){
     if(rc==0){
       if(this->adb)this->adb->increment_throw_count();
       if(this->adb&&this->adb->get_throw_count()>1)return *this;
-      if(otl_uncaught_exception()) return *this; 
+      if(otl_uncaught_exception()) return *this;
       throw OTL_TMPL_EXCEPTION
         (this->adb->get_connect_struct(),
          this->stm_label?this->stm_label:
@@ -8704,8 +8789,7 @@ otl_uncaught_exception()){
      {
        unsigned char* c=OTL_RCAST(unsigned char*,this->vl[cur_x]->val(cur_y));
        int len=OTL_CCAST(otl_long_string*,&s)->len();
-       if(this->vl[cur_x]->get_ftype()!=otl_var_raw)
-         this->vl[cur_x]->set_not_null(cur_y);
+       this->vl[cur_x]->set_not_null(cur_y);
        if(len>this->vl[cur_x]->actual_elem_size()){
          otl_var_info_var
            (this->vl[cur_x]->get_name(),
@@ -8715,7 +8799,7 @@ otl_uncaught_exception()){
             sizeof(var_info));
          if(this->adb)this->adb->increment_throw_count();
          if(this->adb&&this->adb->get_throw_count()>1)return *this;
-         if(otl_uncaught_exception()) return *this; 
+         if(otl_uncaught_exception()) return *this;
          throw OTL_TMPL_EXCEPTION
            (otl_error_msg_5,
             otl_error_code_5,
@@ -8753,7 +8837,7 @@ otl_uncaught_exception()){
             sizeof(var_info));
          if(this->adb)this->adb->increment_throw_count();
          if(this->adb&&this->adb->get_throw_count()>1)return *this;
-         if(otl_uncaught_exception()) return *this; 
+         if(otl_uncaught_exception()) return *this;
          throw OTL_TMPL_EXCEPTION
            (otl_error_msg_5,
             otl_error_code_5,
@@ -8805,7 +8889,7 @@ otl_uncaught_exception()){
      sizeof(temp_var_info));
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return *this;
-   if(otl_uncaught_exception()) return *this; 
+   if(otl_uncaught_exception()) return *this;
    throw OTL_TMPL_EXCEPTION
     (otl_error_msg_0,
      otl_error_code_0,
@@ -8939,7 +9023,7 @@ public:
    if(hvd.has_plsql_tabs_or_refcur() && arr_size>1){
       if(this->adb)this->adb->increment_throw_count();
       if(this->adb&&this->adb->get_throw_count()>1)return;
-      if(otl_uncaught_exception()) return; 
+      if(otl_uncaught_exception()) return;
       throw OTL_TMPL_EXCEPTION
        (otl_error_msg_33,
         otl_error_code_33,
@@ -8989,8 +9073,8 @@ public:
      if(hvd.get_len()>0){
        avl=new otl_tmpl_variable<TVariableStruct>*[hvd.get_len()];
      }
-    iv_len=0; 
-    this->vl_len=0; 
+    iv_len=0;
+    this->vl_len=0;
     avl_len=hvd.get_len();
     for(j=0;j<avl_len;++j){
 #if defined(OTL_STREAM_LEGACY_BUFFER_SIZE_TYPE)
@@ -9004,7 +9088,7 @@ public:
         sizeof(tmp_var_info));
       if(this->adb)this->adb->increment_throw_count();
       if(this->adb&&this->adb->get_throw_count()>1)return;
-      if(otl_uncaught_exception()) return; 
+      if(otl_uncaught_exception()) return;
       throw OTL_TMPL_EXCEPTION
        (otl_error_msg_6,
         otl_error_code_6,
@@ -9201,7 +9285,7 @@ public:
        sizeof(var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-    if(otl_uncaught_exception()) return 0; 
+    if(otl_uncaught_exception()) return 0;
     throw OTL_TMPL_EXCEPTION
       (otl_error_msg_0,
        otl_error_code_0,
@@ -9309,7 +9393,7 @@ public:
       if(rc==0){
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw OTL_TMPL_EXCEPTION
           (this->adb->get_connect_struct(),
            this->stm_label?this->stm_label:
@@ -9534,7 +9618,7 @@ public:
                sizeof(long int)*tmp_len);
         break;
       }
-      
+
     }
     for(i=0;i<tmp_len;++i){
      if(in_vl[cur_in_x]->is_null(i))
@@ -9561,7 +9645,7 @@ public:
    if(rc==0){
      if(this->adb)this->adb->increment_throw_count();
      if(this->adb&&this->adb->get_throw_count()>1)return *this;
-     if(otl_uncaught_exception()) return *this; 
+     if(otl_uncaught_exception()) return *this;
      throw OTL_TMPL_EXCEPTION
        (this->adb->get_connect_struct(),
         this->stm_label?this->stm_label:
@@ -9601,7 +9685,7 @@ public:
       if(rc==0){
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw OTL_TMPL_EXCEPTION
           (this->adb->get_connect_struct(),
            this->stm_label?this->stm_label:
@@ -9626,7 +9710,7 @@ public:
          sizeof(temp_var_info));
       if(this->adb)this->adb->increment_throw_count();
       if(this->adb&&this->adb->get_throw_count()>1)return *this;
-      if(otl_uncaught_exception()) return *this; 
+      if(otl_uncaught_exception()) return *this;
       throw OTL_TMPL_EXCEPTION
         (otl_error_msg_0,
          otl_error_code_0,
@@ -9673,7 +9757,7 @@ public:
      sizeof(tmp_var_info));
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return *this;
-   if(otl_uncaught_exception()) return *this; 
+   if(otl_uncaught_exception()) return *this;
    throw OTL_TMPL_EXCEPTION
     (otl_error_msg_0,
      otl_error_code_0,
@@ -9686,7 +9770,7 @@ public:
  }
 #endif
 
- otl_tmpl_inout_stream(): 
+ otl_tmpl_inout_stream():
    OTL_TMPL_OUT_STREAM(),
    in_vl(0),
    iv_len(0),
@@ -9704,7 +9788,7 @@ public:
 private:
 
  otl_tmpl_inout_stream
- (const otl_tmpl_inout_stream&): 
+ (const otl_tmpl_inout_stream&):
    OTL_TMPL_OUT_STREAM(),
    in_vl(0),
    iv_len(0),
@@ -9966,10 +10050,10 @@ inline const int otl_odbc_date_prec(int override_len = 0)
 	return tslen;
 }
 /*
- [i_a] ^^^^^^^^^^^^^^^^^^^^^^^^ was: 23 
+ [i_a] ^^^^^^^^^^^^^^^^^^^^^^^^ was: 23
 
  part of fix for http://connect.microsoft.com/SQLServer/feedback/ViewFeedback.aspx?FeedbackID=331868
- see also ms-help://MS.VSCC.v90/MS.MSDNQTR.v90.en/odbc/html/541b83ab-b16d-4714-bcb2-3c3daa9a963b.htm 
+ see also ms-help://MS.VSCC.v90/MS.MSDNQTR.v90.en/odbc/html/541b83ab-b16d-4714-bcb2-3c3daa9a963b.htm
  --> 'Column Size' comments for SQLBindParameter(...)
 */
 
@@ -9986,7 +10070,7 @@ public:
   unsigned char sqlstate[1000];
 #endif
   int code;
-  
+
 #if defined(OTL_EXTENDED_EXCEPTION)
 
 #if defined(OTL_UNICODE_EXCEPTION_AND_RLOGON)
@@ -10222,7 +10306,7 @@ inline void otl_fill_exception(
     }
   }while(rc!=SQL_NO_DATA&&rc!=SQL_INVALID_HANDLE&&
          rc!=SQL_ERROR&&tmp_arr_len<OTL_MAX_MSG_ARR);
-    
+
   exception_struct.arr_len=tmp_arr_len;
   exception_struct.msg_arr=new SQLWCHAR*[tmp_arr_len];
   exception_struct.sqlstate_arr=new SQLWCHAR*[tmp_arr_len];
@@ -10287,7 +10371,7 @@ inline void otl_fill_exception(
     }
   }while(rc!=SQL_NO_DATA&&rc!=SQL_INVALID_HANDLE&&
          rc!=SQL_ERROR&&tmp_arr_len<OTL_MAX_MSG_ARR);
-    
+
   exception_struct.arr_len=tmp_arr_len;
   exception_struct.msg_arr=new char*[tmp_arr_len];
   exception_struct.sqlstate_arr=new char*[tmp_arr_len];
@@ -10351,7 +10435,7 @@ inline void otl_fill_exception(
     }
   }while(rc!=SQL_NO_DATA&&rc!=SQL_INVALID_HANDLE&&
          rc!=SQL_ERROR&&tmp_arr_len<OTL_MAX_MSG_ARR);
-    
+
   exception_struct.arr_len=tmp_arr_len;
   exception_struct.msg_arr=new char*[tmp_arr_len];
   exception_struct.sqlstate_arr=new char*[tmp_arr_len];
@@ -10508,7 +10592,7 @@ public:
     OTL_RCAST(SQLPOINTER,OTL_SQL_MARS_ENABLED_YES),
     SQL_IS_UINTEGER);
 #endif
-#endif 
+#endif
     status=SQLConnect
       (hdbc,
        OTL_CCAST(SQLWCHAR*,tnsname),SQL_NTS,
@@ -10523,7 +10607,7 @@ public:
 
  int ext_logon(OTL_HENV ahenv,
                OTL_HDBC ahdbc,
-               const int 
+               const int
 #ifndef OTL_ODBC_MYSQL
                auto_commit
 #endif
@@ -10568,9 +10652,9 @@ public:
      SQL_IS_POINTER);
 #else
   if(auto_commit)
-   status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,1); 
+   status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,1);
   else
-   status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,0); 
+   status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,0);
 #endif
   if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)return 0;
 #endif
@@ -10615,7 +10699,7 @@ public:
    henv=0;
   }
  }
- 
+
  void set_timeout(const int atimeout=0)
  {
   timeout=atimeout;
@@ -10627,7 +10711,7 @@ public:
  }
 
  int rlogon(const char* connect_str,
-            const int 
+            const int
 #ifndef OTL_ODBC_MYSQL
             auto_commit
 #endif
@@ -10674,7 +10758,7 @@ public:
 
    if(*c=='/')++c;
    prev_c=' ';
-   while(*c && !(*c=='@' && prev_c!='\\') && 
+   while(*c && !(*c=='@' && prev_c!='\\') &&
          (OTL_SCAST(unsigned,passwd_ptr-passwd)<sizeof(passwd)-1)){
      if(prev_c=='\\')--passwd_ptr;
     *passwd_ptr=*c;
@@ -10710,7 +10794,7 @@ public:
    while(*c1 && (OTL_SCAST(unsigned,c1-temp_connect_str)<
                  sizeof(temp_connect_str)-1)){
     c2=entry_name;
-    while(*c1 && *c1!='=' && 
+    while(*c1 && *c1!='=' &&
           (OTL_SCAST(unsigned,c1-temp_connect_str)<
            sizeof(temp_connect_str)-1)){
      *c2=*c1;
@@ -10721,7 +10805,7 @@ public:
     if(*c1) ++c1;
     c2=entry_value;
     prev_c=' ';
-    while(*c1&&*c1!=';' && 
+    while(*c1&&*c1!=';' &&
           (OTL_SCAST(unsigned,c2-entry_value)<
            sizeof(entry_value)-1)){
       if(prev_c=='\\')
@@ -10783,11 +10867,8 @@ public:
    status=SQLAllocConnect(henv, &hdbc);
 #endif
    if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)return 0;
-  }
-  else /* [i_a] */
-  {
-	  status=SQL_SUCCESS;
-  }
+  }else
+    status=SQL_SUCCESS;
 
 #ifndef OTL_ODBC_MYSQL
 #if (ODBCVER >= 0x0300)
@@ -10805,9 +10886,9 @@ public:
      SQL_IS_POINTER);
 #else
   if(auto_commit)
-   status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,1); 
+   status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,1);
   else
-   status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,0); 
+   status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,0);
 #endif
   if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)return 0;
 #endif
@@ -10820,7 +10901,7 @@ public:
      0);
 #else
   if (timeout>0)
-    status=SQLSetConnectOption(hdbc,SQL_LOGIN_TIMEOUT,timeout); 
+    status=SQLSetConnectOption(hdbc,SQL_LOGIN_TIMEOUT,timeout);
 #endif
   if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)return 0;
 
@@ -10845,7 +10926,7 @@ public:
     OTL_RCAST(SQLPOINTER,OTL_SQL_MARS_ENABLED_YES),
     SQL_IS_UINTEGER);
 #endif
-#endif 
+#endif
 
   if(oracle_format){
 #if defined(OTL_ODBC_zOS)
@@ -10944,7 +11025,7 @@ public:
  }
 
   int set_transaction_isolation_level
-  (const long int 
+  (const long int
 #ifndef OTL_ODBC_MYSQL
    level
 #endif
@@ -10982,7 +11063,7 @@ public:
     OTL_RCAST(SQLPOINTER,SQL_AUTOCOMMIT_ON),
     SQL_IS_POINTER);
 #else
-  status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,1); 
+  status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,1);
 #endif
   if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)
    return 0;
@@ -11003,7 +11084,7 @@ public:
     OTL_RCAST(SQLPOINTER,SQL_AUTOCOMMIT_OFF),
     SQL_IS_POINTER);
 #else
- status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,0); 
+ status=SQLSetConnectOption(hdbc,SQL_AUTOCOMMIT,0);
 #endif
   if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)
    return 0;
@@ -11022,7 +11103,7 @@ public:
    return 1;
   }else{
 #if defined(OTL_ODBC_zOS)
-   if(logoff_commit) 
+   if(logoff_commit)
      commit();
 #else
    commit();
@@ -11133,8 +11214,8 @@ public:
 #endif
 
 #else
- rc=SQLError(henv, 
-             hdbc, 
+ rc=SQLError(henv,
+             hdbc,
              0, // hstmt
              OTL_RCAST(OTL_SQLCHAR_PTR,&exception_struct.sqlstate[0]),
              OTL_RCAST(OTL_SQLINTEGER_PTR,&exception_struct.code),
@@ -11170,7 +11251,7 @@ public:
 #if (ODBCVER >= 0x0300)
   status=SQLEndTran(SQL_HANDLE_DBC,hdbc,SQL_COMMIT);
 #else
- status=SQLTransact(henv,hdbc,SQL_COMMIT); 
+ status=SQLTransact(henv,hdbc,SQL_COMMIT);
 #endif
   if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)
    return 0;
@@ -11187,7 +11268,7 @@ public:
 #if (ODBCVER >= 0x0300)
   status=SQLEndTran(SQL_HANDLE_DBC,hdbc,SQL_ROLLBACK);
 #else
- status=SQLTransact(henv,hdbc,SQL_ROLLBACK); 
+ status=SQLTransact(henv,hdbc,SQL_ROLLBACK);
 #endif
   if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)
    return 0;
@@ -11239,7 +11320,7 @@ protected:
   int last_param_data_token;
   int last_sql_param_data_status;
   int sql_param_data_count;
-  
+
 public:
 
  otl_cur0():
@@ -11252,7 +11333,7 @@ public:
 
  virtual ~otl_cur0(){}
 
-  OTL_SQLHSTMT get_cda(){return cda;}  
+  OTL_SQLHSTMT get_cda(){return cda;}
 
 private:
 
@@ -11441,7 +11522,7 @@ public:
    (cur.cda,
     OTL_SCAST(SQLSMALLINT,lob_pos),
     OTL_SCAST(SQLSMALLINT,lob_ftype),
-    s.v, 
+    s.v,
     buf_size,
     &retLen);
   if(rc==SQL_SUCCESS_WITH_INFO||rc==SQL_SUCCESS){
@@ -11493,7 +11574,7 @@ public:
     alen=lob_len;
     return 1;
   }
-  
+
  int put_blob(void)
  {
   return 1;
@@ -11572,7 +11653,7 @@ public:
      p_len[ndx]=SQL_NTS;
      break;
    case otl_var_varchar_long:
-     if(lob_stream_mode && 
+     if(lob_stream_mode &&
         (vparam_type==otl_input_param||
          vparam_type==otl_inout_param))
        p_len[ndx]=SQL_DATA_AT_EXEC;
@@ -11584,12 +11665,12 @@ public:
 #endif
      break;
    case otl_var_raw_long:
-     if(lob_stream_mode && 
+     if(lob_stream_mode &&
         (vparam_type==otl_input_param||
          vparam_type==otl_inout_param))
        p_len[ndx]=SQL_DATA_AT_EXEC;
      else
-       p_len[ndx]=OTL_SCAST(OTL_SQLLEN,len);       
+       p_len[ndx]=OTL_SCAST(OTL_SQLLEN,len);
      break;
    default:
      p_len[ndx]=OTL_SCAST(OTL_SQLLEN,len);
@@ -11827,7 +11908,7 @@ public:
   int& elem_size,
   otl_select_struct_override& override,
   const int column_ndx,
-  const int 
+  const int
 #if !defined(OTL_ODBC_TIMESTEN) && defined(OTL_ODBC_MULTI_MODE)
   connection_type
 #endif
@@ -11841,7 +11922,7 @@ public:
    else
 #elif defined(OTL_ODBC_MULTI_MODE)
      if((connection_type==OTL_MSSQL_2005_ODBC_CONNECT ||
-         connection_type==OTL_MSSQL_2008_ODBC_CONNECT)&& 
+         connection_type==OTL_MSSQL_2008_ODBC_CONNECT)&&
       desc.prec==0 && desc.dbtype==SQL_VARBINARY)
      ftype=SQL_LONGVARBINARY;
    else
@@ -12092,7 +12173,7 @@ public:
 #if (ODBCVER >= 0x0300)
   status=SQLAllocHandle(SQL_HANDLE_STMT,connect.hdbc,&cda);
 #else
- status=SQLAllocStmt(connect.hdbc,&cda); 
+ status=SQLAllocStmt(connect.hdbc,&cda);
 #endif
   if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)return 0;
   if(connect.timeout>0){
@@ -12266,14 +12347,14 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
         (ctl_arr_W[3].name,OTL_RCAST(unsigned char*,ctl_arr[3].name));
 #if !defined(OTL_UNICODE_USE_ANSI_ODBC_FUNCS_FOR_DATA_DICT)
       status=SQLTables
-        (cda, 
+        (cda,
          ctl_arr_W[0].name,SQL_NTS,
          ctl_arr_W[1].name,SQL_NTS,
          ctl_arr_W[2].name,SQL_NTS,
          ctl_arr_W[3].name,SQL_NTS);
 #else
       status=SQLTablesA
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12282,7 +12363,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #else
       status=SQLTables
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12291,7 +12372,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
       func_found=true;
     }else if(strcmp(func_name,"SQLGetTypeInfo")==0){
       status=SQLGetTypeInfo
-        (cda, 
+        (cda,
          SQL_ALL_TYPES);
       func_found=true;
     }else if(strcmp(func_name,"SQLColumns")==0){
@@ -12307,14 +12388,14 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #if !defined(OTL_UNICODE_USE_ANSI_ODBC_FUNCS_FOR_DATA_DICT)
       status=SQLColumns
-        (cda, 
+        (cda,
          ctl_arr_W[0].name,SQL_NTS,
          ctl_arr_W[1].name,SQL_NTS,
          ctl_arr_W[2].name,SQL_NTS,
          ctl_arr_W[3].name,SQL_NTS);
 #else
       status=SQLColumnsA
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12323,7 +12404,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #else
       status=SQLColumns
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12341,13 +12422,13 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #if !defined(OTL_UNICODE_USE_ANSI_ODBC_FUNCS_FOR_DATA_DICT)
       status=SQLProcedures
-        (cda, 
+        (cda,
          ctl_arr_W[0].name,SQL_NTS,
          ctl_arr_W[1].name,SQL_NTS,
          ctl_arr_W[2].name,SQL_NTS);
 #else
       status=SQLProceduresA
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len);
@@ -12355,7 +12436,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #else
       status=SQLProcedures
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len);
@@ -12373,14 +12454,14 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
         (ctl_arr_W[3].name,OTL_RCAST(unsigned char*,ctl_arr[3].name));
 #if !defined(OTL_UNICODE_USE_ANSI_ODBC_FUNCS_FOR_DATA_DICT)
      status=SQLColumnPrivileges
-       (cda, 
+       (cda,
         ctl_arr_W[0].name,SQL_NTS,
         ctl_arr_W[1].name,SQL_NTS,
         ctl_arr_W[2].name,SQL_NTS,
         ctl_arr_W[3].name,SQL_NTS);
 #else
      status=SQLColumnPrivilegesA
-       (cda, 
+       (cda,
         ctl_arr[0].name_ptr,ctl_arr[0].name_len,
         ctl_arr[1].name_ptr,ctl_arr[1].name_len,
         ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12389,7 +12470,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #else
       status=SQLColumnPrivileges
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12407,13 +12488,13 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #if !defined(OTL_UNICODE_USE_ANSI_ODBC_FUNCS_FOR_DATA_DICT)
       status=SQLTablePrivileges
-        (cda, 
+        (cda,
          ctl_arr_W[0].name,SQL_NTS,
          ctl_arr_W[1].name,SQL_NTS,
          ctl_arr_W[2].name,SQL_NTS);
 #else
       status=SQLTablePrivilegesA
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len);
@@ -12421,7 +12502,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #else
       status=SQLTablePrivileges
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len);
@@ -12438,13 +12519,13 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #if !defined(OTL_UNICODE_USE_ANSI_ODBC_FUNCS_FOR_DATA_DICT)
       status=SQLPrimaryKeys
-        (cda, 
+        (cda,
          ctl_arr_W[0].name,SQL_NTS,
          ctl_arr_W[1].name,SQL_NTS,
          ctl_arr_W[2].name,SQL_NTS);
 #else
       status=SQLPrimaryKeysA
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len);
@@ -12452,7 +12533,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #else
       status=SQLPrimaryKeys
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len);
@@ -12471,14 +12552,14 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #if !defined(OTL_UNICODE_USE_ANSI_ODBC_FUNCS_FOR_DATA_DICT)
       status=SQLProcedureColumns
-        (cda, 
+        (cda,
          ctl_arr_W[0].name,SQL_NTS,
          ctl_arr_W[1].name,SQL_NTS,
          ctl_arr_W[2].name,SQL_NTS,
          ctl_arr_W[3].name,SQL_NTS);
 #else
       status=SQLProcedureColumnsA
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12487,7 +12568,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #else
       status=SQLProcedureColumns
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12511,7 +12592,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #if !defined(OTL_UNICODE_USE_ANSI_ODBC_FUNCS_FOR_DATA_DICT)
       status=SQLForeignKeys
-        (cda, 
+        (cda,
          ctl_arr_W[0].name,SQL_NTS,
          ctl_arr_W[1].name,SQL_NTS,
          ctl_arr_W[2].name,SQL_NTS,
@@ -12520,7 +12601,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
          ctl_arr_W[5].name,SQL_NTS);
 #else
       status=SQLForeignKeysA
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12531,7 +12612,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 
 #else
       status=SQLForeignKeys
-        (cda, 
+        (cda,
          ctl_arr[0].name_ptr,ctl_arr[0].name_len,
          ctl_arr[1].name_ptr,ctl_arr[1].name_len,
          ctl_arr[2].name_ptr,ctl_arr[2].name_len,
@@ -12608,7 +12689,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
       in_str=0;
     }
    }
-   if(*c==':' && !in_str && 
+   if(*c==':' && !in_str &&
       ((c>stm_text && *(c-1)!='\\' )|| c==stm_text)){
     *c='?';
     ++c;
@@ -12616,7 +12697,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
      *c=' ';
      ++c;
     }
-   }else if(*c==':' && !in_str && 
+   }else if(*c==':' && !in_str &&
             ((c>stm_text && *(c-1)=='\\' )|| c==stm_text)){
      char* c_1=c-1;
      char* c_=c;
@@ -12653,8 +12734,8 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
        status!=SQL_SUCCESS_WITH_INFO)
       return 0;
   }
-#endif 
-  
+#endif
+
 #if (defined(UNICODE)||defined(_UNICODE))
  {
    SQLWCHAR* temp_stm_text=new SQLWCHAR[strlen(stm_text)+1];
@@ -12678,7 +12759,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
   return 1;
  }
 
- int exec(const int iters, 
+ int exec(const int iters,
           const int /*rowoff*/,
 #if defined(OTL_ODBC_ALTERNATE_RPC)
           const int otl_sql_exec_from_class)
@@ -12722,7 +12803,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
      status=SQLParamOptions
        (cda,
         OTL_SCAST(OTL_SQLULEN,iters),
-        &irows); 
+        &irows);
      if(status!=SQL_SUCCESS&&
         status!=SQL_SUCCESS_WITH_INFO)
        return 0;
@@ -12734,11 +12815,11 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
    last_param_data_token=0;
    last_sql_param_data_status=0;
    sql_param_data_count=0;
-   
+
    status=SQLExecute(cda);
    if(canceled)return 0;
 #if defined(OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO)
-   if(adb && adb->throws_on_sql_success_with_info && 
+   if(adb && adb->throws_on_sql_success_with_info &&
       status==SQL_SUCCESS_WITH_INFO)
      return 0;
 #endif
@@ -12873,7 +12954,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
   const int aftype,
   const int aparam_type,
   const int name_pos,
-  const int 
+  const int
 #if !defined(OTL_ODBC_TIMESTEN) && defined(OTL_ODBC_MULTI_MODE)
   connection_type
 #endif
@@ -12967,11 +13048,11 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
     }
 #endif
    status=SQLBindParameter
-    (cda,                                             
-     OTL_SCAST(OTL_SQLUSMALLINT,parm_pos),            
-     OTL_SCAST(OTL_SQLSMALLINT,param_type),           
-     ftype,                                           
-     OTL_SCAST(OTL_SQLSMALLINT,mapped_sqltype),       
+    (cda,
+     OTL_SCAST(OTL_SQLUSMALLINT,parm_pos),
+     OTL_SCAST(OTL_SQLSMALLINT,param_type),
+     ftype,
+     OTL_SCAST(OTL_SQLSMALLINT,mapped_sqltype),
 #if (ODBCVER >= 0x0300)
 
 #if defined(OTL_ODBC_MSSQL_2005) && !defined(OTL_ODBC_MULTI_MODE)
@@ -12987,9 +13068,9 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
      sqltype==SQL_TIMESTAMP?otl_odbc_date_prec():aelem_size,
 #endif
 #if (ODBCVER >= 0x0300)
-     sqltype==SQL_TYPE_TIMESTAMP ? 
+     sqltype==SQL_TYPE_TIMESTAMP ?
 #if defined(OTL_ODBC_MULTI_MODE)
-     ((connection_type==OTL_MSSQL_2008_ODBC_CONNECT)? 7 : 
+     ((connection_type==OTL_MSSQL_2008_ODBC_CONNECT)? 7 :
       (connection_type==OTL_MSSQL_2005_ODBC_CONNECT)? 3 :
       otl_odbc_date_scale) : 0,
 #else
@@ -12999,8 +13080,8 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
      sqltype==SQL_TIMESTAMP?otl_odbc_date_scale:0,
 #endif
      OTL_RCAST(OTL_SQLPOINTER,OTL_SCAST(size_t,parm_pos)),
-     0,                     
-     v.p_len);                                        
+     0,
+     v.p_len);
   }else{
     int temp_column_size=0;
 #if (ODBCVER >= 0x0300)
@@ -13040,7 +13121,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 #if (ODBCVER >= 0x0300)
      sqltype==SQL_TYPE_TIMESTAMP ?
 #if defined(OTL_ODBC_MULTI_MODE)
-     ((connection_type==OTL_MSSQL_2008_ODBC_CONNECT)? 7 : 
+     ((connection_type==OTL_MSSQL_2008_ODBC_CONNECT)? 7 :
       (connection_type==OTL_MSSQL_2005_ODBC_CONNECT)? 3 :
       otl_odbc_date_scale) : 0,
 #else
@@ -13161,7 +13242,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
     &scale,
     &nullok);
 #endif
-  if(!(status == SQL_SUCCESS || 
+  if(!(status == SQL_SUCCESS ||
        status == SQL_SUCCESS_WITH_INFO))
     return 0;
   dbsize=prec;
@@ -13172,7 +13253,7 @@ SQLRETURN sql_row_count(OTL_SQLLEN* total_rpc)
 #error OTL_DB2_CLI_MAP_LONG_VARCHAR_TO_VARCHAR is not supported when \
 OTL_UNICODE is defined
 #else
-  if(dbtype==SQL_LONGVARCHAR && 
+  if(dbtype==SQL_LONGVARCHAR &&
      dbsize <= OTL_DB2_CLI_MAP_LONG_VARCHAR_TO_VARCHAR){
     dbtype=SQL_VARCHAR;
   }
@@ -13240,8 +13321,8 @@ OTL_UNICODE is defined
 #endif
 
 #else
- rc=SQLError(adb->henv, 
-             adb->hdbc, 
+ rc=SQLError(adb->henv,
+             adb->hdbc,
              cda,
              OTL_RCAST(OTL_SQLCHAR_PTR,&exception_struct.sqlstate[0]),
              OTL_RCAST(OTL_SQLINTEGER_PTR,&exception_struct.code),
@@ -13253,7 +13334,7 @@ OTL_UNICODE is defined
   exception_struct.msg[msg_len]=0;
 
   if(rc==SQL_INVALID_HANDLE||rc==SQL_ERROR)
-    exception_struct.msg[0]=0;    
+    exception_struct.msg[0]=0;
 #if (ODBCVER >= 0x0300)
 #if defined(OTL_EXTENDED_EXCEPTION)
   else if(rc!=SQL_NO_DATA)
@@ -13329,7 +13410,7 @@ public:
    out_prefetch_array_size=0;
 #endif
  }
- 
+
  int close_select(otl_cur& cur)
  {
   if(!in_sequence)return 1;
@@ -13405,7 +13486,7 @@ public:
   int& cur_size,
   int& row_count,
   int& eof_data,
-  const int 
+  const int
 #if !defined(OTL_ODBC_XTG_IBASE6)
   array_size
 #endif
@@ -13448,9 +13529,9 @@ public:
     SQL_NTS);
 #else
 #if defined(OTL_ODBC_TIMESTEN)
-  status=SQLSetStmtOption(cur.cda,TT_PREFETCH_COUNT,prefetch_array_size); 
+  status=SQLSetStmtOption(cur.cda,TT_PREFETCH_COUNT,prefetch_array_size);
 #else
- status=SQLSetStmtOption(cur.cda,SQL_ROWSET_SIZE,array_size); 
+ status=SQLSetStmtOption(cur.cda,SQL_ROWSET_SIZE,array_size);
 #endif
 #endif
   if(cur.canceled)return 0;
@@ -13489,11 +13570,11 @@ public:
    }
   }else{
    status=SQLExtendedFetch
-    (cur.cda, 
+    (cur.cda,
      SQL_FETCH_NEXT,
      1,
-     &crow, 
-     row_status); 
+     &crow,
+     row_status);
   }
 #else
 #if (ODBCVER >= 0x0300)
@@ -13502,18 +13583,18 @@ public:
   {
     alloc_row_status(array_size);
     status=SQLExtendedFetch
-      (cur.cda, 
+      (cur.cda,
        SQL_FETCH_NEXT,
        1,
-       &crow, 
-       row_status); 
+       &crow,
+       row_status);
   }
 #endif
 
 #endif
 
 #endif
-  
+
   in_sequence=1;
   if(cur.canceled)return 0;
   if(status==SQL_ERROR||
@@ -13591,11 +13672,11 @@ public:
    }
   }else{
    status=SQLExtendedFetch
-    (cur.cda, 
+    (cur.cda,
      SQL_FETCH_NEXT,
      1,
-     &crow, 
-     row_status); 
+     &crow,
+     row_status);
  }
 #else
 #if (ODBCVER >= 0x0300)
@@ -13604,11 +13685,11 @@ public:
   {
     alloc_row_status(array_size);
     status=SQLExtendedFetch
-      (cur.cda, 
+      (cur.cda,
        SQL_FETCH_NEXT,
        1,
-       &crow, 
-       row_status); 
+       &crow,
+       row_status);
   }
 #endif
 #endif
@@ -13711,7 +13792,7 @@ protected:
 
 #if (defined(OTL_STL)||defined(OTL_ACE)) && defined(OTL_STREAM_POOLING_ON)
  otl_stream_pool sc;
-#endif  
+#endif
 
 public:
 
@@ -13764,7 +13845,7 @@ public:
     otl_cursor::syntax_check(*this,sqlstm);
   }
 
- otl_connect() OTL_NO_THROW : 
+ otl_connect() OTL_NO_THROW :
     otl_odbc_connect(),
 #if (defined(OTL_STL)||defined(OTL_ACE)) && defined(OTL_STREAM_POOLING_ON)
     sc(),
@@ -13777,7 +13858,7 @@ public:
   }
 
  otl_connect(const char* connect_str, const int aauto_commit=0)
-   OTL_THROWS_OTL_EXCEPTION: 
+   OTL_THROWS_OTL_EXCEPTION:
    otl_odbc_connect(connect_str, aauto_commit),
 #if (defined(OTL_STL)||defined(OTL_ACE)) && defined(OTL_STREAM_POOLING_ON)
     sc(),
@@ -13794,7 +13875,7 @@ public:
       auto_commit_=false;
 #endif
   }
-  
+
  otl_connect(OTL_HENV ahenv,OTL_HDBC ahdbc,const int auto_commit=0)
    OTL_THROWS_OTL_EXCEPTION:
     otl_odbc_connect(),
@@ -13872,7 +13953,7 @@ public:
      connected=0;
      increment_throw_count();
      if(get_throw_count()>1)return;
-     if(otl_uncaught_exception()) return; 
+     if(otl_uncaught_exception()) return;
      throw otl_exception(connect_struct);
    }
 #if defined(OTL_FREETDS_ODBC_WORKAROUNDS)
@@ -13909,7 +13990,7 @@ public:
      connected=0;
      increment_throw_count();
      if(get_throw_count()>1)return;
-     if(otl_uncaught_exception()) return; 
+     if(otl_uncaught_exception()) return;
      throw otl_exception(connect_struct);
    }
 #if defined(OTL_FREETDS_ODBC_WORKAROUNDS)
@@ -13919,8 +14000,8 @@ public:
 #endif
   }
 #endif
-  
- virtual ~otl_connect() 
+
+ virtual ~otl_connect()
 #if !defined(OTL_DESTRUCTORS_DO_NOT_THROW)
    OTL_THROWS_OTL_EXCEPTION
 #endif
@@ -13960,8 +14041,8 @@ public:
     }
 #endif
  }
-  
- void logoff(void) 
+
+ void logoff(void)
    OTL_THROWS_OTL_EXCEPTION
  {
 #if defined(OTL_STL) && defined(OTL_STREAM_POOLING_ON)
@@ -13981,7 +14062,7 @@ public:
     if(!retcode){
      increment_throw_count();
      if(get_throw_count()>1)return;
-     if(otl_uncaught_exception()) return; 
+     if(otl_uncaught_exception()) return;
      throw otl_exception(connect_struct);
     }
   }
@@ -13993,7 +14074,7 @@ private:
   bool auto_commit_;
 #endif
 
- otl_connect(const otl_connect&) OTL_NO_THROW : 
+ otl_connect(const otl_connect&) OTL_NO_THROW :
     otl_odbc_connect(),
 #if (defined(OTL_STL)||defined(OTL_ACE)) && defined(OTL_STREAM_POOLING_ON)
     sc(),
@@ -14022,17 +14103,17 @@ public:
   otl_select_stream* ss;
   otl_inout_stream* io;
   otl_connect* adb;
-  
+
   int auto_commit_flag;
-  
+
   otl_var_desc* iov;
   int iov_len;
   int next_iov_ndx;
-  
+
   otl_var_desc* ov;
   int ov_len;
   int next_ov_ndx;
-  
+
   bool flush_flag;
   int stream_type;
   bool lob_stream_flag;
@@ -14166,7 +14247,7 @@ public:
   TVariableStruct>* p_cursor;
 
 private:
-  
+
   p_bind_var bind_var;
   p_connect connect;
   p_cursor cursor;
@@ -14176,7 +14257,7 @@ private:
   bool closed_flag;
 
 public:
-  
+
  void init
  (void* avar,void* aconnect,void* acursor,
   int andx,int amode,const int alob_is_null=0)
@@ -14189,13 +14270,13 @@ public:
       if(!retcode){
         if(this->connect)this->connect->increment_throw_count();
         if(this->connect&&this->connect->get_throw_count()>1)return;
-        if(otl_uncaught_exception()) return; 
+        if(otl_uncaught_exception()) return;
         throw OTL_TMPL_EXCEPTION
           (cursor->get_cursor_struct(),
            cursor->get_stm_label()?cursor->get_stm_label():
            cursor->get_stm_text());
       }
-     
+
    }
   connect=OTL_RCAST(p_connect,aconnect);
   bind_var=OTL_RCAST(p_bind_var,avar);
@@ -14233,7 +14314,7 @@ public:
   init(0,0,0,0,otl_lob_stream_zero_mode);
  }
 
- ~otl_tmpl_lob_stream() 
+ ~otl_tmpl_lob_stream()
 #if !defined(OTL_DESTRUCTORS_DO_NOT_THROW)
    OTL_THROWS_OTL_EXCEPTION
 #endif
@@ -14264,7 +14345,7 @@ public:
   otl_lob_stream_generic& operator<<(const OTL_STRING_CONTAINER& s)
     OTL_THROWS_OTL_EXCEPTION
   {
-    otl_long_string temp_s(s.c_str(),                  
+    otl_long_string temp_s(s.c_str(),
                            OTL_SCAST(int,s.length()),
                            OTL_SCAST(int,s.length()));
     (*this)<<temp_s;
@@ -14328,7 +14409,7 @@ public:
     vinfo=&var_info[0];
    if(this->connect)this->connect->increment_throw_count();
    if(this->connect&&this->connect->get_throw_count()>1)return *this;
-   if(otl_uncaught_exception()) return *this; 
+   if(otl_uncaught_exception()) return *this;
    throw otl_tmpl_exception
     <TExceptionStruct,
      TConnectStruct,
@@ -14346,7 +14427,7 @@ public:
    return *this;
   if(this->connect)this->connect->increment_throw_count();
   if(this->connect&&this->connect->get_throw_count()>1)return *this;
-  if(otl_uncaught_exception()) return *this; 
+  if(otl_uncaught_exception()) return *this;
   throw OTL_TMPL_EXCEPTION
     (cursor->get_cursor_struct(),
      cursor->get_stm_label()?cursor->get_stm_label():
@@ -14379,7 +14460,7 @@ public:
     vinfo=&var_info[0];
    if(this->connect)this->connect->increment_throw_count();
    if(this->connect&&this->connect->get_throw_count()>1)return *this;
-   if(otl_uncaught_exception()) return *this; 
+   if(otl_uncaught_exception()) return *this;
    throw OTL_TMPL_EXCEPTION
     (otl_error_msg_10,
      otl_error_code_10,
@@ -14396,7 +14477,7 @@ public:
   }
   if(this->connect)this->connect->increment_throw_count();
   if(this->connect&&this->connect->get_throw_count()>1)return *this;
-  if(otl_uncaught_exception()) return *this; 
+  if(otl_uncaught_exception()) return *this;
   throw OTL_TMPL_EXCEPTION
     (cursor->get_cursor_struct(),
      cursor->get_stm_label()?cursor->get_stm_label():
@@ -14418,7 +14499,7 @@ public:
   if(retcode)return alen;
   if(this->connect)this->connect->increment_throw_count();
   if(this->connect&&this->connect->get_throw_count()>1)return 0;
-  if(otl_uncaught_exception()) return 0; 
+  if(otl_uncaught_exception()) return 0;
   throw OTL_TMPL_EXCEPTION
     (connect->get_connect_struct(),
      cursor->get_stm_label()?cursor->get_stm_label():
@@ -14446,7 +14527,7 @@ public:
      if(!retcode){
        if(this->connect)this->connect->increment_throw_count();
        if(this->connect&&this->connect->get_throw_count()>1)return;
-       if(otl_uncaught_exception()) return; 
+       if(otl_uncaught_exception()) return;
        throw OTL_TMPL_EXCEPTION
          (cursor->get_cursor_struct(),
           cursor->get_stm_label()?cursor->get_stm_label():
@@ -14469,7 +14550,7 @@ public:
       if(!retcode){
         if(this->connect)this->connect->increment_throw_count();
         if(this->connect&&this->connect->get_throw_count()>1)return;
-        if(otl_uncaught_exception()) return; 
+        if(otl_uncaught_exception()) return;
         throw OTL_TMPL_EXCEPTION
           (cursor->get_cursor_struct(),
            cursor->get_stm_label()?cursor->get_stm_label():
@@ -14515,21 +14596,21 @@ private:
   otl_stream_shell* shell;
   otl_ptr<otl_stream_shell> shell_pt;
   int connected;
-  
+
   otl_select_stream** ss;
   otl_inout_stream** io;
   otl_connect** adb;
-  
+
   int* auto_commit_flag;
-  
+
   otl_var_desc** iov;
   int* iov_len;
   int* next_iov_ndx;
-  
+
   otl_var_desc** ov;
   int* ov_len;
   int* next_ov_ndx;
-  
+
   otl_select_struct_override* override;
   int end_marker;
   int oper_int_called;
@@ -14593,10 +14674,18 @@ protected:
        this->get_stm_text());
   }
 
-
 public:
 
-  bool get_lob_stream_flag() const 
+  int get_prefetched_row_count() const
+  {
+    if(*ss){
+      (*adb)->reset_throw_count();
+      return (*ss)->get_prefetched_row_count();
+    }
+    return 0;
+  }
+
+  bool get_lob_stream_flag() const
   {
     if(!shell)
       return false;
@@ -14604,7 +14693,7 @@ public:
       return shell->lob_stream_flag;
   }
 
-  int get_adb_max_long_size() const 
+  int get_adb_max_long_size() const
   {
     return this->shell->adb->get_max_long_size();
   }
@@ -14647,13 +14736,13 @@ public:
     }
   }
 
-  
+
 
   void setBufSize(int buf_size)
   {
     buf_size_=buf_size;
   }
-  
+
   int getBufSize(void) const
   {
     return buf_size_;
@@ -14676,69 +14765,68 @@ public:
   {
     if(next_ov_ndx==0)
       return;
-	if((*ov_len)==0)return;
-	last_oper_was_read_op=true;
-	switch(shell->stream_type){
-	case otl_odbc_no_stream:
-		break;
-	case otl_odbc_io_stream:
-		last_eof_rc=(*io)->eof();
-		(*io)->skip_to_end_of_row();
-		break;
-	case otl_odbc_select_stream:
-		last_eof_rc=(*ss)->eof();
-		(*ss)->skip_to_end_of_row();
-		break;
-	}
-	while ((*next_ov_ndx)<(*ov_len)-1)
-		++(*next_ov_ndx);
-	// (*next_ov_ndx)=0;
+    if((*ov_len)==0)return;
+    last_oper_was_read_op=true;
+    switch(shell->stream_type){
+    case otl_odbc_no_stream:
+      break;
+    case otl_odbc_io_stream:
+      last_eof_rc=(*io)->eof();
+      (*io)->skip_to_end_of_row();
+      break;
+    case otl_odbc_select_stream:
+      last_eof_rc=(*ss)->eof();
+      (*ss)->skip_to_end_of_row();
+      break;
+    }
+    while ((*next_ov_ndx)<(*ov_len)-1)
+      ++(*next_ov_ndx);
   }
 
   void get_next()
   {
-	if((*ov_len)==0)return;
-	last_oper_was_read_op=true;
-	switch(shell->stream_type){
-	case otl_odbc_no_stream:
-		break;
-	case otl_odbc_io_stream:
-		last_eof_rc=(*io)->eof();
-		(*io)->get_next();
-		break;
-	case otl_odbc_select_stream:
-		last_eof_rc=(*ss)->eof();
-		(*ss)->get_next();
-		break;
-	}
-	if ((*next_ov_ndx)<(*ov_len)-1)
-		++(*next_ov_ndx);
+    if((*ov_len)==0)return;
+    last_oper_was_read_op=true;
+    switch(shell->stream_type){
+    case otl_odbc_no_stream:
+        break;
+    case otl_odbc_io_stream:
+        last_eof_rc=(*io)->eof();
+        (*io)->get_next();
+        break;
+    case otl_odbc_select_stream:
+        last_eof_rc=(*ss)->eof();
+        (*ss)->get_next();
+        break;
+    }
+    if ((*next_ov_ndx)<(*ov_len)-1)
+        ++(*next_ov_ndx);
   }
 
-  int get_row_count() const 
+  int get_row_count() const
   {
-	if((*ss)){
-		(*adb)->reset_throw_count();
-		return (*ss)->get_row_count();
-	}
+    if((*ss)){
+        (*adb)->reset_throw_count();
+        return (*ss)->get_row_count();
+    }
     return 0;
   }
-  int get_sl_len() const 
+  int get_sl_len() const
   {
-	if((*ss))
-	{
-		(*adb)->reset_throw_count();
-		return (*ss)->get_sl_len();
-	}
-	return 0;
+    if((*ss))
+    {
+        (*adb)->reset_throw_count();
+        return (*ss)->get_sl_len();
+    }
+    return 0;
   }
-  long get_rfc() const 
+  long get_rfc() const
   {
-	if((*ss))
-	{
-		(*adb)->reset_throw_count();
-		return (*ss)->get_rfc();
-	}
+    if((*ss))
+    {
+        (*adb)->reset_throw_count();
+        return (*ss)->get_rfc();
+    }
     return 0;
   }
   /* [i_a] fix END */
@@ -14898,7 +14986,7 @@ public:
   else
    (*next_ov_ndx)=0;
  }
- 
+
  void inc_next_iov(void)
  {
   if((*iov_len)==0)return;
@@ -14952,7 +15040,7 @@ public:
    shell=new otl_stream_shell(0);
    shell_pt.assign(&shell);
    connected=0;
-   
+
    ss=&(shell->ss);
    io=&(shell->io);
    adb=&(shell->adb);
@@ -14964,16 +15052,16 @@ public:
    ov_len=&(shell->ov_len);
    next_ov_ndx=&(shell->next_ov_ndx);
    override=&(shell->override);
-   
+
    (*io)=0;
    (*ss)=0;
    (*adb)=0;
-   (*ov)=0; 
+   (*ov)=0;
    (*ov_len)=0;
    (*next_iov_ndx)=0;
    (*next_ov_ndx)=0;
    (*auto_commit_flag)=1;
-   (*iov)=0; 
+   (*iov)=0;
    (*iov_len)=0;
 
  }
@@ -15119,7 +15207,7 @@ public:
   }
  }
 
- void clean(const int clean_up_error_flag=0) 
+ void clean(const int clean_up_error_flag=0)
    OTL_THROWS_OTL_EXCEPTION
  {
   if((*io)){
@@ -15142,7 +15230,7 @@ public:
   }
  }
 
- 
+
  int is_null(void) OTL_NO_THROW
  {
   if((*io))
@@ -15170,7 +15258,7 @@ public:
    temp_stm_text=stm_label?stm_label:stm_text;
    return temp_stm_text;
  }
- 
+
  void open
  (const otl_stream_buffer_size_type arr_size,
   const char* sqlstm,
@@ -15224,7 +15312,7 @@ public:
      intern_cleanup();
      shell_pt.destroy();
      connected=0;
-     throw;     
+     throw;
    }
    connected=1;
    return;
@@ -15308,7 +15396,7 @@ public:
         otl_error_code_31,
         temp_stm_text);
    }
-#endif     
+#endif
      override->set_master_stream_ptr(OTL_RCAST(void*,this));
      (*ss)=new otl_select_stream(override,temp_arr_size,sqlstm,
                                  db,otl_explicit_select,
@@ -15333,7 +15421,7 @@ public:
         otl_error_code_31,
         temp_stm_text);
    }
-#endif     
+#endif
    override->set_master_stream_ptr(OTL_RCAST(void*,this));
    (*ss)=new otl_select_stream(override,temp_arr_size,
                                sqlstm,db,
@@ -15404,7 +15492,7 @@ public:
     break;
   }
   (*ss)=0; (*io)=0;
-  if(adb!=0)(*adb)=0; 
+  if(adb!=0)(*adb)=0;
   adb=0;
  }
 
@@ -15449,7 +15537,7 @@ public:
     intern_cleanup();
     shell_pt.destroy();
     connected=0;
-    return; 
+    return;
    }
 #elif defined(OTL_UNCAUGHT_EXCEPTION_ON)
    if(otl_uncaught_exception()){
@@ -15458,7 +15546,7 @@ public:
     intern_cleanup();
     shell_pt.destroy();
     connected=0;
-    return; 
+    return;
    }
 #endif
    (*adb)->sc.add(shell,shell->orig_sql_stm.c_str());
@@ -15516,7 +15604,7 @@ public:
     (*pf)(*this);
     return *this;
   }
-  
+
  otl_stream& operator>>(otl_lob_stream& s)
    OTL_THROWS_OTL_EXCEPTION
  {
@@ -15575,14 +15663,14 @@ public:
    return *this;
  }
 
- /* [i_a] swapped order of appearance of 
-          otl_datetime >> and << operators 
-		  so OTL_TRACE_WRITE() in the << can 
-		  use it; using a forward function reference 
+ /* [i_a] swapped order of appearance of
+          otl_datetime >> and << operators
+		  so OTL_TRACE_WRITE() in the << can
+		  use it; using a forward function reference
 		  here is no use as MSVC2008 just complains
 		  in another way then (unless we'd complete
-		  move that function implementation out of 
-		  here, which is 
+		  move that function implementation out of
+		  here, which is
   */
  otl_stream& operator<<(const otl_datetime& s)
    OTL_THROWS_OTL_EXCEPTION
@@ -15600,7 +15688,7 @@ public:
 #endif
 #else
       char tmp_str[100];
-#endif      
+#endif
      OTL_ODBC_TIMESTAMP_TO_STRING(s,tmp_str);
      OTL_TRACE_READ
        (s, /* [i_a] */
@@ -15612,7 +15700,7 @@ public:
 		int scale =         /* [i_a] */
 #if (ODBCVER >= 0x0300)
 #if defined(OTL_ODBC_MULTI_MODE)
-     (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2008_ODBC_CONNECT)? 7 : 
+     (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2008_ODBC_CONNECT)? 7 :
       (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2005_ODBC_CONNECT)? 3 :
       otl_odbc_date_scale;
 #else
@@ -15628,7 +15716,7 @@ public:
       tmp.minute=OTL_SCAST(SQLSMALLINT,s.minute);
       tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
       tmp.fraction=otl_clip_fraction(otl_to_fraction(s.fraction,s.frac_precision), scale); /* [i_a] fix, see comment at [otl_odbc_date_scale] */
-      (*this)<<tmp;  
+      (*this)<<tmp;
       OTL_TRACE_READ(s, /* [i_a] */
                      "operator <<", /* [i_a] wrong text fix */
                      "otl_datetime&");
@@ -15639,7 +15727,7 @@ public:
 		int scale =                     /* [i_a] */
 #if (ODBCVER >= 0x0300)
 #if defined(OTL_ODBC_MULTI_MODE)
-     (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2008_ODBC_CONNECT)? 7 : 
+     (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2008_ODBC_CONNECT)? 7 :
       (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2005_ODBC_CONNECT)? 3 :
       otl_odbc_date_scale;
 #else
@@ -15655,7 +15743,7 @@ public:
     tmp.minute=OTL_SCAST(SQLSMALLINT,s.minute);
     tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
     tmp.fraction=otl_clip_fraction(otl_to_fraction(s.fraction,s.frac_precision), scale); /* [i_a] fix, see comment at [otl_odbc_date_scale] */
-    (*this)<<tmp;  
+    (*this)<<tmp;
     OTL_TRACE_READ(s, /* [i_a] */
                    "operator <<",
                    "otl_datetime&");
@@ -15678,7 +15766,7 @@ public:
 #endif
 #else
     char tmp_str[100];
-#endif    
+#endif
     (*this)>>tmp_str;
 #if defined(OTL_DEFAULT_DATETIME_NULL_TO_VAL)
     if((*this).is_null())
@@ -15688,8 +15776,14 @@ public:
 #else
     OTL_ODBC_STRING_TO_TIMESTAMP(tmp_str,s);
 #endif
+#if defined(OTL_ODBC_TIME_ZONE)
     OTL_TRACE_WRITE
-      (s, /* [i_a] */
+      (OTL_TRACE_FORMAT_TZ_DATETIME(s),
+       "operator >>",
+       "otl_datetime&");
+#else
+    OTL_TRACE_WRITE
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&");
     return *this;
@@ -15745,11 +15839,74 @@ public:
 
 #endif
   OTL_TRACE_WRITE
-    (s, /* [i_a] */
+    (OTL_TRACE_FORMAT_DATETIME(s),
      "operator >>",
      "otl_datetime&");
   inc_next_ov();
   return *this;
+ }
+
+ otl_stream& operator<<(const otl_datetime& s)
+   OTL_THROWS_OTL_EXCEPTION
+ {
+   otl_time tmp;
+   last_oper_was_read_op=false;
+   reset_end_marker();
+#if defined(OTL_ODBC_TIMESTAMP_TO_STRING)
+    if(describe_next_in_var()->ftype==otl_var_char){
+#if defined(OTL_UNICODE)
+#if defined(OTL_UNICODE_CHAR_TYPE)
+     OTL_UNICODE_CHAR_TYPE tmp_str[100];
+#else
+      OTL_CHAR tmp_str[100];
+#endif
+#else
+      char tmp_str[100];
+#endif
+     OTL_ODBC_TIMESTAMP_TO_STRING(s,tmp_str);
+#if defined(OTL_ODBC_TIME_ZONE)
+     OTL_TRACE_READ
+       (OTL_TRACE_FORMAT_TZ_DATETIME(s),
+        "operator <<",
+        "otl_datetime&");
+#else
+     OTL_TRACE_READ
+       (OTL_TRACE_FORMAT_DATETIME(s),
+        "operator <<",
+        "otl_datetime&");
+#endif
+     (*this)<<tmp_str;
+     return *this;
+    }else{
+      tmp.year=OTL_SCAST(SQLSMALLINT,s.year);
+      tmp.month=OTL_SCAST(SQLSMALLINT,s.month);
+      tmp.day=OTL_SCAST(SQLSMALLINT,s.day);
+      tmp.hour=OTL_SCAST(SQLSMALLINT,s.hour);
+      tmp.minute=OTL_SCAST(SQLSMALLINT,s.minute);
+      tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
+      tmp.fraction=otl_to_fraction(s.fraction,s.frac_precision);
+      (*this)<<tmp;
+      OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s),
+                     "operator >>",
+                     "otl_datetime&");
+      inc_next_iov();
+      return *this;
+    }
+#else
+    tmp.year=OTL_SCAST(SQLSMALLINT,s.year);
+    tmp.month=OTL_SCAST(SQLSMALLINT,s.month);
+    tmp.day=OTL_SCAST(SQLSMALLINT,s.day);
+    tmp.hour=OTL_SCAST(SQLSMALLINT,s.hour);
+    tmp.minute=OTL_SCAST(SQLSMALLINT,s.minute);
+    tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
+    tmp.fraction=otl_to_fraction(s.fraction,s.frac_precision);
+    (*this)<<tmp;
+    OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s),
+                   "operator <<",
+                   "otl_datetime&");
+    inc_next_iov();
+    return *this;
+#endif
  }
 
 #if !defined(OTL_UNICODE)
@@ -16892,7 +17049,7 @@ class otl_nocommit_stream: public otl_stream{
 public:
 
  otl_nocommit_stream() OTL_NO_THROW
-   : otl_stream() 
+   : otl_stream()
  {
   set_commit(0);
  }
@@ -17320,13 +17477,13 @@ public:
      elem_size=aelem_size;
      array_size=aarray_size;
    }
-   
+
    p_v=new ub1[elem_size*OTL_SCAST(unsigned,array_size)];
    p_ind=new sb2[array_size];
    p_rlen=new ub2[array_size];
    p_rcode=new ub2[array_size];
    memset(p_v,0,elem_size*OTL_SCAST(unsigned,array_size));
-   
+
    if(aftype==otl_var_varchar_long||aftype==otl_var_raw_long){
      if(aelem_size>32760)
        p_ind[0]=0;
@@ -17611,7 +17768,7 @@ private:
   friend class otl_ref_select_stream;
 
   Cda_Def cda;
-  
+
   ub4* rpc; // reference to "rows processed count"
   ub2* ft; // reference to "OCI function code"
   ub2* rc; // reference to "V7 return code"
@@ -17620,7 +17777,7 @@ private:
   int last_sql_param_data_status;
   int sql_param_data_count;
   bool canceled;
-  
+
 public:
 
   void set_canceled(const bool acanceled)
@@ -17703,7 +17860,7 @@ public:
   return !oparse(&cda,OTL_RCAST(unsigned char*,OTL_CCAST(char*,stm_text)),-1,0,1);
  }
 
-  int exec(const int iters, 
+  int exec(const int iters,
            const int /*rowoff*/,
            const int /*otl_sql_exec_from_class*/)
  {
@@ -18065,7 +18222,7 @@ public:
   {
   }
 
-  virtual ~otl_connect() 
+  virtual ~otl_connect()
 #if !defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     OTL_THROWS_OTL_EXCEPTION
 #endif
@@ -18101,7 +18258,7 @@ public:
       connected=0;
       increment_throw_count();
       if(get_throw_count()>1)return;
-      if(otl_uncaught_exception()) return; 
+      if(otl_uncaught_exception()) return;
       throw otl_exception(connect_struct);
     }
   }
@@ -18150,11 +18307,11 @@ public:
     OTL_STRCPY_S(cmd_,cmd_len+1,cmd);
     return *this;
   }
-  
+
 private:
 
   char* cmd_;
-  
+
   otl_connect& operator=(const otl_connect&)
   {
     return *this;
@@ -18187,7 +18344,7 @@ private:
   int row_count;
   int array_size;
   otl_select_struct_override local_override;
-  
+
 public:
 
  otl_ref_cursor
@@ -18296,14 +18453,14 @@ public:
   if(rc!=0){
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return 0;
-  if(otl_uncaught_exception()) return 0; 
+  if(otl_uncaught_exception()) return 0;
    throw otl_exception(cursor_struct,stm_label?stm_label:stm_text);
   }
   if(cur_row==-2)
    ; // Special case -- calling describe_select() between parse() and first()
   else{
 // Executing the PLSQL master block
-    exec(1,0,otl_sql_exec_from_select_cursor_class); 
+    exec(1,0,otl_sql_exec_from_select_cursor_class);
    sel_cur.set_connected(1);
   }
   cur_row=-1;
@@ -18315,7 +18472,7 @@ public:
   if(rc==0){
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return 0;
-  if(otl_uncaught_exception()) return 0; 
+  if(otl_uncaught_exception()) return 0;
   throw otl_exception(sel_cur.get_cursor_struct_ref(),stm_label?stm_label:stm_text);
   }
   row_count=sel_cur.get_cursor_struct_ref().cda.rpc;
@@ -18341,7 +18498,7 @@ public:
     if(rc==0){
       if(this->adb)this->adb->increment_throw_count();
       if(this->adb&&this->adb->get_throw_count()>1)return 0;
-      if(otl_uncaught_exception()) return 0; 
+      if(otl_uncaught_exception()) return 0;
       throw otl_exception(sel_cur.get_cursor_struct_ref(),
                           stm_label?stm_label:stm_text);
     }
@@ -18413,11 +18570,11 @@ public:
   if(rc!=0){
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return 0;
-   if(otl_uncaught_exception()) return 0; 
+   if(otl_uncaught_exception()) return 0;
    throw otl_exception(cursor_struct,stm_label?stm_label:stm_text);
   }
 // Executing the PLSQL master block
-  exec(1,0,otl_sql_exec_from_select_cursor_class); 
+  exec(1,0,otl_sql_exec_from_select_cursor_class);
   sel_cur.set_connected(1);
   cur_row=-2; // Special case -- describe_select() before first() or next()
   desc_len=0;
@@ -18482,7 +18639,7 @@ public:
   }
   int get_row_count() const /* [i_a] */
   {
-	  return this->row_count; 
+	  return this->row_count;
   }
 
  void cleanup(void)
@@ -18593,6 +18750,22 @@ public:
  {
   return !ret_code;
  }
+
+ void skip_to_end_of_row()
+ {
+   check_if_executed();
+   if(eof())return;
+   while(cur_col<sl_len-1){
+     ++cur_col;
+     null_fetched=sl[cur_col].is_null(this->cur_row);
+   }
+   ret_code=this->next();
+   cur_col=0;
+   if(!eof())
+     cur_col=-1;
+  ++_rfc;
+ }
+
 
  otl_ref_select_stream& operator>>(otl_time0& t)
  {
@@ -18756,7 +18929,7 @@ public:
   if(eof())return *this;
   get_next();
   switch(sl[cur_col].get_ftype()){
-  case otl_var_varchar_long: 
+  case otl_var_varchar_long:
   case otl_var_raw_long:
     {
       if(!eof()){
@@ -18826,7 +18999,7 @@ public:
            sizeof(var_info));
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw otl_exception
           (otl_error_msg_5,
            otl_error_code_5,
@@ -18900,7 +19073,7 @@ public:
       sizeof(temp_var_info));
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
     if(this->adb)this->adb->increment_throw_count();
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw otl_exception
      (otl_error_msg_4,
       otl_error_code_4,
@@ -18936,7 +19109,7 @@ public:
        sizeof(temp_var_info));
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
     if(this->adb)this->adb->increment_throw_count();
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw otl_exception
      (otl_error_msg_4,
       otl_error_code_4,
@@ -18972,7 +19145,7 @@ public:
        sizeof(temp_var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw otl_exception
      (otl_error_msg_4,
       otl_error_code_4,
@@ -19072,7 +19245,7 @@ protected:
       sizeof(var_info));
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception
      (otl_error_msg_0,
       otl_error_code_0,
@@ -19098,7 +19271,7 @@ protected:
        sizeof(var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-    if(otl_uncaught_exception()) return 0; 
+    if(otl_uncaught_exception()) return 0;
     throw otl_exception
       (otl_error_msg_0,
        otl_error_code_0,
@@ -19113,7 +19286,7 @@ protected:
     else
       return check_type_throw(type_code,actual_data_type);
   }
-    
+
  void look_ahead(void)
  {
   if(cur_col==sl_len-1){
@@ -19141,7 +19314,7 @@ protected:
   if(rc!=0){
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception(cursor_struct,stm_label?stm_label:stm_text);
   }
   for(i=0;i<vl_len;++i)
@@ -19219,7 +19392,7 @@ protected:
        sizeof(var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-    if(otl_uncaught_exception()) return 0; 
+    if(otl_uncaught_exception()) return 0;
 
     throw otl_exception
       (otl_error_msg_0,
@@ -19238,7 +19411,7 @@ protected:
       if(type_code==otl_var_raw)
         return 1;
     default:
-      if(vl[cur_in]->get_ftype()==type_code && 
+      if(vl[cur_in]->get_ftype()==type_code &&
          vl[cur_in]->get_elem_size()==tsize)
         return 1;
     }
@@ -19249,7 +19422,7 @@ protected:
   {
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return;
-    if(otl_uncaught_exception()) return; 
+    if(otl_uncaught_exception()) return;
     throw otl_exception
       (otl_error_msg_1,
        otl_error_code_1,
@@ -19267,7 +19440,7 @@ protected:
   {
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return;
-    if(otl_uncaught_exception()) return; 
+    if(otl_uncaught_exception()) return;
     throw otl_exception
       (otl_error_msg_2,
        otl_error_code_2,
@@ -19319,22 +19492,22 @@ public:
   otl_inout_stream* io;
   otl_connect* adb;
   bool lob_stream_flag;
-  
+
   int auto_commit_flag;
-  
+
   otl_var_desc* iov;
   int iov_len;
   int next_iov_ndx;
-  
+
   otl_var_desc* ov;
   int ov_len;
   int next_ov_ndx;
-  
+
   bool flush_flag;
   int stream_type;
-  
+
   otl_select_struct_override override;
-  
+
 #if (defined(OTL_STL)||defined(OTL_ACE)) && defined(OTL_STREAM_POOLING_ON)
   OTL_STRING_CONTAINER orig_sql_stm;
 #endif
@@ -19444,22 +19617,22 @@ private:
 
 class otl_stream{
 private:
-  
+
   otl_stream_shell* shell;
   otl_ptr<otl_stream_shell> shell_pt;
   int connected;
-  
+
   otl_ref_select_stream** ref_ss;
   otl_select_stream** ss;
   otl_inout_stream** io;
   otl_connect** adb;
-  
+
   int* auto_commit_flag;
-  
+
   otl_var_desc** iov;
   int* iov_len;
   int* next_iov_ndx;
-  
+
   otl_var_desc** ov;
   int* ov_len;
   int* next_ov_ndx;
@@ -19493,6 +19666,33 @@ protected:
 
 public:
 
+
+  void skip_to_end_of_row()
+  {
+    if(next_ov_ndx==0)
+      return;
+    if((*ov_len)==0)return;
+    last_oper_was_read_op=true;
+    switch(shell->stream_type){
+    case otl_ora7_no_stream:
+      break;
+    case otl_ora7_io_stream:
+      last_eof_rc=(*io)->eof();
+      (*io)->skip_to_end_of_row();
+      break;
+    case otl_ora7_select_stream:
+      last_eof_rc=(*ss)->eof();
+      (*ss)->skip_to_end_of_row();
+      break;
+    case otl_ora7_refcur_select_stream:
+      last_eof_rc=(*ref_ss)->eof();
+      (*ref_ss)->skip_to_end_of_row();
+      break;
+    }
+    while ((*next_ov_ndx)<(*ov_len)-1)
+      ++(*next_ov_ndx);
+  }
+
   void reset_to_last_valid_row()
   {
     if((*io)){
@@ -19501,7 +19701,7 @@ public:
     }
   }
 
-  bool get_lob_stream_flag() const 
+  bool get_lob_stream_flag() const
   {
     if(!shell)
       return false;
@@ -19509,7 +19709,7 @@ public:
       return shell->lob_stream_flag;
   }
 
-  int get_adb_max_long_size() const 
+  int get_adb_max_long_size() const
   {
     return this->shell->adb->get_max_long_size();
   }
@@ -19562,7 +19762,7 @@ public:
   {
     buf_size_=buf_size;
   }
-  
+
   int getBufSize(void) const
   {
     return buf_size_;
@@ -19735,7 +19935,7 @@ public:
   else
    (*next_ov_ndx)=0;
  }
- 
+
  void inc_next_iov(void)
  {
   if((*iov_len)==0)return;
@@ -19789,7 +19989,7 @@ public:
    shell=new otl_stream_shell(0);
    shell_pt.assign(&shell);
    connected=0;
-   
+
    ref_ss=&(shell->ref_ss);
    ss=&(shell->ss);
    io=&(shell->io);
@@ -19802,17 +20002,17 @@ public:
    ov_len=&(shell->ov_len);
    next_ov_ndx=&(shell->next_ov_ndx);
    override=&(shell->override);
-   
+
    (*ref_ss)=0;
    (*io)=0;
    (*ss)=0;
    (*adb)=0;
-   (*ov)=0; 
+   (*ov)=0;
    (*ov_len)=0;
    (*next_iov_ndx)=0;
    (*next_ov_ndx)=0;
    (*auto_commit_flag)=1;
-   (*iov)=0; 
+   (*iov)=0;
    (*iov_len)=0;
 
  }
@@ -20085,10 +20285,10 @@ public:
     break;
   }
   (*ss)=0; (*io)=0; (*ref_ss)=0;
-  if(adb!=0)(*adb)=0; 
+  if(adb!=0)(*adb)=0;
   adb=0;
  }
- 
+
  void open
  (const otl_stream_buffer_size_type arr_size,
   const char* sqlstm,
@@ -20142,7 +20342,7 @@ public:
    shell=temp_shell;
    ref_ss=&(shell->ref_ss);
    ss=&(shell->ss);
-   io=&(shell->io); 
+   io=&(shell->io);
    if((*io)!=0)(*io)->set_flush_flag2(true);
    adb=&(shell->adb);
    auto_commit_flag=&(shell->auto_commit_flag);
@@ -20162,7 +20362,7 @@ public:
      intern_cleanup();
      shell_pt.destroy();
      connected=0;
-     throw;     
+     throw;
    }
 
    connected=1;
@@ -20246,7 +20446,7 @@ public:
 #if defined(OTL_STL) && defined(OTL_UNCAUGHT_EXCEPTION_ON)
      !(otl_uncaught_exception())&&
 #elif defined(OTL_UNCAUGHT_EXCEPTION_ON)
-     !(otl_uncaught_exception())&& 
+     !(otl_uncaught_exception())&&
 #endif
      (*adb)->get_throw_count()==0){
    try{
@@ -20270,7 +20470,7 @@ public:
     intern_cleanup();
     shell_pt.destroy();
     connected=0;
-    return; 
+    return;
    }
 #elif defined(OTL_UNCAUGHT_EXCEPTION_ON)
    if(otl_uncaught_exception()){
@@ -20279,7 +20479,7 @@ public:
      intern_cleanup();
      shell_pt.destroy();
      connected=0;
-     return; 
+     return;
    }
 #endif
    (*adb)->sc.add(shell,shell->orig_sql_stm.c_str());
@@ -20453,7 +20653,7 @@ public:
     OTL_ORA7_STRING_TO_TIMESTAMP(tmp_str,s);
 #endif
     OTL_TRACE_WRITE
-      (s, /* [i_a] */
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&");
     return *this;
@@ -20480,7 +20680,7 @@ public:
     s.second=tmp.second-1;
 #endif
     OTL_TRACE_WRITE
-      (s, /* [i_a] */
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&")
       inc_next_ov();
@@ -20509,7 +20709,7 @@ public:
   s.second=tmp.second-1;
 #endif
   OTL_TRACE_WRITE
-    (s, /* [i_a] */
+    (OTL_TRACE_FORMAT_DATETIME(s),
      "operator >>",
      "otl_datetime&")
   inc_next_ov();
@@ -20527,7 +20727,7 @@ public:
      char tmp_str[100];
      OTL_ORA7_TIMESTAMP_TO_STRING(s,tmp_str);
      OTL_TRACE_READ
-       (s, /* [i_a] */
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp_str;
@@ -20542,7 +20742,7 @@ public:
      tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
      tmp.second=OTL_SCAST(unsigned char, (s.second+1));
      OTL_TRACE_READ
-       (s, /* [i_a] */
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp;
@@ -20559,7 +20759,7 @@ public:
      tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
      tmp.second=OTL_SCAST(unsigned char, (s.second+1));
      OTL_TRACE_READ
-       (s, /* [i_a] */
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp;
@@ -21735,7 +21935,7 @@ private:
 
   friend class otl_cur;
   friend class otl_var;
-  
+
   OCIEnv *envhp; // OCI environment handle
   OCIServer *srvhp; // OCI Server handle
   OCIError *errhp; // OCI Error handle
@@ -21752,15 +21952,15 @@ private:
   int last_status;
   char* xa_server_external_name;
   char* xa_server_internal_name;
-  
+
 #if defined(OTL_ORA_OCI_ENV_CREATE)
   bool threaded_mode;
 #endif
-  
+
 public:
-  
+
 #if defined(OTL_ORA_OCI_ENV_CREATE)
-  void set_threaded_mode(const bool athreaded_mode) 
+  void set_threaded_mode(const bool athreaded_mode)
   {
     threaded_mode=athreaded_mode;
   }
@@ -21954,17 +22154,17 @@ public:
     0);
 #else
   status=OCIEnvCreate
-    (OTL_RCAST(OCIEnv**,&envhp), 
+    (OTL_RCAST(OCIEnv**,&envhp),
 #if defined(OTL_ORA_OCI_ENV_CREATE_MODE)
      OTL_ORA_OCI_ENV_CREATE_MODE,
 #else
      threaded_mode?OCI_THREADED:OCI_DEFAULT,
 #endif
-     0, 
-     0, 
-     0, 
-     0, 
-     0, 
+     0,
+     0,
+     0,
+     0,
+     0,
      0);
 #endif
 
@@ -22039,17 +22239,17 @@ public:
        OTL_RCAST(dvoid*,xa_server_external_name),
        0,
        OCI_ATTR_EXTERNAL_NAME,
-       errhp);        
+       errhp);
     if(status)return 0;
-    
+
     status=OCIAttrSet
       (OTL_RCAST(dvoid*,srvhp),
        OCI_HTYPE_SERVER,
        OTL_RCAST(dvoid*,xa_server_internal_name),
        0,
        OCI_ATTR_INTERNAL_NAME,
-       errhp);   
-    if(status)return 0; 
+       errhp);
+    if(status)return 0;
   }
 
 #if defined(__GNUC__) && (__GNUC__>=4)
@@ -22089,7 +22289,7 @@ public:
     authp,
     cred_type,
     OTL_SCAST(ub4,session_mode_));
-  if(status!=OCI_SUCCESS && 
+  if(status!=OCI_SUCCESS &&
      status!=OCI_SUCCESS_WITH_INFO)
     return 0;
 
@@ -22171,7 +22371,7 @@ public:
    const char* password,
    const char* new_password)
   {int& status=last_status;
-    
+
     OCIAttrSet
       (OTL_RCAST(dvoid*,svchp),
        OTL_SCAST(ub4,OCI_HTYPE_SVCCTX),
@@ -22179,9 +22379,9 @@ public:
        0,
        OTL_SCAST(ub4,OCI_ATTR_SESSION),
        errhp);
-    
-    status=OCIPasswordChange 
-      (svchp,  
+
+    status=OCIPasswordChange
+      (svchp,
        errhp,
        OTL_RCAST(text*,OTL_CCAST(char*,user_name)),
        OTL_SCAST(ub4,strlen(user_name)),
@@ -22194,7 +22394,7 @@ public:
       return 0;
     else
       return 1;
-  
+
   }
 #endif
 
@@ -22260,13 +22460,13 @@ public:
    char* c=OTL_CCAST(char*,connect_str);
    char* passwd_ptr=passwd;
    char prev_c=' ';
-   
+
    auto_commit=aauto_commit;
-   
+
    username[0]=0;
    passwd[0]=0;
    tnsname[0]=0;
-   
+
    while(*c&&*c!='/'&&(OTL_SCAST(unsigned,username_ptr-username)<
                        sizeof(username)-1)){
     *username_ptr=*c;
@@ -22285,7 +22485,7 @@ public:
      ++passwd_ptr;
    }
    *passwd_ptr=0;
-   
+
    if(*c=='@'){
      ++c;
      tnsname_ptr=tnsname;
@@ -22296,7 +22496,7 @@ public:
      }
      *tnsname_ptr=0;
    }
-   
+
    envhp=0;
    srvhp=0;
    errhp=0;
@@ -22314,13 +22514,13 @@ public:
      username,
      passwd,
      auto_commit)
-   
+
    status=server_attach(tnsname);
    if(!status)return 0;
-   
+
    status=session_begin(username,passwd,aauto_commit);
    if(!status)return 0;
-   
+
    return 1;
 
  }
@@ -22501,7 +22701,7 @@ private:
   int otl_adapter;
   bool lob_stream_mode;
   sb4 unicode_var_len;
-  ub2 csid; 
+  ub2 csid;
   ub1 csfrm;
   ub4 read_blob_amt;
   ub4 total_read_blob_amt;
@@ -22612,9 +22812,9 @@ public:
    delete[] buf;
  }
 
-  int write_dt(void* trg, 
-               const void* src, 
-               const int 
+  int write_dt(void* trg,
+               const void* src,
+               const int
 #if (defined(OTL_ORA8I)||defined(OTL_ORA9I))&&defined(OTL_ORA_TIMESTAMP)
 #else
                sz
@@ -22626,7 +22826,7 @@ public:
     otl_datetime* src_ptr=OTL_RCAST(otl_datetime*,OTL_CCAST(void*,src));
     int rc=0;
     if(ftype!=otl_var_tz_timestamp){
-      rc=OCIDateTimeConstruct 
+      rc=OCIDateTimeConstruct
         (connect->envhp,
          connect->errhp,
          trg_ptr,
@@ -22649,7 +22849,7 @@ public:
       *tzc=':';
       ++tzc;
       otl_itoa(tz_minute,tzc);
-      rc=OCIDateTimeConstruct 
+      rc=OCIDateTimeConstruct
         (connect->envhp,
          connect->errhp,
          trg_ptr,
@@ -22673,9 +22873,9 @@ public:
 #endif
   }
 
-  int read_dt(void* trg, 
-              const void* src, 
-              const int 
+  int read_dt(void* trg,
+              const void* src,
+              const int
 #if (defined(OTL_ORA8I)||defined(OTL_ORA9I))&&defined(OTL_ORA_TIMESTAMP)
 #else
               sz
@@ -22690,9 +22890,9 @@ public:
     ub4 fsec;
     sb1 tz_hour;
     sb1 tz_minute;
-    int rc=OCIDateTimeGetDate 
+    int rc=OCIDateTimeGetDate
       (connect->envhp,
-       connect->errhp, 
+       connect->errhp,
        src_ptr,
        &year,
        &month,
@@ -22700,7 +22900,7 @@ public:
     if(rc!=0)return 0;
     rc=OCIDateTimeGetTime
       (connect->envhp,
-       connect->errhp, 
+       connect->errhp,
        src_ptr,
        &hour,
        &minute,
@@ -22720,7 +22920,7 @@ public:
        ftype==otl_var_ltz_timestamp){
       rc=OCIDateTimeGetTimeZoneOffset
         (connect->envhp,
-         connect->errhp, 
+         connect->errhp,
          src_ptr,
          &tz_hour,
          &tz_minute);
@@ -22797,7 +22997,7 @@ public:
    elem_size=sizeof(OCIDateTime*);
    act_elem_size=elem_size;
    timestamp=new OCIDateTime*[array_size];
-   p_v=OTL_RCAST(ub1*,timestamp); 
+   p_v=OTL_RCAST(ub1*,timestamp);
    p_ind=new sb2[array_size];
    p_rlen=new ub2[array_size];
    p_rcode=new ub2[array_size];
@@ -22872,7 +23072,7 @@ public:
 #if (defined(OTL_ORA8I)||defined(OTL_ORA9I))&&defined(OTL_ORA_TIMESTAMP)
     if((ftype==otl_var_timestamp ||
         ftype==otl_var_tz_timestamp ||
-        ftype==otl_var_ltz_timestamp) && 
+        ftype==otl_var_ltz_timestamp) &&
        apl_tab_flag){
       elem_size=sizeof(otl_oracle_date);
       aelem_size=elem_size; // sending feedback back to the template class
@@ -23007,7 +23207,7 @@ public:
 #if defined(OTL_UNICODE)
   if(ftype==otl_var_clob)
    byte_buf_size=buf_size*sizeof(OTL_CHAR);
-#endif  
+#endif
   ub4 amt=byte_buf_size;
   ub4 offset=1;
   int rc;
@@ -23261,10 +23461,10 @@ public:
   csid=0;
 #endif
   if(mode==OCI_FIRST_PIECE || mode==OCI_ONE_PIECE){
-    rc=OCILobTrim 
-      (connect->get_svchp(), 
-       connect->get_errhp(), 
-       lob[0], 
+    rc=OCILobTrim
+      (connect->get_svchp(),
+       connect->get_errhp(),
+       lob[0],
        0);
     if(rc!=OCI_SUCCESS)
       return 0;
@@ -23893,7 +24093,7 @@ public:
         mode=OCI_COMMIT_ON_SUCCESS;
       else
         mode=OCI_DEFAULT;
-     
+
       status=OCIStmtExecute
         (db->get_svchp(),
          cda,
@@ -23912,7 +24112,7 @@ public:
     return 1;
  }
 
- int exec(const int iters, 
+ int exec(const int iters,
           const int rowoff,
           const int /*otl_sql_exec_from_class*/)
  {
@@ -24031,7 +24231,7 @@ public:
  {OCIBind* bindpp;
 
   int db_ftype=0;
-    
+
    if(ftype==otl_var_refcur){
     status=OCIBindByName
      (cda,
@@ -24066,7 +24266,7 @@ public:
 #endif
      db_ftype=tmpl_ftype2ora_ftype(ftype);
 #if (defined(OTL_ORA8I)||defined(OTL_ORA9I))&&defined(OTL_ORA_TIMESTAMP)
-     if(ftype==otl_var_timestamp || 
+     if(ftype==otl_var_timestamp ||
         ftype==otl_var_tz_timestamp ||
         ftype==otl_var_ltz_timestamp){
        if(!apl_tab_flag)
@@ -24123,20 +24323,20 @@ public:
         else
           v.csfrm=OTL_SCAST(ub1,db->char_set_);
         status=OCIAttrSet
-          (bindpp, 
-           OCI_HTYPE_BIND, 
-           &v.csfrm, 
-           0, 
+          (bindpp,
+           OCI_HTYPE_BIND,
+           &v.csfrm,
+           0,
            OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM),
            errhp);
         if(status)return 0;
       }
       v.csid=OTL_UNICODE_ID;
       status=OCIAttrSet
-        (bindpp, 
-         OCI_HTYPE_BIND, 
-         &v.csid, 
-         0, 
+        (bindpp,
+         OCI_HTYPE_BIND,
+         &v.csid,
+         0,
          OCI_ATTR_CHARSET_ID,
          errhp);
       if(status)return 0;
@@ -24153,11 +24353,11 @@ public:
 #endif
       }
       status=OCIAttrSet
-        (bindpp, 
-         OCI_HTYPE_BIND, 
-         &v.unicode_var_len, 
-         0, 
-         OCI_ATTR_MAXDATA_SIZE, 
+        (bindpp,
+         OCI_HTYPE_BIND,
+         &v.unicode_var_len,
+         0,
+         OCI_ATTR_MAXDATA_SIZE,
          errhp);
       if(status)return 0;
     }
@@ -24170,10 +24370,10 @@ public:
       else
         v.csfrm=OTL_SCAST(ub1,db->char_set_);
       status=OCIAttrSet
-        (bindpp, 
-         OCI_HTYPE_BIND, 
-         &v.csfrm, 
-         0, 
+        (bindpp,
+         OCI_HTYPE_BIND,
+         &v.csfrm,
+         0,
          OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM),
          errhp);
       if(status)return 0;
@@ -24202,10 +24402,10 @@ public:
     if(ftype==otl_var_clob){
       v.csid=OTL_UNICODE_ID;
       status=OCIAttrSet
-        (bindpp, 
-         OCI_HTYPE_BIND, 
-         &v.csid, 
-         0, 
+        (bindpp,
+         OCI_HTYPE_BIND,
+         &v.csid,
+         0,
          OCI_ATTR_CHARSET_ID,
          errhp);
       if(status)return 0;
@@ -24214,10 +24414,10 @@ public:
       else
         v.csfrm=OTL_SCAST(ub1,db->char_set_);
       status=OCIAttrSet
-        (bindpp, 
-         OCI_HTYPE_BIND, 
-         &v.csfrm, 
-         0, 
+        (bindpp,
+         OCI_HTYPE_BIND,
+         &v.csfrm,
+         0,
          OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM),
          errhp);
       if(status)return 0;
@@ -24231,10 +24431,10 @@ public:
       else
         v.csfrm=OTL_SCAST(ub1,db->char_set_);
       status=OCIAttrSet
-        (bindpp, 
-         OCI_HTYPE_BIND, 
-         &v.csfrm, 
-         0, 
+        (bindpp,
+         OCI_HTYPE_BIND,
+         &v.csfrm,
+         0,
          OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM),
          errhp);
       if(status)return 0;
@@ -24304,12 +24504,12 @@ public:
      else
        v.csfrm=OTL_SCAST(ub1,db->char_set_);
      status=OCIAttrSet
-       (defnp, 
-        OCI_HTYPE_DEFINE, 
-        OTL_RCAST(void*,&v.csfrm), 
+       (defnp,
+        OCI_HTYPE_DEFINE,
+        OTL_RCAST(void*,&v.csfrm),
         OTL_SCAST(ub4,0),
-        OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM), 
-        errhp); 
+        OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM),
+        errhp);
      if(status)return 0;
    }
 #endif
@@ -24321,20 +24521,20 @@ public:
      else
        v.csfrm=OTL_SCAST(ub1,db->char_set_);
      status=OCIAttrSet
-       (defnp, 
-        OCI_HTYPE_DEFINE, 
-        OTL_RCAST(void*,&v.csfrm), 
+       (defnp,
+        OCI_HTYPE_DEFINE,
+        OTL_RCAST(void*,&v.csfrm),
         OTL_SCAST(ub4,0),
-        OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM), 
-        errhp); 
+        OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM),
+        errhp);
      if(status)return 0;
      v.csid=OTL_UNICODE_ID;
      status=OCIAttrSet
-       (defnp, 
-        OCI_HTYPE_DEFINE, 
-        &v.csid, 
-        0, 
-        OCI_ATTR_CHARSET_ID, 
+       (defnp,
+        OCI_HTYPE_DEFINE,
+        &v.csid,
+        0,
+        OCI_ATTR_CHARSET_ID,
         errhp);
      if(status)return 0;
    }
@@ -24358,11 +24558,11 @@ public:
    if(ftype==otl_var_char||ftype==otl_var_varchar_long){
      v.csid=OTL_UNICODE_ID;
      status=OCIAttrSet
-       (defnp, 
-        OCI_HTYPE_DEFINE, 
-        &v.csid, 
-        0, 
-        OCI_ATTR_CHARSET_ID, 
+       (defnp,
+        OCI_HTYPE_DEFINE,
+        &v.csid,
+        0,
+        OCI_ATTR_CHARSET_ID,
         errhp);
      if(status)return 0;
    }
@@ -24374,12 +24574,12 @@ public:
      else
        v.csfrm=OTL_SCAST(ub1,db->char_set_);
      status=OCIAttrSet
-       (defnp, 
-        OCI_HTYPE_DEFINE, 
-        OTL_RCAST(void*,&v.csfrm), 
+       (defnp,
+        OCI_HTYPE_DEFINE,
+        OTL_RCAST(void*,&v.csfrm),
         OTL_SCAST(ub4,0),
-        OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM), 
-        errhp); 
+        OTL_SCAST(ub4,OCI_ATTR_CHARSET_FORM),
+        errhp);
      if(status)return 0;
    }
 #endif
@@ -24847,7 +25047,7 @@ public:
   otl_lob_stream_generic& operator<<(const OTL_STRING_CONTAINER& s)
     OTL_THROWS_OTL_EXCEPTION
   {
-    otl_long_string temp_s(s.c_str(),                  
+    otl_long_string temp_s(s.c_str(),
                            OTL_SCAST(int,s.length()),
                            OTL_SCAST(int,s.length()));
     (*this)<<temp_s;
@@ -24911,7 +25111,7 @@ public:
     vinfo=&var_info[0];
    if(this->connect)this->connect->increment_throw_count();
    if(this->connect&&this->connect->get_throw_count()>1)return *this;
-   if(otl_uncaught_exception()) return *this; 
+   if(otl_uncaught_exception()) return *this;
    throw otl_tmpl_exception
     <TExceptionStruct,
      TConnectStruct,
@@ -24921,7 +25121,7 @@ public:
       stm,
       vinfo);
   }
-  if(offset==0)offset=1; 
+  if(offset==0)offset=1;
   if((offset-1)+s.len()>lob_len){
    char var_info[256];
    otl_var_info_var
@@ -24932,7 +25132,7 @@ public:
      sizeof(var_info));
    if(this->connect)this->connect->increment_throw_count();
    if(this->connect&&this->connect->get_throw_count()>1)return *this;
-   if(otl_uncaught_exception()) return *this; 
+   if(otl_uncaught_exception()) return *this;
   char err_msg[1024];
   char temp_num[64];
   OTL_STRCPY_S(err_msg,sizeof(err_msg),otl_error_msg_7);
@@ -24960,7 +25160,7 @@ public:
     otl_error_code_7,
     cursor->get_stm_label()?cursor->get_stm_label():
     cursor->get_stm_text(),
-    var_info); 
+    var_info);
   }
   if(s.is_last_piece())
     lob_len=(offset+s.len()-1);
@@ -24973,7 +25173,7 @@ public:
   }
   if(this->connect)this->connect->increment_throw_count();
   if(this->connect&&this->connect->get_throw_count()>1)return *this;
-  if(otl_uncaught_exception()) return *this; 
+  if(otl_uncaught_exception()) return *this;
   throw otl_tmpl_exception
     <TExceptionStruct,
      TConnectStruct,
@@ -25008,7 +25208,7 @@ public:
     vinfo=&var_info[0];
    if(this->connect)this->connect->increment_throw_count();
    if(this->connect&&this->connect->get_throw_count()>1)return *this;
-   if(otl_uncaught_exception()) return *this; 
+   if(otl_uncaught_exception()) return *this;
    throw otl_tmpl_exception
     <TExceptionStruct,
      TConnectStruct,
@@ -25037,7 +25237,7 @@ public:
   }
   if(this->connect)this->connect->increment_throw_count();
   if(this->connect&&this->connect->get_throw_count()>1)return *this;
-  if(otl_uncaught_exception()) return *this; 
+  if(otl_uncaught_exception()) return *this;
   throw otl_tmpl_exception
     <TExceptionStruct,
      TConnectStruct,
@@ -25060,7 +25260,7 @@ public:
   if(retcode) return is_init!=0;
   if(this->connect)this->connect->increment_throw_count();
   if(this->connect&&this->connect->get_throw_count()>1)return false;
-  if(otl_uncaught_exception()) return false; 
+  if(otl_uncaught_exception()) return false;
   throw OTL_TMPL_EXCEPTION
     (connect->get_connect_struct(),
      cursor->get_stm_label()?cursor->get_stm_label():
@@ -25075,7 +25275,7 @@ public:
   if(retcode)return alen;
   if(this->connect)this->connect->increment_throw_count();
   if(this->connect&&this->connect->get_throw_count()>1)return 0;
-  if(otl_uncaught_exception()) return 0; 
+  if(otl_uncaught_exception()) return 0;
   throw otl_tmpl_exception
     <TExceptionStruct,
      TConnectStruct,
@@ -25103,7 +25303,7 @@ public:
   }else{
    // write mode
    if(!(offset==0&&lob_len==0)&&(offset-1)!=lob_len){
-     bind_var->get_var_struct().close_lob();     
+     bind_var->get_var_struct().close_lob();
      char var_info[256];
      char msg_buf[1024];
      OTL_STRCPY_S(msg_buf,sizeof(msg_buf),otl_error_msg_8);
@@ -25115,7 +25315,7 @@ public:
         sizeof(var_info));
      if(this->connect)this->connect->increment_throw_count();
      if(this->connect&&this->connect->get_throw_count()>1)return;
-     if(otl_uncaught_exception()) return; 
+     if(otl_uncaught_exception()) return;
      throw otl_tmpl_exception
        <TExceptionStruct,
        TConnectStruct,
@@ -25202,7 +25402,7 @@ public:
 #if (defined(OTL_STL)||defined(OTL_ACE)) && defined(OTL_STREAM_POOLING_ON)
 
   otl_stream_pool& get_sc(){return sc;}
-  
+
   void set_stream_pool_size(const int max_size=otl_max_default_pool_size)
   {
     sc.init(max_size);
@@ -25248,9 +25448,9 @@ public:
  {
   connect_struct.set_char_set(char_set);
  }
-#endif 
+#endif
 
- otl_connect(const char* connect_str, 
+ otl_connect(const char* connect_str,
              const int aauto_commit=0
 #if defined(OTL_ORA_OCI_ENV_CREATE)
              ,bool threaded_mode=false
@@ -25269,7 +25469,7 @@ public:
     rlogon(connect_str,aauto_commit);
   }
 
- virtual ~otl_connect() 
+ virtual ~otl_connect()
 #if !defined(OTL_DESTRUCTORS_DO_NOT_THROW)
    OTL_THROWS_OTL_EXCEPTION
 #endif
@@ -25333,7 +25533,7 @@ public:
   if(!retcode){
    increment_throw_count();
    if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception(connect_struct);
   }
  }
@@ -25347,7 +25547,7 @@ public:
   if(!retcode){
    increment_throw_count();
    if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception(connect_struct);
   }
  }
@@ -25368,7 +25568,7 @@ public:
     if(!retcode){
       increment_throw_count();
       if(get_throw_count()>1)return;
-      if(otl_uncaught_exception()) return; 
+      if(otl_uncaught_exception()) return;
       throw otl_exception(connect_struct);
     }
   }
@@ -25405,12 +25605,12 @@ public:
      connected=0;
      increment_throw_count();
      if(get_throw_count()>1)return;
-     if(otl_uncaught_exception()) return; 
+     if(otl_uncaught_exception()) return;
      throw otl_exception(connect_struct);
    }
  }
 
- void rlogon(const char* connect_str, 
+ void rlogon(const char* connect_str,
              const int aauto_commit=0,
              const char* xa_server_external_name=0,
              const char* xa_server_internal_name=0
@@ -25442,7 +25642,7 @@ public:
      if(ex.code!=0){
        increment_throw_count();
        if(get_throw_count()>1)return;
-       if(otl_uncaught_exception()) return; 
+       if(otl_uncaught_exception()) return;
        throw ex;
      }
    }
@@ -25499,7 +25699,7 @@ public:
    if(!retcode){
      increment_throw_count();
      if(get_throw_count()>1)return;
-     if(otl_uncaught_exception()) return; 
+     if(otl_uncaught_exception()) return;
      throw otl_exception(connect_struct);
    }
  }
@@ -25511,7 +25711,7 @@ public:
   if(!retcode){
    increment_throw_count();
    if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception(connect_struct);
   }
  }
@@ -25522,7 +25722,7 @@ public:
    const int auto_commit=0,
    const int session_mode=OCI_DEFAULT
    // OCI_SYSDBA -- in this mode, the user is authenticated for SYSDBA
-   // access.  
+   // access.
    // OCI_SYSOPER -- in this mode, the user is authenticated
    // for SYSOPER access.
   ) OTL_THROWS_OTL_EXCEPTION
@@ -25540,7 +25740,7 @@ public:
      connected=0;
      increment_throw_count();
      if(get_throw_count()>1)return;
-     if(otl_uncaught_exception()) return; 
+     if(otl_uncaught_exception()) return;
      throw otl_exception(connect_struct);
    }
    if(connect_struct.get_last_status()==OCI_SUCCESS_WITH_INFO){
@@ -25548,7 +25748,7 @@ public:
      if(ex.code!=0){
        increment_throw_count();
        if(get_throw_count()>1)return;
-       if(otl_uncaught_exception()) return; 
+       if(otl_uncaught_exception()) return;
        throw ex;
      }
    }
@@ -25562,7 +25762,7 @@ public:
    connected=0;
    increment_throw_count();
    if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception(otl_error_msg_11,otl_error_code_11);
   }
   retcode=connect_struct.session_begin(auto_commit);
@@ -25572,7 +25772,7 @@ public:
    connected=0;
    increment_throw_count();
    if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception(connect_struct);
   }
   if(connect_struct.get_last_status()==OCI_SUCCESS_WITH_INFO){
@@ -25580,7 +25780,7 @@ public:
     if(ex.code!=0){
       increment_throw_count();
       if(get_throw_count()>1)return;
-      if(otl_uncaught_exception()) return; 
+      if(otl_uncaught_exception()) return;
       throw ex;
     }
   }
@@ -25598,7 +25798,7 @@ public:
   if(!retcode){
    increment_throw_count();
    if(get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception(connect_struct);
   }
  }
@@ -25724,7 +25924,7 @@ public:
   if(rc==0){
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-  if(otl_uncaught_exception()) return 0; 
+  if(otl_uncaught_exception()) return 0;
    throw otl_exception(cursor_struct,stm_label?stm_label:stm_text);
   }
   row_count=cursor_struct.rpc();
@@ -25748,7 +25948,7 @@ public:
    if(rc==0){
      if(this->adb)this->adb->increment_throw_count();
      if(this->adb&&this->adb->get_throw_count()>1)return 0;
-     if(otl_uncaught_exception()) return 0; 
+     if(otl_uncaught_exception()) return 0;
      throw otl_exception(cursor_struct,stm_label?stm_label:stm_text);
    }
    cur_size=cursor_struct.rpc()-row_count;
@@ -25813,71 +26013,72 @@ public:
   virtual int is_null(void) OTL_NO_THROW = 0;
   virtual void rewind(void) OTL_THROWS_OTL_EXCEPTION = 0;
   virtual int eof(void) OTL_NO_THROW = 0;
+  virtual void skip_to_end_of_row(void) OTL_NO_THROW = 0;
 
   virtual otl_var_desc* describe_out_vars(int& desc_len) OTL_NO_THROW = 0;
   virtual otl_var_desc* describe_next_out_var(void) OTL_NO_THROW = 0;
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(otl_datetime& s) OTL_THROWS_OTL_EXCEPTION = 0;
 
 #if !defined(OTL_UNICODE)
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(char& c) OTL_THROWS_OTL_EXCEPTION = 0;
 #endif
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(unsigned char& c) OTL_THROWS_OTL_EXCEPTION = 0;
 
 #if defined(OTL_STL) || defined(USER_DEFINED_STRING_CLASS)
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(OTL_STRING_CONTAINER& s) OTL_THROWS_OTL_EXCEPTION = 0;
 #endif
 
 #if defined(OTL_UNICODE_STRING_TYPE)
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(OTL_UNICODE_STRING_TYPE& s) OTL_THROWS_OTL_EXCEPTION = 0;
 #endif
 
 #if !defined(OTL_UNICODE)
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(char* s) OTL_THROWS_OTL_EXCEPTION = 0;
 #endif
 
 #if defined(OTL_UNICODE)
 
- virtual otl_read_stream_interface& 
+ virtual otl_read_stream_interface&
  operator>>(OTL_UNICODE_CHAR_TYPE* s) OTL_THROWS_OTL_EXCEPTION = 0;
 
 #endif
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(unsigned char* s) OTL_THROWS_OTL_EXCEPTION = 0;
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(int& n) OTL_THROWS_OTL_EXCEPTION = 0;
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(unsigned& u) OTL_THROWS_OTL_EXCEPTION = 0;
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(short& sh) OTL_THROWS_OTL_EXCEPTION = 0;
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(long int& l) OTL_THROWS_OTL_EXCEPTION = 0;
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(float& f) OTL_THROWS_OTL_EXCEPTION = 0;
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(double& d) OTL_THROWS_OTL_EXCEPTION = 0;
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(otl_long_string& s) OTL_THROWS_OTL_EXCEPTION = 0;
 
-  virtual otl_read_stream_interface& 
+  virtual otl_read_stream_interface&
   operator>>(otl_lob_stream& s) OTL_THROWS_OTL_EXCEPTION = 0;
 
-  virtual otl_column_desc* 
+  virtual otl_column_desc*
   describe_select(int& desc_len) OTL_NO_THROW = 0;
 
 };
@@ -25900,24 +26101,39 @@ protected:
   int same_sl_flag;
   otl_select_struct_override override;
 
-  otl_var_desc* ov;  
+  otl_var_desc* ov;
   int ov_len;
   int next_ov_ndx;
 
 
 public:
 
+  void skip_to_end_of_row()
+  {
+    check_if_executed();
+    if(eof())return;
+    while(cur_col<sl_len-1){
+      ++cur_col;
+      null_fetched=sl[cur_col].is_null(this->cur_row);
+    }
+    ret_code=this->next();
+    cur_col=0;
+    if(!eof())
+      cur_col=-1;
+  }
+
+
   bool good() const
   {
     return get_connected()==1;
   }
 
-  bool get_lob_stream_flag() const 
+  bool get_lob_stream_flag() const
   {
     return true;
   }
 
-  int get_adb_max_long_size() const 
+  int get_adb_max_long_size() const
   {
     return this->adb->get_max_long_size();
   }
@@ -25938,7 +26154,7 @@ public:
   {
     override.add_override(column_ndx,col_type,col_size);
   }
-  
+
   void set_all_column_types(const unsigned mask=0)
     OTL_NO_THROW
   {
@@ -26058,7 +26274,7 @@ public:
         ov[i].copy_name(sl_desc[i].name);
     }
   }
-  
+
   void close(void)
     OTL_THROWS_OTL_EXCEPTION
   {
@@ -26079,7 +26295,7 @@ public:
    if(rc==0){
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw otl_exception(adb->get_connect_struct(),stm_label?stm_label:stm_text);
    }
 #else
@@ -26209,7 +26425,7 @@ public:
       int max_long_sz=this->adb->get_max_long_size();
       otl_auto_array_ptr<unsigned char> loc_ptr(max_long_sz);
       unsigned char* temp_buf=loc_ptr.get_ptr();
-    
+
       int rc=sl[cur_col].get_var_struct().get_blob
         (cur_row,
          temp_buf,
@@ -26218,7 +26434,7 @@ public:
       if(rc==0){
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw otl_exception(adb->get_connect_struct(),
                             stm_label?stm_label:stm_text);
       }
@@ -26572,7 +26788,7 @@ OTL_ORA_REFCUR_COMMON_READ_STREAM& operator>>(otl_long_string& s)
        if(sl[cur_col].get_ftype()==otl_var_clob)
          s.null_terminate_string(len);
        look_ahead();
-     }     
+     }
      break;
      case otl_var_raw:
      {
@@ -26708,14 +26924,14 @@ protected:
        sizeof(var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-    if(otl_uncaught_exception()) return 0; 
+    if(otl_uncaught_exception()) return 0;
     throw otl_exception
       (otl_error_msg_0,
        otl_error_code_0,
        stm_label?stm_label:stm_text,
        var_info);
   }
-  
+
   int check_type(int type_code, int actual_data_type=0)
   {
     switch(sl[cur_col].get_ftype()){
@@ -26730,7 +26946,7 @@ protected:
     }
     return check_type_throw(type_code,actual_data_type);
   }
-  
+
  void look_ahead(void)
  {
   if(cur_col==sl_len-1){
@@ -26747,7 +26963,7 @@ protected:
    otl_column_desc* sl_desc_tmp=loc_ptr.get_ptr();
    int sld_tmp_len=0;
    int ftype,elem_size;
-   
+
    sld_tmp_len=0;
    cursor_struct.straight_select=0;
    for(i=1;describe_column(sl_desc_tmp[i-1],i);++i){
@@ -26813,9 +27029,9 @@ private:
     return *this;
   }
 
-  otl_refcur_stream(const otl_refcur_stream&) : 
+  otl_refcur_stream(const otl_refcur_stream&) :
 #if defined(OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE)
-    otl_read_stream_interface(), 
+    otl_read_stream_interface(),
 #endif
     otl_refcur_base_cursor(),
     delay_next(0),
@@ -26853,7 +27069,7 @@ public:
                           alob_stream_mode,sqlstm_label),
     adb2(&db)
  {
- } 
+ }
 
  otl_inout_stream& operator>>(otl_refcur_stream& str)
  {
@@ -26864,7 +27080,7 @@ public:
              &(in_vl[cur_in_x]->get_var_struct()),
              stm_text,
              OTL_SCAST
-             (const otl_stream_buffer_size_type, 
+             (const otl_stream_buffer_size_type,
               in_vl[cur_in_x]->get_var_struct().array_size)
             );
     null_fetched=0;
@@ -27355,7 +27571,7 @@ public:
    if(rc!=0){
      if(this->adb)this->adb->increment_throw_count();
      if(this->adb&&this->adb->get_throw_count()>1)return 0;
-     if(otl_uncaught_exception()) return 0; 
+     if(otl_uncaught_exception()) return 0;
      throw otl_exception(cursor_struct,
                          stm_label?stm_label:stm_text);
    }
@@ -27365,7 +27581,7 @@ public:
    ; // Special case -- calling describe_select() between parse() and first()
   else{
 // Executing the PLSQL master block
-    exec(1,0,otl_sql_exec_from_select_cursor_class); 
+    exec(1,0,otl_sql_exec_from_select_cursor_class);
    sel_cur.set_connected(1);
   }
   cur_row=-1;
@@ -27377,7 +27593,7 @@ public:
   if(rc==0){
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-    if(otl_uncaught_exception()) return 0; 
+    if(otl_uncaught_exception()) return 0;
     throw otl_exception(sel_cur.get_cursor_struct(),
                         stm_label?stm_label:stm_text);
   }
@@ -27404,7 +27620,7 @@ public:
    if(rc==0){
      if(this->adb)this->adb->increment_throw_count();
      if(this->adb&&this->adb->get_throw_count()>1)return 0;
-     if(otl_uncaught_exception()) return 0; 
+     if(otl_uncaught_exception()) return 0;
      throw otl_exception(sel_cur.get_cursor_struct(),
                          stm_label?stm_label:stm_text);
    }
@@ -27488,13 +27704,13 @@ public:
    if(rc!=0){
      if(this->adb)this->adb->increment_throw_count();
      if(this->adb&&this->adb->get_throw_count()>1)return 0;
-     if(otl_uncaught_exception()) return 0; 
+     if(otl_uncaught_exception()) return 0;
      throw otl_exception(cursor_struct,
                          stm_label?stm_label:stm_text);
    }
   }
 // Executing the PLSQL master block
-  exec(1,0,otl_sql_exec_from_select_cursor_class); 
+  exec(1,0,otl_sql_exec_from_select_cursor_class);
   sel_cur.set_connected(1);
   cur_row=-2; // Special case -- describe_select() before first() or next()
   desc_len=0;
@@ -27557,13 +27773,29 @@ protected:
 
 public:
 
+  void skip_to_end_of_row()
+  {
+    check_if_executed();
+    if(eof())return;
+    while(cur_col<sl_len-1){
+      ++cur_col;
+      null_fetched=sl[cur_col].is_null(this->cur_row);
+    }
+    ret_code=this->next();
+    cur_col=0;
+    if(!eof())
+      cur_col=-1;
+    ++_rfc;
+  }
+
+
   int get_select_row_count() const /* [i_a] is used for get_dirty_buf_len() only! is NOT the number of rows returned by SELECT */
   {
     return this->cur_row==-1?0:this->cur_size-this->cur_row;
   }
   int get_row_count() const /* [i_a] */
   {
-	  return this->row_count; 
+	  return this->row_count;
   }
 
   long get_rfc() const {return _rfc;}
@@ -27664,7 +27896,7 @@ public:
    executed=1;
    delay_next=0;
  }
-  
+
   void clean(void)
   {
     _rfc=0;
@@ -27707,7 +27939,7 @@ public:
    if(rc==0){
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw otl_exception(adb->get_connect_struct(),
                         stm_label?stm_label:stm_text);
    }
@@ -27730,7 +27962,7 @@ public:
    if(rc==0){
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw otl_exception(adb->get_connect_struct(),
                         stm_label?stm_label:stm_text);
    }
@@ -27759,7 +27991,7 @@ public:
            sizeof(var_info));
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw otl_exception
           (otl_error_msg_5,
            otl_error_code_5,
@@ -27846,7 +28078,7 @@ public:
       int max_long_sz=this->adb->get_max_long_size();
       otl_auto_array_ptr<unsigned char> loc_ptr(max_long_sz);
       unsigned char* temp_buf=loc_ptr.get_ptr();
-    
+
       int rc=sl[cur_col].get_var_struct().get_blob
         (cur_row,
          temp_buf,
@@ -27855,7 +28087,7 @@ public:
       if(rc==0){
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count()>1)return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw otl_exception(adb->get_connect_struct(),
                             stm_label?stm_label:stm_text);
       }
@@ -27933,7 +28165,7 @@ public:
         if(rc==0){
           if(this->adb)this->adb->increment_throw_count();
           if(this->adb&&this->adb->get_throw_count()>1)return *this;
-          if(otl_uncaught_exception()) return *this; 
+          if(otl_uncaught_exception()) return *this;
           throw otl_exception
             (this->adb->get_connect_struct(),
              this->stm_label?this->stm_label:
@@ -28034,8 +28266,8 @@ public:
         s.v[len]=0;
         s.set_len(len);
         look_ahead();
-      }  
-    }    
+      }
+    }
     break;
   case otl_var_raw:
     {
@@ -28047,8 +28279,8 @@ public:
         otl_memcpy(s.v,c+sizeof(short int),len,sl[cur_col].get_ftype());
         s.set_len(len);
         look_ahead();
-      }  
-    }    
+      }
+    }
     break;
   case otl_var_blob:
   case otl_var_clob:
@@ -28060,7 +28292,7 @@ public:
         if(rc==0){
           if(this->adb)this->adb->increment_throw_count();
           if(this->adb&&this->adb->get_throw_count()>1)return *this;
-          if(otl_uncaught_exception()) return *this; 
+          if(otl_uncaught_exception()) return *this;
           throw otl_exception(adb->get_connect_struct(),
                               stm_label?stm_label:stm_text);
         }
@@ -28153,7 +28385,7 @@ public:
        sizeof(temp_var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw otl_exception
      (otl_error_msg_4,
       otl_error_code_4,
@@ -28173,7 +28405,7 @@ public:
   {
     check_in_var();
     if(check_in_type(otl_var_char,1)){
-      
+
       int overflow;
       otl_strcpy4
         (OTL_RCAST(unsigned char*,vl[cur_in]->val()),
@@ -28193,7 +28425,7 @@ public:
            sizeof(temp_var_info));
         if(this->adb)this->adb->increment_throw_count();
         if(this->adb&&this->adb->get_throw_count())return *this;
-        if(otl_uncaught_exception()) return *this; 
+        if(otl_uncaught_exception()) return *this;
         throw otl_exception
           (otl_error_msg_4,
            otl_error_code_4,
@@ -28229,7 +28461,7 @@ public:
        sizeof(temp_var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw otl_exception
      (otl_error_msg_4,
       otl_error_code_4,
@@ -28265,7 +28497,7 @@ public:
        sizeof(temp_var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return *this;
-    if(otl_uncaught_exception()) return *this; 
+    if(otl_uncaught_exception()) return *this;
     throw otl_exception
       (otl_error_msg_4,
        otl_error_code_4,
@@ -28302,7 +28534,7 @@ public:
   template<OTL_TYPE_NAME T,const int T_type> OTL_D8(T,T_type)
 #endif
 
- int select_list_len(void) const 
+ int select_list_len(void) const
  {
   return sl_len;
  }
@@ -28373,7 +28605,7 @@ protected:
        sizeof(var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-  if(otl_uncaught_exception()) return 0; 
+  if(otl_uncaught_exception()) return 0;
 
     throw otl_exception
       (otl_error_msg_0,
@@ -28435,7 +28667,7 @@ protected:
    if(rc!=0){
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception(cursor_struct,
                        stm_label?stm_label:stm_text);
    }
@@ -28452,7 +28684,7 @@ protected:
   <otl_exc,
    otl_conn,
    otl_cur,
-     otl_var>::exec(1,0,otl_sql_exec_from_select_cursor_class); 
+     otl_var>::exec(1,0,otl_sql_exec_from_select_cursor_class);
   sel_cur.set_connected(1);
   cur_row=-2;
   if(same_sl_flag && sl){
@@ -28529,7 +28761,7 @@ protected:
        sizeof(var_info));
     if(this->adb)this->adb->increment_throw_count();
     if(this->adb&&this->adb->get_throw_count()>1)return 0;
-    if(otl_uncaught_exception()) return 0; 
+    if(otl_uncaught_exception()) return 0;
 
     throw otl_exception
       (otl_error_msg_0,
@@ -28555,17 +28787,17 @@ protected:
     default:
       if(vl[cur_in]->get_ftype()==type_code &&
          vl[cur_in]->get_elem_size()==tsize)
-        return 1; 
+        return 1;
     }
     return check_in_type_throw(type_code);
   }
-  
+
  void check_in_var(void)
  {
   if(vl_len==0){
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception
     (otl_error_msg_1,
      otl_error_code_1,
@@ -28579,7 +28811,7 @@ protected:
   if(!executed){
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception
     (otl_error_msg_2,
      otl_error_code_2,
@@ -28599,7 +28831,7 @@ protected:
       sizeof(var_info));
    if(this->adb)this->adb->increment_throw_count();
    if(this->adb&&this->adb->get_throw_count()>1)return;
-   if(otl_uncaught_exception()) return; 
+   if(otl_uncaught_exception()) return;
    throw otl_exception
      (otl_error_msg_0,
       otl_error_code_0,
@@ -28645,18 +28877,18 @@ public:
   otl_select_stream* ss;
   otl_inout_stream* io;
   otl_connect* adb;
-  
+
   int auto_commit_flag;
   bool lob_stream_flag;
-  
+
   otl_var_desc* iov;
   int iov_len;
   int next_iov_ndx;
-  
+
   otl_var_desc* ov;
   int ov_len;
   int next_ov_ndx;
-  
+
   bool flush_flag;
   int stream_type;
 
@@ -28830,14 +29062,14 @@ protected:
   otl_stream_shell* shell;
   otl_ptr<otl_stream_shell> shell_pt;
   int connected;
-  
+
   otl_ref_select_stream** ref_ss;
   otl_select_stream** ss;
   otl_inout_stream** io;
   otl_connect** adb;
-  
+
   int* auto_commit_flag;
-  
+
   otl_var_desc** iov;
   int* iov_len;
   int* next_iov_ndx;
@@ -28928,10 +29160,10 @@ else if(strcmp(datatype,"TIMESTAMP")==0)
        otl_error_code_34,
        this->get_stm_text());
   }
- 
+
 public:
 
-  bool get_lob_stream_flag() const 
+  bool get_lob_stream_flag() const
   {
     if(!shell)
       return false;
@@ -28939,11 +29171,11 @@ public:
       return shell->lob_stream_flag;
   }
 
-  int get_adb_max_long_size() const 
+  int get_adb_max_long_size() const
   {
     return this->shell->adb->get_max_long_size();
   }
-  
+
 
   void check_end_of_row()
   {
@@ -28976,7 +29208,7 @@ public:
   {
     buf_size_=buf_size;
   }
-  
+
   int getBufSize(void) const
   {
     return buf_size_;
@@ -29111,20 +29343,20 @@ public:
      "from all_arguments "
      "where object_name=upper(:obj_name<char[50]>) "
      "  and (:pkg_name<char[50]> is null and package_name is null or "
-     " :pkg_name is not null " 
-     " and (package_name=upper(:pkg_name) " 
-     " or package_name = " 
-     " (select package_name from " 
-     " (select table_name as package_name " 
-     " from user_synonyms " 
-     " where synonym_name=upper(:pkg_name) " 
-     " union all " 
-     " select table_name as package_name " 
-     " from all_synonyms " 
-     " where synonym_name=upper(:pkg_name) " 
-     " )" 
-     " where rownum = 1)" 
-     " )) " 
+     " :pkg_name is not null "
+     " and (package_name=upper(:pkg_name) "
+     " or package_name = "
+     " (select package_name from "
+     " (select table_name as package_name "
+     " from user_synonyms "
+     " where synonym_name=upper(:pkg_name) "
+     " union all "
+     " select table_name as package_name "
+     " from all_synonyms "
+     " where synonym_name=upper(:pkg_name) "
+     " )"
+     " where rownum = 1)"
+     " )) "
      "  and ((:owner<char[50]> is null "
      "        and owner= "
      "            (select owner from "
@@ -29158,11 +29390,11 @@ public:
      "order by position",
      db);
   }
-  
+
   otl_auto_array_ptr< otl_Tptr<otl_sp_parm_desc> > desc(otl_var_list_size);
   int desc_len=0;
   otl_sp_parm_desc parm;
-  
+
   args_strm<<proc_name;
   if(package_name==0)
    args_strm<<otl_null();
@@ -29199,7 +29431,7 @@ public:
   }
 
   if(desc_len==1){
-    if(desc.get_ptr()[0].get_ptr()->position==1 
+    if(desc.get_ptr()[0].get_ptr()->position==1
        && desc.get_ptr()[0].get_ptr()->data_type[0]=='*'){
     // procedure without any parameters
      otl_strcat(sql_stm,"BEGIN ");
@@ -29207,7 +29439,7 @@ public:
      otl_strcat(sql_stm,"; END;");
      stm_type=otl_constant_sql_type;
     return;
-    }if(desc.get_ptr()[0].get_ptr()->position==1 && 
+    }if(desc.get_ptr()[0].get_ptr()->position==1 &&
         desc.get_ptr()[0].get_ptr()->data_type[0]!='*'){
     // procedure with one parameter
       if(strcmp(desc.get_ptr()[0].get_ptr()->data_type,"REF CURSOR")==0){
@@ -29291,14 +29523,14 @@ public:
     }
    }
   }
-  
+
   // Checking if the procedure is of the "refcur" type
   bool refcur_flag=false;
   bool refcur_outpar=false;
   int refcur_count=0;
   bool inpar_only=true;
   for(i=0;i<desc_len;++i){
-   if(inpar_only && 
+   if(inpar_only &&
       strcmp(desc.get_ptr()[i].get_ptr()->in_out,"IN")!=0 &&
       strcmp(desc.get_ptr()[i].get_ptr()->data_type,"REF CURSOR")!=0)
     inpar_only=false;
@@ -29364,7 +29596,7 @@ public:
        otl_snprintf(temp_buf2,sizeof(temp_buf2),desc.get_ptr()[i].get_ptr()->bind_var,temp_buf); /* [i_a] */
      otl_strcat(sql_stm,temp_buf2);
     }
-    
+
     // procedure/function's name
     if(!full_name_printed){
      otl_strcat(sql_stm,full_name);
@@ -29462,7 +29694,7 @@ public:
       otl_strcat(sql_stm,"); ");
   }
   otl_strcat(sql_stm," END;");
-  
+
  }
 #endif
 
@@ -29485,7 +29717,7 @@ public:
    override->add_override(column_ndx,col_type,col_size);
  }
 
- 
+
   void set_all_column_types(const unsigned mask=0)
     OTL_NO_THROW
   {
@@ -29509,7 +29741,7 @@ public:
     if(shell==0)return;
     shell->lob_stream_flag=lob_stream_flag;
   }
- 
+
  void inc_next_ov(void)
  {
   if((*ov_len)==0)return;
@@ -29518,7 +29750,7 @@ public:
   else
    (*next_ov_ndx)=0;
  }
- 
+
  void inc_next_iov(void)
  {
   if((*iov_len)==0)return;
@@ -29563,7 +29795,7 @@ public:
   if(shell->ov==0)return 0;
   return &(shell->ov[shell->next_ov_ndx]);
  }
- 
+
   const char* get_stm_text(void)
   {
     const char* no_stm_text=OTL_NO_STM_TEXT;
@@ -29600,7 +29832,7 @@ public:
      return 0;
    }
  }
- 
+
  void create_var_desc(void)
  {int i;
   delete[] (*iov);
@@ -29661,7 +29893,7 @@ public:
    shell=new otl_stream_shell(0);
    shell_pt.assign(&shell);
    connected=0;
-   
+
    ref_ss=&(shell->ref_ss);
    ss=&(shell->ss);
    io=&(shell->io);
@@ -29674,17 +29906,17 @@ public:
    ov_len=&(shell->ov_len);
    next_ov_ndx=&(shell->next_ov_ndx);
    override=&(shell->override);
-   
+
    (*ref_ss)=0;
    (*io)=0;
    (*ss)=0;
    (*adb)=0;
-   (*ov)=0; 
+   (*ov)=0;
    (*ov_len)=0;
    (*next_iov_ndx)=0;
    (*next_ov_ndx)=0;
    (*auto_commit_flag)=1;
-   (*iov)=0; 
+   (*iov)=0;
    (*iov_len)=0;
 
  }
@@ -29732,7 +29964,7 @@ public:
   shell->flush_flag=true;
   open(arr_size,sqlstm,db,ref_cur_placeholder,sqlstm_label);
  }
- 
+
  otl_stream() OTL_NO_THROW:
  #if defined(OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE)
    otl_read_stream_interface(),
@@ -29761,8 +29993,8 @@ public:
   init_stream();
   shell->flush_flag=true;
  }
- 
- virtual ~otl_stream() 
+
+ virtual ~otl_stream()
 #if !defined(OTL_DESTRUCTORS_DO_NOT_THROW)
    OTL_THROWS_OTL_EXCEPTION
 #endif
@@ -29823,6 +30055,33 @@ public:
    return 1;
  }
 
+  void skip_to_end_of_row()
+  {
+    if(next_ov_ndx==0)
+      return;
+    if((*ov_len)==0)return;
+    last_oper_was_read_op=true;
+    switch(shell->stream_type){
+    case otl_no_stream_type:
+      break;
+    case otl_inout_stream_type:
+      last_eof_rc=(*io)->eof();
+      (*io)->skip_to_end_of_row();
+      break;
+    case otl_select_stream_type:
+      last_eof_rc=(*ss)->eof();
+      (*ss)->skip_to_end_of_row();
+      break;
+    case otl_refcur_stream_type:
+      last_eof_rc=(*ref_ss)->eof();
+      (*ref_ss)->skip_to_end_of_row();
+      break;
+    }
+    while ((*next_ov_ndx)<(*ov_len)-1)
+      ++(*next_ov_ndx);
+  }
+
+
   void reset_to_last_valid_row()
   {
     if((*io)){
@@ -29830,7 +30089,7 @@ public:
       (*io)->reset_to_last_valid_row();
     }
   }
- 
+
  void flush(const int rowoff=0,const bool force_flush=false)
    OTL_THROWS_OTL_EXCEPTION
  {
@@ -29839,7 +30098,7 @@ public:
    (*io)->flush(rowoff,force_flush);
   }
  }
- 
+
  void clean(const int clean_up_error_flag=0)
    OTL_THROWS_OTL_EXCEPTION
  {
@@ -29869,7 +30128,7 @@ public:
    (*ref_ss)->rewind();
   }
  }
- 
+
  int is_null(void) OTL_NO_THROW
  {
   if((*io))
@@ -29890,7 +30149,7 @@ public:
    (*io)->set_commit(auto_commit);
   }
  }
- 
+
  void open
  (const otl_stream_buffer_size_type arr_size,
   const char* sqlstm,
@@ -29962,7 +30221,7 @@ public:
      intern_cleanup();
      shell_pt.destroy();
      connected=0;
-     throw;     
+     throw;
    }
    connected=1;
    return;
@@ -30083,7 +30342,7 @@ public:
     break;
   }
   (*ss)=0; (*io)=0; (*ref_ss)=0;
-  if(adb!=0)(*adb)=0; 
+  if(adb!=0)(*adb)=0;
   adb=0;
  }
 
@@ -30124,7 +30383,7 @@ public:
     intern_cleanup();
     shell_pt.destroy();
     connected=0;
-    return; 
+    return;
    }
 #elif defined(OTL_UNCAUGHT_EXCEPTION_ON)
    if(otl_uncaught_exception()){
@@ -30133,7 +30392,7 @@ public:
     intern_cleanup();
     shell_pt.destroy();
     connected=0;
-    return; 
+    return;
    }
 #endif
    (*adb)->get_sc().add(shell,shell->orig_sql_stm.c_str());
@@ -30285,7 +30544,7 @@ public:
        (*io)->operator>>(s);
 #if defined(OTL_ORA_TIMESTAMP)
        OTL_TRACE_WRITE
-         (s, /* [i_a] */
+         (OTL_TRACE_FORMAT_DATETIME(s),
           "operator >>",
           "otl_datetime&");
 #endif
@@ -30297,7 +30556,7 @@ public:
        (*ss)->operator>>(s);
 #if defined(OTL_ORA_TIMESTAMP)
        OTL_TRACE_WRITE
-         (s, /* [i_a] */
+         (OTL_TRACE_FORMAT_DATETIME(s),
           "operator >>",
           "otl_datetime&");
 #endif
@@ -30309,7 +30568,7 @@ public:
        (*ref_ss)->operator>>(s);
 #if defined(OTL_ORA_TIMESTAMP)
        OTL_TRACE_WRITE
-         (s, /* [i_a] */
+         (OTL_TRACE_FORMAT_DATETIME(s),
           "operator >>",
           "otl_datetime&");
 #endif
@@ -30334,8 +30593,8 @@ public:
      {
        (*io)->operator<<(n);
 #if defined(OTL_ORA_TIMESTAMP)
-       OTL_TRACE_READ(n, /* [i_a] */
-                      "operator <<", /* [i_a] text fix */
+       OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(n),
+                      "operator <<",
                       "otl_datetime&");
 #endif
        break;
@@ -30344,8 +30603,8 @@ public:
      {
        (*ss)->operator<<(n);
 #if defined(OTL_ORA_TIMESTAMP)
-       OTL_TRACE_READ(n, /* [i_a] */
-                      "operator <<", /* [i_a] text fix */
+       OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(n),
+                      "operator <<",
                       "otl_datetime&");
 #endif
        break;
@@ -30355,8 +30614,8 @@ public:
        (*ref_ss)->operator<<(n);
        if(!(*ov)&&(*ref_ss)->get_sl()) create_var_desc();
 #if defined(OTL_ORA_TIMESTAMP)
-       OTL_TRACE_READ(n, /* [i_a] */
-                      "operator <<", /* [i_a] text fix */
+       OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(n),
+                      "operator <<",
                       "otl_datetime&");
 #endif
        break;
@@ -30369,7 +30628,7 @@ public:
  }
 
 #if (defined(OTL_ORA8I)||defined(OTL_ORA9I))&&defined(OTL_ORA_TIMESTAMP)
-  // already declared 
+  // already declared
 #else
  OTL_ORA_COMMON_READ_STREAM& operator>>(otl_datetime& s)
    OTL_THROWS_OTL_EXCEPTION
@@ -30396,7 +30655,7 @@ public:
     OTL_ORA7_STRING_TO_TIMESTAMP(tmp_str,s);
 #endif
     OTL_TRACE_WRITE
-      (s, /* [i_a] */
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&");
     return *this;
@@ -30423,7 +30682,7 @@ public:
     s.second=tmp.second-1;
 #endif
     OTL_TRACE_WRITE
-      (s, /* [i_a] */
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&")
       inc_next_ov();
@@ -30454,7 +30713,7 @@ public:
   s.second=tmp.second-1;
 #endif
   OTL_TRACE_WRITE
-    (s, /* [i_a] */
+    (OTL_TRACE_FORMAT_DATETIME(s),
      "operator >>",
      "otl_datetime&");
   inc_next_ov();
@@ -30484,7 +30743,7 @@ public:
 #endif
       OTL_ORA7_TIMESTAMP_TO_STRING(s,tmp_str);
       OTL_TRACE_READ
-       (s, /* [i_a] */
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp_str;
@@ -30499,7 +30758,7 @@ public:
      tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
      tmp.second=OTL_SCAST(unsigned char, (s.second+1));
      OTL_TRACE_READ
-       (s, /* [i_a] */
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp;
@@ -30516,7 +30775,7 @@ public:
   tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
   tmp.second=OTL_SCAST(unsigned char, (s.second+1));
   OTL_TRACE_READ
-    (s, /* [i_a] */
+    (OTL_TRACE_FORMAT_DATETIME(s),
      "operator <<",
      "otl_datetime&");
   (*this)<<tmp;
@@ -31602,88 +31861,88 @@ public:
   void subscribe(const char *name=0,int port=0,int timeout=1800)
   {
     if(subscrhp) unsubscribe();
-    if(!db||(db&&!db->connected)) 
+    if(!db||(db&&!db->connected))
       throw otl_exception
         (otl_error_msg_32,
          otl_error_code_32);
-    
+
     OCIEnv *envhp=db->get_connect_struct().get_envhp();
     OCIError *errhp=db->get_connect_struct().get_errhp();
     OCISvcCtx *svchp=db->get_connect_struct().get_svchp();
-    
+
     if(port)
-      check(OCIAttrSet(OTL_RCAST(dvoid*,envhp), 
-                       OTL_SCAST(ub4,OCI_HTYPE_ENV), 
+      check(OCIAttrSet(OTL_RCAST(dvoid*,envhp),
+                       OTL_SCAST(ub4,OCI_HTYPE_ENV),
                        OTL_RCAST(dvoid*,&port),
-                       0, 
-                       OCI_ATTR_SUBSCR_PORTNO, 
+                       0,
+                       OCI_ATTR_SUBSCR_PORTNO,
                        errhp));
 
     OCISubscription** temp_subscrhp=&subscrhp;
-    check(OCIHandleAlloc(OTL_RCAST(dvoid*,envhp), 
+    check(OCIHandleAlloc(OTL_RCAST(dvoid*,envhp),
                          OTL_RCAST(dvoid**,temp_subscrhp),
-                         OCI_HTYPE_SUBSCRIPTION, 
+                         OCI_HTYPE_SUBSCRIPTION,
                          OTL_SCAST(size_t,0),
                          OTL_RCAST(dvoid**,0)));
-    
+
     if(name && *name)
-      check(OCIAttrSet(subscrhp, 
-                       OCI_HTYPE_SUBSCRIPTION, 
-                       OTL_RCAST(void*,OTL_CCAST(char*,name)), 
-                       OTL_SCAST(ub4,strlen(name)), 
-                       OCI_ATTR_SUBSCR_NAME, 
+      check(OCIAttrSet(subscrhp,
+                       OCI_HTYPE_SUBSCRIPTION,
+                       OTL_RCAST(void*,OTL_CCAST(char*,name)),
+                       OTL_SCAST(ub4,strlen(name)),
+                       OCI_ATTR_SUBSCR_NAME,
                        errhp));
-    
+
     ub4 nspace = OCI_SUBSCR_NAMESPACE_DBCHANGE;
-    check(OCIAttrSet(subscrhp, 
-                     OCI_HTYPE_SUBSCRIPTION, 
-                     OTL_RCAST(dvoid*,&nspace), 
-                     sizeof(ub4), 
-                     OCI_ATTR_SUBSCR_NAMESPACE, 
+    check(OCIAttrSet(subscrhp,
+                     OCI_HTYPE_SUBSCRIPTION,
+                     OTL_RCAST(dvoid*,&nspace),
+                     sizeof(ub4),
+                     OCI_ATTR_SUBSCR_NAMESPACE,
                      errhp));
-    
-    check(OCIAttrSet(subscrhp, 
-                     OCI_HTYPE_SUBSCRIPTION, 
+
+    check(OCIAttrSet(subscrhp,
+                     OCI_HTYPE_SUBSCRIPTION,
 #if defined(__GNUC__) && (__GNUC__<4)
                      (void*)common_notification_callback,
 #else
                      OTL_RCAST(void*,common_notification_callback),
 #endif
-                     0, 
-                     OCI_ATTR_SUBSCR_CALLBACK, 
+                     0,
+                     OCI_ATTR_SUBSCR_CALLBACK,
                      errhp));
-    
+
     int rowids_needed=1;
-    check(OCIAttrSet(subscrhp, 
-                     OCI_HTYPE_SUBSCRIPTION, 
+    check(OCIAttrSet(subscrhp,
+                     OCI_HTYPE_SUBSCRIPTION,
                      OTL_RCAST(dvoid*,&rowids_needed),
-                     sizeof(ub4), 
-                     OCI_ATTR_CHNF_ROWIDS, 
+                     sizeof(ub4),
+                     OCI_ATTR_CHNF_ROWIDS,
                      errhp));
-    
-    check(OCIAttrSet(subscrhp, 
+
+    check(OCIAttrSet(subscrhp,
                      OTL_SCAST(ub4,OCI_HTYPE_SUBSCRIPTION),
                      OTL_RCAST(dvoid*,this),
-                     0, 
-                     OCI_ATTR_SUBSCR_CTX, 
+                     0,
+                     OCI_ATTR_SUBSCR_CTX,
                      errhp));
-    
+
     if(timeout)
-      check(OCIAttrSet(subscrhp, 
-                       OCI_HTYPE_SUBSCRIPTION, 
+      check(OCIAttrSet(subscrhp,
+                       OCI_HTYPE_SUBSCRIPTION,
                        OTL_RCAST(dvoid*,&timeout),
-                       0, 
-                       OCI_ATTR_SUBSCR_TIMEOUT, 
+                       0,
+                       OCI_ATTR_SUBSCR_TIMEOUT,
                        errhp));
-    
+
     check(OCISubscriptionRegister(svchp,&subscrhp,1,errhp,OCI_DEFAULT));
-    
+
   }
 
   void unsubscribe(void)
   {
     if(!subscrhp) return;
-    if(!db||(db&&!db->connected)) 
+    if(!db||(db&&!db->connected))
       throw otl_exception
         (otl_error_msg_32,
          otl_error_code_32);
@@ -31696,7 +31955,7 @@ public:
 
   void associate_table(const char *table_name)
   {
-    if(!db||(db&&!db->connected)) 
+    if(!db||(db&&!db->connected))
       throw otl_exception
         (otl_error_msg_32,
          otl_error_code_32);
@@ -31709,18 +31968,18 @@ public:
       throw otl_exception(db->get_connect_struct(),sql_stmt);
     OCIError *errhp=db->get_connect_struct().get_errhp();
     OCIStmt *stmthp=s.get_shell()->ss->get_cursor_struct().cda;
-    check(OCIAttrSet(stmthp, 
-                     OCI_HTYPE_STMT, 
-                     subscrhp, 
-                     0, 
-                     OCI_ATTR_CHNF_REGHANDLE, 
+    check(OCIAttrSet(stmthp,
+                     OCI_HTYPE_STMT,
+                     subscrhp,
+                     0,
+                     OCI_ATTR_CHNF_REGHANDLE,
                    errhp));
     s<<arg;
   }
 
   void associate_query(const char *stmt)
   {
-    if(!db||(db&&!db->connected)) 
+    if(!db||(db&&!db->connected))
       throw otl_exception
         (otl_error_msg_32,
          otl_error_code_32);
@@ -31729,11 +31988,11 @@ public:
       throw otl_exception(db->get_connect_struct(),stmt);
     OCIError *errhp=db->get_connect_struct().get_errhp();
     OCIStmt *stmthp=s.get_shell()->ss->get_cursor_struct().cda;
-    check(OCIAttrSet(stmthp, 
-                     OCI_HTYPE_STMT, 
-                     subscrhp, 
-                     0, 
-                     OCI_ATTR_CHNF_REGHANDLE, 
+    check(OCIAttrSet(stmthp,
+                     OCI_HTYPE_STMT,
+                     subscrhp,
+                     0,
+                     OCI_ATTR_CHNF_REGHANDLE,
                    errhp));
     s<<0;
   }
@@ -31742,7 +32001,7 @@ protected:
 
   void check(ub4 ret_code)
   {
-    if(ret_code!=OCI_SUCCESS) 
+    if(ret_code!=OCI_SUCCESS)
       throw otl_exception(db->get_connect_struct());
   }
 
@@ -31765,7 +32024,7 @@ protected:
   virtual void OnRowUpdate( text *table_name, text *row_id ) = 0;
   virtual void OnRowDelete( text *table_name, text *row_id ) = 0;
 
-protected:  
+protected:
   otl_connect* db;
 
 private:
@@ -31775,7 +32034,7 @@ private:
   void notification_callback
   (dvoid* /*payload*/, ub4 /*paylen*/, dvoid *desc, ub4 /*mode*/)
   {
-    if(!db||(db&&!db->connected)) 
+    if(!db||(db&&!db->connected))
       return;
     ub4 num_rows = 0;
     OCIColl *row_changes=0;
@@ -31787,77 +32046,77 @@ private:
     try{
       OCIEnv *envhp=db->get_connect_struct().get_envhp();
       OCIError *errhp=db->get_connect_struct().get_errhp();
-      
+
       //----------------
       ub4 notify_type;
-      check(OCIAttrGet(desc, 
-                       OCI_DTYPE_CHDES, 
-                       &notify_type, 
+      check(OCIAttrGet(desc,
+                       OCI_DTYPE_CHDES,
+                       &notify_type,
                        0,
-                       OCI_ATTR_CHDES_NFYTYPE, 
+                       OCI_ATTR_CHDES_NFYTYPE,
                        errhp));
-      
+
       switch(notify_type){
-      case OCI_EVENT_STARTUP: 
-        OnStartup(); 
+      case OCI_EVENT_STARTUP:
+        OnStartup();
         return;
-      case OCI_EVENT_SHUTDOWN: 
-        OnInstanceShutdown(); 
+      case OCI_EVENT_SHUTDOWN:
+        OnInstanceShutdown();
         return;
-      case OCI_EVENT_SHUTDOWN_ANY: 
-        OnAnyInstanceShutdown(); 
+      case OCI_EVENT_SHUTDOWN_ANY:
+        OnAnyInstanceShutdown();
         return;
-      case OCI_EVENT_DEREG: 
-        OnDeRegistration(); 
+      case OCI_EVENT_DEREG:
+        OnDeRegistration();
         return;
-      case OCI_EVENT_OBJCHANGE: 
+      case OCI_EVENT_OBJCHANGE:
         break;
-      default: 
+      default:
         return;
       }
 
       OCIColl *table_changes=0;
-      check(OCIAttrGet(desc, 
-                       OCI_DTYPE_CHDES, 
-                       &table_changes, 
-                       0, 
-                       OCI_ATTR_CHDES_TABLE_CHANGES, 
+      check(OCIAttrGet(desc,
+                       OCI_DTYPE_CHDES,
+                       &table_changes,
+                       0,
+                       OCI_ATTR_CHDES_TABLE_CHANGES,
                        errhp));
       if(!table_changes)return;
-      
+
       ub4 num_tables=0;
-      check(OCICollSize(envhp, 
-                        errhp, 
+      check(OCICollSize(envhp,
+                        errhp,
                         OTL_RCAST(CONST OCIColl*,table_changes),
                         OTL_RCAST(sb4*,&num_tables)));
       if(!num_tables)return;
-      
+
       for(unsigned int i=0;i<num_tables;i++){
         int exist;
         dvoid *elemind=0, *table_desc, **table_descp;
         dvoid*** temp_table_descp=&table_descp;
-        check(OCICollGetElem(envhp, 
-                             errhp, 
-                             table_changes, 
-                             i, 
-                             &exist, 
+        check(OCICollGetElem(envhp,
+                             errhp,
+                             table_changes,
+                             i,
+                             &exist,
                              OTL_RCAST(dvoid**,temp_table_descp),
                              &elemind));
         table_desc=*table_descp;
         text *table_name;
-        check(OCIAttrGet(table_desc, 
-                         OCI_DTYPE_TABLE_CHDES, 
-                         &table_name, 
-                         0, 
-                         OCI_ATTR_CHDES_TABLE_NAME, 
+        check(OCIAttrGet(table_desc,
+                         OCI_DTYPE_TABLE_CHDES,
+                         &table_name,
+                         0,
+                         OCI_ATTR_CHDES_TABLE_NAME,
                          errhp));
-        
+
         ub4 table_op;
-        check(OCIAttrGet(table_desc, 
-                         OCI_DTYPE_TABLE_CHDES, 
+        check(OCIAttrGet(table_desc,
+                         OCI_DTYPE_TABLE_CHDES,
                          OTL_RCAST(dvoid*,&table_op),
-                         0, 
-                         OCI_ATTR_CHDES_TABLE_OPFLAGS, 
+                         0,
+                         OCI_ATTR_CHDES_TABLE_OPFLAGS,
                          errhp));
         bool all_rows=!!(table_op & OCI_OPCODE_ALLROWS);   /* [i_a] 'ub4' : forcing value to bool 'true' or 'false' (performance warning) */
         switch(table_op){
@@ -31866,61 +32125,61 @@ private:
           continue;
         case OCI_OPCODE_ALTER:
         case (OCI_OPCODE_ALTER+OCI_OPCODE_ALLROWS):
-          OnTableAlter(table_name,all_rows); 
+          OnTableAlter(table_name,all_rows);
           continue;
-        case OCI_OPCODE_DROP: 
-        case (OCI_OPCODE_DROP+OCI_OPCODE_ALLROWS): 
+        case OCI_OPCODE_DROP:
+        case (OCI_OPCODE_DROP+OCI_OPCODE_ALLROWS):
           OnTableDrop(table_name,all_rows);
           continue;
         case (OCI_OPCODE_INSERT+OCI_OPCODE_ALLROWS):
         case (OCI_OPCODE_UPDATE+OCI_OPCODE_ALLROWS):
-        case (OCI_OPCODE_DELETE+OCI_OPCODE_ALLROWS): 
+        case (OCI_OPCODE_DELETE+OCI_OPCODE_ALLROWS):
           OnTableChange(table_name,all_rows);
           continue;
         case OCI_OPCODE_INSERT:
         case OCI_OPCODE_UPDATE:
-        case OCI_OPCODE_DELETE: 
-          OnTableChange(table_name,all_rows); 
+        case OCI_OPCODE_DELETE:
+          OnTableChange(table_name,all_rows);
           break;
         }
-        
+
         row_changes=0;
         check(OCIAttrGet(table_desc,
-                         OCI_DTYPE_TABLE_CHDES, 
-                         &row_changes, 
-                         0, 
-                         OCI_ATTR_CHDES_TABLE_ROW_CHANGES, 
+                         OCI_DTYPE_TABLE_CHDES,
+                         &row_changes,
+                         0,
+                         OCI_ATTR_CHDES_TABLE_ROW_CHANGES,
                          errhp));
         if(!row_changes)continue;
         num_rows=0;
         check(OCICollSize(envhp,errhp,row_changes,OTL_RCAST(sb4*,&num_rows)));
         for(j=0;j<num_rows;j++){
           elemind=0;
-          check(OCICollGetElem(envhp, 
-                               errhp, 
-                               row_changes, 
-                               j, 
-                               &exist, 
-                               OTL_RCAST(dvoid**,temp_row_descp), 
+          check(OCICollGetElem(envhp,
+                               errhp,
+                               row_changes,
+                               j,
+                               &exist,
+                               OTL_RCAST(dvoid**,temp_row_descp),
                                &elemind));
           row_desc=*row_descp;
-          
-          check(OCIAttrGet(row_desc, 
-                           OCI_DTYPE_ROW_CHDES, 
+
+          check(OCIAttrGet(row_desc,
+                           OCI_DTYPE_ROW_CHDES,
                            OTL_RCAST(dvoid*,&row_id),
-                           &rowid_size, 
-                           OCI_ATTR_CHDES_ROW_ROWID, 
+                           &rowid_size,
+                           OCI_ATTR_CHDES_ROW_ROWID,
                            errhp));
-          
+
           switch(table_op){
-          case OCI_OPCODE_INSERT: 
-            OnRowInsert( table_name, row_id ); 
+          case OCI_OPCODE_INSERT:
+            OnRowInsert( table_name, row_id );
             continue;
-          case OCI_OPCODE_UPDATE: 
-            OnRowUpdate( table_name, row_id ); 
+          case OCI_OPCODE_UPDATE:
+            OnRowUpdate( table_name, row_id );
             continue;
-          case OCI_OPCODE_DELETE: 
-            OnRowDelete( table_name, row_id ); 
+          case OCI_OPCODE_DELETE:
+            OnRowDelete( table_name, row_id );
             continue;
           }
         }
@@ -31931,11 +32190,11 @@ private:
   }
 
   static void common_notification_callback
-  (dvoid *ctx, 
-   OCISubscription* /*subscrhp*/, 
-   dvoid *payload, 
-   ub4 paylen, 
-   dvoid *desc, 
+  (dvoid *ctx,
+   OCISubscription* /*subscrhp*/,
+   dvoid *payload,
+   ub4 paylen,
+   dvoid *desc,
    ub4 mode)
   {
     if(!ctx) return;
@@ -32145,8 +32404,8 @@ OTL_ORA8_NAMESPACE_END
 
 #if defined(OTL_STL) && !defined(OTL_STLPORT)
 
-#define STL_INPUT_ITERATOR_TO_DERIVE_FROM 
-#define STL_OUTPUT_ITERATOR_TO_DERIVE_FROM 
+#define STL_INPUT_ITERATOR_TO_DERIVE_FROM
+#define STL_OUTPUT_ITERATOR_TO_DERIVE_FROM
 
 #elif defined(OTL_STLPORT)
 
@@ -32327,7 +32586,7 @@ OTL_ODBC_NAMESPACE_END
 class otl_ltcharstar{
 public:
 #if defined(OTL_STL)
- bool 
+ bool
 #else
  int
 #endif
@@ -32338,7 +32597,7 @@ public:
 #else
 #if defined(__STRICT_ANSI__)
    while(otl_to_upper(*s1)==otl_to_upper(*s2)&&*s1){
-     ++s1; 
+     ++s1;
      ++s2;
    }
    return *s1 < *s2;
@@ -33118,7 +33377,7 @@ protected:
   bool lob_stream_mode_flag_;
 
 #if defined(OTL_STL)
-  typedef STD_NAMESPACE_PREFIX 
+  typedef STD_NAMESPACE_PREFIX
     map<const char*,int,otl_ltcharstar> var_name2pos_map_type;
   var_name2pos_map_type var_name2pos_map_;
 #endif
@@ -33150,7 +33409,7 @@ protected:
       throw OTLException
         (otl_error_msg_26,
          otl_error_code_26,
-         str_->get_stm_text(), 
+         str_->get_stm_text(),
          var_name);
   }
 #endif
@@ -33162,14 +33421,14 @@ protected:
       throw OTLException
         (otl_error_msg_26,
          otl_error_code_26,
-         str_->get_stm_text(), 
+         str_->get_stm_text(),
          var_name);
     }
   }
 #endif
 
-  void check_type(const int pos, 
-                  const int type_code, 
+  void check_type(const int pos,
+                  const int type_code,
                   const bool lob_stream_arg=false)
   {
     switch(out_vars_[pos-1].ftype){
@@ -33185,7 +33444,7 @@ protected:
       if(type_code==otl_var_long_string)
         return;
     case otl_var_raw:
-      if(type_code==otl_var_long_string && 
+      if(type_code==otl_var_long_string &&
          lob_stream_mode_flag_ &&
          lob_stream_arg){
         char var_info1[255];
@@ -33305,7 +33564,7 @@ protected:
     }
     return vars_len;
   }
-  
+
   void allocate_arrays(void)
   {
     if(out_vars_){
@@ -33387,7 +33646,7 @@ protected:
     }
     out_vars_constructed_=true;
   }
-  
+
 private:
 
   otl_stream_read_iterator(const otl_stream_read_iterator&):
@@ -33411,7 +33670,7 @@ private:
   {
     return *this;
   }
- 
+
 };
 
 #endif
