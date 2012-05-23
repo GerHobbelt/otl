@@ -1,12 +1,23 @@
-// ==============================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.199,
-// Copyright (C) Sergei Kuchin, 1996,2009
-// Author: Sergei Kuchin
-// This library is free software. Permission to use, copy,
-// modify and redistribute it for any purpose is hereby granted
-// without fee, provided that the above copyright notice appear
-// in all copies.
-// ==============================================================
+// =================================================================================
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.201,
+// Copyright (C) 1996-2009, Sergei Kuchin (skuchin@gmail.com)
+// 
+// This library is free software. Permission to use, copy, modify,
+// and/or distribute this software for any purpose with or without fee
+// is hereby granted, provided that the above copyright notice and
+// this permission notice appear in all copies.
+//
+// THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+// WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+// ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+// WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+// ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+// OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
+// a.k.a. as Open BSD license
+// (http://www.openbsd.org/cgi-bin/cvsweb/~checkout~/src/share/misc/license.template
+// =================================================================================
 
 #ifndef __OTL_H__
 #define __OTL_H__
@@ -15,7 +26,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0400C7L)
+#define OTL_VERSION_NUMBER (0x0400C9L)
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #pragma warning (disable:4351)
@@ -85,6 +96,26 @@
 #define OTL_UNCAUGHT_EXCEPTION_ON
 #endif
 
+#if !defined(OTL_TRACE_LEVEL)
+
+#define OTL_TRACE_FORMAT_TZ_DATETIME(s)
+#define OTL_TRACE_FORMAT_DATETIME(s)
+
+#else
+
+#if !defined(OTL_TRACE_FORMAT_DATETIME)
+
+#define OTL_TRACE_FORMAT_TZ_DATETIME(s)                         \
+s.month<<"/"<<s.day<<"/"<<s.year                                \
+<<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction    \
+<<" "<<s.tz_hour<<":"<<s.tz_minute
+
+#define OTL_TRACE_FORMAT_DATETIME(s)                            \
+s.month<<"/"<<s.day<<"/"<<s.year                                \
+<<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction
+
+#endif
+#endif
 
 #if defined(OTL_ORA11G)
 #define OTL_ORA10G_R2
@@ -815,43 +846,67 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
 #endif
 
 #if !defined(OTL_TRACE_READ)
-#define OTL_TRACE_READ(val,function,type)               \
-  if(OTL_TRACE_LEVEL & 0x10){                           \
-    otl_var_desc* temp_vdesc=describe_next_in_var();    \
-    OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;            \
-    OTL_TRACE_STREAM<<"otl_stream(this=";               \
-    OTL_TRACE_STREAM<<OTL_RCAST(void*,this);            \
-    OTL_TRACE_STREAM<<")::" function "(" type ": ";     \
-    OTL_TRACE_STREAM<<"ftype=";                         \
-    OTL_TRACE_STREAM<<temp_vdesc->ftype;                \
-    OTL_TRACE_STREAM<<", placeholder=";                 \
-    OTL_TRACE_STREAM<<temp_vdesc->name;                 \
-    OTL_TRACE_STREAM<<", value=";                       \
-    OTL_TRACE_STREAM<<val;                              \
-    OTL_TRACE_STREAM <<");";                            \
-    OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;            \
+
+#define OTL_TRACE_READ(val,function,type)                       \
+  if(OTL_TRACE_LEVEL & 0x10){                                   \
+    otl_var_desc* temp_vdesc=describe_next_in_var();            \
+    if(temp_vdesc){                                             \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                  \
+      OTL_TRACE_STREAM<<"otl_stream(this=";                     \
+      OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                  \
+      OTL_TRACE_STREAM<<")::" function "(" type ": ";           \
+      OTL_TRACE_STREAM<<"ftype=";                               \
+      OTL_TRACE_STREAM<<temp_vdesc->ftype;                      \
+      OTL_TRACE_STREAM<<", placeholder=";                       \
+      OTL_TRACE_STREAM<<temp_vdesc->name;                       \
+      OTL_TRACE_STREAM<<", value=";                             \
+      OTL_TRACE_STREAM<<val;                                    \
+      OTL_TRACE_STREAM <<");";                                  \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                  \
+    }else{                                                      \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                  \
+      OTL_TRACE_STREAM<<"loading superfluous input variable";   \
+      OTL_TRACE_STREAM<<"::" function "(" type ": ";            \
+      OTL_TRACE_STREAM<<", value=";                             \
+      OTL_TRACE_STREAM<<val;                                    \
+      OTL_TRACE_STREAM<<");";                                   \
+      OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                  \
+    }                                                           \
   }
 #endif
 
 #if !defined(OTL_TRACE_WRITE)
-#define OTL_TRACE_WRITE(val,function,type)              \
-   if(OTL_TRACE_LEVEL & 0x10){                          \
-     otl_var_desc* temp_vdesc=describe_next_out_var();  \
-     OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;           \
-     OTL_TRACE_STREAM<<"otl_stream(this=";              \
-     OTL_TRACE_STREAM<<OTL_RCAST(void*,this);           \
-     OTL_TRACE_STREAM<<")::" function "(" type " : ";   \
-     OTL_TRACE_STREAM<<"ftype=";                        \
-     OTL_TRACE_STREAM<<temp_vdesc->ftype;               \
-     OTL_TRACE_STREAM<<", placeholder=";                \
-     OTL_TRACE_STREAM<<temp_vdesc->name;                \
-     OTL_TRACE_STREAM<<", value=";                      \
-     if(this->is_null())                                \
-       OTL_TRACE_STREAM<<"NULL";                        \
-     else                                               \
-       OTL_TRACE_STREAM<<val;                           \
-     OTL_TRACE_STREAM<<");";                            \
-     OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;           \
+#define OTL_TRACE_WRITE(val,function,type)                      \
+   if(OTL_TRACE_LEVEL & 0x10){                                  \
+     otl_var_desc* temp_vdesc=describe_next_out_var();          \
+     if (temp_vdesc){                                           \
+       OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                 \
+       OTL_TRACE_STREAM<<"otl_stream(this=";                    \
+       OTL_TRACE_STREAM<<OTL_RCAST(void*,this);                 \
+       OTL_TRACE_STREAM<<")::" function "(" type " : ";         \
+       OTL_TRACE_STREAM<<"ftype=";                              \
+       OTL_TRACE_STREAM<<temp_vdesc->ftype;                     \
+       OTL_TRACE_STREAM<<", placeholder=";                      \
+       OTL_TRACE_STREAM<<temp_vdesc->name;                      \
+       OTL_TRACE_STREAM<<", value=";                            \
+       if(this->is_null())                                      \
+         OTL_TRACE_STREAM<<"NULL";                              \
+       else                                                     \
+         OTL_TRACE_STREAM<<val;                                 \
+       OTL_TRACE_STREAM<<");";                                  \
+       OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                 \
+     }else{                                                     \
+       OTL_TRACE_STREAM<<OTL_TRACE_LINE_PREFIX;                 \
+       OTL_TRACE_STREAM<<"writing superfluous output variable"; \
+       OTL_TRACE_STREAM<<"::" function "(" type " : ";          \
+       OTL_TRACE_STREAM<<", value=";                            \
+       if(this->is_null())                                      \
+         OTL_TRACE_STREAM<<"NULL";                              \
+       else                                                     \
+         OTL_TRACE_STREAM<<val;                                 \
+       OTL_TRACE_STREAM<<");";                                  \
+       OTL_TRACE_STREAM<<OTL_TRACE_LINE_SUFFIX;                 \
+     }                                                          \
    }
 #endif
 
@@ -965,7 +1020,7 @@ const int otl_unsupported_type=-10000;
 
 #define OTL_CONST_EXCEPTION const
 
-#if defined OTL_FUNC_THROW_SPEC_ON
+#if defined(OTL_FUNC_THROW_SPEC_ON)
 #define OTL_THROWS_OTL_EXCEPTION throw(otl_exception)
 #define OTL_NO_THROW throw()
 #else
@@ -1517,6 +1572,14 @@ inline unsigned int otl_to_fraction
 (unsigned int fraction,int frac_prec)
 {
   if(fraction==0||frac_prec==0)return fraction;
+  int fraction_degree=otl_decimal_degree(fraction);
+  if(fraction_degree>frac_prec){
+    // in case if the actual fraction value is beyond the "fraction
+    // precision" range, truncate the value
+    int excess_decimal_digits=fraction_degree-frac_prec;
+    for(int iter=1;iter<=excess_decimal_digits;++iter)
+      fraction/=10;
+  }
   int degree_diff=9-frac_prec;
   for(int i=0;i<degree_diff;++i)
     fraction*=10;
@@ -1996,9 +2059,12 @@ public:
     return this_is_last_piece_;
   }
 
-  unsigned char& operator[](int ndx){return v[ndx];}
+  unsigned char& operator[](int ndx) 
+  {
+    return v[ndx];
+  }
 
-  virtual void null_terminate_string(const int alen)
+  virtual void null_terminate_string(const int alen) 
   {
     (*this)[alen]=0;
   }
@@ -2095,7 +2161,7 @@ public:
 
   virtual ~otl_long_unicode_string(){}
   
-  OTL_CHAR& operator[](int ndx)
+  OTL_CHAR& operator[](int ndx) 
   {
     return OTL_RCAST(OTL_CHAR*,v)[ndx];
   }
@@ -3318,6 +3384,8 @@ STD_NAMESPACE_PREFIX ostream& operator<<
  return s;
 }
 
+#if defined(OTL_DISABLE_OPERATOR_GT_GT_FOR_OTL_VALUE_OTL_DATETIME)
+#else
 inline STD_NAMESPACE_PREFIX ostream& operator<<(
  STD_NAMESPACE_PREFIX ostream& s, 
  const otl_value<otl_datetime>& var)
@@ -3325,11 +3393,17 @@ inline STD_NAMESPACE_PREFIX ostream& operator<<(
  if(var.ind)
    s<<"NULL";
  else{
-   s<<var.v.month<<"/"<<var.v.day<<"/"<<var.v.year<<" "
-    <<var.v.hour<<":"<<var.v.minute<<":"<<var.v.second;
+#if !defined(OTL_TRACE_LEVEL)
+   s<<var.v.month<<"/"<<var.v.day<<"/"<<var.v.year 
+    <<" "<<var.v.hour<<":"<<var.v.minute
+    <<":"<<var.v.second<<"."<<var.v.fraction;
+#else
+   s<<OTL_TRACE_FORMAT_DATETIME(var.v);
+#endif
  }
  return s;
 }
+#endif
 
 #endif
 
@@ -6302,6 +6376,9 @@ public:
   {
     return this->cur_row==-1?0:this->cur_size-this->cur_row; 
   }
+
+  int get_prefetched_row_count() const {return this->row_count;}
+  int get_row_count() const {return this->row_count;}
   int get_sl_len() const {return sl_len;}
   otl_tmpl_variable<TVariableStruct>* get_sl(){return sl;}
   otl_column_desc* get_sl_desc(){return sl_desc;}
@@ -6464,6 +6541,21 @@ public:
   return !eof_status;
  }
 
+
+ void skip_to_end_of_row()
+ {
+   check_if_executed();
+   if(eof_intern())return;
+   while(cur_col<sl_len-1){
+     ++cur_col;
+     null_fetched=sl[cur_col].is_null(this->cur_row);
+   }
+   eof_status=this->next();
+   cur_col=0;
+   if(!eof_intern())
+     cur_col=-1;
+  ++_rfc;
+ }
 
  void bind_all(void)
  {int i;
@@ -6792,9 +6884,7 @@ public:
            this->stm_text,
       temp_var_info);
       }
-      
       this->vl[cur_in]->set_not_null(0);
-      
     }
     get_in_next();
     return *this;
@@ -7284,6 +7374,32 @@ public:
  {
   check_in_var();
   switch(this->vl[cur_in]->get_ftype()){
+  case otl_var_varchar_long:
+    {
+      unsigned char* c=OTL_RCAST(unsigned char*,this->vl[cur_in]->val(0));
+      int len=OTL_CCAST(otl_long_string*,&s)->len();
+      this->vl[cur_in]->set_not_null(0);
+      if(len>this->vl[cur_in]->actual_elem_size()){
+        otl_var_info_var
+          (this->vl[cur_in]->get_name(),
+           this->vl[cur_in]->get_ftype(),
+           otl_var_long_string,
+           var_info,
+           sizeof(var_info));
+        if(this->adb)this->adb->increment_throw_count();
+        if(this->adb&&this->adb->get_throw_count()>1)return *this;
+        if(otl_uncaught_exception()) return *this; 
+        throw OTL_TMPL_EXCEPTION
+          (otl_error_msg_5,
+           otl_error_code_5,
+           this->stm_label?this->stm_label:
+           this->stm_text,
+           var_info);
+      }
+      otl_memcpy(c,s.v,len,this->vl[cur_in]->get_ftype());
+      this->vl[cur_in]->set_len(len,0);
+    }
+    break;
   case otl_var_raw_long:
     {
       unsigned char* c=OTL_RCAST(unsigned char*,this->vl[cur_in]->val(0));
@@ -8513,8 +8629,7 @@ otl_uncaught_exception()){
      {
        unsigned char* c=OTL_RCAST(unsigned char*,this->vl[cur_x]->val(cur_y));
        int len=OTL_CCAST(otl_long_string*,&s)->len();
-       if(this->vl[cur_x]->get_ftype()!=otl_var_raw)
-         this->vl[cur_x]->set_not_null(cur_y);
+       this->vl[cur_x]->set_not_null(cur_y);
        if(len>this->vl[cur_x]->actual_elem_size()){
          otl_var_info_var
            (this->vl[cur_x]->get_name(),
@@ -8963,6 +9078,21 @@ public:
  {
   return null_fetched;
  }
+
+  void skip_to_end_of_row()
+  {
+    if(eof())return;
+    if(iv_len==0)return;
+    if(in_y_len==0)return;
+    if(cur_in_y<in_y_len-1){
+      ++cur_in_y;
+      cur_in_x=0;
+    }else{
+      cur_in_y=0;
+      cur_in_x=0;
+      in_y_len=0;
+    }
+  }
 
  void get_in_next(void)
  {
@@ -10560,7 +10690,8 @@ public:
    status=SQLAllocConnect(henv, &hdbc);
 #endif
    if(status!=SQL_SUCCESS&&status!=SQL_SUCCESS_WITH_INFO)return 0;
-  }
+  }else
+    status=SQL_SUCCESS;
 
 #ifndef OTL_ODBC_MYSQL
 #if (ODBCVER >= 0x0300)
@@ -13696,7 +13827,7 @@ public:
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     try{
       logoff();
-    }catch(otl_exception&){
+    }catch(OTL_CONST_EXCEPTION otl_exception&){
     }
 #endif
   }
@@ -14015,7 +14146,7 @@ public:
    try{
      if(!closed_flag)
        close();
-   }catch(otl_exception&){
+   }catch(OTL_CONST_EXCEPTION otl_exception&){
    }
 #else
    if(!closed_flag)
@@ -14357,8 +14488,16 @@ protected:
        this->get_stm_text());
   }
 
-
 public:
+
+  int get_prefetched_row_count() const 
+  {
+    if(*ss){
+      (*adb)->reset_throw_count();
+      return (*ss)->get_prefetched_row_count();
+    }
+    return 0;
+  }
 
   bool get_lob_stream_flag() const 
   {
@@ -14434,6 +14573,29 @@ public:
   }else
    return 0;
  }
+
+  void skip_to_end_of_row()
+  {
+    if(next_ov_ndx==0)
+      return;
+    if((*ov_len)==0)return;
+    last_oper_was_read_op=true;
+    switch(shell->stream_type){
+    case otl_odbc_no_stream:
+      break;
+    case otl_odbc_io_stream:
+      last_eof_rc=(*io)->eof();
+      (*io)->skip_to_end_of_row();
+      break;
+    case otl_odbc_select_stream:
+      last_eof_rc=(*ss)->eof();
+      (*ss)->skip_to_end_of_row();
+      break;
+    }
+    while ((*next_ov_ndx)<(*ov_len)-1)
+      ++(*next_ov_ndx);
+  }
+
 
   operator int(void) OTL_THROWS_OTL_EXCEPTION
   {
@@ -15293,15 +15455,12 @@ public:
 #endif
 #if defined(OTL_ODBC_TIME_ZONE)
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction
-        <<" "<<s.tz_hour<<":"<<s.tz_minute,
+      (OTL_TRACE_FORMAT_TZ_DATETIME(s),
        "operator >>",
        "otl_datetime&");
 #else
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&");
 #endif
@@ -15358,8 +15517,7 @@ public:
 
 #endif
   OTL_TRACE_WRITE
-    (s.month<<"/"<<s.day<<"/"
-     <<s.year<<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+    (OTL_TRACE_FORMAT_DATETIME(s),
      "operator >>",
      "otl_datetime&");
   inc_next_ov();
@@ -15386,15 +15544,12 @@ public:
      OTL_ODBC_TIMESTAMP_TO_STRING(s,tmp_str);
 #if defined(OTL_ODBC_TIME_ZONE)
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction
-        <<" "<<s.tz_hour<<":"<<s.tz_minute,
+       (OTL_TRACE_FORMAT_TZ_DATETIME(s),
         "operator <<",
         "otl_datetime&");
 #else
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
 #endif
@@ -15409,8 +15564,7 @@ public:
       tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
       tmp.fraction=otl_to_fraction(s.fraction,s.frac_precision);
       (*this)<<tmp;  
-      OTL_TRACE_READ(s.month<<"/"<<s.day<<"/"<<s.year
-                     <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s),
                      "operator >>",
                      "otl_datetime&");
       inc_next_iov();
@@ -15425,8 +15579,7 @@ public:
     tmp.second=OTL_SCAST(SQLSMALLINT,s.second);
     tmp.fraction=otl_to_fraction(s.fraction,s.frac_precision);
     (*this)<<tmp;  
-    OTL_TRACE_READ(s.month<<"/"<<s.day<<"/"<<s.year
-                   <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+    OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s),
                    "operator <<",
                    "otl_datetime&");
     inc_next_iov();
@@ -16208,10 +16361,10 @@ public:
    {
      char temp_str[otl_bigint_str_size];
      _i64toa(n,temp_str,10);
-     OTL_TRACE_READ(temp_str,"operator >>","BIGINT")
+     OTL_TRACE_READ(temp_str,"operator <<","BIGINT")
    }
 #elif !defined(_MSC_VER) && defined(OTL_TRACE_LEVEL)
-   OTL_TRACE_READ(n,"operator >>","BIGINT");
+   OTL_TRACE_READ(n,"operator <<","BIGINT");
 #endif
    switch(shell->stream_type){
    case otl_odbc_no_stream:
@@ -17759,7 +17912,7 @@ public:
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     try{
       logoff();
-    }catch(otl_exception&){
+    }catch(OTL_CONST_EXCEPTION otl_exception&){
     }
 #endif
   }
@@ -18271,6 +18424,22 @@ public:
  {
   return !ret_code;
  }
+
+ void skip_to_end_of_row()
+ {
+   check_if_executed();
+   if(eof())return;
+   while(cur_col<sl_len-1){
+     ++cur_col;
+     null_fetched=sl[cur_col].is_null(this->cur_row);
+   }
+   ret_code=this->next();
+   cur_col=0;
+   if(!eof())
+     cur_col=-1;
+  ++_rfc;
+ }
+
 
  otl_ref_select_stream& operator>>(otl_time0& t)
  {
@@ -19170,6 +19339,33 @@ protected:
   }
 
 public:
+
+
+  void skip_to_end_of_row()
+  {
+    if(next_ov_ndx==0)
+      return;
+    if((*ov_len)==0)return;
+    last_oper_was_read_op=true;
+    switch(shell->stream_type){
+    case otl_ora7_no_stream:
+      break;
+    case otl_ora7_io_stream:
+      last_eof_rc=(*io)->eof();
+      (*io)->skip_to_end_of_row();
+      break;
+    case otl_ora7_select_stream:
+      last_eof_rc=(*ss)->eof();
+      (*ss)->skip_to_end_of_row();
+      break;
+    case otl_ora7_refcur_select_stream:
+      last_eof_rc=(*ref_ss)->eof();
+      (*ref_ss)->skip_to_end_of_row();
+      break;
+    }
+    while ((*next_ov_ndx)<(*ov_len)-1)
+      ++(*next_ov_ndx);
+  }
 
   void reset_to_last_valid_row()
   {
@@ -20131,8 +20327,7 @@ public:
     OTL_ORA7_STRING_TO_TIMESTAMP(tmp_str,s);
 #endif
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&");
     return *this;
@@ -20159,8 +20354,7 @@ public:
     s.second=tmp.second-1;
 #endif
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&")
       inc_next_ov();
@@ -20189,8 +20383,7 @@ public:
   s.second=tmp.second-1;
 #endif
   OTL_TRACE_WRITE
-    (s.month<<"/"<<s.day<<"/"<<s.year
-     <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+    (OTL_TRACE_FORMAT_DATETIME(s),
      "operator >>",
      "otl_datetime&")
   inc_next_ov();
@@ -20208,8 +20401,7 @@ public:
      char tmp_str[100];
      OTL_ORA7_TIMESTAMP_TO_STRING(s,tmp_str);
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp_str;
@@ -20224,8 +20416,7 @@ public:
      tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
      tmp.second=OTL_SCAST(unsigned char, (s.second+1));
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp;
@@ -20242,8 +20433,7 @@ public:
      tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
      tmp.second=OTL_SCAST(unsigned char, (s.second+1));
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp;
@@ -24519,7 +24709,7 @@ public:
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
    try{
      close();
-   }catch(otl_exception&){
+   }catch(OTL_CONST_EXCEPTION otl_exception&){
    }
 #else
    close();
@@ -24965,7 +25155,7 @@ public:
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     try{
       logoff();
-    }catch(otl_exception&){
+    }catch(OTL_CONST_EXCEPTION otl_exception&){
     }
 #else
     logoff();
@@ -25497,6 +25687,7 @@ public:
   virtual int is_null(void) OTL_NO_THROW = 0;
   virtual void rewind(void) OTL_THROWS_OTL_EXCEPTION = 0;
   virtual int eof(void) OTL_NO_THROW = 0;
+  virtual void skip_to_end_of_row(void) OTL_NO_THROW = 0;
 
   virtual otl_var_desc* describe_out_vars(int& desc_len) OTL_NO_THROW = 0;
   virtual otl_var_desc* describe_next_out_var(void) OTL_NO_THROW = 0;
@@ -25590,6 +25781,21 @@ protected:
 
 
 public:
+
+  void skip_to_end_of_row()
+  {
+    check_if_executed();
+    if(eof())return;
+    while(cur_col<sl_len-1){
+      ++cur_col;
+      null_fetched=sl[cur_col].is_null(this->cur_row);
+    }
+    ret_code=this->next();
+    cur_col=0;
+    if(!eof())
+      cur_col=-1;
+  }
+
 
   bool good() const
   {
@@ -27240,6 +27446,22 @@ protected:
  long _rfc;
 
 public:
+
+  void skip_to_end_of_row()
+  {
+    check_if_executed();
+    if(eof())return;
+    while(cur_col<sl_len-1){
+      ++cur_col;
+      null_fetched=sl[cur_col].is_null(this->cur_row);
+    }
+    ret_code=this->next();
+    cur_col=0;
+    if(!eof())
+      cur_col=-1;
+    ++_rfc;
+  }
+
 
   int get_select_row_count() const 
   {
@@ -29716,6 +29938,33 @@ public:
    return 1;
  }
 
+  void skip_to_end_of_row()
+  {
+    if(next_ov_ndx==0)
+      return;
+    if((*ov_len)==0)return;
+    last_oper_was_read_op=true;
+    switch(shell->stream_type){
+    case otl_no_stream_type:
+      break;
+    case otl_inout_stream_type:
+      last_eof_rc=(*io)->eof();
+      (*io)->skip_to_end_of_row();
+      break;
+    case otl_select_stream_type:
+      last_eof_rc=(*ss)->eof();
+      (*ss)->skip_to_end_of_row();
+      break;
+    case otl_refcur_stream_type:
+      last_eof_rc=(*ref_ss)->eof();
+      (*ref_ss)->skip_to_end_of_row();
+      break;
+    }
+    while ((*next_ov_ndx)<(*ov_len)-1)
+      ++(*next_ov_ndx);
+  }
+
+
   void reset_to_last_valid_row()
   {
     if((*io)){
@@ -30178,8 +30427,7 @@ public:
        (*io)->operator>>(s);
 #if defined(OTL_ORA_TIMESTAMP)
        OTL_TRACE_WRITE
-         (s.month<<"/"<<s.day<<"/"<<s.year
-          <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+         (OTL_TRACE_FORMAT_DATETIME(s),
           "operator >>",
           "otl_datetime&");
 #endif
@@ -30191,8 +30439,7 @@ public:
        (*ss)->operator>>(s);
 #if defined(OTL_ORA_TIMESTAMP)
        OTL_TRACE_WRITE
-         (s.month<<"/"<<s.day<<"/"<<s.year
-          <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+         (OTL_TRACE_FORMAT_DATETIME(s),
           "operator >>",
           "otl_datetime&");
 #endif
@@ -30204,8 +30451,7 @@ public:
        (*ref_ss)->operator>>(s);
 #if defined(OTL_ORA_TIMESTAMP)
        OTL_TRACE_WRITE
-         (s.month<<"/"<<s.day<<"/"<<s.year
-          <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+         (OTL_TRACE_FORMAT_DATETIME(s),
           "operator >>",
           "otl_datetime&");
 #endif
@@ -30230,9 +30476,8 @@ public:
      {
        (*io)->operator<<(n);
 #if defined(OTL_ORA_TIMESTAMP)
-       OTL_TRACE_READ(n.month<<"/"<<n.day<<"/"<<n.year
-                      <<" "<<n.hour<<":"<<n.minute<<":"<<n.second<<"."<<n.fraction,
-                      "operator >>",
+       OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(n),
+                      "operator <<",
                       "otl_datetime&");
 #endif
        break;
@@ -30241,9 +30486,8 @@ public:
      {
        (*ss)->operator<<(n);
 #if defined(OTL_ORA_TIMESTAMP)
-       OTL_TRACE_READ(n.month<<"/"<<n.day<<"/"<<n.year
-                      <<" "<<n.hour<<":"<<n.minute<<":"<<n.second<<"."<<n.fraction,
-                      "operator >>",
+       OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(n),
+                      "operator <<",
                       "otl_datetime&");
 #endif
        break;
@@ -30253,9 +30497,8 @@ public:
        (*ref_ss)->operator<<(n);
        if(!(*ov)&&(*ref_ss)->get_sl()) create_var_desc();
 #if defined(OTL_ORA_TIMESTAMP)
-       OTL_TRACE_READ(n.month<<"/"<<n.day<<"/"<<n.year
-                      <<" "<<n.hour<<":"<<n.minute<<":"<<n.second<<"."<<n.fraction,
-                      "operator >>",
+       OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(n),
+                      "operator <<",
                       "otl_datetime&");
 #endif
        break;
@@ -30295,8 +30538,7 @@ public:
     OTL_ORA7_STRING_TO_TIMESTAMP(tmp_str,s);
 #endif
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&");
     return *this;
@@ -30323,8 +30565,7 @@ public:
     s.second=tmp.second-1;
 #endif
     OTL_TRACE_WRITE
-      (s.month<<"/"<<s.day<<"/"<<s.year
-       <<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+      (OTL_TRACE_FORMAT_DATETIME(s),
        "operator >>",
        "otl_datetime&")
       inc_next_ov();
@@ -30355,8 +30596,7 @@ public:
   s.second=tmp.second-1;
 #endif
   OTL_TRACE_WRITE
-    (s.month<<"/"<<s.day<<"/"
-     <<s.year<<" "<<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+    (OTL_TRACE_FORMAT_DATETIME(s),
      "operator >>",
      "otl_datetime&");
   inc_next_ov();
@@ -30386,8 +30626,7 @@ public:
 #endif
       OTL_ORA7_TIMESTAMP_TO_STRING(s,tmp_str);
       OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp_str;
@@ -30402,8 +30641,7 @@ public:
      tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
      tmp.second=OTL_SCAST(unsigned char, (s.second+1));
      OTL_TRACE_READ
-       (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-        <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+       (OTL_TRACE_FORMAT_DATETIME(s),
         "operator <<",
         "otl_datetime&");
      (*this)<<tmp;
@@ -30420,8 +30658,7 @@ public:
   tmp.minute=OTL_SCAST(unsigned char, (s.minute+1));
   tmp.second=OTL_SCAST(unsigned char, (s.second+1));
   OTL_TRACE_READ
-    (s.month<<"/"<<s.day<<"/"<<s.year<<" "
-     <<s.hour<<":"<<s.minute<<":"<<s.second<<"."<<s.fraction,
+    (OTL_TRACE_FORMAT_DATETIME(s),
      "operator <<",
      "otl_datetime&");
   (*this)<<tmp;
@@ -31651,7 +31888,7 @@ protected:
       throw otl_exception(db->get_connect_struct());
   }
 
-  virtual void OnException(otl_exception& e) = 0;
+  virtual void OnException(OTL_CONST_EXCEPTION otl_exception& e) = 0;
   virtual void OnDeRegistration(void) = 0;
 
   //--- DB events:
@@ -31830,7 +32067,7 @@ private:
           }
         }
       }
-    }catch( otl_exception &e ){
+    }catch(OTL_CONST_EXCEPTION otl_exception &e){
       OnException(e);
     }
   }
