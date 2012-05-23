@@ -17,7 +17,7 @@
 Programmer's Guide</font></i></h1>
 </center>
 <center>
-<h1> <i>OTL 4.0.207 (updated) is now
+<h1> <i>OTL 4.0.214 (updated (2)) is now
 released, see&nbsp;<br>
 "<a href="otl3_whatn.htm">what's new</a>" and the <a
  href="otl3_down.htm">download</a> instructions.</i></h1>
@@ -51,7 +51,7 @@ OTL Web Site Stats<br>
       <h1> <font size="+2"><a href="otl3_whatn.htm">What's New</a></font></h1>
       </td>
       <td>
-      <h1> <font size="+2"><a href="mailto:skuchin@aceweb.com">Send
+      <h1> <font size="+2"><a href="mailto:skuchin@gmail.com">Send
 me
 an email</a></font></h1>
       </td>
@@ -99,8 +99,8 @@ OTL site</a></font></b></td>
 </center>
 <p> </p>
 <hr width="100%">
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a
+<p>Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
  href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)

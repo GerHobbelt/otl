@@ -23,7 +23,33 @@ New</title>
 4.0</h1>
   <h1 align="center">What's New</h1>
   <h1>Current release number of the OTL header file</h1>
-  <p>Current release number of the OTL header file is <font size="5">4.0.207.
+  <p>Current release number of the OTL header file is <font size="5">4.0.214.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -35,22 +61,73 @@ New</title>
 
 
   <script language="JavaScript">
+
+
+
 <!-- hide from old browsers
+
+
+
+
+
+
+
+
+
 
 
  var modDate = new Date(document.lastModified)
 
 
+
+
+
+
+
+
+
+
+
  document.write("<i> (Updated: " + (modDate.getMonth()+1) + "/" + 
+
+
+
+
+
+
+
+
+
 
 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+"</i>).");
 
 
+
+
+
+
+
+
+
+
+
  //-->
 
 
+
+
+
+
+
+
+
+
+
   
+
+
+
   </script>
   </font>If you need the up-to-date version of the OTL
 header file, see the <a href="otl3_down.htm">download instructions</a>.&nbsp;
@@ -64,19 +141,45 @@ header file, see the <a href="otl3_down.htm">download instructions</a>.&nbsp;
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   </p>
-  <h1>OTL 4.0.207 is now released (updated).</h1>
+  <h1>OTL 4.0.214 is now released.</h1>
   <h1>For more detail, see the <a href="#summary">summary </a>of new
 features. <i>The <a href="otl4_htm.zip">archived version</a> of the
 OTL Web pages </i>is available.</h1>
-  <h1><a name="summary"></a><i>From OTL 3.0.0 to OTL 4.0.207: summary
+  <h1><a name="summary"></a><i>From OTL 3.0.0 to OTL 4.0.214: summary
 of new features and bug fixes</i></h1>
 </ul>
 <p style="margin-bottom: 0in;" align="center">&nbsp;</p>
 <dl>
   <dd>
-    <table style="page-break-before: always;" width="923" border="1"
- cellpadding="2" cellspacing="3">
+    <table style="page-break-before: always;" border="1" cellpadding="2"
+ cellspacing="3" width="923">
       <col width="816"> <col width="2"> <col width="80"> <tbody>
         <tr>
           <td width="816">
@@ -87,8 +190,292 @@ of new features and bug fixes</i></h1>
           </td>
         </tr>
         <tr>
-          <td style="vertical-align: top;">20-Dec-2009: New (in OTL
-4.0.207):<br>
+          <td style="vertical-align: top;">19-Apr-2010. New (in
+4.0.214, updated (2)):<br>
+          <br>
+          <ul>
+            <li>GNU C++ 4.5.0 was released
+recently. OTL 2.0.14 compiles clean with g++ 4.5.0, and all OTL tests
+from the OTL test suite run correctly.</li>
+          </ul>
+          <br>
+18-Apr-2010. New (in
+4.0.214, updated):<br>
+          <br>
+          <ul>
+            <li>Visual C++ Studio 2010 (version 10) was released
+recently. OTL 2.0.14 compiles clean with VC++ 10, and all OTL tests
+from the OTL test suite run correctly.<br>
+              <br>
+            </li>
+          </ul>
+02-Apr-2010. New (in OTL
+4.0.214):<br>
+          <br>
+          <ul>
+            <li><a name="BUG1"></a>A bug was reported that when
+OTL/OCIx (x&gt;=8) is used together with the <a
+ href="otl3_lob_stream.htm">LOB stream class</a>, in case of an UPDATE
+statement that updates 0 rows, OTL throws the Oracle "Invalid LOB
+locator" exception. otl_lob_stream::<a href="otl3_lob_stream.htm#close">close</a>()
+function
+was
+modified
+to accommodate this special condition, and OTL
+code examples <a href="otl3_ex56.htm">56</a>, and <a
+ href="otl3_ex57.htm">57</a> were modified to show how to use it.<br>
+              <br>
+            </li>
+            <li>A bug similar to the <a href="#BUG1">first bug</a> was
+found, when&nbsp; OTL/OCIx (x&gt;=8) is used without the LOB stream
+class, in case if an UPDATE statement updates 0 rows. The bug is fixed
+in this release.<br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">19-Mar-2010. New (in OTL
+4.0.213, updated):<br>
+          <br>
+          <ul>
+            <li><a href="otl3_comm.htm">What's New</a> Page has been
+updated to reflect the traffic to the OTL Web site.<br>
+              <br>
+            </li>
+          </ul>
+10-Mar-2010. New (in OTL
+4.0.213):<br>
+          <br>
+          <ul>
+            <li>This release introduces the following new #define in
+order to address compatibility issues with some frameworks, and
+transaction monitors: <a
+ href="otl3_compile.htm#OTL_ROLLS_BACK_BEFORE_LOGOFF">OTL_ROLLS_BACK_BEFORE_LOGOFF</a>.
+
+
+
+
+
+
+              <br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">07-Mar-2010. New (in OTL
+4.0.212):<br>
+          <br>
+          <ul>
+            <li>This release of OTL introduces the following new
+#defines
+in order to address a need for mapping DECIMAL / NUMERIC to signed
+64-bit integers on SELECT statements instead of doubles: <a
+ href="otl3_compile.htm#OTL_MAP_SQL_DECIMAL_TO_OTL_BIGINT">OTL_MAP_SQL_DECIMAL_TO_OTL_BIGINT</a>,
+
+
+
+
+
+
+
+              <a
+ href="otl3_compile.htm#OTL_MAP_SQL_NUMERIC_TO_OTL_BIGINT">OTL_MAP_SQL_DECIMAL_TO_OTL_BIGINT</a>.<br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">28-Feb-2010. New (in OTL
+4.0.211, updated):<br>
+          <br>
+          <ul>
+            <li>GNU C++ 4.4.3 was released a month ago. This release of
+OTL compiles clean with g++ 4.4.3.<br>
+              <br>
+            </li>
+          </ul>
+25-Feb-2010. New (in OTL
+4.0.211): <br>
+          <br>
+          <ul>
+            <li>A bug was reported that when otl_stream is instantiated
+with an otl_connect object that is not connected to the database,
+OTL/OCI10G throws an otl_exception with seemingly random error message
+and
+error code. This release introduces the following new #define that can
+be used as a workaround: #define <a
+ href="otl3_compile.htm#OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION">OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION</a>.
+The
+#define
+needs
+to
+be
+enabled
+before
+including
+the
+OTL
+header
+file.
+OTL
+will throw the <a href="otl3_exc_list.htm#32036">not-connected-to-database</a>
+exception in case if the otl_connect::connected flag is 0. <br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">18-Feb-2010. New (in OTL
+4.0.210, updated):<br>
+          <br>
+          <ul>
+            <li>A problem was reported that T-SQL stored procedures
+that have INSERTs / UPDATEs / DELETEs don't work with OTL. An <a
+ href="otl3_faq.htm#SET_NOCOUNT_ON">explanation</a> has been added to
+the OTL F.A.Q.<br>
+              <br>
+            </li>
+          </ul>
+20-Jan-2010: New (in
+4.0.210):<br>
+          <br>
+          <ul>
+            <li>A complition problem was reported when #define
+OTL_EXCEPTION_IS_DERIVED_FROM_STD_EXCEPTION is defined and g++ 4.1.2 is
+used. The problem is fixed in this release.<br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">17-Jan-2010: New (in
+4.0.209):<br>
+          <br>
+          <ul>
+            <li>This release introduces a new Oracle SQL tool neutral <a
+ href="otl3_bind_variables.htm#sql_neut_bvar">syntax</a> for bind
+variables. The rationale for the new feature is that OTL extended bind
+variable syntax should be transparent for the SQL tools. Also, see code
+example <a href="otl4_ex717.htm">717</a>. <br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">03-Jan-2010: New (in OTL
+4.0.208):<br>
+          <br>
+          <ul>
+            <li>OTL <a href="#40181">4.0.181</a>
+introduced&nbsp;otl_stream::<a
+ href="otl3_stream_class.htm#check_end_of_row">check_end_of_row</a>()
+(and the otl_stream manipulator <span style="font-style: italic;">endr</span>)
+in
+order
+to
+address
+the
+"<a href="http://soci.sourceforge.net/doc/rationale.html">row-tearing</a>"
+problem
+in
+SELECT
+statements.
+This
+release
+of
+OTL
+extends
+the
+check_end_of_row()
+function
+(and
+the
+endr
+stream
+manipulator)
+to do the
+end-of-row checking for INSERT / UPDATE / DELETE statements as well as
+calls to stored procedures / anonymous PL/SQL blocks. the endr
+(end-of-row) stream manipulator is designed to be similar to C++
+standard std::endl and std::ends stream manipulators at least by usage,
+for example:<br>
+              <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">s&gt;&gt;f1&gt;&gt;f2&gt;&gt;endr;<br>
+&nbsp;&nbsp; ...<br>
+              <span style="font-family: monospace;">&nbsp;&nbsp;
+o&lt;&lt;</span>f1&lt;&lt;f2&lt;&lt;endr;</span><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+What it means is that when <span style="font-style: italic;">endr</span>
+is called at the end of each operator &gt;&gt;/&lt;&lt; chain, it calls
+otl_stream::check_end_of_row(), which check the "end of row" condition.
+At least syntactically it looks very similar to the following:<br>
+              <br>
+&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">o&lt;&lt;f1&lt;&lt;f1&lt;&lt;endl;</span><br>
+              <br>
+endr is recommended for use in long term projects, when over time the
+table layout may change, and the OTL based C++ code may get out of sync
+with the table layout. At least, the end-of-row check will catch that.
+See also the following new code examples:<br>
+              <br>
+              <ul>
+                <li>Oracle (OCI7): example <a href="otl4_ex710.htm">710</a>;<br>
+                </li>
+                <li>Oracle (OCI8 and higher): example <a
+ href="otl4_ex711.htm">711</a>;</li>
+                <li>DB2 CLI: example <a href="otl4_ex712.htm">712</a>;</li>
+                <li>MS SQL Server: example <a href="otl4_ex713.htm">713</a>;</li>
+                <li>Sybase: example <a href="otl4_ex714.htm">714</a>;</li>
+                <li>MySQL: example <a href="otl4_ex715.htm">715</a>;<br>
+                </li>
+                <li>PostgreSQL: example <a href="otl4_ex716.htm">716</a>.<br>
+                  <br>
+                </li>
+              </ul>
+For database types that are not in the list (above), the same code can
+be used with appropriate&nbsp; database type specific #define's, and
+table columns.<br>
+              <br>
+            </li>
+          </ul>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">27-Dec-2009: New (in OTL
+4.0.207 updated (2) ):<br>
+          <br>
+          <ul>
+            <li>The following PostgreSQL code samples have been added
+(by popular demand!) in order to show how to use OTL with PostgreSQL
+XML data type. See examples: <a href="otl4_ex706.htm">706</a>, <a
+ href="otl4_ex707.htm">707</a>, <a href="otl4_ex708.htm">708</a>, <a
+ href="otl4_ex709.htm">709</a>.<br>
+              <br>
+            </li>
+          </ul>
+20-Dec-2009: New (in OTL
+4.0.207 updated):<br>
           <br>
           <ul>
             <li>A few questions were asked whether OTL supported
@@ -131,10 +518,36 @@ recognize&nbsp;
 PL/SQL
 global
 stored
-procedures with
-no parameters (Oracle). The bug is fixed in this release. Also, an
-example of a global stored procedure without any parameters was added
-to code example <a href="otl4_ex153.htm">153</a>.<br>
+procedures
+with
+no
+parameters
+(Oracle).
+The
+
+bug
+is
+
+fixed
+in
+this
+release.
+Also,
+an
+example
+of
+a
+global
+stored
+procedure
+without
+any
+parameters
+was
+added
+to
+code
+example <a href="otl4_ex153.htm">153</a>.<br>
               <br>
             </li>
           </ul>
@@ -208,9 +621,23 @@ as
 I'll
 implement
 DB2
-9.7 timestamp's precision
-in [10..12] range at some point in the future when somebody requests
-the feature.<br>
+9.7
+timestamp's
+precision
+in
+[10..12]
+range
+at
+some
+point
+in
+the
+future
+when
+somebody
+requests
+the
+feature.<br>
               <br>
             </li>
           </ul>
@@ -425,6 +852,32 @@ data format in OTL trace statements: <a
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_TRACE_FORMAT_DATETIME">OTL_TRACE_FORMAT_TZ_DATETIME</a>.<br>
               <br>
             </li>
@@ -432,6 +885,32 @@ data format in OTL trace statements: <a
 functions:<br>
               <ul>
                 <li><a href="otl3_stream_class.htm#skip_to_end_of_row">otl_stream::skip_to_end_of_row</a>,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -465,7 +944,7 @@ text of Open BSD license:<br>
 DB2/CLI Template Library, Version 4.0.200,</span><br
  style="font-family: monospace;">
               <span style="font-family: monospace;">// Copyright (C)
-1996-2009, Sergei Kuchin (skuchin@gmail.com)</span><br
+1996-2010, Sergei Kuchin (skuchin@gmail.com)</span><br
  style="font-family: monospace;">
               <span style="font-family: monospace;">// </span><br
  style="font-family: monospace;">
@@ -758,8 +1237,11 @@ for
 PostgreSQL
 may
 want
-to enable
-the new #define.<br>
+to
+enable
+the
+new
+#define.<br>
               <br>
             </li>
           </ul>
@@ -897,7 +1379,33 @@ for
 the
 problem.
 See
-example <a href="otl4_ex473.htm">473</a>
+example
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <a href="otl4_ex473.htm">473</a>
 for more detail. The same technique can
 be used under #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>.</li>
           </ul>
@@ -951,6 +1459,32 @@ singed
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_ODBC_TIMESTAMP_TO_STRING">OTL_ODBC_TIMESTAMP_TO_STRING</a>
 were introduced a few releases ago as a way to work with TIMESTAMP WITH
 TIME ZONE (PostgreSQL, Oracle) / timestampoffset (MS SQL Server 2008)
@@ -993,8 +1527,30 @@ Oracle
 PL/SQL
 reference
 cursors,
-and stored procedures that return implicit result sets: it
-returns the number of rows in the stream buffer that are yet to be read.<br>
+and
+stored
+procedures
+that
+return
+implicit
+result
+sets:
+it
+returns
+the
+number
+of
+rows
+in
+the
+stream
+buffer
+that
+are
+yet
+to
+be
+read.<br>
               <br>
             </li>
             <li>A bug was reported that otl_refcur_stream::rewind()
@@ -1006,6 +1562,32 @@ can't be easily eliminated because it is derived from <a
  href="otl3_compile.htm#OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE">otl_read_stream_interface</a>,
 when
 #define
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1056,6 +1638,32 @@ and
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>:<br>
               <br>
               <span style="font-family: monospace;">C4297: 'function' :
@@ -1086,11 +1694,63 @@ functions
 that
 have
 more
-than one output reference cursor parameters and also input / output
-parameters in addition to the reference cursor parameters. The
-following new global constant was added to indicate the new type ot
+than
+one
+output
+reference
+cursor
+
+parameters
+and
+
+also
+input
+/
+output
+parameters
+in
+addition
+to
+the
+reference
+cursor
+parameters.
+The
+following
+new
+global
+constant
+was
+added
+to indicate the new type ot
 stored procedures: <span style="font-family: monospace;"><a
  href="otl3_stream_class.htm#otl_mixed_refcur_stream_type">otl_mixed_refcur_stream_type</a>.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1255,7 +1915,8 @@ couple
 of
 developers
 (from
-Canada and
+Canada
+and
 China).<br>
               </p>
             </li>
@@ -1399,10 +2060,22 @@ name
 if
 the
 procedure
-/ function
-is available via Oracle synonym mechanism. The bug is fixed in this
-release: otl_stream::<a
- href="otl3_stream_class.htm#create_stored_proc_call">create_stored_proc_call()</a>
+/
+function
+is
+available
+via
+Oracle
+synonym
+mechanism.
+The
+bug
+is
+fixed
+in
+this
+release:
+otl_stream::<a href="otl3_stream_class.htm#create_stored_proc_call">create_stored_proc_call()</a>
 searches Oracle's data dictionary's user_synonyms and all_synonyms
 views in case if the procedure / function name is not found anywhere
 else. </p>
@@ -1459,6 +2132,32 @@ new
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a
  href="otl3_connect_class.htm#OTL_MSSQL_2008_ODBC_CONNECT">OTL_MSSQL_2008_ODBC_CONNECT</a>
 mode under #define <a href="otl3_compile.htm#OTL_ODBC_MULTI_MODE">OTL_ODBC_MULTI_MODE</a>).
@@ -1468,6 +2167,32 @@ detail,
 see
 also
 examples
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1513,9 +2238,61 @@ to address the need: <a href="otl3_compile.htm#OTL_ODBC_TIME_ZONE">OTL_ODBC_TIME
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_ODBC_TIMESTAMP_TO_STRING">OTL_ODBC_TIMESTAMP_TO_STRING</a>.
 See
 example
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1574,6 +2351,32 @@ an
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_stream_class.htm">otl_stream</a> is opened
 in the
 LOB stream mode (otl_stream::<a
@@ -1589,9 +2392,35 @@ don't
 get
 processed
 correctly.
-Instead of inserting a NULL, OTL inserts a non-NULL value
-from a row prior to the one with the NULL. The bug is specific to
-OTL/DB2-CLI. OTL introduced a tweak a couple of years ago that resets
+Instead
+of
+inserting
+a
+NULL,
+
+OTL
+inserts
+
+a
+non-NULL
+value
+from
+a
+row
+prior
+to
+the
+one
+with
+the
+NULL.
+The
+bug
+is
+specific
+to
+OTL/DB2-CLI.
+OTL introduced a tweak a couple of years ago that resets
 the "NULL indicator" / "length" fields for each bind variable / array
 to the default "non-NULL" right after SQLExcute() is called.
 Apparently, DB2 CLI has some semi-documented behavior (maybe it's
@@ -1661,7 +2490,11 @@ fixed
 in
 this
 release.
-If the same parameters (<font face="monospace">:f</font>
+If
+the
+same
+parameters
+(<font face="monospace">:f</font>
 and <font face="monospace">:c</font>) get
 returned by a SELECT statement, such a bug doesn't exist.</p>
             </li>
@@ -1683,14 +2516,32 @@ in this release.</p>
               <p>The following constructor was broken:</p>
               <pre>   otl_value&lt;otl_datetime&gt;(const otl_null&amp;):<br><font
  color="#ff0000">    v(0),</font>
+
+
+
     ind(true)
+
+
+
   {
+
+
+
   }</pre>
               <p> It should be</p>
               <pre>   otl_value&lt;otl_datetime&gt;(const otl_null&amp;):<br><font
  color="#ff0000">    v(),</font>
+
+
+
     ind(true)
+
+
+
   {
+
+
+
   }</pre>
               <p> The bug is fixed in this release.</p>
             </li>
@@ -1732,6 +2583,32 @@ set the OCI "Charset Form" correctly for NLS string columns (NVARCHAR2
 enabled, OTL doesn't compile with 64-bit Visual C++ 2008 under 64-bit
 Windows. OTL had a variable declared as SQLUINTEGER (unsigned 32-bit
 integer). The variable was used in a call to SQLExtendedFetch() as the <i>RowCountPtr
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1813,9 +2690,31 @@ SELECT
 statement
 that
 has
-a "TIMESTAMP"
-column, and an "IMAGE" column. Visual C++ 8's runtime's assert on a
-call to strcat_s() fails. The problem is fixed in this release.</p>
+a
+"TIMESTAMP"
+column,
+and
+an
+"IMAGE"
+column.
+Visual
+C++
+8's
+runtime's
+assert
+on
+a
+call
+to
+strcat_s()
+fails.
+The
+problem
+is
+fixed
+in
+this
+release.</p>
             </li>
             <li>
               <p><font face="monospace"><font size="1"><span
@@ -1910,6 +2809,32 @@ example
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl4_ex675.htm">675</a>.</p>
             </li>
           </ul>
@@ -1971,6 +2896,32 @@ following code examples:</p>
                 </li>
                 <li>
                   <p>MS SQL with FreeTDS: <a href="otl4_ex667.htm">667</a>,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2088,6 +3039,32 @@ following command line options are enabled:</p>
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                   </p>
                 </li>
                 <li>
@@ -2159,6 +3136,32 @@ See
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl4_mssql_freetds_examples.htm">MS SQL Server /
 FreeTDS
 ODBC</a> examples for more detail. The new #define is recommended for
@@ -2181,8 +3184,34 @@ a
 fix
 becomes
 available,
-auto_commit_on() / auto_commit_off() are recommended for use. See for <a
- href="otl4_sybsql_freetds_examples.htm">Sybase SQL Server / FreeTDS
+auto_commit_on()
+/
+auto_commit_off()
+are
+recommended
+
+for
+use.
+
+See
+for
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <a href="otl4_sybsql_freetds_examples.htm">Sybase
+SQL Server / FreeTDS
 ODBC</a> examples more detail.<br>
               <br>
 Also, FreeTDS/ODBC doesn't seem to support "transaction isolation"
@@ -2199,9 +3228,35 @@ implemented
 in
 FreeTDS/ODBC,
 it's
-recommended that explicit server side settings should be used instead.
-For example, MS SQL supports an explicit (NOLOCK) option on the FROM
-clause in a SELECT statement. Sybase has the "set transaction isolation
+recommended
+that
+explicit
+server
+side
+
+settings
+should
+
+be
+used
+instead.
+For
+example,
+MS
+SQL
+supports
+an
+explicit
+(NOLOCK)
+option
+on
+the
+FROM
+clause
+in
+a
+SELECT
+statement. Sybase has the "set transaction isolation
 level X" command to set an explicit, session-wide transaction isolation
 level. For more detail, see examples <a href="otl4_ex516.htm">516</a>
 (MS SQL), and <a href="otl4_ex561.htm">561</a> (Sybase).<br>
@@ -2345,9 +3400,35 @@ CLI
 for
 a
 few
-years. Informix
-CLI in Windows is indistinguishable from ODBC, so in Windows #define <a
- href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a> can used with Informix
+years.
+Informix
+CLI
+in
+Windows
+is
+
+indistinguishable
+from
+
+ODBC,
+so
+in
+Windows
+#define
+
+
+
+
+
+
+
+
+
+
+
+
+              <a href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>
+can used with Informix
 CLI. In Unix, #define <a href="otl3_compile.htm#OTL_INFORMIX_CLI">OTL_INFORMIX_CLI</a>
 can be used. </p>
             </li>
@@ -2390,7 +3471,33 @@ some
 C++
 gurus
 who
-would <a href="otl3_whatn_1.htm#HIT_IN_HEAD">hit</a>
+would
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <a href="otl3_whatn_1.htm#HIT_IN_HEAD">hit</a>
 me in the head, should not
 have had "throwing destructors". See more detail on the history of the
 question <a href="http://kolpackov.net/projects/c++/eh/dtor-1.xhtml">here</a>.<br>
@@ -2416,6 +3523,32 @@ Those who do not want OTL destructors to "throw" can use </font>#define
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_DESTRUCTORS_DO_NOT_THROW">OTL_DESTRUCTORS_DO_NOT_THROW</a>,
 but
 they
@@ -2428,7 +3561,13 @@ close()
 function
 all
 otl_streams
-explicitly, before each stream goes out scope.</p>
+explicitly,
+before
+each
+stream
+goes
+out
+scope.</p>
             </li>
           </ul>
           <p><br>
@@ -2460,6 +3599,32 @@ be enabled with #define <a
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               </p>
             </li>
             <li>
@@ -2475,9 +3640,36 @@ CLOB/BLOB
 in
 a
 table
-goes from, say a size &gt;
-0 to the size of 0, the actual value doesn't get set to the size of 0.
-The bug fixed in this release.</p>
+goes
+from,
+say
+a
+size
+
+&gt;
+
+0
+to
+
+the
+size
+of
+0,
+the
+actual
+value
+doesn't
+get
+set
+to
+the
+size
+of
+0.
+The
+bug
+fixed
+in this release.</p>
             </li>
             <li>
               <p>A bug was reported that when #define OTL_ORA8 / 8I /
@@ -2494,9 +3686,28 @@ with
 both
 the
 OCI
-and the
-TimesTen object libraries, the program's performance (the Oracle side
-in particular) degrades tenfold. The bug is fixed in this release.</p>
+and
+the
+TimesTen
+object
+libraries,
+the
+program's
+performance
+(the
+Oracle
+side
+in
+particular)
+degrades
+tenfold.
+The
+bug
+is
+fixed
+in
+this
+release.</p>
             </li>
             <li>
               <p>A bug was reported that when an otl_exception gets
@@ -2516,6 +3727,32 @@ can
 be
 used
 with
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2551,6 +3788,32 @@ the following new #define to start the OTL/OCI11g series: #define <a
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>, <a
  href="otl3_compile.htm#OTL_STR_TO_BIGINT">OTL_STR_TO_BIGINT</a>, and <a
  href="otl3_compile.htm#OTL_BIGINT_TO_STR">OTL_BIGINT_TO_STR</a> are
@@ -2560,6 +3823,32 @@ bug is fixed in this release.</p>
             <li>
               <p>When <a
  href="otl3_compile.htm#OTL_DEFAULT_STRING_NULL_TO_VAL">OTL_DEFAULT_STRING_NULL_TO_VAL</a>,
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2588,9 +3877,27 @@ reported
 to
 have
 a
-compilation error on
-an unspecified C++ compiler, on an unspecified platform. The proposed
-code change was merged into this release. .</p>
+compilation
+error
+on
+an
+unspecified
+C++
+compiler,
+on
+an
+unspecified
+platform.
+The
+proposed
+code
+change
+was
+merged
+into
+this
+release.
+.</p>
             </li>
           </ul>
           </td>
@@ -2625,14 +3932,65 @@ of
 the
 numeric
 operators
-&gt;&gt;() of
-the same class. The error goes away when #define <a
- href="otl3_compile.htm#OTL_NO_TMPL_MEMBER_FUNC_SUPPORT">OTL_NO_TMPL_MEMBER_FUNC_SUPPORT</a>
+&gt;&gt;()
+of
+the
+same
+class.
+The
+
+error
+goes
+
+away
+when
+#define
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <a href="otl3_compile.htm#OTL_NO_TMPL_MEMBER_FUNC_SUPPORT">OTL_NO_TMPL_MEMBER_FUNC_SUPPORT</a>
 is enabled. The bug is fixed in this release by enabling the #define
 for Borland C++ by default.</span></font></font></p>
             </li>
             <li>
               <p><font face="Arial"><font size="3"><span lang="en-US">Michael
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2681,8 +4039,27 @@ the
 program,
 because
 the
-size of the output string buffer was specified in bytes
-instead of wide characters. The bug is fixed in this release:<br>
+size
+of
+the
+output
+string
+buffer
+was
+specified
+in
+bytes
+instead
+of
+wide
+characters.
+The
+bug
+is
+fixed
+in
+this
+release:<br>
               <br>
 &nbsp;&nbsp; </font><font face="monospace"><font size="2"><i><b>Before
               </b></i></font></font><font face="monospace"><font
@@ -2707,6 +4084,32 @@ instead of wide characters. The bug is fixed in this release:<br>
 &nbsp;&nbsp;&nbsp;&nbsp; </font><font face="monospace"><font size="2">SQL_DRIVER_NOPROMPT);<br>
               <br>
 &nbsp;&nbsp; </font></font><font face="monospace"><font size="2"><i><b>Now
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2749,6 +4152,32 @@ ref_cur_placeholder=0,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ...<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2918,6 +4347,32 @@ Code
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
               <a href="otl4_t10_examples.htm">examples</a> for TimesTen
 have
 been updated to reflect the new feature.</p>
@@ -2982,11 +4437,37 @@ ODBC
 driver
 (version
 0.63)
-is high
-enough quality to work with OTL. The following FreeTDS based sets of
-code examples have been added: <a
- href="otl4_mssql_freetds_examples.htm">MS SQL Server / FreeTDS ODBC,</a>
-              <a href="otl4_sybsql_freetds_examples.htm">Sybase SQL
+is
+high
+enough
+quality
+to
+work
+
+with
+OTL.
+
+The
+following
+FreeTDS
+based
+sets
+of
+code
+examples
+have
+been
+added:
+
+
+
+
+
+
+
+              <a href="otl4_mssql_freetds_examples.htm">MS
+SQL Server / FreeTDS ODBC,</a> <a
+ href="otl4_sybsql_freetds_examples.htm">Sybase SQL
 Server / FreeTDS ODBC</a>. <br>
               <br>
 FreeTDS ODBC supports the bulk interface, calls to stored procedures,
@@ -3053,8 +4534,12 @@ function
 has
 been
 added
-to the lob stream
-class: i<a href="otl3_lob_stream.htm#is_initialized">s_initialized</a>().</p>
+to
+the
+lob
+stream
+class:
+i<a href="otl3_lob_stream.htm#is_initialized">s_initialized</a>().</p>
             </li>
             <li>
               <p>This release introduces support for Oracle UTF8 via
@@ -3062,6 +4547,32 @@ the following new #define: #define <a
  href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>. See also
 examples for <a href="otl4_ora9_utf8_examples.htm">Oracle 9i, UTF8</a>,
 and
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3150,8 +4661,25 @@ records
 SQL
 statement
 labels
-instead of the bodies of the SQL statements. It is useful for reducing
-the size of the OTL trace.</p>
+instead
+of
+the
+bodies
+of
+the
+SQL
+statements.
+It
+is
+useful
+for
+reducing
+the
+size
+of
+the
+OTL
+trace.</p>
             </li>
             <li>
               <p>#define <a
@@ -3467,26 +4995,77 @@ successfully tested with PostgreSQL 8.2.</p>
 <hr>
 <ul>
   <p align="center"><a href="home.htm">Go Home</a></p>
-  <p>Copyright © 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a
+  <p>Copyright © 1996-2010, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
  href="mailto:skuchin@gmail.com">skuchin@gmail.com&nbsp;
   <script language="JavaScript">
+
+
+
 <!-- hide from old browsers
+
+
+
+
+
+
+
+
+
 
 
  var modDate = new Date(document.lastModified)
 
 
+
+
+
+
+
+
+
+
+
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+
+
+
+
+
+
+
+
+
 
 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
 
 
+
+
+
+
+
+
+
+
+
  //-->
 
 
+
+
+
+
+
+
+
+
+
  
+
+
+
   </script>
   </a>. </p>
   <p><i>Permission to use, copy, modify and redistribute this document
@@ -3502,12 +5081,30 @@ PERFORMANCE OF THIS SOFTWARE.</i></p>
 </ul>
 <p>
 <script>
+
+
+
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+
+
+
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+
+
 </script>
 <script>
+
+
+
 var pageTracker = _gat._getTracker("UA-5456201-1");
+
+
+
 pageTracker._trackPageview();
+
+
+
 </script><br>
 <br>
 </p>

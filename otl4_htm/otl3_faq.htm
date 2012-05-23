@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
   <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
+ content="text/html; charset=ISO-8859-1">
   <meta name="Author" content="Sergei Kuchin">
   <meta name="GENERATOR"
  content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
@@ -21,13 +21,14 @@ Frequently Asked Questions</title>
   </center>
 </ul>
 Please, send your questions and comments to <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><br>
 <i><font size="+1"><br>
 </font></i><i><font size="+1">Q. OTL: how does OTL handle NULLs?</font></i>
 <ul>
   <li>Call otl_stream::<a href="otl3_stream_class.htm#is_null">is_null</a>()
-to check whether the value that was just read from the stream is NULL
+to
+check whether the value that was just read from the stream is NULL
 or
 not.<br>
   </li>
@@ -49,6 +50,27 @@ value in the case of NULL), the following #defines could be enabled:<br>
  href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL">OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL</a></li>
   </ul>
 </ul>
+<br>
+<i><font size="+1"><a name="SET_NOCOUNT_ON"></a>Q. OTL: Why my T-SQL
+stored procedure that has INSERT or UPDATE or DELETE statements doesn't
+work with OTL</font></i><span style="font-style: italic;">?</span><br>
+<br>
+INSERT/UPDATE/DELETE statments inside T-SQL stored procedures generate
+row [processed] counts (RPC). The RPCs get returned back to the caller,
+in this case to the OTL/C++ code, as separate result sets via MS SQL
+Native Client (SNAC). OTL doesn't handle such RPC result sets, so they
+need to turned off with "SET NOCOUNT ON" statement in the stored
+procedure, for example:<br>
+<br>
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; CREATE
+PROCEDURE my_proc</span><br style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ...</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; AS</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; SET NOCOUNT ON</span><br
+ style="font-family: monospace;">
+<span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ...</span><br>
 <br>
 <i><font size="+1"><a name="Large_Nvarchar_MSSQL"></a>Q. OTL: How to
 insert or update MS SQL NVARCHAR</font></i><span
@@ -77,7 +99,8 @@ and I'll add the URL to this answer.<br>
 If there is a need to insert / update NVACHAR / NCHAR large (&gt;2000
 characters) table columns, <span style="font-family: monospace;">:v&lt;varchar_long&gt;</span>
 can be used instead of <span style="font-family: monospace;">:v&lt;char[XXX]&gt;</span>.
-otl_long_unicode_string can be used with :v&lt;varchar_long&gt;, for
+otl_long_unicode_string
+can be used with :v&lt;varchar_long&gt;, for
 example:<br>
 <br>
 <span style="font-family: monospace;">...</span><br>
@@ -85,15 +108,18 @@ example:<br>
 nvarchar(4000));<br>
 ...<br>
 </span><span style="font-family: monospace;">&nbsp;db.set_max_long_size(4000);
-// set the maximum varchar long to 4000 characters</span><br
+//
+set the maximum varchar long to 4000 characters</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;otl_stream o(3, // buffer
 size should can be &gt; 1</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"insert into test_tab values(:f1&lt;int&gt;,:f2&lt;varchar_long&gt;)",</span><br
+"insert
+into test_tab values(:f1&lt;int&gt;,:f2&lt;varchar_long&gt;)",</span><br
  style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-db // connect object</span><br style="font-family: monospace;">
+db
+// connect object</span><br style="font-family: monospace;">
 <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 );</span><br style="font-family: monospace;">
 <br style="font-family: monospace;">
@@ -229,7 +255,8 @@ new in OTL 4</a>" for more detail.
 <p>The answer is Yes. Starting with version 4.0.0, OTL supports
 PostgreSQL
 via ODBC. See "<a href="otl3_whatn.htm#NEW_OTL400">what's new in OTL 4</a>"
-for more detail.
+for
+more detail.
 <br>
 &nbsp;
 </p>
@@ -240,7 +267,8 @@ Interface
 <p>The answer is Yes. Starting with version 3.2.7, there is a new
 flavor
 of OTL: OTL/DB2-CLI. OTL/DB2-CLI uses DB2's native database API: the <i>Call
-Level Interface.</i> DB2-CLI is 99.5% compatible with the ODBC 3.x
+Level
+Interface.</i> DB2-CLI is 99.5% compatible with the ODBC 3.x
 specification,
 plus extensions. The OTL header file #includes CLI's native header
 files
@@ -324,7 +352,8 @@ takes PL/SQL tables as arguments ?</font></i>
 <p>OTL 3.1 supports PL/SQL table via <a
  href="otl3_bind_variables.htm#pl_tab">otl_streams</a>
 and <a href="otl3_pl_tab.htm">special template data containers</a>.Fore
-more detail, see examples <a href="otl3_ex49.htm">49</a>, <a
+more
+detail, see examples <a href="otl3_ex49.htm">49</a>, <a
  href="otl3_ex50.htm">50</a>,
 <a href="otl3_ex51.htm">51</a>,
 <a href="otl3_ex52.htm">52</a>.
@@ -341,7 +370,8 @@ or do you intend to put it on your website later ?</font></i>
 compared to other datatypes as far as NULLs are concerned?</font></i>
 </p>
 <p>For more detail, see "<a href="otl3_long_string.htm#LOB_and_NULL">Large
-Objects and NULLs</a>."
+Objects
+and NULLs</a>."
 </p>
 <p><i><font size="+1">Q. How to read/write date&amp;time information
 from/to
@@ -382,8 +412,8 @@ always
 <hr width="100%">
 <ul>
   <center><a href="home.htm">Go Home</a></center>
-  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a
+  <p>Copyright &copy; 1996-2010, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
  href="mailto:skuchin@gmail.com">skuchin@gmail.com
   <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
@@ -391,12 +421,20 @@ always
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
  </script></a>.
+
   </p>
   <p><i>Permission to use, copy, modify and redistribute this document
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i></p>
 </ul>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
