@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ex700_oci9"
-	ProjectGUID="{59F3C784-A592-4A21-9F98-4115EA3237DD}"
-	RootNamespace="ex700_oci9"
+	Name="ex699_oci8"
+	ProjectGUID="{52FCEAFE-C9EC-48E7-89BE-A67B8FAD4F65}"
+	RootNamespace="ex699_oci8"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -570,7 +570,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\otl4_examples\ex700_oci9.cpp"
+				RelativePath="..\..\otl4_examples\ex699_oci8.cpp"
 				>
 			</File>
 		</Filter>

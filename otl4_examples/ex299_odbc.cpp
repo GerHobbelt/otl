@@ -70,7 +70,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger@TT_tt70_32"); // connect to Oracle
+  db.rlogon("scott/tiger@TT_tt1121_32"); // connect 1121 Oracle
 
   otl_cursor::direct_exec
    (

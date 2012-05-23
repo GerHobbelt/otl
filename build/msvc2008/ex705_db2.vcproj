@@ -2,8 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ex699_db2"
-	RootNamespace="ex699_db2"
+	Name="ex705_db2"
+	ProjectGUID="{AF1A17DB-10AD-449B-8C10-2866DBCD4392}"
+	RootNamespace="ex705_db2"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -569,7 +570,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\otl4_examples\ex699_db2.cpp"
+				RelativePath="..\..\otl4_examples\ex705_db2.cpp"
 				>
 			</File>
 		</Filter>

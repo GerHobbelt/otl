@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="ex698_odbc"
+	Name="ex698_oci8"
 	ProjectGUID="{1CE383CE-5C61-41CF-9338-C91CD5645B5B}"
-	RootNamespace="ex698_odbc"
+	RootNamespace="ex698_oci8"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="0"
 	>
@@ -570,7 +570,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\otl4_examples\ex698_odbc.cpp"
+				RelativePath="..\..\otl4_examples\ex698_oci8.cpp"
 				>
 			</File>
 		</Filter>

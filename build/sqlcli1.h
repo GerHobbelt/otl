@@ -18,13 +18,11 @@
 
 
 
-extern "C" {
 
 
 
 
-
-
+#if 0
 
 
 
@@ -157,6 +155,11 @@ extern "C" {
 **
 ******************************************************************************/
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 typedef char            sqlint8;
 typedef unsigned char   sqluint8;
 
@@ -207,6 +210,11 @@ typedef SQL_BIGUINT_TYPE sqluint64;
    typedef sqluint32       sqluintptr;
 #endif
 
+#ifdef __cplusplus
+}
+#endif
+
+
 #endif /* SQL_H_SQLSYSTM */
 
 
@@ -220,6 +228,10 @@ typedef SQL_BIGUINT_TYPE sqluint64;
 
 
 
+
+#ifdef __cplusplus
+   extern "C" {
+#endif
 
 
 #if defined(DB2NT)
@@ -319,6 +331,10 @@ SQL_STRUCTURE  sqlca
 
 #endif /* SQLCODE */
 
+#ifdef __cplusplus
+}
+#endif
+
 
 
 
@@ -347,8 +363,8 @@ SQL_STRUCTURE  sqlca
  *
  *****************************************************************************/
 
-#ifndef SQL_H_SQLCLI
-#define SQL_H_SQLCLI             /* Permit duplicate Includes */
+//#ifndef SQL_H_SQLCLI
+//#define SQL_H_SQLCLI             /* Permit duplicate Includes */
 
 /* Prevent inclusion of winsock.h in windows.h */
 #ifndef _WINSOCKAPI_
@@ -1033,7 +1049,7 @@ typedef SQLWCHAR * LPWSTR;
 typedef sqluint32  DWORD;
 #endif
 
-#include "sqlext.h"
+#include <sqlext.h>
 
 
 #ifdef DB2_WINSOCKAPI_
@@ -1041,7 +1057,7 @@ typedef sqluint32  DWORD;
 #undef DB2_WINSOCKAPI_
 #endif
 
-#endif /* SQL_H_SQLCLI */
+//#endif /* SQL_H_SQLCLI */
 
 
 
@@ -2432,9 +2448,7 @@ SQLRETURN SQL_API_FN  SQLExtendedBind    (SQLHSTMT          hstmt,
                                           SQLUINTEGER *     pcbColDef,
                                           SQLSMALLINT *     pibScale );
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #define  SQL_C_WCHAR         SQL_WCHAR
 #ifdef UNICODE
@@ -2490,9 +2504,12 @@ typedef SQLCHAR         SQLTCHAR;
 #undef DB2_WINSOCKAPI_
 #endif
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* SQL_H_SQLCLI1 */
 
-}
 
 
 
@@ -2502,6 +2519,10 @@ typedef SQLCHAR         SQLTCHAR;
 
 
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
 /*
@@ -2553,6 +2574,35 @@ SQLRETURN   SQLDescribeCol (
                SQLUINTEGER       *ColumnSizePtr,     /* pcbColDef */
                SQLSMALLINT       *DecimalDigitsPtr,  /* pibScale */
                SQLSMALLINT       *NullablePtr);      /* pfNullable */ 
+
+
+#ifdef __cplusplus
+}
+#endif
+
+
+
+#else // #if 0
+
+#if !defined DB2NT
+#define DB2NT     1
+#endif
+/* If DB2CLI_VER is not defined, assume version 2.10 */
+#ifndef DB2CLI_VER
+#define DB2CLI_VER 0x0310
+#endif
+
+
+
+#define SQL_ATTR_LONGDATA_COMPAT    SQL_LONGDATA_COMPAT
+#define SQL_LONGDATA_COMPAT                        1253
+#define SQL_LD_COMPAT_YES            1
+#define SQL_ATTR_CLOSE_BEHAVIOR      1257
+#define SQL_CC_RELEASE                1
+
+
+
+#endif // #if 0
 
 
 

@@ -87,7 +87,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("scott/tiger@TT_tt70_32"); 
+  db.rlogon("scott/tiger@TT_tt1121_32"); 
 
   otl_cursor::direct_exec
    (

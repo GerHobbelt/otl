@@ -37,6 +37,10 @@
 #include <oci.h>
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 
 /*
@@ -152,5 +156,9 @@ sword  osql3    (struct cda_def *cda, text *sqlstm, sword sqllen);
 sword  odsc     (struct cda_def *cursor, sword pos, sb2 *dbsize,
                  sb2 *fsize, sb2 *rcode, sb2 *dtype, sb1 *buf,
                  sb2 *bufl, sb2 *dsize);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* OCIAPR */

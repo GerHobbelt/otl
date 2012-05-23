@@ -3234,11 +3234,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\otl4_examples\ex698_odbc.cpp"
+				RelativePath="..\..\otl4_examples\ex698_oci8.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\otl4_examples\ex699_db2.cpp"
+				RelativePath="..\..\otl4_examples\ex699_oci8.cpp"
 				>
 			</File>
 			<File
@@ -3259,6 +3259,14 @@
 			</File>
 			<File
 				RelativePath="..\..\otl4_examples\ex703_generic.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex704_odbc.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex705_db2.cpp"
 				>
 			</File>
 			<File
