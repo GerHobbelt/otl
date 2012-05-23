@@ -1,7 +1,7 @@
 <!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-  <meta content="text/html; charset=iso-8859-1"
+  <meta content="text/html; charset=ISO-8859-1"
  http-equiv="Content-Type">
   <meta content="Sergei Kuchin" name="Author">
   <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
@@ -17,7 +17,7 @@
 Programmer's Guide</font></i></h1>
 </center>
 <center>
-<h1> <i>OTL 4.0.204 is now
+<h1> <i>OTL 4.0.207 (updated) is now
 released, see&nbsp;<br>
 "<a href="otl3_whatn.htm">what's new</a>" and the <a
  href="otl3_down.htm">download</a> instructions.</i></h1>
@@ -85,7 +85,8 @@ bug report</a></font></h1>
     <tr>
       <td><small><b><font size="+2"><small><a
  href="https://sourceforge.net/forum/forum.php?forum_id=208859"><big>OTL
-Discussion Board<br>
+Discussion
+Board<br>
       </big> (state your name in the <br>
 posting, please)<br>
       </a></small></font></b></small></td>
