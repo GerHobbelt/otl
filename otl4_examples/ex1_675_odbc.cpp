@@ -90,7 +90,7 @@ It would have been 'better' if it hadn't been named 'STD_NAMESPACE_PREFIX' but
 
 so we could put it here, so we don't have to doublecheck with otlv4.
 */
-#define OTL_STD_NAMESPACE_PREFIX     std::    // not used right now
+//#define OTL_STD_NAMESPACE_PREFIX     std::    // not used right now
 
 class otl_datetime;
 
@@ -110,9 +110,9 @@ typedef __int64   int64_t;
 #define OTL_BIGINT int64_t
 
 
-//#define OTL_TIMESTAMP_TO_OSTREAM(o, ts)        otl_timestamp_to_ostream(o, ts)
+#define OTL_DISABLE_OPERATOR_GT_GT_FOR_OTL_VALUE_OTL_DATETIME 1 /* [i_a] */
 
-extern std::ostream& otl_timestamp_to_ostream(std::ostream& dst, const otl_datetime &src);
+
 
 
 // [i_a] customization ends
@@ -252,7 +252,9 @@ void otl_ts_to_str(const otl_datetime &tm, char str[100])
 
 
 
-STD_NAMESPACE_PREFIX ostream& otl_timestamp_to_ostream(STD_NAMESPACE_PREFIX ostream& dst, const otl_datetime &src)
+inline STD_NAMESPACE_PREFIX ostream& operator<<(
+ STD_NAMESPACE_PREFIX ostream& dst, 
+ const otl_datetime& src)
 {
 	/* [i_a] ISO date/timestamp format so Old World blokes like me can grok it too ;-) */
    dst<<STD_NAMESPACE_PREFIX setfill('0')

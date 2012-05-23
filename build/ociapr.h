@@ -33,7 +33,7 @@
 
 
 
-#define cda_def    Lda_Def
+//#define cda_def    Lda_Def
 #include <oci.h>
 
 

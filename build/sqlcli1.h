@@ -3,10 +3,8 @@
 #define __FAKED_DB2_H__
 
 
-// [i_a] shut up ex674_db2; I don't know who's right here, but this compiles
-//#define SQLLEN SQLINTEGER
-//#define SQLULEN SQLUINTEGER
-// no it does NOT; somehow the whole DB2 stuff is foobarred for 64-bit builds (AMD+Itanium) RRRAAAGGHH!
+// [i_a] how to shut up ex674_db2
+// somehow the whole DB2 stuff is foobarred for 64-bit builds (AMD+Itanium) RRRAAAGGHH!
 
 
 
@@ -2495,6 +2493,66 @@ typedef SQLCHAR         SQLTCHAR;
 #endif /* SQL_H_SQLCLI1 */
 
 }
+
+
+
+
+
+
+
+
+
+
+
+/*
+http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/ad/r0000604.htm
+http://publib.boulder.ibm.com/infocenter/dzichelp/v2r2/index.jsp?topic=/com.ibm.db29.doc.odbc/db2z_fngetdata.htm
+*/
+SQLRETURN   SQLGetData       (
+               SQLHSTMT          StatementHandle,     /* hstmt */
+               SQLUSMALLINT      ColumnNumber,        /* icol */
+               SQLSMALLINT       TargetType,          /* fCType */
+               SQLPOINTER        TargetValuePtr,      /* rgbValue */
+               SQLINTEGER        BufferLength,        /* cbValueMax */
+               SQLINTEGER        *StrLen_or_IndPtr);  /* pcbValue */ 
+
+
+
+
+SQLRETURN  SQLBindParameter(
+              SQLHSTMT          StatementHandle,     /* hstmt */
+              SQLUSMALLINT      ParameterNumber,     /* ipar */
+              SQLSMALLINT       InputOutputType,     /* fParamType */
+              SQLSMALLINT       ValueType,           /* fCType */
+              SQLSMALLINT       ParameterType,       /* fSqlType */
+              SQLUINTEGER       ColumnSize,          /* cbColDef */
+              SQLSMALLINT       DecimalDigits,       /* ibScale */
+              SQLPOINTER        ParameterValuePtr,   /* rgbValue */
+              SQLINTEGER        BufferLength,        /* cbValueMax */
+              SQLINTEGER        *StrLen_or_IndPtr);  /* pcbValue */ 
+
+SQLRETURN   SQLRowCount (
+               SQLHSTMT     StatementHandle,   /* hstmt */
+               SQLINTEGER   *RowCountPtr);     /* pcrow */ 
+
+SQLRETURN   SQLBindCol (
+               SQLHSTMT          StatementHandle,            /* hstmt */
+               SQLUSMALLINT      ColumnNumber,               /* icol */
+               SQLSMALLINT       TargetType,                 /* fCType */
+               SQLPOINTER        TargetValuePtr,             /* rgbValue */
+               SQLINTEGER        BufferLength,               /* dbValueMax */
+               SQLINTEGER        *StrLen_or_IndPtr);         /* *pcbValue */ 
+
+SQLRETURN   SQLDescribeCol (
+               SQLHSTMT          StatementHandle,    /* hstmt */
+               SQLUSMALLINT      ColumnNumber,       /* icol */
+               SQLCHAR           *ColumnName,        /* szColName */
+               SQLSMALLINT       BufferLength,       /* cbColNameMax */
+               SQLSMALLINT       *NameLengthPtr,     /* pcbColName */
+               SQLSMALLINT       *DataTypePtr,       /* pfSqlType */
+               SQLUINTEGER       *ColumnSizePtr,     /* pcbColDef */
+               SQLSMALLINT       *DecimalDigitsPtr,  /* pibScale */
+               SQLSMALLINT       *NullablePtr);      /* pfNullable */ 
 
 
 

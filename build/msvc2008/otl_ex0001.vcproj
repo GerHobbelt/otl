@@ -3202,7 +3202,63 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\otl4_examples\ex690_oci7.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex691_oci7.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex692_oci8.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex693_oci8.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex694_db2.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex695_db2.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex696_odbc.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex697_odbc.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex698_odbc.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex699_db2.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\otl4_examples\ex69_oci8.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex700_oci9.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex701_generic.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex702_generic.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\otl4_examples\ex703_generic.cpp"
 				>
 			</File>
 			<File

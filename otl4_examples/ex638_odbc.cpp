@@ -1,5 +1,4 @@
 #include <iostream>
-#include <iomanip>
 #include <string>
 
 // Compile OTL 4.0/ODBC in Windows. Informix CLI uses the  

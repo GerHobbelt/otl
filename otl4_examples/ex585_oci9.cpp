@@ -81,9 +81,9 @@ private:
 
 // The functions below override the pure virtual (interface)
 // functions of the otl_subscriber interface 
-  virtual void OnException(otl_exception& e) 
+  virtual void OnException(const otl_exception& e) 
   { 
-    Log( "Event Exception", reinterpret_cast<char*>(e.msg) ); 
+    Log( "Event Exception", reinterpret_cast<const char*>(e.msg) ); 
   }
 
   virtual void OnDeRegistration(void)
