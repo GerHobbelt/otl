@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.75 [en] (Win98; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, Template otl_value&lt;T&gt;</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, Template otl_value&lt;T&gt;</h1>
+  </center>
+
+  <h1><a name="otl_value" id="otl_value"></a>Template otl_value&lt;T&gt;</h1>This is an OTL template class which allows the user to create a derivative data container based upon the following scalar data types: int, unsigned, long, short, float, double, <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a> (OTL date&amp;time container), std::string (STL string class).
+
+  <p>The derivative container has built-in NULL indicator functionality, that is, the containter has a NULL indicator field in it and can carry over the NULL value from one operation to another.</p>
+
+  <p>For example, a value gets read from a SELECT statement into a otl_value&lt;int&gt; container, and, it is a NULL. Then, the same value gets written into an INSERT statement. The otl_value&lt;int&gt; container retains the NULL in its NULL indicator field, and the NULL gets carried over from the SELECT into the INSERT.</p>
+
+  <p>The otl_value&lt;T&gt; class can be activated with #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a>, or #define <a href="otl3_compile.htm#OTL_VALUE_TEMPLATE_ON">OTL_VALUE_TEMPLATE_ON</a>.<br>
+  &nbsp;<br>
+  &nbsp;</p>
+  <pre>
+<font size="+2">template&lt;class TData&gt; <br>class otl_value{<br>public:<br></font>
+</pre>
+
+  <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+    <tbody>
+      <tr>
+        <td style="vertical-align: top;"><span style="font-style: italic;">Function / Data member</span><br></td>
+
+        <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br></td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+TData v;
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">Container for a scalar value of the TData type.</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+bool ind;
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">NULL indicator.</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_value();
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">default constructor</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;"><span style="font-family: monospace;">otl_value(const otl_value&lt;TData&gt;&amp; var);</span></td>
+
+        <td style="vertical-align: top;">copy constructor</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_value(const TData&amp; var); 
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">copy constructor</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_value(const otl_null&amp; var); 
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">copy constructor</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_value&lt;TData&gt;&amp; operator=<br>(const otl_value&lt;TData&gt;&amp; var); 
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">assignment operator</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_value&lt;TData&gt;&amp; operator=<br>(const TData&amp; var); 
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">assignment operator</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+otl_value&lt;TData&gt;&amp; operator=<br>(const otl_null&amp; var); 
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">assignment operator</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+bool is_null(void) const; 
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">returns true if the otl_value is NULL</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+void set_null(void); 
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">sets the otl_value to NULL. This function duplicates the assignment&nbsp; operator=(const otl_null&amp;), and used only&nbsp; when <b>.v</b> and/or <b>.ind</b> fields are used directly</td>
+      </tr>
+
+      <tr>
+        <td style="vertical-align: top;">
+          <pre>
+void set_non_null(void); 
+</pre>
+        </td>
+
+        <td style="vertical-align: top;">sets the otl_value to "non-NULL", and should be used only when <b>.v</b> and/or <b>.ind</b> fields are used directly.</td>
+      </tr>
+    </tbody>
+  </table><br>
+  <pre>
+<font size="+2">}; // end of otl_value</font>
+
+</pre>Also, two global global template stream operators were overloaded for otl_value&lt;T&gt; and otl_stream's:
+  <pre>
+<a name="otl_value_rr" id="otl_value_rr"></a>template &lt;class TData&gt;<br>otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const otl_value&lt;TData&gt;&amp; var);<br><br><a name="otl_value_ll" id="otl_value_ll"></a>template &lt;class TData&gt;<br>otl_stream&amp; operator&gt;&gt;(otl_stream&amp; s, otl_value&lt;TData&gt;&amp; var);
+</pre>These two template overloaded operators can be used in a combination with the otl_value&lt;T&gt; container. The operators carry over NULL values, if there are any.
+
+  <p>Here's one more overloaded operator&lt;&lt; for writing otl_value&lt;T&gt;'s to std::ostream:</p>
+  <pre>
+<a name="otl_value_ostream" id="otl_value_ostream"></a>template &lt;class TData&gt; std::ostream&amp;<br>operator&lt;&lt;(std::ostream&amp; s, const otl_value&lt;TData&gt;&amp; var);<br><br>
+</pre>
+  <hr width="100%">
+
+  <center>
+    <p><a href="otl3_iterators.htm">Prev</a> <a href="otl3_const_sql.htm">Next</a><a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com <script language="JavaScript" type="text/javascript">
+<!-- hide from oldgmailsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i> <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script> <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script></p>
+</body>
+</html>

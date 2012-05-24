@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+
+  <title>OTL 4.0, Example 473 (OCI7, otl_datetime and Oracle 9i TIMESTAMP type)</title>
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</head>
+
+<body>
+  <h1 align="center">OTL 4.0, Example 473 (OCI7, otl_datetime and Oracle 9i TIMESTAMP type)</h1>
+
+  <p>This example demonstrates an INSERT and SELECT with Oracle9i TIMESTAMPs and <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>.</p>
+
+  <h2>Source Code</h2>
+  <pre>
+#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;
+</pre>
+  <pre>
+#define <a href="otl3_compile.htm#OTL_ORA7">OTL_ORA7</a> // Compile OTL 4.0/OCI7<br><a name="ex1" id="ex1"></a>#define <a href=
+"otl3_compile.htm#OTL_ORA7_TIMESTAMP_TO_STRING">OTL_ORA7_TIMESTAMP_TO_STRING(</a>tm,s)      \<br>{                                               \<br>  sprintf(s,                                    \<br>          "%02d/%02d/%04d %02d:%02d:%02d.%06ld",\<br>          tm.month,                             \<br>          tm.day,                               \<br>          tm.year,                              \<br>          tm.hour,                              \<br>          tm.minute,                            \<br>          tm.second,                            \<br>          tm.fraction                           \<br>         );                                     \<br>}<br><br><a name="ex2" id="ex2"></a>#define <a href=
+"otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAMP">OTL_ORA7_STRING_TO_TIMESTAMP</a>(s,tm)       \<br>{                                                \<br>  sscanf(s,                                      \<br>          "%02d/%02d/%04d %02d:%02d:%02d.%06ld", \<br>          &amp;tm.month,                             \<br>          &amp;tm.day,                               \<br>          &amp;tm.year,                              \<br>          &amp;tm.hour,                              \<br>          &amp;tm.minute,                            \<br>          &amp;tm.second,                            \<br>          &amp;tm.fraction                           \<br>         );                                      \<br>}<br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert(void)<br>// insert rows into table<br>{ <br> otl_stream o(50, // buffer size<br>              "insert into test_tab2 "<br>              "values(:f1&lt;int&gt;, "<br>               "      to_timestamp(:f2&lt;char[28]&gt;,'MM/DD/YYYY HH24:MI:SS.FF'))", <br>                 // SQL statement<br>              db // connect object<br>             );<br><br> otl_datetime tm;<br><br> for(int i=1;i&lt;=10;++i){<br>  tm.year=2008;<br>  tm.month=1;<br>  tm.day=19;<br>  tm.hour=23;<br>  tm.minute=12;<br>  tm.second=12;<br> // Second's precision needs to be specified BEFORE the stucture can be<br> // used either for writing or reading timestamp values, which have second's <br> // fractional parts.<br>  tm.frac_precision=6;<br>  tm.fraction=123456;<br>  o&lt;&lt;i;<br>  o&lt;&lt;tm; // otl_datetime can be written into a <br>         // char[XXX] variable when appropriate <br>         // conversion is #<a href="#ex1">defined</a><br> }<br>}<br><br>void select(void)<br>{ <br> otl_stream i(50, // buffer size<br>              "select "<br>              "  f1, "<br>              "  to_char(f2,'MM/DD/YYYY HH24:MI:SS.FF') f2 "<br>               "from test_tab2 where f1 between :f1&lt;int&gt; and :f1*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> int f1;<br> otl_datetime f2;<br><br> i&lt;&lt;4; // assigning :f1 = 4<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of out rows is fetched to the buffer<br><br> // Second's precision needs to be specified BEFORE the stucture can be<br> // used either for writing or reading timestamp values, which have second's <br> // fractional parts.<br> f2.frac_precision=6; // microseconds<br><br> while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1;<br>  i&gt;&gt;f2; // otl_datetime can be read from a <br>         // char[XXX] variable when appropriate <br>         // conversion is #<a href="#ex2">defined</a><br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2.month&lt;&lt;"/"&lt;&lt;f2.day&lt;&lt;"/"<br>      &lt;&lt;f2.year&lt;&lt;" "&lt;&lt;f2.hour&lt;&lt;":"&lt;&lt;f2.minute&lt;&lt;":"<br>      &lt;&lt;f2.second&lt;&lt;"."<br>      &lt;&lt;f2.fraction<br>      &lt;&lt;endl;<br> }<br> <br>}
+</pre>
+  <pre>
+int main()<br>{<br> <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment<br> try{<br><br>  db.rlogon("scott/tiger"); // connect to Oracle<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "drop table test_tab2",<br>    otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "create table test_tab2(f1 int, f2 timestamp)"<br>    );  // create table<br><br>  insert(); // insert records into table<br>  select(); // select records from table<br><br> }<br><br> catch(<a href=
+"otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from Oracle<br><br> return 0;<br><br>}<br>
+</pre>
+
+  <h2>Output</h2>
+  <pre>
+f1=4, f2=1/19/2008 23:12:12.123456<br>f1=5, f2=1/19/2008 23:12:12.123456<br>f1=6, f2=1/19/2008 23:12:12.123456<br>f1=7, f2=1/19/2008 23:12:12.123456<br>f1=8, f2=1/19/2008 23:12:12.123456<br>
+</pre>
+  <hr width="100%">
+
+  <center>
+    <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a> <a href="home.htm">Go Home</a></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a> <script language="JavaScript" type="text/javascript">
+<!-- hide from oldgmailsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

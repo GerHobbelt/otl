@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+  <title>OTL 4.0, Example 361 (Unicode VARCHAR Insert/Select and
+#define OTL_UNICODE_CHAR_TYPE)</title>
+</head>
+<body>
+<center>
+<h1>OTL 4.0, Example 361 (Unicode VARCHAR Insert/Select and #define
+OTL_UNICODE_CHAR_TYPE)</h1>
+</center>
+<h2>Source Code</h2>
+<pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
+<pre>#define <a href="otl3_compile.htm#OTL_ODBC_ALTERNATE_RPC">OTL_ODBC_ALTERNATE_RPC</a><br>#define OTL_ODBC_POSTGRESQL // Compile OTL 4.0/ODBC<br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> // Enable Unicode OTL for ODBC<br><br>#if defined(__GNUC__)<br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a> unsigned short <br>#else<br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a> wchar_t<br>#endif<br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[5]&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement, char[5] means 5 2-byte <br>                 // Unicode charatcters including a null<br>                 // terminator<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br><br>&nbsp;OTL_UNICODE_CHAR_TYPE tmp[5]; // Null terminated Unicode character array.<br><br>&nbsp;for(int i=1;i&lt;=100;++i){<br>&nbsp; o&lt;&lt;i;<br>  tmp[0]=1111; // Unicode character (decimal code of 1111)<br>  tmp[1]=2222; // Unicode character (decimal code of 2222)<br> &nbsp;tmp[2]=3333; // Unicode chracater (decimal code of 3333)<br>  tmp[3]=4444; // Unicode chracater (decimal code of 4444)<br>  tmp[4]=0; // Unicode null terminator <br>&nbsp; o<a
+ href="otl3_stream_class.htm#unicode_ll">&lt;&lt;</a>tmp;&nbsp;<br>&nbsp;}<br><br>}<br><br>void select()<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab "<br>              "where f1&gt;=:f11&lt;int&gt; "<br>              "  and f1&lt;=:f12&lt;int&gt;*2",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;int f1;<br>&nbsp;OTL_UNICODE_CHAR_TYPE f2[5];<br><br>&nbsp;i&lt;&lt;8&lt;&lt;8; // assigning :f11 = 8, f12 = 8<br>&nbsp;&nbsp; // SELECT automatically executes when all input variables are<br>&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1;<br>&nbsp; i<a
+ href="otl3_stream_class.htm#unicode_gg">&gt;&gt;</a>f2;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2=";<br>&nbsp;&nbsp; for(int j=0;f2[j]!=0;++j)<br>&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;" "&lt;&lt;f2[j];<br>&nbsp;&nbsp; cout&lt;&lt;endl;<br>&nbsp;}<br><br>&nbsp;i&lt;&lt;4&lt;&lt;4; // assigning :f11 = 4, :f12 = 4<br>&nbsp;&nbsp; // SELECT automatically executes when all input variables are<br>&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2=";<br>&nbsp;&nbsp; for(int j=0;f2[j]!=0;++j)<br>&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;" "&lt;&lt;f2[j];<br>&nbsp;&nbsp; cout&lt;&lt;endl;<br>&nbsp;}<br><br>}<br><br>int main()<br>{<br>&nbsp;<a
+ href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize the database API environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tiger@postgresql2"); // connect to the database<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br>   db.commit();<br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 varchar(4))"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br>  db.commit();<br>&nbsp; insert(); // insert records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from the database<br><br>&nbsp;return 0;<br><br>}</pre>
+<h2>
+Output</h2>
+<pre>f1=8, f2= 1111 2222 3333 4444<br>f1=9, f2= 1111 2222 3333 4444<br>f1=10, f2= 1111 2222 3333 4444<br>f1=11, f2= 1111 2222 3333 4444<br>f1=12, f2= 1111 2222 3333 4444<br>f1=13, f2= 1111 2222 3333 4444<br>f1=14, f2= 1111 2222 3333 4444<br>f1=15, f2= 1111 2222 3333 4444<br>f1=16, f2= 1111 2222 3333 4444<br>f1=4, f2= 1111 2222 3333 4444<br>f1=5, f2= 1111 2222 3333 4444<br>f1=6, f2= 1111 2222 3333 4444<br>f1=7, f2= 1111 2222 3333 4444<br>f1=8, f2= 1111 2222 3333 4444<br><br><hr
+ width="100%"></pre>
+<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
+ href="home.htm">Go
+Home</a></center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript">
+<!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+</p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

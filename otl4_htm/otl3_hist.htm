@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title>Oracle and Odbc Template Library, Version 3.1, History of the
+Project</title>
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/3.03Gold (Win95; I) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</head>
+<body>
+<ul>
+  <h1 align="center">Oracle and Odbc Template Library, Version 4.0<br>
+  </h1>
+  <p><br>
+  <br>
+  </p>
+  <h1 align="center">History of the Project</h1>
+  <p>This project started with my early experiments on the Oracle Call
+Interface
+back in 1994. Before that I had worked with C++ and several database
+APIs
+in different platforms. The idea was relatively obvious: SQL as a query
+language is based on the concept of data sets. The process of
+retrieving
+data from and writing it to the database can be naturally expressed as
+data streams. C++ had a concept of streams applied to files. </p>
+  <p>It was a logical idea to combine the C++ streams and SQL as a
+language with
+data streams.. Besides the idea itself, a good implementation was
+needed. It took me a while to realize that the simplest and most
+efficient
+implementation would be via C++ templates. </p>
+  <p>I went through a few intermediate implementations that used
+conventional
+object oriented techniques like creating a class hierarchy with
+inheritance
+and making an object library out of the source code. Some folks might
+have
+used it. It is known as the Oracle SQL Class Library (OSCL). It was
+released
+in late 1995 / early 1996 time frame. At the time, I was working on H1B
+visa as a technical consultant in a small "body shop" called
+Mosakin Corp. That is why the OSCL was stored in Mosakin's Web site as
+the "original product of the company." It seems that Mosakin
+has changed its general direction of business and the OSCL is no longer
+available in the Web site. </p>
+  <p>The first real template version of the OTL (OTL 1.0) was made on
+top
+for the Oracle Call Interface 7.x for Oracle 7 and it was released in
+late
+1996 / early 1997. </p>
+  <p>Around mid-1998 I received a lot of questions and requests from
+different
+folks who kept asking me about the OTL for the Oracle Call Interface 8.
+The framework of the OTL 1.0 was enhanced a little bit and migrated to
+the OCI8. It became the second version of the OTL (OTL 2.0). This is
+the
+version that was used by the developer community in 1998-2000. OTL 2.0
+was available
+for the OCI7 and OCI8 in separate header files.<br>
+  </p>
+  <p>In late 1998, I realized that the OTL framework could be migrated
+to
+the ODBC API. That is how the ODBC Template Library came along. </p>
+  <p>Basically, all three OTL's (OTL/OCI7, OTL/OCI8 and OTL ODBC) were
+similar
+in the core but they were based on quite different API's. Each OTL was
+around 150Kb of source code, so the combined code was around 500Kb. The
+next logical step was to try to come up with a unified template stream
+framework. I created the unified framework and also developed so called
+OTL-adapters for the OCI7, OCI8 and ODBC. This more integrated version
+of OTL became OTL 3.0.<br>
+  </p>
+  <p>The framework is truly template. The OTL-adapters are thin
+wrappers
+around the database APIs. The actual OTL classes are
+instances
+of the template classes instantiated from the framework and the
+OTL-adapters.
+The adapter classes are passed as parameters into the framework.<br>
+  </p>
+  <p>In 2001-2002 time frame, implementations of Unicode (both UTF-16
+and UTF-8) were added to OTL. OTL 4.0 was released in 2001, as a
+release that accumulated enough code modifications to go from version
+3.x to 4.0. Around 2004,&nbsp; transition from 32-bit
+platforms to 64-bit platforms has started and still goes on. The list
+of supported database types grew substantially. <br>
+  <br>
+In 2008, I heard from many enough developers who worked on&nbsp; "OTL
+legacy applications", and the developers asked me about backward
+compatibility. Backward compatibility remains one of the main goals of
+the OTL project, though occasionally it gets broken, and then fixed. As
+long as C++ is used in database applications, I'll try to maintain the
+OTL project, to keep the code base up to date, and hopefully I could
+add more useful features.<br>
+  <br>
+Also, my hope is that at some point in the future, serious people from
+the C++ standardization committee will look into the lack of a decent
+C++ database access API, and come together to see what ideas are
+available, and they might even consider the idea of combining the C++
+stream idiom with SQL in some form. I'd be more than happy to
+participate in such a project. <br>
+  </p>
+  <p>Sergei Kuchin</p>
+  <p> </p>
+  <hr width="100%">
+  <p></p>
+  <center>
+  <p><a href="home.htm">Go Home</a></p>
+  </center>
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a
+ href="mailto:skuchin@gmail.com">skuchin@yahogmail</a>
+  <script language="JavaScript">
+<!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script>.</p>
+  <p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
+</ul>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

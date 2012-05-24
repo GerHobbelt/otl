@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, STL-compliant iinput iterator</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, STL-compliant OTL input iterator</h1>
+  </center>
+
+  <h1>STL-compliant OTL input iterator</h1>
+
+  <h1>otl_input_iterator&lt;T, Distance&gt;</h1>
+
+  <table cellpadding="0" cellspacing="0" width="100%">
+    <tbody>
+      <tr>
+        <td align="left"><img src="iterator.gif" height="38" width="194"></td>
+
+        <td align="right"><img src="type.gif" height="39" width="194"></td>
+      </tr>
+
+      <tr>
+        <td align="left" valign="top"><b>Category</b>: iterators</td>
+
+        <td align="right" valign="top"><b>Component type</b>: type</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Description</h3><tt>otl_input_iterator</tt> is an <a href="http://www.sgi.com/tech/stl/InputIterator.html">Input Iterator</a> that performs input of objects of type <tt>T</tt> from a particular <a href="otl3_stream_class.htm">otl_stream</a>. When end of stream is reached, the <tt>otl_input_iterator</tt> takes on a special <i>end of stream</i> value, which is a past-the-end iterator. Note that all of the restrictions of an <a href="http://www.sgi.com/tech/stl/InputIterator.html">Input Iterator</a> must be obeyed, including the restrictions on the ordering of <tt>operator*</tt> and <tt>operator++</tt> operations.
+
+  <h3>Definition</h3>Defined in the OTL header file.
+
+  <h3>Template parameters</h3>
+
+  <table border="2">
+    <tbody>
+      <tr>
+        <th>Parameter&nbsp;</th>
+
+        <th>Description&nbsp;</th>
+
+        <th>Default&nbsp;</th>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>T</tt></td>
+
+        <td valign="top">The <tt>otl_input_iterator</tt>'s value type. <tt>Operator*</tt> returns a <tt>const T&amp;</tt>.&nbsp;</td>
+
+        <td valign="top">&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>Distance</tt></td>
+
+        <td valign="top">The <tt>otl_input_iterator</tt>'s distance type.&nbsp;</td>
+
+        <td valign="top"><tt>ptrdiff_t</tt></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Model of</h3><a href="http://www.sgi.com/tech/stl/InputIterator.html">Input Iterator</a>
+
+  <h3>Type requirements</h3>The value type <tt>T</tt> must be a type such that <tt>s &gt;&gt; T</tt> is a valid expression.
+
+  <p>The value type <tt>T</tt> must be a model of <a href="http://www.sgi.com/tech/stl/DefaultConstructible.html">Default Constructible</a>.</p>
+
+  <p>The distance type must, as described in the <a href="http://www.sgi.com/tech/stl/InputIterator.html">Input Iterator</a> requirements, be a signed integral type.</p>
+
+  <h3>Public base classes</h3>None.
+
+  <h3>Members</h3>
+
+  <table border="2">
+    <tbody>
+      <tr>
+        <th>Member&nbsp;</th>
+
+        <th>Where defined&nbsp;</th>
+
+        <th>Description&nbsp;</th>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>otl_input_iterator()</tt></td>
+
+        <td valign="top"><tt>otl_input_iterator</tt></td>
+
+        <td valign="top">See below.&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>otl_input_iterator(otl_stream&amp;)</tt></td>
+
+        <td valign="top"><tt>otl_input_iterator</tt></td>
+
+        <td valign="top">See below.&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>otl_input_iterator(const otl_input_iterator&amp;)</tt></td>
+
+        <td valign="top"><a href="http://www.sgi.com/tech/stl/trivial.html">Trivial Iterator</a></td>
+
+        <td valign="top">The copy constructor&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>otl_input_iterator&amp; operator=(const otl_stream&amp;)</tt></td>
+
+        <td valign="top"><a href="http://www.sgi.com/tech/stl/trivial.html">Trivial Iterator</a></td>
+
+        <td valign="top">The assignment operator&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>const T&amp; operator*() const</tt></td>
+
+        <td valign="top"><a href="http://www.sgi.com/tech/stl/InputIterator.html">Input Iterator</a></td>
+
+        <td valign="top">Returns the next object in the stream.&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>otl_input_iterator&amp; operator++()</tt></td>
+
+        <td valign="top"><a href="http://www.sgi.com/tech/stl/InputIterator.html">Input Iterator</a></td>
+
+        <td valign="top">Preincrement.&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>otl_input_iterator&amp; operator++(int)</tt></td>
+
+        <td valign="top"><a href="http://www.sgi.com/tech/stl/InputIterator.html">Input Iterator</a></td>
+
+        <td valign="top">Postincrement.<br></td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>bool operator==(const otl_input_iterator&amp;, const otl_input_iterator&amp;)</tt></td>
+
+        <td valign="top"><a href="http://www.sgi.com/tech/stl/trivial.html">Trivial iterator</a></td>
+
+        <td valign="top">The equality operator. This is a global function, not a member function.&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>input_iterator_tag iterator_category(const otl_input_iterator&amp;)</tt></td>
+
+        <td valign="top"><a href="http://www.sgi.com/tech/stl/iterator_tags.html">iterator tags</a></td>
+
+        <td valign="top">Returns the iterator's category.&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>T* value_type(const otl_input_iterator&amp;)</tt></td>
+
+        <td valign="top"><a href="http://www.sgi.com/tech/stl/iterator_tags.html">iterator tags</a></td>
+
+        <td valign="top">Returns the iterator's value type.&nbsp;</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>Distance* distance_type(const otl_input_iterator&amp;)</tt></td>
+
+        <td valign="top"><a href="http://www.sgi.com/tech/stl/iterator_tags.html">iterator tags</a></td>
+
+        <td valign="top">Returns the iterator's distance type. &lt;&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>New members</h3>&nbsp;&nbsp;&nbsp;<br>
+  &nbsp;
+
+  <table border="2">
+    <tbody>
+      <tr>
+        <th>Function&nbsp;</th>
+
+        <th>Description&nbsp;</th>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>otl_input_iterator()</tt></td>
+
+        <td valign="top">The default constructor: Constructs an end-of-stream iterator. This is a past-the-end iterator, and it is useful when constructing a "range".</td>
+      </tr>
+
+      <tr>
+        <td valign="top"><tt>otl_input_iterator(otl_stream&amp; s)</tt></td>
+
+        <td valign="top">Creates an <tt>otl_input_iterator</tt> that reads values from the OTL stream <tt>s</tt>. When <tt>s</tt> reaches end of stream, this iterator will compare equal to an end-of-stream iterator created using the default constructor.&nbsp;</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Notes</h3>
+
+  <h3>See also</h3><a href="otl3_output_iterator.htm">otl_output_iterator</a>, <a href="http://www.sgi.com/tech/stl/InputIterator.html">Input Iterator</a>, <a href="http://www.sgi.com/tech/stlOutputIterator.html">Output Iterator</a>
+  <hr width="100%">
+
+  <center>
+    <p><a href="otl3.htm">Contents</a> <a href="home.htm">Go Home</a></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>.&nbsp; <script language="JavaScript" type="text/javascript">
+<!-- hide from oldgmailsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i> <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script> <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script></p>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+  <title>OTL 4.0, OTL exception class</title>
+</head>
+<body>
+<center>
+<h1>OTL 4.0, OTL exception class</h1>
+</center>
+<h1>
+<a name="otl_exception_class"></a>OTL exception class</h1>
+This class is used by the OTL functions to raise exceptions. In case if
+an OTL function receives a non-zero error code from the underlying
+database
+API, the OTL function raises an exception of the otl_exception type. A
+raised otl_exception may be a database error or an <a
+ href="otl3_exc_list.htm">OTL
+defined exception</a>.
+<pre><font size="+2">class otl_exception {<br>public:<br></font></pre>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
+ cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Function
+/ data member</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Description
+      </span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="stm_text"></a>char stm_text[2048 or <a
+ href="otl3_compile.htm#OTL_EXCEPTION_STM_TEXT_SIZE">OTL_EXCEPTION_STM_TEXT_SIZE</a>];</pre>
+      </td>
+      <td style="vertical-align: top;">First 2047 characters of the
+text of the SQL statement in which
+the
+otl_exception
+was raised.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="var_info"></a>char var_info[256];</pre>
+      </td>
+      <td style="vertical-align: top;">In case if the OTL defined
+exception "<a href="otl3_exc_list.htm#32000">Incompatible
+data types in stream operation</a>" is raised, the <i>var_info</i>
+field
+is filled out with variable specific information: bind variable name /
+select output column number, its datatype and the datatype of the
+parameter
+of the operator &gt;&gt; or operator &lt;&lt;.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><span style="font-family: monospace;"><a name="unicode_msg"></a>#if defined(<a
+ href="otl3_compile.htm#OTL_UNICODE_EXCEPTION_AND_RLOGON">OTL_UNICODE_EXCEPTION_AND_RLOGON</a>)<br>       </span><span
+ style="font-family: monospace;">SQLWCHAR</span><span
+ style="font-family: monospace;"> </span>msg[1000];<span
+ style="font-family: monospace;"><br>#else<br></span>  &nbsp;&nbsp;&nbsp;&nbsp; unsigned char msg[1000];<br>#endif<br></pre>
+      </td>
+      <td style="vertical-align: top;">The <i>msg</i> field contains a
+database error message or a
+message of
+an <a href="otl3_exc_list.htm">OTL defined exception</a></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">int code;</span></td>
+      <td style="vertical-align: top;">The <i>code</i> field contains
+a database error code or a code
+of an OTL
+defined exception</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><span style="font-family: monospace;"><a
+ name="unicode_sqlstate"></a>#if defined(<a
+ href="otl3_compile.htm#OTL_UNICODE_EXCEPTION_AND_RLOGON">OTL_UNICODE_EXCEPTION_AND_RLOGON</a>)<br>       SQLWCHAR </span>sqlstate[1000];<span
+ style="font-family: monospace;"><br>#else<br></span>  &nbsp;&nbsp;&nbsp;&nbsp; unsigned char sqlstate[1000];<br>#endif<br></pre>
+      </td>
+      <td style="vertical-align: top;">The <i>sqlstate</i> field is
+used in OTL 4.0/ODBC and in OTL
+4.0/DB2-CLI
+only. It is always empty in OTL 4.0/OCIx. In OTL 4.0/ODBC or
+OTL/DB2-CLI,
+the field contains the sqlstate information, the way it is defined in
+ODBC.
+For more detail, see the ODBC Programmer's Guide, the DB2 CLI
+Programmer's
+Guide.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><span style="font-family: monospace;">#if defined(<a
+ href="otl3_compile.htm#OTL_EXTENDED_EXCEPTION">OTL_EXTENDED_EXCEPTION</a>)<br>#if defined(<a
+ href="otl3_compile.htm#OTL_UNICODE_EXCEPTION_AND_RLOGON">OTL_UNICODE_EXCEPTION_AND_RLOGON</a>)<br></span>     &nbsp;&nbsp; int arr_len;<br>   &nbsp;&nbsp;&nbsp;&nbsp; <span
+ style="font-family: monospace;">SQLWCHAR</span>* msg_arr[];<br>   &nbsp;&nbsp;&nbsp;&nbsp; <span
+ style="font-family: monospace;">SQLWCHAR</span>* sqlstate_arr[];<br>   &nbsp;&nbsp;&nbsp;&nbsp; int code_arr[];<span
+ style="font-family: monospace;"><br>#else<br></span>     &nbsp;&nbsp; int arr_len;<br>   &nbsp;&nbsp;&nbsp;&nbsp; char* msg_arr[];<br>   &nbsp;&nbsp;&nbsp;&nbsp; char* sqlstate_arr[];<br>   &nbsp;&nbsp;&nbsp;&nbsp; int code_arr[];<br>#endif<br>#endif<br></pre>
+      </td>
+      <td style="vertical-align: top;"><a name="EXTENDED"></a>Extended
+fields, containing all ODBC /
+DB2-CLI diagnostic
+records, retrieved by the ODBC/DB2-CLI SQLGetDiagRec() function.
+otl_exception
+usually retrieves only the first diagnostic record and populates the <i>msg</i>,
+      <i>code</i>, and <i>sqlstate </i>fields with it. In some cases,
+though,
+multiple diagnostic records can be retrieved. In these cases, the
+extended
+fields get populated with the diagnostic records. <i>arr_len</i>
+contains
+the size of the xxx_arr[] fields. The xxx_arr[] fields get allocated
+and
+deallocated dynamically, if the arr_len&gt;0. <i>msg_arr[] </i>contains
+the
+diagnostic messages, <i>sqlstate_arr[] </i>--the SQLSTATE
+information,
+and <i>code_arr[]</i> -- the error codes. <i>msg</i>, <i>code</i>,
+and <i>sqlstate</i> get always populated with the first diagnostic
+record.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span
+ style="font-family: monospace;">#if defined(<a
+ href="otl3_compile.htm#OTL_EXCEPTION_ENABLE_ERROR_OFFSET">OTL_EXCEPTION_ENABLE_ERROR_OFFSET</a>)<br>
+&nbsp;&nbsp;&nbsp; int error_offset;<br>
+#endif<br>
+      </span> </td>
+      <td style="vertical-align: top;">SQL Statement Parse Error
+Offset. Available for <span style="font-style: italic;">OTL/OCIx only.</span></td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="enum"></a>enum{disabled=0,enabled=1};</pre>
+      </td>
+      <td style="vertical-align: top;">This <i>enum</i> defines two
+constants which may be used in
+execution
+of <a href="otl3_const_sql.htm#otl_constant_sql">constant SQL
+statements</a></td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<pre><font size="+2">}; // end of otl_exception</font></pre>
+<hr width="100%">
+<center>
+<p><a href="otl3_connect_class.htm">Prev</a> <a
+ href="otl3_long_string.htm">Next</a><a href="otl3.htm">Contents</a>
+<a href="home.htm">Go Home</a></p>
+</center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+</p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

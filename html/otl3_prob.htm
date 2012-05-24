@@ -1,0 +1,677 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.75 [en] (Win98; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>Oracle, Odbc and DB2-CLI Template Library, Version 3.2, Known Problems</title>
+</head>
+
+<body>
+  <div style="margin-left: 2em">
+    <center>
+      <h1>Oracle, Odbc and DB2-CLI Template Library, Version 3.2</h1>
+    </center>
+
+    <center>
+      <h1>Known Problems</h1>
+    </center>If you have found a problem or a bug in OTL 3.2, feel free to send an email to <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com/a&gt;. The following is the list of known problems in OTL 3.2:</a>
+
+    <ul>
+      <li style="list-style: none">&nbsp;</li>
+
+      <li><a name="prob63"></a><b>63.</b> The program crashes when there is a typo in a bind variable declaration inside a SQL statement to be passed as a second parameter into an otl_stream.E.g.: "INSERT INTO my_tab VALUES(:f1&lt;<i>date</i>&gt;,:f2&lt;int&gt;)", <i>date</i> is not a legimitate type definition (it should be <i>timestamp</i>). Ideally, OTL should just spit out an otl_exception. <i><font color="#800000">This problem has been fixed in OTL 3.2.20.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob62"></a><b>62.</b> In an otl_stream with a SELECT statement, when eof()!=1 yet (that is, not all rows were fetched from the SELECT statement, or it's not the end of the fetch sequence yet), if otl_streaqm::rewind() gets called in OTL/ODBC, the following ODBC error gets returned: "Cursor is in invalid state." This error is due to the fact that the ODBC statement handle needs to be closed with the SQL_CLOSE option, before the SELECT statement may be executed again. <i><font color="#800000">This problem has been fixed in OTL 3.2.20.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob61"></a><b>61.</b> For OTL/OCI8, the maximum number of bind variables/SELECT output columns was increased from 512 to 1024&nbsp; to match the Oracle 8(i) limit.Some cases were reported when more than 512 SELECT output columns were used and and it caused the program core dump. <i><font color="#800000">This problem has been fixed in OTL 3.2.19.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob60"></a><b>60.</b> OTL does not compile with <a href="http://www.stlport.org">STLPort 4.0</a> when #define OTL_STL is on.&nbsp; <i><font color="#800000">This problem has been fixed in OTL 3.2.17.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob59"></a><b>59.</b> Under #define OTL_ORA7, otl_stream in the <i>referenced cursor</i> mode generates:&nbsp; "Maximum open cursors exceeded." It happens because&nbsp; the second cursor, that gets allocated behind the scenes for the referenced cursor itself (not for the master PL/SQL block), does not get released in the process of closing the otl_stream. <i><font color="#800000">This problem has been fixed in OTL 3.2.16.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob58"></a><b>58.</b> A problem in reading unitialized (NULL) CLOBs/BLOBs. The problem occurs in the regular mode as well as the stream mode. The problem is that when a NULL LOB gets read from the stream, the LOB's length should be showing up as 0&nbsp; if the LOB gets fetched into an otl_long_strnig buffer, or a otl_lob_stream. Instead, the otl_stream spit out an otl_exception.&nbsp; <i><font color="#800000">This problem has been fixed in OTL 3.2.16.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob57"></a><b>57.</b> otl_long_int_vec, when used in otl_stream operations, generates ""Incompatible data types in stream operation." <i><font color="#800000">This problem has been fixed in OTL 3.2.16.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob56"></a><b>56.</b> A general compilation problem with Sun C++ Workshop 5.0, when #define OTL_STL is defined. Most probably, it is a bug in the compiler, because I was unable to find any rational explanation for this error. <i><font color="#800000">This problem has not been fixed yet.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob55"></a><b>55.</b> In some cases, when OTL is compiled with tools like Bounds Checker, Heap Agent, Purify, Code Guard, etc., the tools, which catch memory leaks or other types of resource leaks / mismacthes, get confused by mismacthing pairs of new[] / delete. It works okay, but for the sake of making the OTL a better product, some cleanup work needs to be done. <i><font color="#800000">This problem has been fixed in OTL 3.2.15.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob54"></a><b>54.</b> A few compilation warnings in Sun C++ Workshop 5.0, saying something about hiding variables / parameters / objects. A small inconvenience I'd say. <i><font color="#800000">This problem has been fixed in OTL 3.2.15</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob53"></a><b>53.</b> A general problem with the otl_stream's destructor which tries to <i>auto-flush</i> its buffer in case, say, INSERT, UPDATE or DELETE SQL statements, or a call to a stored procedure / PL/SQL block. In case if an unrelated [to OTL] exception is being thrown, and the destructor is being called as part of the <i>stack unwinding</i>, and at the same time the database connection gets cut off, because of, say, the database backend's shutdown was completed at the exact same moment. Under all of these conditions, if they happen simultaneously, the auto-flushing of the buffer will result in the second exception, thrown by the destructor. Despite the fix for problem <a href="#prob46">46</a>, released with OTL 3.2.13, the problem has not completely gone away
+      because some C++ compilers do not really support the ANSI C++ standard. <i><font color="#800000">This problem has been fixed in OTL 3.2.15</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob52"></a><b>52.</b> A problem with the otl_stream::get_rpc() as well as the otl_cursor::direct_exec() functions. The problem is that the first time around the functions return a value greater than 0, meaning that the row process count was &gt; 0, that is a non-zero number of records were processed, say, deleted. Then, the second time around, if the actual number of records to be processed equals zero, the functions will return the non-zero value recorded in the previous operation.This problem had something to do with the <i>dirty</i> flag inside the stream, and the re-initialization of the internal <i>rpc</i> variable was located after the checking of <i>if(dirty) return</i>. The fix was obvious. <i><font color="#800000">This problem has been fixed in OTL
+      3.2.15</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob51"></a><b>51.</b> A problem in <a href="otl3_long_string.htm">otl_long_string</a>: the constructors or an otl_long_string with <a href="otl3_long_string.htm#gen_constr0">internal buffer</a> and for an otl_long_string with <a href="otl3_long_string.htm#gen_constr">external buffer</a> did not set the dynamic length of the string on the input. And, because of that, the developer had to explicitly call the otl_long_string::<a href="otl3_long_string.htm#set_len">set_len</a>() function.I consider this rather inconveniece than a bug. Anyway, <i><font color="#800000">this problem has been fixed in OTL 3.2.14</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><a name="prob50"></a><b>50.</b> A general problem in OTL: a memory leak, when otl_exception's get raised, under certain conditions, especially in case of repeated otl_exception's, say, when otl_exception's are used as a means to communicate messages from the database back end. It's really hard to positively identify under conditions of what sort the memory leak happens. I did some internal restructuring of the code to implement the new features for OTL 3.2.14, and the memory leak disappeared. <i><font color="#800000">This problem has been fixed in OTL 3.2.14</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob49"></a><b>49.</b> A problem in OTL/ODBC and OTL/DB2-CLI: bulk operations with SQL_LONGVARCHAR and SQL_LONGVARBINARY are supported by ODBC and DB2-CLI but the operations were notsupported by OTL/ODBC and OTL/DB2-CLI. This feature is useful for optimizing performance of operations on a large number of relatively small LOBs. For more detail on how the LOB data types get mapped to the ODBC SQL_LONGVARCHAR and SQL_LONGVARBINARY, see the manuals on the actual ODBC drivers and DB2-CLI..<i><font color="#800000">This problem has been fixed in OTL 3.2.13.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob48"></a><b>48.</b> A problem in OTL/ODBC: MS SQL Server's data type uniqueidentifier (GUID) was not supported.<i><font color="#800000">This problem has been fixed in OTL 3.2.13</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob47"></a><b>47.</b> A problem with extracting ODBC's diagnostic records. In general, there may be more than one record. otl_exception (in OTL/ODBC) retrieves only the very first record by calling SQLGetDiagRec(...,1,...). It is 99.5% sufficient in database applications. However, there are rare cases when the ODBC drivers may return multiple Diag Records.Mostly, cases like that are limited to MS SQL Server. I have not seen any other [except for MS SQL Server ODBC driver] ODBC driver returning more than one Diag Rec.<i><font color="#800000">This problem has been fixed in OTL 3.2.13</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><a name="prob46"></a><b>46.</b> A general problem with otl_stream when it was opened with INSERT, DELETE, UPDATE statement, or PL/SQL block / stored procedure call which has output bind variable(s) in it. The otl_stream descructor (<i>~otl_stream::otl_stream()</i>) checks to see if the its output buffer is <i>dirty.</i> If it is, the destructor tries to execute the SQL statement. If the SQL statement fails, the destructor, in its turn, tries to raise an otl_exception. There may be a situation when the destructor gets called as part of the so-called <i>stack unwinding</i>. This may happen if any C++ expection gets thrown, even an exception, unrelated to the OTL environment. In that case, a stack unwinding takes place, and as a result [of more than one exception being thrown], the
+      program crashes / aborts / terminates.</li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+
+        <p>A partial solution was implemented in OTL earlier.The solution covered only the case when an otl_exception is being raised in an otl_stream, or otl_cursor::dierct_exec(), opened under the same otl_connect object. In this case, the <i>in-exception</i> flag gets propagated correctly to all the OTL objects for the same otl_connect, and otl_stream destructors know about the pending otl_exception and behave correctly.</p>
+
+        <p>ANSI C++ offers a generic solution in the form of the <i>bool uncaught_exception()</i> function.The function returns <i>true</i> if an exception is pending, or, in other words, if the program is in the state of stack unwinding. Uncaught_exception() is specific to implementation of each C++ compiler. Not every C++ compiler supports it correctly, even if the compiler is claimed to be ANSI C++. For example, VC++ 6.0 implements the function but it always returns <i>false,</i> very much typical for mothertruckers from Miscrosoft. Fortunately, many other C++ compilers like GNU C++, Borland C++, Sun C++ Workshop, etc., do support the function and OTL can rely on it.<i><font color="#800000">This problem has been fixed in OTL 3.2.13.</font></i><br>
+        &nbsp;</p>
+      </li>
+
+      <li><a name="prob45"></a><b>45.</b> A compilation problem when a const <a href="otl3_value.htm">otl_value</a> varaiable is defined and otl_value::is_null() is being referenced The <i>const</i> keyword was typed in the function declaration not after the function prototype but after the function body: <i>is_null(...) {...} const</i>.<i><font color="#800000">This problem has been fixed in OTL 3.2.13.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob44"></a><b>44.</b> A fix of problem <a href="#prob37">37</a> introduced another bug (or feature if you will). The fix contains a new mechanism of counting (<i>throw_count</i> field in the otl_connect structure) otl_exception's, to prevent multiple otl_exception's from bein raised, and to eventually prevent the program's crash that happens under certain conditions. When the exception is successfully caught and handled, theoretically, the <i>throw_count</i> needs to be reset to 0 in the otl_exception catch block. It does not happen. The fix for this new problem is as follows: any subsequent OTL function call which may implicitly open or close transaction, open an otl_stream or directly execute a SQL statement, sets the throw_count back to 0. <i><font color=
+      "#800000">This problem has been fixed in OTL 3.2.12.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><a name="prob43"></a><b>43.</b> A problem with OTL/OCI8 and CLOBs/BLOBs: when a LOB value is being written to the database, if a database error occurs, in some cases no otl_exception gets raised. This may happen if the database error occurs in the OCILobWrite() OCI8 call. I guess I overlooked this specific extreme case because LOB operations are done separately from SQL statements associated with the LOBs, and it's hard to set up a proper test case for stuff like this. Luckily enough :-), someone ran into this, and the problem was reported. <i><font color="#800000">This problem has been fixed in OTL 3.2.11.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><a name="prob42"></a><b>42.</b> A problem with ANSI C++ compiler in HP UX: aCC. The problem is that when OTL's #define OTL_STL is defined, it triggers the inclusion of STL files like &lt;vector&gt;, &lt;iterator&gt;, &lt;string&gt;, &lt;iostream&gt;. Also, OTL assumes that <i>namespace std</i> is defined. aCC is just an ANSI C++ compliant compiler, no more, no less. HP Corp. purchased a license for using and distributing the Rogue Wave version of STL. For a reason, known only to HP and RW, namespace std is not configured in the STL that goes with aCC. Here goes the dilemma: you have a C++ compiler, that compiles ANSI C++, but the libraries are pre-standard.<i><font color="#800000">This problem has been fixed in OTL 3.2.10.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><a name="prob41"></a><b>41.</b> A compilation problem with static inline functions in the OTL header file and Visual Age C++ 5 in AIX.<i><font color="#800000">This problem has been fixed in OTL 3.2.9.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><a name="prob40"></a><b>40.</b> A compilation problem with OTL/OCI8 3.2.8., Sun C++ Workshop 5.0 and Oracle 8.0.5 in Solaris. This compilation error was intoruced in OTL 3.2.8 in the otl_connect_logoff() function.<i><font color="#800000">This problem has been fixed in OTL 3.2.9.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><a name="prob39"></a><b>39.</b> A compilation problem with OTL/DB2-CLI and xlC in AIX: OTL for DB2-CLI does not compile with xlC (C++ compiler in AIX).<i><font color="#800000">This problem has NOT been fixed YET.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><a name="prob38"></a><b>38.</b> A problem with a few annoying compilation warnings. No further details. You may notice, when compiling OTL with your C++ compiler, that there are fewer compilation warnings on the output.<i><font color="#800000">This problem has been fixed in OTL 3.2.8.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob37"></a><b>37.</b> A problem with otl_connect::logoff(). When the database back end goes down / becomes unavailable exactly at the moment after the very last transaction was already closed (committed or rolled back), and when logoff() is being / about to be called, the logoff() does not throw any otl_exception, it just "ignores the fact." The problem was uncovered by someone, who was curious enough to try to run "kill -9 all_oracle_processes" just before calling logoff(). This problem might be potentially more of a problem in multi-threaded applications. I, myself, tried it with Oracle 8i, MS SQL Server 7.0, DB2 7.1 and MySQL 3.x. The behavior of logoff() was consistent: logoff() did not raise any otl_exception. Another part of the problem was that with Oracle 7.3,
+      more than one otl_exception was raised, and, it resulted [in some cases] in the program's crash, depending upon the C++ compiler to be used. I had to make up an otl_exception throw counting scheme, in order to prevent more than one otl_exception's from being thrown. <i><font color="#800000">This problem has been fixed in OTL 3.2.8.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob36"></a><b>36.</b> A problem with operators &lt;&lt; in otl_stream's. Namely, the problem was showing up in the operators &lt;&lt;, when the stream was opened with either a straight SELECT statement (all versions of OTL), or a SELECT statement via reference cursor (OTL/OCIx), or a SELECT statement via implicit result set (OTL/ODBC, OTL/DB2-CLI). The problem is that when you enter a NULL value into such a stream via operator&lt;&lt;(const otl_null), all subsequent values that are being entered into the same bind variables, no matter what values, are showing as NULLs. Typically, SELECT statements [of all kinds] have bind variables/placeholders in their WHERE clauses. NULLs in the WHERE clause are not used very often. As a matter of fact, they are very rare. That's why
+      the problem just started showing up, and has not been detected before. <i><font color="#800000">This problem has been fixed in OTL 3.2.8.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob35"></a><b>35.</b> A problem was reported in OTL/ODBC: &lt;long&gt; as a bind variable specifier did not work properly because of the "out of range" error raised by the ODBC driver. <i><font color="#800000">This problem has been fixed in OTL 3.2.6.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob34"></a><b>34.</b> A problem was reported in OTL/OCIx that the new otl_XXX_vec containers for PL/SQL tables were causing the compilation warning that the constructors of the classes were not virtual but the classes contained virtual functions. <i><font color="#800000">This problem has been fixed in OTL 3.2.6.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob33"></a><b>33.</b> A problem was reported in OTL/ODBC that in some cases an otl_exception gets thrown when SQLExecute() is executed inside the OTL. <i><font color="#800000">This problem has been fixed in OTL 3.1.19.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob32"></a><b>32.</b> A compilation problem was reported for OTL 3.1.16 and Sun C++ 4.2. The thing is that OTL 3.1.14-16 were made more compliant with the ANSI C++ standard, that is, compilable with C++ compilers like HP ANSI C++ (aCC). The changes that were made to OTL 3.1.14-16, affected compilation of OTL with Sun C++ 4.2. <i><font color="#800000">This problem has been fixed in OTL 3.1.17.</font></i> Also, it is worth mentioning that OTL 3.1.17 now compiles with xlC (AIX).</li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>31.</b> A minor problem in otl_connect::server_attach (OTL/OCI8 only). The problem was that the return code of OCIServerAttach() was not properly checked and the OCISessionBegin() function call was reporting an error different from the original error [that would have been reported by the OCIServerAttach]. Typically, if there is a problem with SQL*Net, you would see an error about user authentication or user id/password. <i><font color="#800000">This problem has been fixed in OTL 3.1.15.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="aCC_comp"></a><b>30.</b> A number of folks reported compilation problems with the HP ANSI C++ (aCC). The problems were due to aCC's special template instantiation mechanism and more strict error checking. After some modifications, the OTL header file now compiles with aCC.</li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+
+        <p>Also, it was reported that in OTL/OCI8, if otl_connect::rlogon() fails, some of the OCI8 handles associated with the connect object don't get released even after otl_connect::logoff() is called.</p>
+
+        <p><i><font color="#800000">These problems have been fixed in OTL 3.1.14.</font></i><br>
+        &nbsp;</p>
+      </li>
+
+      <li><b>29.</b> In OTL 3.1.12, a compilation error was reported for Sun C++ WorkShop 5.0. The problem was that otl_numeric_convert() (a template function) generated a compilation error. <i><font color="#800000">This problem has been fixed in OTL 3.1.13.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+
+        <p><b><i><blink>If anybody experienced the same problem, please, let me know via email</blink></i></b>.<br>
+        &nbsp;</p>
+      </li>
+
+      <li><b>28.</b> In OTL/OCI8, there was a compilation warning about an unused variable in a function. <i><font color="#800000">This problem has been fixed in OTL 3.1.12.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>27.</b> In OTL/OCI8, if the NO_DATA_FOUND predefined exception is raised in PL/SQL explicitly, or via the SELECT ... INTO construct, OTL does not handle it properly. <i><font color="#800000">This problem has been fixed in OTL 3.1.10.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>26.</b> A copy constructor was added to the <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a> class to make it work with the STL data container template classes. <i><font color="#800000">This problem has been fixed in OTL 3.1.8.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob25"></a><b>25.</b> In OTL/OCI8, if it is compiled with OCI8.1.5 in Sun Solaris, otl_stream::<a href="otl3_stream_class.htm#describe_select">describe_select</a>() causes the program to crash. <i><font color="#800000">This problem has been fixed in OTL 3.1.7.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>24.</b> This time around, it's an enhancement: a capability to override the default mapping in SELECT statements. <i><font color="#800000">This problem has been fixed in OTL 3.1.3.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob23"></a><b>23.</b> In OTL/OCI8, otl_stream::describe_select() returns a random value in the scale field of the otl_column_desc structure. <i><font color="#800000">This problem has been fixed in OTL 3.1.2.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>22.</b> When a PL/SQL table size is set higher than 32767, the program crashes. Now, the program raises the following otl_exception: "PL/SQL table size is too large" <i><font color="#800000">This problem has been fixed in OTL 3.1.1.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>21.</b> This time, it's not a problem, just a small functionality fix: <a href="otl3_connect_class.htm#rlogon">otl_connect::rlogon</a>() was enhanced with a second parameter: int auto_commit. This parameter allows the user to set the "auto-commit" / "commit-on-success" mode at the connection level, so every single SQL statement commits the current transaction. <i><font color="#800000">This problem has been fixed in OTL 3.0.32.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>20.</b> This time, it's not a problem, it's just a new piece of functionality: direct_exec() now returns a rows processed count for INSERT, UPDATE and DLETE statements; otl_stream::get_rpc() was added to the class. <i><font color="#800000">This problem has been fixed in OTL 3.0.31.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>19.</b> Sorry folks, I forgot to add a default constructor to the <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a> class in problem <a href="#prob17">17</a>. From now on, when an otl_datetime variable is declared, it is initialized as "01/01/1900 0:0:0". <i><font color="#800000">This problem has been fixed in OTL 3.0.28.</font></i></li>
+
+      <li><b>18.</b> In Alfa Unix and Oracle 7.3.4, operator&lt;&lt;(const long int) raises the otl_exception that the long int input parameter is not compatible with the long int placeholder in the otl_stream. In the data type compatibility verification, sizeof(int) was used instead of sizeof(long), which is a typo. It does not cause any problem in the 32-bit platforms since int=long. However, in the 64-bit Alfa Unix <i>long</i> is 64-bit and <i>int</i> is 32-bit.. <i><font color="#800000">This problem has been fixed in OTL 3.0.27</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob17"></a><b>17.</b> This time, it is not really a problem, just a new piece of functionality: class <a href="otl3_stream_class.htm#otl_datetime">otl_datetime.</a> <i><font color="#800000">This problem has been fixed in OTL 3.0.26.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>16.</b> A "<i>return</i> <i>*this;"</i> statement was missing from one of the overloaded assignment operators (operator=()). <i><font color="#800000">This problem has been fixed in OTL 3.0.25.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>15.</b> One of the functions that is used in formatting otl_exception messages was not thread safe. <i><font color="#800000">This problem has been fixed in OTL 3.0.24</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>14.</b> A small memory leak was reported recently: if, say, a SQL statement has a syntactical error, otl_stream generates an otl_exception but it doesn't release some of the allocated memory blocks. <i><font color="#800000">This problem has been fixed in OTL 3.0.23.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>13.</b> General problem with too large strings as well as otl_long_string's on the input: if the string is too large it may cause <i>access viloation / segmentation violation</i> runtime error and, as a result, the program will crash. Two new <a href="otl3_exc_list.htm#32008">otl_exception's</a> (codes: 32008, 32006) were defined to cover the gap in the OTL functionality. From now on, OTL will throw two new exceptions. The exception can be caught and handled properly. <i><font color="#800000">This problem has been fixed in OTL 3.0.22.</font></i> <font color="#000000">You are welcome to give this new functionality a try and any feedback would be appreciated very much.</font></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>12.</b> General problem: sometimes, the requirement is that the C++ compiler is used with the option when warnings are treated as errors and also the level of warnings is set to the maximum. For example, unused arguments in functions, warnings about typecasting (possible loss of data, etc.) are preventing OTL from getting compiled successfully. <i><font color="#800000">This problem has been partly fixed in OTL 3.0.20. and completely fixed in OTL 3.0.21.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>11</b>. OTL 3.0/ODBC used ODBC 2.x function calls and because of that the ODBC 3.x drivers for Microsoft SQL 7.0 were throwing SQL warning left and right. OTL 3.1 was catching them and presenting them as errors to the user. I thought I fixed <a href="#ODBC_WARN">the problem</a> in OTL 3.0.18. However, a more drastic measure was needed -- to make OTL 3.0/ODBC compliant with ODBC 3.x specification. So, <i><font color="#800000">OTL 3.0.19 uses ODBC 3.x function calls and requires the underlying ODBC drivers to be ODBC 3.x compatible.</font></i> <font color="#000000">At least, I've tested OTL 3.1/ODBC with MS SQL 7.0 ODBC drivers and Oracle 8.x ODBC drivers and it passed all of my tests.</font></li>
+
+      <li><b>10</b>.&nbsp;<a name="ODBC_WARN"></a>OTL 3.1/ODBC in some cases throws an otl_exception when it's actually an ODBC warning. <i><font color="#800000">This problem has been fixed in OTL 3.0.18.</font></i> <font color="#000000">This problem is basically the same as the bug, fixed in OTL 3.0.14: more potential spots in the code were found and fixed</font></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><b>9</b>. In OTL 3.1/OCI7 and OCI8, if an &lt;unsigned&gt; variable is declared in an OTL INSERT stream and then it's used to write an unsigned int value beyond the signed int range, then it gets written as a negative into the database. That was due to the fact that the &lt;unsigned&gt; variable got actually bound to the placeholder as signed int: &lt;int&gt;. The wrong external OCI datatype code was used. <i><font color="#800000">This problem has been fixed in OTL 3.0.17.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><b>8.</b> Some folks don't feel comfortable with the default setting of the otl_stream auto-commit flag. I derived the otl_nocommit_stream class from the otl_stream. This class behaves exactly as the otl_stream except it doesn't commit transactions. <i><font color="#800000">This problem has been fixed in OTL 3.0.16.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><b>7</b>. otl_stream::set_commit() has effect only if it is called after otl_stream::open() was called. In case if set_commit() is called before open(), it has no effect. The symptom was that it was not possible to rollback the current transaction since it was already committed even if set_commit(0) was called [before open()]. <i><font color="#800000">This problem has been fixed in OTL 3.0.1</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><b>6</b>. OTL 3.1/ODBC in some cases throws an otl_exception when it's actually an ODBC warning. <i><font color="#800000">This problem has been fixed in OTL 3.0.14.</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><b>5.</b> OTL 3.1 does not compile with Sun Workshop C++ 5.0. <i><font color="#800000">This problem has been fixed in OTL 3.0.13</font></i></li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><b>4.</b> Some C++ compilers generate compilation errors like "Symbol otl_error_code_1 is already defined." The problem is that the symbol was defined as const char* in the OTL header file and the compliers generated a global name. In order to fix this kind of error, the corresponding <i>const char*</i> 's were converted to <i>#define</i>'s to prevent the compilers from generating named objects. <i><font color="#800000">This problem has been fixed in OTL 3.0.12.</font></i></li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><b>3.</b> In some cases, when an error message is returned via otl_exception, the very last character of the message is missing. It is not a critical bug so it was not visible. The bug was reported on Nov-29, 1999. <i><font color="#800000">This problem has been fixed in OTL 3.0.11.</font></i> Check out the release number in your OTL header file, if you need the fix, send an email to the author.</li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+
+      <li><b>2.</b> If <a href="otl3_long_string.htm">otl_long_string</a>'s size is set to a smaller size than the size set by <a href="otl3_connect_class.htm#set_max_long_size">otl_connect::set_max_long_size</a>(), then the program crashes.The fix is to set the size of the otl_long_string to a value higher than in the set_max_long_size(). <i><font color="#804040">This problem has been fixed in OTL 3.0.10</font></i>. Check out the release number in your OTL header file, if you need the fix, send an email to the author.</li>
+
+      <li style="list-style: none"><br>
+      &nbsp;</li>
+
+      <li><a name="prob1"></a><b>1.</b>. Examples <a href="otl3_ex13.htm">13</a> and <a href="otl3_ex17.htm">17</a> do not work with the Oracle 8.1.5 OCI. Here are the symptoms: otl_connect::logoff() crashes the program. It appears that there is a bug in OCI 8.1.5 or something has changed in OCI 8.1.5 compared to OCI 8.0.x and it is not documented. If anybody has a reference to a decent example of OCI 8.1.5 and REF CURSORs, please, send the example to me.</li>
+
+      <li style="list-style: none">
+        <br>
+        &nbsp;
+
+        <p>&nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;<br>
+        &nbsp;</p>
+      </li>
+    </ul>
+
+    <center>
+      <hr width="100%">
+
+      <p><a href="home.htm">Go Home</a></p>
+    </center>
+
+    <p>Copyright &#169; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com<script language="JavaScript" type="text/javascript">
+<!-- hide from oldgmailsers
+    var modDate = new Date(document.lastModified)
+    document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+    //-->
+    </script></a> .</p>
+
+    <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p>
+  </div><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>OTL 3.1, Workaround 1 (PL/SQL tables as parameters)</TITLE>
+   <META NAME="Author" CONTENT="Sergei Kuchin">
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
+   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</HEAD>
+<BODY>
+
+<H1 ALIGN=CENTER>OTL 3.1, Workaround 1 (PL/SQL tables as parameters)</H1>
+
+<H1><A NAME="example1"></A>Workaround 1 (PL/SQL tables as parameters)</H1>
+
+<P>This is an example of a workaround on how to pass data from C++ into
+PL/SQL tables and back. This example works with both OCI7 and OCI8. The
+idea here is to use global PL/SQL table variables.</P>
+
+<H2>Source Code</H2>
+
+<PRE>#include &lt;iostream&gt;
+using namespace std;
+
+#include &lt;stdio.h&gt;</PRE>
+
+<PRE>#define OTL_ORA7 // Compile OTL 3.1/OCI7
+#include &lt;otlv31.h&gt; // include the OTL 3.1 header file
+
+<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+</PRE>
+
+<PRE>void plsql(void)
+{ 
+ otl_stream s1(100, // buffer size
+              &quot;begin &quot;
+              &quot; pkg_test.glob_v1(:ndx&lt;int,in&gt;) := :A&lt;int,in&gt;; &quot;
+              &quot;end;&quot;,
+              // PL/SQL block: initialize the global PL/SQL table variable
+              db // connect object
+             );
+
+ s1.set_commit(0); // set stream auto-commit off since 
+                   // the block does not have any transactions
+                   // to commit
+
+ s1&lt;&lt;1&lt;&lt;1000; // v1(1) := 1000;
+ s1&lt;&lt;2&lt;&lt;2000; // v1(2) := 2000;
+ s1&lt;&lt;3&lt;&lt;3000; // v1(3) := 3000;
+
+ s1.flush(); // executing PL/SQL block 3 times
+
+ otl_stream s2(1, // buffer size
+               &quot;begin &quot;
+               &quot;  pkg_test.prc_test(pkg_test.glob_v1); &quot;
+               &quot;  :v1_size&lt;int,out&gt; := pkg_test.glob_v1.last; &quot;
+              &quot;end;&quot;,
+              // PL/SQL block: execute the stored procedure and get
+              // the size of the v1 PL/SQL table
+              db // connect object
+             );
+
+ s2.set_commit(0);
+
+ int v1_size=0;
+
+ s2&gt;&gt;v1_size; // execute the stored procedure and get the PL/SQL table
+              // size
+
+ cout&lt;&lt;&quot;V1_SIZE=&quot;&lt;&lt;v1_size&lt;&lt;endl;
+
+ otl_stream s3(100, // buffer size
+               &quot;begin &quot;
+               &quot; :v1&lt;int,out&gt; := pkg_test.glob_v1(:ndx&lt;int,in&gt;); &quot;
+               &quot;end;&quot;,
+               // PL/SQL block: initialize the global PL/SQL table variable
+              db // connect object
+             );
+
+ s3.set_commit(0); // set stream auto-commit off since 
+                  // the block does not have any transactions
+                  // to commit
+
+ // get the elements of the PL/SQL table 
+
+ for(int i=1;i&lt;=v1_size;++i)s3&lt;&lt;i; 
+ s3.flush();
+
+ int v,j=0;
+
+ while(!s3.eof()){ // not end-of-data
+  ++j;
+  s3&gt;&gt;v;
+  cout&lt;&lt;&quot;V1(&quot;&lt;&lt;j&lt;&lt;&quot;)=&quot;&lt;&lt;v&lt;&lt;endl;
+ }
+
+}
+
+
+int main()
+{
+ <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize OCI environment
+ try{
+
+  db.rlogon(&quot;scott/tiger&quot;); // connect to Oracle
+
+  otl_cursor::direct_exec
+   (db,
+    &quot;CREATE OR REPLACE PACKAGE pkg_test IS &quot;
+    &quot;  TYPE my_plsql_table IS TABLE OF NUMBER INDEX BY BINARY_INTEGER; &quot;
+    &quot; &quot;
+    &quot;  PROCEDURE prc_test(v1 IN OUT my_plsql_table); &quot;
+    &quot; &quot;
+    &quot;  glob_v1 my_plsql_table; &quot;
+    &quot;   &quot;
+    &quot;END; &quot;
+   );
+
+  otl_cursor::direct_exec
+   (db,
+    &quot;CREATE OR REPLACE PACKAGE BODY pkg_test IS &quot;
+    &quot; &quot;
+    &quot;  PROCEDURE prc_test(v1 IN OUT my_plsql_table) &quot;
+    &quot;  IS &quot;
+    &quot;  BEGIN &quot;
+    &quot;    FOR i IN 1..v1.last LOOP &quot;
+    &quot;      v1(i) := v1(i)+100; &quot;
+    &quot;    END LOOP; &quot;
+    &quot;    v1(v1.last+1) := 0; &quot;
+    &quot;  END; &quot;
+    &quot;   &quot;
+    &quot;END; &quot;
+   );
+
+
+  plsql();
+
+ }
+
+ catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from Oracle
+
+ return 0;
+
+}
+</PRE>
+
+<H2>Output</H2>
+
+<PRE>V1_SIZE=4
+V1(1)=1100
+V1(2)=2100
+V1(3)=3100
+V1(4)=0
+
+
+<HR WIDTH="100%"></PRE>
+
+<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
+<A HREF="home.htm">Go Home</A> </P></CENTER>
+
+<P>Copyright &copy; 1996-2009, Sergei Kuchin, email: <A HREF="mailto:skuchin@aceweb.com">skuchin@aceweb.com</A>,
+<A HREF="mailto:skuchin@gmail.com">skuchin@yahogmail</A>
+<SCRIPT Language="JavaScript">
+<!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </SCRIPT>
+.</P>
+
+<P><I>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</BODY>
+</HTML>

@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+
+  <title>OTL 4.0, Example 63 (otl_stream::describe_select() with a simple Select for Oracle 8i)</title>
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</head>
+
+<body>
+  <h1 align="center">OTL 4.0, Example 63<br>
+  (otl_stream::describe_select() with a simple Select for Oracle 8i)</h1>
+
+  <h1><a name="example1" id="example1"></a>Example 63 (otl_stream::describe_select() with a simple Select for Oracle 8i)</h1>
+
+  <p>This example demonstrates the <a href="otl3_stream_class.htm#describe_select">otl_stream::describe_select</a>() with a simple SELECT statement for Oracle8i. The implementation of describe_select() for Oracle 8i requires a slightly different use of OCI8 compared with Oracle 8. Therefore, a new #define was introduced: OTL_ORA8I.</p>
+
+  <h2>Source Code</h2>
+  <pre>
+#include &lt;iostream&gt;
+using namespace std;
+
+#include &lt;stdio.h&gt;
+</pre>
+  <pre>
+#define OTL_ORA8I // Compile OTL 4.0/OCI8 in the Oracle 8i environment
+#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
+
+void select()
+{ 
+ <a href="otl3_stream_class.htm">otl_stream</a> i(1, // buffer size
+              "select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2",
+                 // SELECT statement
+              db // connect object
+             ); 
+   // create select stream
+ 
+ <a href="otl3_stream_class.htm#otl_column_desc">otl_column_desc</a>* desc;
+ int desc_len;
+
+ desc=i.<a href="otl3_stream_class.htm#describe_select">describe_select</a>(desc_len);
+
+ for(int n=0;n&lt;desc_len;++n){
+  cout&lt;&lt;"========== COLUMN #"&lt;&lt;n+1&lt;&lt;" ==========="&lt;&lt;endl;
+  cout&lt;&lt;"name="&lt;&lt;desc[n].name&lt;&lt;endl;
+  cout&lt;&lt;"dbtype="&lt;&lt;desc[n].dbtype&lt;&lt;endl;
+  cout&lt;&lt;"<a href="otl3_stream_class.htm#otl_var_dbtype">otl_var_dbtype</a>="&lt;&lt;desc[n].otl_var_dbtype&lt;&lt;endl;
+  cout&lt;&lt;"dbsize="&lt;&lt;desc[n].dbsize&lt;&lt;endl;
+  cout&lt;&lt;"scale="&lt;&lt;desc[n].scale&lt;&lt;endl;
+  cout&lt;&lt;"prec="&lt;&lt;desc[n].prec&lt;&lt;endl;
+  cout&lt;&lt;"nullok="&lt;&lt;desc[n].nullok&lt;&lt;endl;
+ }
+ 
+
+}
+
+int main()
+{
+ <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment
+ try{
+
+  db.rlogon("scott/tiger"); // connect to Oracle
+
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
+    db,
+    "drop table test_tab",
+    otl_exception::disabled // disable OTL exceptions
+   ); // drop table
+
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
+    db,
+    "create table test_tab(f1 number, f2 varchar2(30), f3 long raw)"
+    );  // create table
+
+  select(); // select records from table
+
+ }
+
+ catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from Oracle
+
+ return 0;
+
+}
+</pre>
+
+  <h2>Output</h2>
+  <pre>
+========== COLUMN #1 ===========
+name=F1
+dbtype=2
+otl_var_dbtype=2
+dbsize=22
+scale=0
+prec=0
+nullok=1
+========== COLUMN #2 ===========
+name=F2
+dbtype=1
+otl_var_dbtype=1
+dbsize=30
+scale=0
+prec=0
+nullok=1
+========== COLUMN #3 ===========
+name=F3
+dbtype=24
+otl_var_dbtype=10
+dbsize=0
+scale=0
+prec=0
+nullok=1
+
+
+
+
+
+
+
+
+</pre>
+  <hr width="100%">
+
+  <center>
+    <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a> <a href="home.htm">Go Home</a></p>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a> <script language="JavaScript" type="text/javascript">
+<!-- hide from oldgmailsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

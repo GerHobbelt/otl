@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta content="text/html; charset=iso-8859-1"
+ http-equiv="Content-Type">
+  <meta content="Sergei Kuchin" name="Author">
+  <meta content="Mozilla/4.75 [en] (Win98; U) [Netscape]"
+ name="GENERATOR">
+  <meta
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library"
+ name="KeyWords">
+  <title>OTL 4.0, Example 411 (OTL_VALUE_TEMPLATE_ON and
+OTL_USER_DEFINED_STRING_CLASS_ON, ODBC/Sybase SQL Server)</title>
+</head>
+<body>
+<center>
+<h1>OTL 4.0, Example 411 (<font size="+2">OTL_VALUE_TEMPLATE_ON and
+OTL_USER_DEFINED_STRING_CLASS_ON</font>,
+ODBC/ Sybase SQL Server)</h1>
+</center>
+This example demonstrates OTL streams,&nbsp; <a href="otl3_value.htm">otl_value&lt;T&gt;</a>,
+a third-party string class, with #define <a
+ href="otl3_compile.htm#OTL_VALUE_TEMPLATE_ON">OTL_VALUE_TEMPLATE_ON</a>
+and #define <a href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_ON">OTL_USER_DEFINED_STRING_CLASS_ON</a>.
+<h2>
+Source Code</h2>
+<pre>#include &lt;iostream&gt;<br>#include &lt;string.h&gt;<br>using namespace std;<br><br><pre>class super_fast_string{<br>public:<br><br>&nbsp; super_fast_string(void)<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; buf[0]=0;<br>&nbsp; }<br><br>&nbsp; super_fast_string(const char* s)<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; strcpy(buf,s);<br>&nbsp; }<br><br>&nbsp; super_fast_string(const super_fast_string&amp; s)<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; strcpy(buf,s.buf);<br>&nbsp; }<br><br>&nbsp; ~super_fast_string(){}<br><br>&nbsp; super_fast_string&amp; operator=(const char* s)<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; strcpy(buf,s);<br>&nbsp;&nbsp;&nbsp; return *this;<br>&nbsp; }<br><br>&nbsp; super_fast_string&amp; operator=(const super_fast_string&amp; s)<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; strcpy(buf,s.buf);<br>&nbsp;&nbsp;&nbsp; return *this;<br>&nbsp; }<br><br>&nbsp; const char* c_str(void) const<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; return buf;<br>&nbsp; }<br><br>  void assign(char* temp_buf,int len)<br>  {<br>    for(int i=0;i&lt;len;++i)<br>      buf[i]=temp_buf[i];<br>    buf[len]=0;<br>  }<br><br>  char&amp; operator[](int ndx)<br>  {<br>    return buf[ndx];<br>  }<br><br>  int length(void) const <br>  {<br>    return strlen(buf);<br>  }<br><br>protected:<br><br>&nbsp;&nbsp; char buf[512];<br><br>};<br><br>ostream&amp; operator&lt;&lt;(ostream&amp; s,const super_fast_string&amp; str)<br>{<br>&nbsp; s&lt;&lt;str.c_str();<br>&nbsp; return s;<br>}<br><br>#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC<br>#define <a
+ href="otl3_compile.htm#OTL_VALUE_TEMPLATE_ON">OTL_VALUE_TEMPLATE_ON</a> // Turn on otl_value&lt;T&gt;<br>#define <a
+ href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_ON">OTL_USER_DEFINED_STRING_CLASS_ON<br></a>#define <a
+ href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_ON">USER_DEFINED_STRING_CLASS</a> super_fast_string<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;,:f3&lt;timestamp&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br><br>&nbsp;<a
+ href="otl3_value.htm">otl_value</a>&lt;super_fast_string&gt; f2; // otl_value container with a string class<br>&nbsp;<a
+ href="otl3_value.htm">otl_value</a>&lt;<a
+ href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&gt; f3; // container of otl_datetime<br><br><br>&nbsp;for(int i=1;i&lt;=100;++i){<br><br>&nbsp; if(i%2==0)<br>&nbsp;&nbsp; f2="NameXXX";<br>&nbsp; else<br>&nbsp;&nbsp; f2=otl_null(); // Assign otl_null() to f2<br><br>&nbsp; if(i%3==0){<br>&nbsp;&nbsp; // Assign a value to f3 via the .v field directly<br>&nbsp;&nbsp; f3.v.year=2001;<br>&nbsp;&nbsp; f3.v.month=1;<br>&nbsp;&nbsp; f3.v.day=1;<br>&nbsp;&nbsp; f3.v.hour=13;<br>&nbsp;&nbsp; f3.v.minute=10;<br>&nbsp;&nbsp; f3.v.second=5;<br>&nbsp;&nbsp; f3.set_non_null(); // Set f3 as a "non-NULL"<br>&nbsp; }else<br>&nbsp;&nbsp; f3.set_null(); // Set f3 as null via .set_null() function<br><br>&nbsp; o&lt;&lt;i&lt;&lt;f2&lt;&lt;f3;<br><br>&nbsp;}<br>}<br><br>void select()<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab where f1&gt;=:f11&lt;int&gt; and f1&lt;=:f12&lt;int&gt;*2",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br><br>&nbsp;int f1;&nbsp;<br>&nbsp;<a
+ href="otl3_value.htm">otl_value</a>&lt;super_fast_string&gt; f2;<br>&nbsp;<a
+ href="otl3_value.htm">otl_value</a>&lt;<a
+ href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&gt; f3;<br><br><br>&nbsp;i&lt;&lt;8&lt;&lt;8; // assigning :f11 = :f12 = 8<br><br>&nbsp;&nbsp; // SELECT automatically executes when all input variables are<br>&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2&gt;&gt;f3;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3="&lt;&lt;f3&lt;&lt;endl;<br>&nbsp;}<br><br>&nbsp;i&lt;&lt;4&lt;&lt;4; // assigning :f11 = :f12 = 4<br>&nbsp;&nbsp; // SELECT automatically executes when all input variables are<br>&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2&gt;&gt;f3;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3="&lt;&lt;f3&lt;&lt;endl;<br>&nbsp;}<br><br>}<br><br>int main()<br>{<br>&nbsp;<a
+ href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize the database API environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tigger@sybsql"); // connect to the database<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 varchar(30), f3 datetime)"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; insert(); // insert records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from the database<br><br>&nbsp;return 0;<br><br>}</pre>
+<h2>
+Output</h2>
+<pre>f1=8, f2=NameXXX, f3=NULL<br>f1=9, f2=NULL, f3=1/1/2001 13:10:5<br>f1=10, f2=NameXXX, f3=NULL<br>f1=11, f2=NULL, f3=NULL<br>f1=12, f2=NameXXX, f3=1/1/2001 13:10:5<br>f1=13, f2=NULL, f3=NULL<br>f1=14, f2=NameXXX, f3=NULL<br>f1=15, f2=NULL, f3=1/1/2001 13:10:5<br>f1=16, f2=NameXXX, f3=NULL<br>f1=4, f2=NameXXX, f3=NULL<br>f1=5, f2=NULL, f3=NULL<br>f1=6, f2=NameXXX, f3=1/1/2001 13:10:5<br>f1=7, f2=NULL, f3=NULL<br>f1=8, f2=NameXXX, f3=NULL<br><br><hr
+ width="100%"></pre>
+<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
+ href="home.htm">Go<br>Home</a><br><div style="text-align: left;">Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,<a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>
+<script language="JavaScript"><!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script><br><span
+ style="font-style: italic;">Permission to use, copy, modify and redistribute this document for any purpose is </span><br
+ style="font-style: italic;"><span style="font-style: italic;">hereby granted without fee, provided that the above</span><i
+ style="font-style: italic;">copyright notice <br>appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></div></center>
+
+<p>
+</p>
+</pre>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

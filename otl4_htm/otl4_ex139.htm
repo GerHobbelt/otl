@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+  <title>OTL 4.0, Example 139 (otl_stream and NULLs)</title>
+</head>
+<body>
+<center>
+<h1>OTL 4.0, Example 139 (otl_stream and NULLs)</h1>
+</center>
+<h1>
+Example 139 (otl_stream and NULLs)</h1>
+This example demonstrates the otl_stream with NULLs.
+<h2>Source Code</h2>
+<pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
+<pre>#define OTL_ODBC // Compile OTL 4.0/ FireBird Database ODBC<br>// #define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(1, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;float&gt;,:f2&lt;char[31]&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;char tmp[32];<br><br>&nbsp;for(int i=1;i&lt;=100;++i){<br>&nbsp; sprintf(tmp,"Name%d",i);<br>&nbsp; if(i==10)<br>&nbsp;&nbsp; o&lt;&lt;(float)i&lt;&lt;<a
+ href="otl3_stream_class.htm#otl_null">otl_null</a>();<br>&nbsp; else<br>&nbsp;&nbsp; o&lt;&lt;(float)i&lt;&lt;tmp;<br>&nbsp;}<br>}<br><br>void select()<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab where f1&gt;=:f11&lt;int&gt; and f1&lt;=:f12&lt;int&gt;*2",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;float f1;<br>&nbsp;char f2[31];<br><br>&nbsp;i&lt;&lt;8&lt;&lt;8; // assigning :f11 = 8, :f12=8<br>&nbsp;&nbsp; // SELECT automatically executes when all input variables are<br>&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1;<br>&nbsp; if(i.is_null())<br>&nbsp;&nbsp; cout&lt;&lt;"f1=NULL,";<br>&nbsp; else<br>&nbsp;&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;",";<br>&nbsp; i&gt;&gt;f2;<br>&nbsp; if(i.is_null())<br>&nbsp;&nbsp; cout&lt;&lt;"f2=NULL";<br>&nbsp; else<br>&nbsp;&nbsp; cout&lt;&lt;"f2="&lt;&lt;f2;<br>&nbsp; cout&lt;&lt;endl;<br>&nbsp;}<br><br>}<br><br>int main()<br>{<br>&nbsp;<a
+ href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("UID=scott;PWD=tiger;DSN=ib6sql"); // connect to ODBC<br>//&nbsp; db.rlogon("scott/tiger@ib6sql"); // connect to ODBC, alternative format<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of connect string&nbsp;<br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 varchar(30))"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; db.commit(); // committing the create table statement to to the database<br><br>&nbsp; insert(); // insert records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from ODBC<br><br>&nbsp;return 0;<br><br>}</pre>
+<h2>
+Output</h2>
+<pre>f1=8, f2=Name8<br>f1=9, f2=Name9<br>f1=10, f2=NULL<br>f1=11, f2=Name11<br>f1=12, f2=Name12<br>f1=13, f2=Name13<br>f1=14, f2=Name14<br>f1=15, f2=Name15<br>f1=16, f2=Name16</pre>
+<pre><hr width="100%"></pre>
+<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
+ href="home.htm">Go
+Home</a></center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript"><!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+</p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

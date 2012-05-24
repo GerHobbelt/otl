@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title>OTL 4.0, Example 670 (XML as varchar_long/wstring on SELECT,
+and varchar_long/wstring on INSERT)</title>
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/3.03Gold (Win95; I) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</head>
+<body>
+<h1 align="center">OTL 4.0, Example 670 (XML as
+varchar_long/wstring on
+SELECT, and varchar_long/wstring on INSERT)</h1>
+<p>This example demonstrates simple INSERT and SELECT statements with
+the XML datatype as well as constant SQL statements. XMLType
+columns can be bound with varchar_long variables on
+INSERT/UPDATE/DELETE. On
+SELECT, XML gets bound to varchar_long by default.<br>
+</p>
+<h2>Source Code</h2>
+<pre>#include &lt;iostream&gt;<br>#include &lt;string&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;<br>#define <a
+ href="otl3_compile.htm#OTL_ODBC_MSSQL_2005">OTL_ODBC_MSSQL_2008</a> // Compile OTL 4/ODBC, MS SQL 2008<br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> // Enable Unicode OTL for ODBC<br><br>#if defined(__GNUC__)<br><br>namespace std{<br>   typedef unsigned short unicode_char;<br>   typedef basic_string&lt;unicode_char&gt; unicode_string;<br>}<br><br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a> unicode_char<br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE_STRING_TYPE">OTL_UNICODE_STRING_TYPE</a> unicode_string<br><br>#else<br><br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a> wchar_t<br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE_STRING_TYPE">OTL_UNICODE_STRING_TYPE</a> wstring<br>#endif<br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{ <br> db.<a
+ href="otl3_connect_class.htm#set_max_long_size">set_max_long_size</a>(80000); // set maximum long string size for connect object<br> <a
+ href="otl3_stream_class.htm">otl_stream</a> o(10, // buffer size<br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;varchar_long&gt;) ",<br>                 // SQL statement<br>              db // connect object<br>             );<br>OTL_UNICODE_CHAR_TYPE tmp[80001]; // Null terminated Unicode character array.<br><br> for(int i=1;i&lt;=20;++i){<br>  tmp[0]='&lt;';<br>  tmp[1]='T';<br>  tmp[2]='A';<br>  tmp[3]='G';<br>  tmp[4]='&gt;';<br>  tmp[5]=1111; // Unicode character (decimal code of 1111)  <br>  tmp[6]=2222; // Unicode character (decimal code of 2222)<br>  tmp[7]=3333; // Unicode character (decimal code of 3333)  <br>  tmp[8]=4444; // Unicode character (decimal code of 4444)  <br>  tmp[9]='&lt;';<br>  tmp[10]='/';<br>  tmp[11]='T';<br>  tmp[12]='A';<br>  tmp[13]='G';<br>  tmp[14]='&gt;';<br>  tmp[15]=0;<br>  OTL_UNICODE_STRING_TYPE tmp_str(tmp);<br>  o&lt;&lt;i&lt;&lt;tmp_str;<br> }<br><br>}<br><br>void select()<br>{ <br> OTL_UNICODE_STRING_TYPE f2;<br> db.<a
+ href="otl3_connect_class.htm#set_max_long_size">set_max_long_size</a>(80000); // set maximum long string size for connect object<br><br> <a
+ href="otl3_stream_class.htm">otl_stream</a> i(10, // buffer size<br>              "select f1, f2 "<br>              "from test_tab "<br>              "where f1&gt;=:f11&lt;int&gt; "<br>              " and f1&lt;=:f12&lt;int&gt;*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> int f1;<br><br> i&lt;&lt;8&lt;&lt;8; // assigning :f11 = 8, :f12 = 8 <br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2=";<br>  for(size_t j=0;j&lt;f2.length();++j)<br>    if(f2[j]&lt;128)<br>      cout&lt;&lt;(char)f2[j];<br>    else<br>      cout&lt;&lt;(int)f2[j]&lt;&lt;" ";<br>  cout&lt;&lt;endl;<br> }<br><br>}<br><br>int main()<br>{<br> <a
+ href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment<br> try{<br><br>  db.rlogon("scott/tiger@mssql2008"); // connect to MS SQL<br><br>  <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "drop table test_tab",<br>    otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "create table test_tab(f1 int, f2 xml)"<br>    );  // create table<br><br>  insert(); // insert records into table<br>  select(); // select records from table<br><br> }<br><br> catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from MS SQL<br><br> return 0;<br><br>}<br></pre>
+<h2>Output</h2>
+<pre>f1=8, f2=&lt;TAG&gt; 1111 2222 3333 4444&lt;/TAG&gt;<br>f1=9, f2=&lt;TAG&gt; 1111 2222 3333 4444&lt;/TAG&gt;<br>f1=10, f2=&lt;TAG&gt; 1111 2222 3333 4444&lt;/TAG&gt;<br>f1=11, f2=&lt;TAG&gt; 1111 2222 3333 4444&lt;/TAG&gt;<br>f1=12, f2=&lt;TAG&gt; 1111 2222 3333 4444&lt;/TAG&gt;<br>f1=13, f2=&lt;TAG&gt; 1111 2222 3333 4444&lt;/TAG&gt;<br>f1=14, f2=&lt;TAG&gt; 1111 2222 3333 4444&lt;/TAG&gt;<br>f1=15, f2=&lt;TAG&gt; 1111 2222 3333 4444&lt;/TAG&gt;<br>f1=16, f2=&lt;TAG&gt; 1111 2222 3333 4444&lt;/TAG&gt;<br><hr
+ width="100%"></pre>
+<center>
+<p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+<a href="home.htm">Go Home</a> </p>
+</center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@yahogmail</a>
+<script language="JavaScript">
+<!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script>.</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

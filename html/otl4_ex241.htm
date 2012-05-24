@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta content="text/html; charset=iso-8859-1"
+ http-equiv="Content-Type">
+  <meta content="Sergei Kuchin" name="Author">
+  <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
+ name="GENERATOR">
+  <meta
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library"
+ name="KeyWords">
+  <title>OTL 4.0, Example 241 (otl_datetime container with TIMESTAMP
+WITH LOCAL TIME ZONE&lt; TIMESTAMP WITH TIME ZONE, Oracle 9i))</title>
+</head>
+<body>
+<center>
+<h1>OTL 4.0, Example 241 (otl_datetime container with TIMESTAMP WITH
+LOCAL TIME ZONE, TIMESTAMP WITH TIME ZONE, Oracle 9i)</h1>
+</center>
+This example demonstrates simple INSERT/SELECT with Oracle 9i
+TIMESTAMPs [WITH [LOCAL] TIME ZONE]
+and
+<a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>.
+<h2>Source Code</h2>
+<pre>#include &lt;iostream&gt;<br>#include &lt;stdio.h&gt;<br>using namespace std;<br><br>#define OTL_ORA9I // Compile OTL 4.0/OCI9i<br><pre>#define <a
+ href="otl3_compile.htm#OTL_ORA_TIMESTAMP">OTL_ORA_TIMESTAMP</a> // enable Oracle 9i TIMESTAMPs [with [local] time zone]<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert(void)<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(3, // stream buffer size in logical rows.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "values(:f1&lt;int&gt;,:f2&lt;<a
+ href="otl3_bind_variables.htm#ltz_timestamp">ltz_timestamp</a>&gt;,:f3&lt;<a
+ href="otl3_bind_variables.htm#ltz_timestamp">tz_timestamp</a>&gt;,:f4&lt;<a
+ href="otl3_bind_variables.htm#timestamp">timestamp</a>&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // INSERT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br><br>&nbsp;<a
+ href="otl3_stream_class.htm#otl_datetime">otl_datetime</a> f2, f3, f4;<br><br>&nbsp;for(int i=1;i&lt;=10;++i){<br>// populating a timestamp with local time zone<br>&nbsp; f2.year=1998;<br>&nbsp; f2.month=10;<br>&nbsp; f2.day=19;<br>&nbsp; f2.hour=23;<br>&nbsp; f2.minute=12;<br>&nbsp; f2.second=12;<br>&nbsp; f2.frac_precision=6; // microseconds<br>&nbsp; f2.fraction=123456;<br>// populating a timestamp with time zone<br>  f3=f2;<br>  f3.tz_hour=-9;<br>  f3.tz_minute=0;<br>// populating a simple timestamp<br>   f4=f2;<br>&nbsp; o&lt;&lt;i;<br>  o&lt;&lt;f2;<br>  o&lt;&lt;f3;<br>  o&lt;&lt;f4;<br>&nbsp;}<br>}<br><br>void select(void)<br>{&nbsp;<br>&nbsp;otl_stream i(5, // stream buffer size in logical rows<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab "<br>              "where f1=:f1&lt;int&gt; "<br>              "  and f3=:f3&lt;tz_tmestamp&gt;",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>// input parameters for the SELECT statement<br> otl_datetime in_f3;<br><br>// SELECT output columns<br>&nbsp;int f1;<br>&nbsp;otl_datetime f2, f3, f4;<br><br>// setting second fraction precision to 6, microseconds<br>  f2.frac_precision=6;<br>  f3.frac_precision=6;<br>  f4.frac_precision=6;<br><br>// populating input "timestamp with time zone"<br>&nbsp; in_f3.year=1998;<br>&nbsp; in_f3.month=10;<br>&nbsp; in_f3.day=19;<br>&nbsp; in_f3.hour=23;<br>&nbsp; in_f3.minute=12;<br>&nbsp; in_f3.second=12;<br>&nbsp; in_f3.frac_precision=6; // microseconds<br>&nbsp; in_f3.fraction=123456;<br>  in_f3.tz_hour=-9;<br>  in_f3.tz_minute=0;<br><br>// writing input parameters to the stream<br> i&lt;&lt;5&lt;&lt;in_f3;<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2&gt;&gt;f3&gt;&gt;f4;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;endl;<br>&nbsp; cout&lt;&lt;"f2="&lt;&lt;f2.month&lt;&lt;"/"&lt;&lt;f2.day&lt;&lt;"/"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f2.year&lt;&lt;" "&lt;&lt;f2.hour&lt;&lt;":"&lt;&lt;f2.minute&lt;&lt;":"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f2.second&lt;&lt;"."<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f2.fraction&lt;&lt;" "<br>      &lt;&lt;f2.tz_hour&lt;&lt;":"<br>      &lt;&lt;f2.tz_minute<br>      &lt;&lt;endl;<br>&nbsp; cout&lt;&lt;"f3="&lt;&lt;f3.month&lt;&lt;"/"&lt;&lt;f3.day&lt;&lt;"/"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f3.year&lt;&lt;" "&lt;&lt;f3.hour&lt;&lt;":"&lt;&lt;f3.minute&lt;&lt;":"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f3.second&lt;&lt;"."<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f3.fraction&lt;&lt;" "<br>      &lt;&lt;f3.tz_hour&lt;&lt;":"<br>      &lt;&lt;f3.tz_minute<br>      &lt;&lt;endl;<br>&nbsp; cout&lt;&lt;"f4="&lt;&lt;f4.month&lt;&lt;"/"&lt;&lt;f4.day&lt;&lt;"/"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f4.year&lt;&lt;" "&lt;&lt;f4.hour&lt;&lt;":"&lt;&lt;f4.minute&lt;&lt;":"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f4.second&lt;&lt;"."<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f4.fraction<br>      &lt;&lt;endl;<br>&nbsp;}<br>&nbsp;<br>}</pre>
+<pre>int main()<br>{<br>&nbsp;<a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tiger"); // connect to Oracle<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab "<br>    "(f1 int, "<br>    " f2 timestamp with local time zone, "<br>    " f3 timestamp with time zone, "<br>    " f4 timestamp)"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; insert(); // insert records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from Oracle<br><br>&nbsp;return 0;<br><br>}</pre>
+<h2>
+Output</h2>
+<pre>f1=5<br>f2=10/19/1998 23:12:12.123456 -5:0<br>f3=10/19/1998 14:12:12.123456 -9:0<br>f4=10/19/1998 23:12:12.123456<br><br><br><hr
+ width="100%"></pre>
+<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
+ href="home.htm">Go<br>Home</a></center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,<br><a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com<bgmailript
+ language="JavaScript"><!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.<br></p>
+<p><i>Permission to use, copy, modify and redistribute this document<br>for<br>any purpose is hereby granted without fee, provided that the above<br>copyright<br>notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+</p>
+</pre>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

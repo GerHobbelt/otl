@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+  <title>OTL 4.0, Appendix B. OTL/ODBC, DB2-CLI, accessing system data
+dictionaries via OTL streams</title>
+</head>
+<body>
+<center>
+<h1>Appendix B. OTL/ODBC, DB2-CLI, accessing system data dictionaries
+via OTL
+streams</h1>
+</center>
+ODBC / DB2 CLI specifications define functions like SQLTables for
+accessing
+system data dictionaries. OTL extends the stream notation for calling
+the
+following ODBC / DB2-CLI functions:
+<ul>
+  <li>
+SQLColumnPrivileges</li>
+  <br>
+&nbsp;
+  <ul>
+    <li>
+Parameter 1: CatalogName</li>
+    <li>
+Parameter 2: SchemaName</li>
+    <li>
+Parameter 3: TableName</li>
+    <li>
+Parameter 4: ColumnName</li>
+    <br>
+&nbsp;
+  </ul>
+  <li>
+SQLColumns</li>
+  <br>
+&nbsp;
+  <ul>
+    <li>
+Parameter 1: CatalogName</li>
+    <li>
+Parameter 2: SchemaName</li>
+    <li>
+Parameter 3: TableName</li>
+    <li>
+Parameter 4: ColumnName</li>
+  </ul>
+</ul>
+<ul>
+  <li>
+SQLForeignKeys</li>
+&nbsp;
+&nbsp;<br>
+  <ul>
+    <li>
+Parameter 1: PKTableCatalog</li>
+    <li>
+Parameter 2: PKTableSchema</li>
+    <li>
+Parameter 3: PKTableName</li>
+    <li>
+Parameter 4: FKTableCatalog</li>
+    <li>
+Parameter 5: FKTableSchema</li>
+    <li>
+Parameter 6: FKTableName<br>
+      <br>
+    </li>
+  </ul>
+  <li>SQLGetTypeInfo<br>
+    <br>
+  </li>
+  <ul>
+    <li>No parameters<br>
+    </li>
+  </ul>
+</ul>
+<ul>
+  <ul>
+&nbsp;
+    <br>
+  </ul>
+  <li>
+SQLPrimaryKeys</li>
+  <br>
+&nbsp;
+  <ul>
+    <li>
+Parameter 1: CatalogName</li>
+    <li>
+Parameter 2: SchemaName</li>
+    <li>
+Parameter 3: TableName</li>
+    <br>
+&nbsp;
+  </ul>
+  <li>
+SQLProcedureColumns</li>
+  <br>
+&nbsp;
+  <ul>
+    <li>
+Parameter 1: CatalogName</li>
+    <li>
+Parameter 2: SchemaName</li>
+    <li>
+Parameter 3: ProcName</li>
+    <li>
+Parameter 4: ColumnName</li>
+    <br>
+&nbsp;
+  </ul>
+  <li>
+SQLProcedures</li>
+  <br>
+&nbsp;
+  <ul>
+    <li>
+Parameter 1: CatalogName</li>
+    <li>
+Parameter 2: SchemaName</li>
+    <li>
+Parameter 3: ProcName</li>
+    <br>
+&nbsp;
+  </ul>
+  <li>
+SQLTablePrivileges</li>
+  <br>
+&nbsp;
+  <ul>
+    <li>
+Parameter 1: CatalogName</li>
+    <li>
+Parameter 2: SchemaName</li>
+    <li>
+Parameter 3: TableName</li>
+    <br>
+&nbsp;
+  </ul>
+  <li>
+SQLTables</li>
+  <br>
+&nbsp;
+  <ul>
+    <li>
+Parameter 1: CatalogName</li>
+    <li>
+Parameter 2: SchemaName</li>
+    <li>
+Parameter 3: TableName</li>
+    <li>
+Parameter 4: TableType</li>
+  </ul>
+</ul>
+The OTL stream extended format is as follows:
+<p><tt>&nbsp; $function_name {$1:'val1'} {$2:'val2'} {$3:'val3'} {$4:
+'val4'}
+{$5: 'val5'} {$6: 'val6'}</tt>
+</p>
+<p>where <tt>{}</tt> mean an optional parameter, and <tt>$function_name</tt>
+means a name of the ODBC / DB2 CLI functions, listed above. Even though
+the ODBC and DB2 CLI specifications define the meaning of each ODBC /
+DB2
+CLI function from the list above, in reality, it is specific to every
+single
+ODBC / DB2 CLI driver.
+</p>
+<p>&nbsp;&nbsp;&nbsp; <b><font size="+2">Examples</font></b>
+</p>
+<p><tt>1. "$SQLTables" </tt>-- get a list of all tables in the current
+database.
+<br>
+<tt>2. "$SQLTables $1:'%'" </tt>-- get a list of all tables in all
+databases.
+<br>
+<tt>3. "$SQLTables $1:'%' $2:'' $3:''" </tt>-- get a list of databases
+on the current connection's server.
+<br>
+<tt>4. "$SQLColumns $1:'DMS' $2:'dbo' $3:'test_tab'" </tt>-- get a
+list of all columns of table "test_tab" that belongs to schema "dbo",
+catalog
+"DMS".
+</p>
+<p>Here is an example of the full format of the OTL stream extended
+syntax:
+</p>
+<p><tt>#define OTL_ODBC // or OTL_DB2_CLI</tt>
+<br>
+<tt>#include &lt;otlv4.h&gt;</tt>
+<br>
+<tt>...</tt>
+<br>
+<tt>&nbsp; otl_stream s(100,</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"$SQLTables $1:'%'",</tt>
+<br>
+<tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+db);</tt>
+<br>
+<tt>...</tt>
+<br>
+<tt>&nbsp; while(!s.eof()){</tt>
+<br>
+<tt>&nbsp;&nbsp; s&gt;&gt;...;</tt>
+<br>
+<tt>&nbsp;}</tt>
+<br>
+<tt>...</tt>
+</p>
+<p>With this new feature (OTL stream extended format), it is possible
+to
+use OTL with ODBC data sources that do not have access to their system
+data dictionaries via normal "system views", which makes it impossible
+to query the system data dictionary as "SELECT * FROM&nbsp; a system
+view".
+Therefore, the only way to query the system data dictionary is
+via&nbsp;
+ODBC functions like SQLTables().
+<br>
+</p>
+<hr width="100%">
+<center>
+<p><a href="otl3_exc_list.htm">Prev</a> <a href="otl3.htm">Contents</a><a
+ href="home.htm">Go
+Home</a></p>
+</center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script></p>
+</body>
+</html>

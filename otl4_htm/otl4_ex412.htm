@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/4.75 [en] (Win98; U) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+  <title>OTL 4.0, Example 412 (Insert/Update/Select with Sybase SQL
+Server TEXT in stream mode)</title>
+</head>
+<body>
+<center>
+<h1>OTL 4.0, Example 412 (Insert/Update/Select with Sybase SQL Server
+TEXT
+in stream
+mode)</h1>
+</center>
+This example demonstrates INSERT, UPDATE, and SELECT statements with
+the
+MS SQL Server TEXT datatype in the <a href="otl3_lob_stream.htm">stream
+mode</a>.
+<h2>Source Code</h2>
+<pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
+<pre>#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{<a
+ href="otl3_long_string.htm">otl_long_string</a> f2(6000); // define long string variable<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> o; // defined an otl_stream variable<br>&nbsp;o.<a
+ href="otl3_stream_class.htm#set_lob_stream_mode">set_lob_stream_mode</a>(true); // set the "lob stream mode" flag<br>&nbsp;o.<a
+ href="otl3_stream_class.htm#open">open</a>(1, // buffer size has to be set to 1 for operations with LOBs<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;varchar_long&gt;, "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ":f3&lt;varchar_long&gt;) ",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;o.<a
+ href="otl3_stream_class.htm#set_commit">set_commit</a>(0); // setting stream "auto-commit" to "off". It is required<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // when LOB stream mode is used.</pre>
+<pre>&nbsp;int i,j;<br>&nbsp;<a href="otl3_lob_stream.htm">otl_lob_stream</a> lob; // LOB stream for reading/writing unlimited number<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of bytes regardless of the buffer size.<br>&nbsp;<a
+ href="otl3_lob_stream.htm">otl_lob_stream</a> lob2; // LOB stream for reading/writing unlimited number<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of bytes regardless of the buffer size.<br><br>&nbsp;for(i=1;i&lt;=20;++i){<br>&nbsp; o&lt;&lt;i;<br>&nbsp; o<a
+ href="otl3_stream_class.htm#stream_write_lob">&lt;&lt;</a>lob; // Initialize otl_lob_stream by writing it<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // into otl_stream.<br>&nbsp; o<a
+ href="otl3_stream_class.htm#stream_write_lob">&lt;&lt;</a>lob2; // Initialize otl_lob_stream by writing it<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // into otl_stream.<br><br>&nbsp; for(j=0;j&lt;5000;++j)<br>&nbsp;&nbsp; f2[j]='*';<br>&nbsp; f2[5000]='?';<br>&nbsp; f2.<a
+ href="otl3_long_string.htm#set_len">set_len</a>(5001);<br><br>&nbsp; lob.<a
+ href="otl3_lob_stream.htm#set_len">set_len</a>(5001+2123); // setting the total&nbsp; size of<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // the TEXT to be written.<br>&nbsp;&nbsp;<br>&nbsp; lob<a
+ href="otl3_lob_stream.htm#write">&lt;&lt;</a>f2; // writing first chunk of the TEXT into lob<br><br><br>&nbsp; f2[2122]='?';<br>&nbsp; f2.set_len(2123); // setting the size of the second chunk<br><br>&nbsp; lob&lt;&lt;f2; // writing the second chunk of the TEXT into lob<br>&nbsp; lob.<a
+ href="otl3_lob_stream.htm">close</a>(); // closing the otl_lob_stream<br><br>&nbsp; for(j=0;j&lt;5000;++j)<br>&nbsp;&nbsp; f2[j]='*';<br>&nbsp; f2[5000]='?';<br>&nbsp; f2.<a
+ href="otl3_long_string.htm#set_len">set_len</a>(5001);<br>&nbsp; lob2.<a
+ href="otl3_lob_stream.htm#set_len">set_len</a>(5001+2123); // setting the total&nbsp; size of<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // the TEXT to be written.<br>&nbsp;&nbsp;<br>&nbsp; lob2<a
+ href="otl3_lob_stream.htm#write">&lt;&lt;</a>f2; // writing first chunk of the TEXT into lob<br><br>&nbsp; f2[2122]='?';<br>&nbsp; f2.set_len(2123); // setting the size of the second chunk<br><br>&nbsp; lob2&lt;&lt;f2; // writing the second chunk of the TEXT into lob<br>&nbsp; lob2.<a
+ href="otl3_lob_stream.htm">close</a>(); // closing the otl_lob_stream<br><br>&nbsp;}<br><br>&nbsp;db.commit(); // committing transaction.<br>}</pre>
+<pre>void update()<br>// insert rows in table<br>{</pre>
+<pre>&nbsp;<a href="otl3_long_string.htm">otl_long_string</a> f2(6200); // define long string variable<br><br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> o; // defined an otl_stream variable<br>&nbsp;o.<a
+ href="otl3_stream_class.htm#set_lob_stream_mode">set_lob_stream_mode</a>(true); // set the "lob stream mode" flag<br>&nbsp;o.<a
+ href="otl3_stream_class.htm#open">open</a>(1, // buffer size has to be set to 1 for operations with LOBs<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "update test_tab "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp; set f2=:f2&lt;varchar_long&gt; "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "where f1=:f1&lt;int&gt; ",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br><br>&nbsp; <a
+ href="otl3_lob_stream.htm">otl_lob_stream</a> lob;<br><br>&nbsp; o.<a
+ href="otl3_stream_class.htm#set_commit">set_commit</a>(0); // setting stream "auto-commit" to "off".&nbsp;<br><br><br>&nbsp;for(int j=0;j&lt;6000;++j){<br>&nbsp; f2[j]='#';<br>&nbsp;}<br><br>&nbsp;f2[6000]='?';<br>&nbsp;f2.<a
+ href="otl3_long_string.htm#set_len">set_len</a>(6001);<br><br>&nbsp;o<a
+ href="otl3_stream_class.htm#stream_write_lob">&lt;&lt;</a>lob; // Initialize otl_lob_stream by writing it<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // into otl_stream.<br>&nbsp;o&lt;&lt;5;<br><br>&nbsp;lob.<a
+ href="otl3_lob_stream.htm#set_len">set_len</a>(6001*4); // setting the total size of of the TEXT to be written<br>&nbsp;for(int i=1;i&lt;=4;++i)<br>&nbsp; lob<a
+ href="otl3_lob_stream.htm#write">&lt;&lt;</a>f2; // writing chunks of the TEXT into the otl_lob_stream<br><br>&nbsp;lob.<a
+ href="otl3_lob_stream.htm#close">close</a>(); // closing the otl_lob_stream<br><br>&nbsp;db.commit(); // committing transaction<br><br>}<br><br>void select()<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_long_string.htm">otl_long_string</a> f2(3000); // define long string variable<br><br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> i; // defined an otl_stream variable<br>&nbsp;i.<a
+ href="otl3_stream_class.htm#set_lob_stream_mode">set_lob_stream_mode</a>(true); // set the "lob stream mode" flag<br>&nbsp;i.<a
+ href="otl3_stream_class.htm#open">open</a>(1, // buffer size. To read TEXTs, it should be set to 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab where f1&gt;=:f11&lt;int&gt; and f1&lt;=:f12&lt;int&gt;*2",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;int f1;<br>&nbsp;<a
+ href="otl3_lob_stream.htm">otl_lob_stream</a> lob; // Stream for reading TEXT<br>&nbsp;<a
+ href="otl3_lob_stream.htm">otl_lob_stream</a> lob2; // Stream for reading TEXT<br><br>&nbsp;i&lt;&lt;4&lt;&lt;4; // assigning :f11 = 4, :f12 = 4<br>&nbsp;&nbsp; // SELECT automatically executes when all input variables are<br>&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;endl;<br>&nbsp; i<a
+ href="otl3_stream_class.htm#stream_read_lob">&gt;&gt;</a>lob; // initializing LOB stream by reading the TEXT reference&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // into the otl_lob_stream from the otl_stream.<br>&nbsp; i<a
+ href="otl3_stream_class.htm#stream_read_lob">&gt;&gt;</a>lob2; // initializing LOB stream by reading the TEXT reference&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // into the otl_lob_stream from the otl_stream.<br>&nbsp; int n=0;<br>&nbsp; while(!lob.<a
+ href="otl3_lob_stream.htm#eof">eof</a>()){ // read while not "end-of-file" -- end of TEXT<br>&nbsp;&nbsp; ++n;<br>&nbsp;&nbsp; lob<a
+ href="otl3_lob_stream.htm#read">&gt;&gt;</a>f2; // reading a chunk of TEXT<br>&nbsp;&nbsp; cout&lt;&lt;"&nbsp;&nbsp; chunk #"&lt;&lt;n;<br>&nbsp;&nbsp; cout&lt;&lt;", f2="&lt;&lt;f2[0]&lt;&lt;f2[f2.len()-1]&lt;&lt;", len="&lt;&lt;f2.len()&lt;&lt;endl;<br>&nbsp; }<br>&nbsp; lob.<a
+ href="otl3_lob_stream.htm#close">close</a>(); // closing the otl_lob_stream.<br>&nbsp; n=0;<br>&nbsp; while(!lob2.<a
+ href="otl3_lob_stream.htm#eof">eof</a>()){ // read while not "end-of-file" -- end of TEXT<br>&nbsp;&nbsp; ++n;<br>&nbsp;&nbsp; lob2<a
+ href="otl3_lob_stream.htm#read">&gt;&gt;</a>f2; // reading a chunk of TEXT<br>&nbsp;&nbsp; cout&lt;&lt;"&nbsp;&nbsp; chunk #"&lt;&lt;n;<br>&nbsp;&nbsp; cout&lt;&lt;", f3="&lt;&lt;f2[0]&lt;&lt;f2[f2.len()-1]&lt;&lt;", len="&lt;&lt;f2.len()&lt;&lt;endl;<br>&nbsp; }<br>&nbsp; lob2.<a
+ href="otl3_lob_stream.htm#close">close</a>(); // closing the otl_lob_stream.&nbsp;<br>&nbsp;&nbsp;<br>&nbsp;}<br><br>}<br><br>int main()<br>{<br>&nbsp;<a
+ href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize the environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tigger@sybsql"); // connect to the database<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 text, f3 text)"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; insert(); // insert records into table<br>&nbsp; update(); // update records in table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE&nbsp;<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from the database<br><br>&nbsp;return 0;<br><br>}</pre>
+<h2>
+Output</h2>
+<pre>f1=4<br>&nbsp;&nbsp; chunk #1, f2=**, len=2999<br>&nbsp;&nbsp; chunk #2, f2=**, len=2999<br>&nbsp;&nbsp; chunk #3, f2=*?, len=1126<br>&nbsp;&nbsp; chunk #1, f3=**, len=2999<br>&nbsp;&nbsp; chunk #2, f3=**, len=2999<br>&nbsp;&nbsp; chunk #3, f3=*?, len=1126<br>f1=5<br>&nbsp;&nbsp; chunk #1, f2=##, len=2999<br>&nbsp;&nbsp; chunk #2, f2=##, len=2999<br>&nbsp;&nbsp; chunk #3, f2=##, len=2999<br>&nbsp;&nbsp; chunk #4, f2=##, len=2999<br>&nbsp;&nbsp; chunk #5, f2=##, len=2999<br>&nbsp;&nbsp; chunk #6, f2=##, len=2999<br>&nbsp;&nbsp; chunk #7, f2=##, len=2999<br>&nbsp;&nbsp; chunk #8, f2=##, len=2999<br>&nbsp;&nbsp; chunk #9, f2=#?, len=12<br>&nbsp;&nbsp; chunk #1, f3=**, len=2999<br>&nbsp;&nbsp; chunk #2, f3=**, len=2999<br>&nbsp;&nbsp; chunk #3, f3=*?, len=1126<br>f1=6<br>&nbsp;&nbsp; chunk #1, f2=**, len=2999<br>&nbsp;&nbsp; chunk #2, f2=**, len=2999<br>&nbsp;&nbsp; chunk #3, f2=*?, len=1126<br>&nbsp;&nbsp; chunk #1, f3=**, len=2999<br>&nbsp;&nbsp; chunk #2, f3=**, len=2999<br>&nbsp;&nbsp; chunk #3, f3=*?, len=1126<br>f1=7<br>&nbsp;&nbsp; chunk #1, f2=**, len=2999<br>&nbsp;&nbsp; chunk #2, f2=**, len=2999<br>&nbsp;&nbsp; chunk #3, f2=*?, len=1126<br>&nbsp;&nbsp; chunk #1, f3=**, len=2999<br>&nbsp;&nbsp; chunk #2, f3=**, len=2999<br>&nbsp;&nbsp; chunk #3, f3=*?, len=1126<br>f1=8<br>&nbsp;&nbsp; chunk #1, f2=**, len=2999<br>&nbsp;&nbsp; chunk #2, f2=**, len=2999<br>&nbsp;&nbsp; chunk #3, f2=*?, len=1126<br>&nbsp;&nbsp; chunk #1, f3=**, len=2999<br>&nbsp;&nbsp; chunk #2, f3=**, len=2999<br>&nbsp;&nbsp; chunk #3, f3=*?, len=1126<br><br><hr
+ width="100%"></pre>
+<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
+ href="home.htm">Go
+Home</a></center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript"><!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+</p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

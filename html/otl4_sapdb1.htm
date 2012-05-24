@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>SAP DB, Example 1 (stored procedure call)</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, SAP DB, Example 1 (stored procedure call)</h1>
+  </center>
+
+  <h1>SAP DB Example 1 (stored procedure call)</h1>This example demonstrates a SAP DB stored procedure call
+
+  <h2>Source Code</h2>
+  <pre>
+#include &lt;iostream.h&gt;
+#include &lt;stdio.h&gt;
+#define OTL_ODBC // Compile OTL 4.0/ODBC
+#include &lt;otlv4.h&gt;
+
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
+
+void stored_proc(void)
+// invoking stored procedure
+{ 
+ <a href="otl3_stream_class.htm">otl_stream</a> o(1, // buffer size should be equal to 1 in case of stored procedure call
+              "{call my_proc("
+              " :A&lt;int,inout&gt;, "
+              " :B&lt;char[31],out&gt;, "
+              " :C&lt;char[31],in&gt; "
+              ")}",
+                 // stored procedure call
+              db // connect object
+             );
+
+ o.<a href="otl3_stream_class.htm#set_commit">set_commit</a>(0); // set stream auto-commit off since
+                  // the stream does not generate transaction
+
+ o&lt;&lt;1&lt;&lt;"Test String1"; // assigning :1 = 1, :3 = "Test String1"
+
+ int a;
+ char b[31];
+
+ o&gt;&gt;a&gt;&gt;b;
+ cout&lt;&lt;"A="&lt;&lt;a&lt;&lt;", B="&lt;&lt;b&lt;&lt;endl;
+
+}
+
+int main()
+{
+ otl_connect::otl_initialize(); // initialize ODBC environment
+ try{
+  db.rlogon("uid=scott;pwd=tiger;dsn=sapdb"); // connect to ODBC
+  otl_cursor::direct_exec
+   (db,
+    "CREATE DBPROC my_proc ("
+    "  INOUT A INTEGER,     "
+    "  OUT   B VARCHAR(60), "
+    "  IN    C VARCHAR(60)  "
+    ") AS "
+    "BEGIN "
+    "  SET A = A + 1;"
+    "  SET B = C;"
+    "END;"
+   );  // create stored procedure
+
+  stored_proc(); // invoking stored procedure
+ }
+ catch(otl_exception&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.code&lt;&lt;endl; // print out error code
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+  cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+ }
+ db.logoff(); // disconnect from the data source
+ return 0;
+}
+</pre>
+
+  <h2>Output</h2>
+  <pre>
+ A=2, B=Test String1
+
+</pre>
+  <hr width="100%">
+
+  <center>
+    <a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com<script language="Javgmailpt">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a> .</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i> <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script> <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script></p>
+</body>
+</html>

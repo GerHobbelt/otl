@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <title>OTL 4.0, Example 585 (Oracle Change Notification via
+otl_subscriber)</title>
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/3.03Gold (Win95; I) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</head>
+<body>
+<h1 align="center">OTL 4.0, Example 585 (Oracle Change Notification via
+otl_subscriber)</h1>
+<p>This example demonstrates Oracle Change Notification Interface via <a
+ href="otl4_subscriber.htm">otl_subscriber</a><a
+ href="otl4_subscriber.htm"></a>.<br>
+</p>
+<h2>Source Code</h2>
+<span style="font-family: monospace;">// User "scott" should have a
+CHANGE NOTIFICATION privilege.<br>
+//<br>
+// The required "change notification" privilege <br>
+// can be set by "grant change notification to scott" by the DBA.<br>
+//<br>
+// Active subscriptions may be viewed with <br>
+// "select * from USER_CHANGE_NOTIFICATION_REGS".<br>
+//------------------------------------------------------------------<br>
+#include &lt;iostream&gt;<br>
+using namespace std;<br>
+#include &lt;time.h&gt; // clock()<br>
+<br>
+</span>
+<pre>#define OTL_ORA10G_R2 // Compile OTL 4.0/OCI10gR2<br>#define <a
+ href="otl3_compile.htm#OTL_ORA_SUBSCRIBE">OTL_ORA_SUBSCRIBE</a> // Enable the <a
+ href="otl4_subscriber.htm">otl_subscriber</a> interface<br><br>// The following two #define's are required for <br>// the otl_subscriber interface to function<br>#define <a
+ href="otl3_compile.htm#OTL_ORA_OCI_ENV_CREATE">OTL_ORA_OCI_ENV_CREATE</a> <br>#define <a
+ href="otl3_compile.htm#OTL_ORA_OCI_ENV_CREATE_MODE">OTL_ORA_OCI_ENV_CREATE_MODE</a> (OCI_THREADED|OCI_OBJECT|OCI_EVENTS)<br><br><a
+ href="otl3_compile.htm#OTL_STRICT_NUMERIC_TYPE_CHECK_ON_SELECT"></a>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>//------------------------------------------------------------------<br>// Function to log a message <br>void Log(const char *sect, const char *mess, int x=-1 )<br>{<br>  cout &lt;&lt; clock()/CLOCKS_PER_SEC &lt;&lt; "\t:" &lt;&lt; sect &lt;&lt; ":\t" &lt;&lt; mess;<br>  if(x&gt;=0) cout &lt;&lt; x;<br>  cout &lt;&lt; '.' &lt;&lt; endl;<br>}<br>//==================================================================<br><br>// Class derived from the otl_subscriber interface. <br>// Implements an example of the Change Notification mechanism.<br>class <a
+ name="TSubscriber"></a>TSubscriber : public <a
+ href="otl4_subscriber.htm">otl_subscriber</a> {<br>public:<br><br>  TSubscriber(otl_connect* adb): otl_subscriber(adb){}<br><br>  ~TSubscriber()<br>  {<br>   // Close the select stream in case if it was open<br>    if(select_str_.good()) select_str_.close();<br>  }<br><br>  void <a
+ name="subscribe"></a>subscribe(void)<br>  {<br>    otl_subscriber::<a
+ href="otl4_subscriber.htm#SUBSCRIBE">subscribe</a><br>      ("test_subs", // This subscription name (optional)<br>       5005, // Application listening TCP port number to receive<br>             // subscription notifications (optional)<br>       20 // Subscription expiration time, in seconds (optional, default<br>          // value 1800 sec, 0 means "never expire")<br>      );<br><br>    <a
+ href="otl4_subscriber.htm#ASSOCIATE_QUERY">associate_query</a>( "select :arg&lt;int&gt; from test_tab" ); <br>    // "Touching" the table, which notification we would like to<br>    // receive, in the context of this subscription<br>    <br>    // <a
+ href="otl4_subscriber.htm#ASSOCIATE_TABLE">associate_table</a>( "test_tab2" ); <br>    // There could be multiple tables in interest<br><br>   // Open a stream to be used by "Row events" functions<br><br>    if(!select_str_.good()){<br>      select_str_.open<br>        (1,<br>         "select f1 from test_tab where ROWID=:RId&lt;char[250]&gt;",<br>         *db);<br>    }<br>    Log( "Subs", "Subscription set" );<br>  }<br><br>private:<br><br>// Select stream for selecting changed rows<br>  otl_stream select_str_;<br><br><br>// The functions below override the pure virtual (interface)<br>// functions of the otl_subscriber interface <br>  virtual void <a
+ href="otl4_subscriber.htm#OnException">OnException</a>(otl_exception&amp; e) <br>  { <br>    Log( "Event Exception", reinterpret_cast&lt;char*&gt;(e.msg) ); <br>  }<br><br>  virtual void <a
+ href="otl4_subscriber.htm#OnDeRegistration">OnDeRegistration</a>(void)<br>  {<br>    Log( "Event", "Subscription time expired, resetting subscription" );<br>    if( is_online()) subscribe(); <br>  }<br><br>  //--- DB events:<br>  virtual void <a
+ href="otl4_subscriber.htm#OnStartup">OnStartup</a>(void) <br>  { <br>    Log( "Event", "Database startup" ); <br>  }<br><br>  virtual void <a
+ href="otl4_subscriber.htm#OnInstanceShutdown">OnInstanceShutdown</a>(void) <br>  { <br>    Log( "Event", "This database instance shutdown" ); <br>  }<br><br>  virtual void <a
+ href="otl4_subscriber.htm#OnAnyInstanceShutdown">OnAnyInstanceShutdown</a>(void) <br>  { <br>      Log( "Event", "Some database instance shutdown" ); <br>  }<br><br>  //--- Table events:<br>  virtual void <a
+ href="otl4_subscriber.htm#OnTableInvalidate">OnTableInvalidate</a>(text * /*table_name*/, bool /*all_rows*/ = false)<br>  { <br>    Log( "Event", <br>         "Too many changes in data, table completely invalidated, "<br>         "no inidividual data notification follows" <br>       );<br>  }<br><br>  virtual void <a
+ href="otl4_subscriber.htm#OnTableAlter">OnTableAlter</a>(text * /*table_name*/, bool /*all_rows*/ = false) <br>  { <br>    Log( "Event", "Table altered" ); <br>  }<br><br>  virtual void <a
+ href="otl4_subscriber.htm#OnTableDrop">OnTableDrop</a>(text * /*table_name*/, bool /*all_rows*/ = false) <br>  { <br>    Log( "Event", "Table dropped" ); <br>  }<br><br>  virtual void <a
+ href="otl4_subscriber.htm#OnTableChange">OnTableChange</a>(text * /*table_name*/, bool /*all_rows*/ = false) <br>  { <br>      Log( "Event", "Table changed" ); <br>  }<br><br>  // followed by individual OnRow*() events for each data row<br><br>  //--- Row events:<br>  virtual void <a
+ href="otl4_subscriber.htm#OnRowInsert">OnRowInsert</a>(text *table_name, text *row_id)<br>  {<br>    // if the changed table name is "TEST_TAB" then <br>    // select the row by its ROWID and then log the change<br>    if(strstr(reinterpret_cast&lt;char*&gt;(table_name),"TEST_TAB")){<br>      // here, there should be a mutex lock in case <br>      // if the TSubscriber class is used from multiple threads<br>      select_str_&lt;&lt;row_id;<br>      while(!select_str_.eof()){<br>        double x;<br>        select_str_&gt;&gt;x;<br>        Log( "Event", "Row inserted, f1=", (int)x );<br>      }    <br>    }<br>  }<br><br>  virtual void <a
+ href="otl4_subscriber.htm#OnRowUpdate">OnRowUpdate</a>( text *table_name, text *row_id )<br>  {<br>    // if the changed table name is "TEST_TAB" then <br>    // select the row by its ROWID and then log the change<br>    if(strstr( reinterpret_cast&lt;char*&gt;(table_name), "TEST_TAB" )){<br>      // here, there should be a mutex lock in case <br>      // if the TSubscriber class is used from multiple threads<br>      select_str_&lt;&lt;row_id;<br>      while(!select_str_.eof()){<br>        double x;<br>        select_str_&gt;&gt;x;<br>        Log( "Event", "Row updated, f1=", (int)x );<br>      }    <br>    }<br>  }<br><br>  virtual void <a
+ href="otl4_subscriber.htm#OnRowDelete">OnRowDelete</a>( text *table_name, text * /*row_id*/ )<br>  {<br>    // if the changed table name is "TEST_TAB" <br>    // then log the change<br>    if( strstr( reinterpret_cast&lt;char*&gt;(table_name), "TEST_TAB" ) )<br>      Log( "Event", "Row deleted" );<br>  }<br><br>};<br><br>int main()<br>{<br> <a
+ href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment<br> try{<br><br>  db.rlogon("scott/tiger"); // connect to Oracle<br>  db.direct_exec<br>    ("drop table test_tab", <br>     otl_exception::disabled <br>    ); // disable OTL exceptions<br>  db.direct_exec("create table test_tab(f1 number)" );<br>  <a
+ href="#TSubscriber">TSubscriber</a> subs(&amp;db);<br>  subs.<a
+ href="#subscribe">subscribe</a>();<br>  //------------------------<br>  char str_buf[128];<br><br>  Log( "Main", "Inserting row, f1=", 123);<br>  db&lt;&lt;"insert into test_tab values(123)";<br>  db.commit();<br>  cout&lt;&lt;"Press 'x' and then press ENTER to continue or wait a bit, "&lt;&lt;endl<br>      &lt;&lt;"there may be pending notifications." &lt;&lt; endl; <br>  cin&gt;&gt;str_buf;<br>  cout &lt;&lt; endl;<br>   <br>  Log( "Main", "Updating row, f1=", 456 );<br>  db&lt;&lt;"update test_tab set f1=456 where f1=123";<br>  db.commit();<br>  cout&lt;&lt;"Press 'x' and then press ENTER to continue or wait a bit, "&lt;&lt;endl<br>      &lt;&lt;"there may be pending notifications." &lt;&lt; endl;<br>  cin&gt;&gt;str_buf;<br>  cout &lt;&lt; endl;<br>  <br>  Log( "Main", "Deleting row, f1=", 456 );<br>  db&lt;&lt;"delete from test_tab where f1=456";<br>  db.commit();<br>  cout&lt;&lt;"Press 'x' and then press ENTER to quit or wait a bit, "&lt;&lt;endl<br>      &lt;&lt;"there may be pending notifications." &lt;&lt; endl;<br>  cin&gt;&gt;str_buf;<br>  cout &lt;&lt; endl;<br>    <br>  //------------------------<br>  subs.<a
+ href="otl4_subscriber.htm#UNSUBSCRIBE">unsubscribe</a>();<br><br><br> }catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.code&lt;&lt;endl; // print out error code<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from Oracle<br><br> return 0;<br><br>}<br></pre>
+<h2>Output</h2>
+<pre>1       :Subs:  Subscription set.<br>1       :Main:  Inserting row, f1=123.<br>Press 'x' and then press ENTER to continue or wait a bit,<br>there may be pending notifications.<br>x<br><br>3       :Main:  Updating row, f1=456.<br>Press 'x' and then press ENTER to continue or wait a bit,<br>there may be pending notifications.<br>4       :Event: Table changed.<br>4       :Event: Row inserted, f1=456.<br>4       :Event: Table changed.<br>4       :Event: Row updated, f1=456.<br>x<br><br>7       :Main:  Deleting row, f1=456.<br>Press 'x' and then press ENTER to quit or wait a bit,<br>there may be pending notifications.<br>9       :Event: Table changed.<br>9       :Event: Row deleted.<br>x<br><br><br><hr
+ width="100%"></pre>
+<center>
+<p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+<a href="home.htm">Go Home</a> </p>
+</center>
+<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
+ href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com.
+<script language="JavaScript">
+<!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a></p>
+<p><a href="mailto:skuchin@gmail.com"><i>Permission to use, copy,
+modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></a></p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

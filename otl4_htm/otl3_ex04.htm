@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>OTL 4.0, Example 4 (Insert and Select via referenced cursor)</TITLE>
+   <META NAME="Author" CONTENT="Sergei Kuchin">
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
+   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</HEAD>
+<BODY>
+
+<H1 ALIGN=CENTER>OTL 4.0, Example 4 (Insert and Select via referenced cursor)</H1>
+
+<H1><A NAME="example1"></A>Example 4 (Insert and Select via referenced
+cursor)</H1>
+
+<P>This example demonstrates a simple INSERT, SELECT and constant SQL statements.</P>
+
+<H2>Source Code</H2>
+
+<PRE>#include &lt;iostream&gt;
+using namespace std;
+
+#include &lt;stdio.h&gt;</PRE>
+
+<PRE>#define OTL_ORA7 // Compile OTL 4.0/OCI7
+#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+
+<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+
+void insert()
+// insert rows into table
+{ 
+ <A HREF="otl3_stream_class.htm">otl_stream</A> o(50, // buffer size
+              &quot;insert into test_tab values(:f1&lt;float&gt;,:f2&lt;char[31]&gt;)&quot;, 
+                 // SQL statement
+              db // connect object
+             );
+ char tmp[32];
+
+ for(int i=1;i&lt;=100;++i){
+  sprintf(tmp,&quot;Name%d&quot;,i);
+  o&lt;&lt;(float)i&lt;&lt;tmp;
+ }
+}
+
+void select()
+{ 
+ <A HREF="otl3_stream_class.htm">otl_stream</A> i(50, // buffer size
+              &quot;begin &quot;
+              &quot; open <B>:cur</B> for &quot;
+              &quot;  select * &quot;
+              &quot;  from test_tab &quot;
+              &quot;  where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2; &quot;
+              &quot;end;&quot;, // PL/SQL block returns a referenced cursor
+              db, // connect object
+              &quot;:cur&quot; // <A HREF="otl3_stream_class.htm#ref_cur">referenced cursor placeholder name
+</A>             ); 
+   // create select stream with referenced cursor
+ 
+ float f1;
+ char f2[31];
+
+ i&lt;&lt;8; // assigning :f = 8
+   // SELECT automatically executes when all input variables are
+   // assigned. First portion of output rows is fetched to the buffer
+
+ while(!i.eof()){ // while not end-of-data
+  i&gt;&gt;f1&gt;&gt;f2;
+  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;endl;
+ }
+
+ i&lt;&lt;4; // assigning :f = 4
+   // SELECT automatically executes when all input variables are
+   // assigned. First portion of output rows is fetched to the buffer
+
+ while(!i.eof()){ // while not end-of-data
+  i&gt;&gt;f1&gt;&gt;f2;
+  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;endl;
+ }
+
+}
+
+int main()
+{
+ <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize OCI environment
+ try{
+
+  db.rlogon(&quot;scott/tiger&quot;); // connect to Oracle
+
+  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
+</A>   (
+    db,
+    &quot;drop table test_tab&quot;,
+    otl_exception::disabled // disable OTL exceptions
+   ); // drop table
+
+  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
+</A>   (
+    db,
+    &quot;create table test_tab(f1 number, f2 varchar2(30))&quot;
+    );  // create table
+
+  insert(); // insert records into table
+  select(); // select records from table
+
+ }
+
+ catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from Oracle
+
+ return 0;
+
+}
+</PRE>
+
+<H2>Output</H2>
+
+<PRE>f1=8, f2=Name8
+f1=9, f2=Name9
+f1=10, f2=Name10
+f1=11, f2=Name11
+f1=12, f2=Name12
+f1=13, f2=Name13
+f1=14, f2=Name14
+f1=15, f2=Name15
+f1=16, f2=Name16
+f1=4, f2=Name4
+f1=5, f2=Name5
+f1=6, f2=Name6
+f1=7, f2=Name7
+f1=8, f2=Name8
+
+
+
+<HR WIDTH="100%"></PRE>
+
+<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
+<A HREF="home.htm">Go Home</A> </P></CENTER>
+
+<P>Copyright &copy; 1996-2009, Sergei Kuchin, email: <A HREF="mailto:skuchin@aceweb.com">skuchin@aceweb.com</A>,
+<A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com/A>.
+<SCRIPT Language="JavaScript">
+<!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </SCRIPT>
+</P>
+
+<P><I>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</BODY>
+</HTML>

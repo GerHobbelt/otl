@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+  <meta name="generator" content="HTML Tidy for Windows (vers 25 March 2009), see www.w3.org">
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+
+  <title>OTL 4.0, Example 481 (UTF8 Insert/Select)</title>
+</head>
+
+<body>
+  <center>
+    <h1>OTL 4.0, Example 481 (UTF8 Insert/Select)</h1>
+  </center>This example demonstrates a simple UTF8 INSERT, SELECT and constant SQL statements.
+
+  <h2>Source Code</h2>
+  <pre>
+#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;
+</pre>
+  <pre>
+#define <a href="otl3_compile.htm#OTL_ORA9I">OTL_ORA9I</a> // Compile OTL 4.0/OCI9i<br>#define <a href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a> // Enable UTF8 OTL for OCI9i<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>// Sample UTF8 based string<br>unsigned char utf8_sample[]=<br>{0x61,0x62,0x63,0xd0,0x9e,0xd0,0x9b,0xd0,<br> 0xac,0xd0,0x93,0xd0,0x90,0x0};<br><br>void insert()<br>// insert rows into table<br>{ <br> <a href=
+"otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br><br> unsigned char tmp[31];<br><br> for(int i=1;i&lt;=100;++i){<br>   strcpy(reinterpret_cast&lt;char*&gt;(tmp),reinterpret_cast&lt;const char*&gt;(utf8_sample));<br>   o&lt;&lt;i;<br>   o&lt;&lt;tmp;<br> }<br><br>}<br><br>void select()<br>{ <br> <a href=
+"otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>              "select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> int f1;<br> unsigned char f2[31];<br><br> i&lt;&lt;8; // assigning :f = 8<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>   i&gt;&gt;f1;<br>   i&gt;&gt;f2;<br>   cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2=";<br>   for(int j=0;f2[j]!=0;++j)<br>     printf("%2x ", f2[j]);<br>   cout&lt;&lt;endl;<br> }<br><br>}<br><br>int main()<br>{<br>  putenv(const_cast&lt;char*&gt;("NLS_LANG=.AL32UTF8")); // set your Oracle Client NLS_LANG <br>                                // if its default was set to something else<br> <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment<br> try{<br><br>  db.rlogon("scott/tiger"); // connect to Oracle<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "drop table test_tab",<br>    otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "create table test_tab(f1 number, f2 varchar2(30))"<br>    );  // create table<br><br>  insert(); // insert records into table<br>  select(); // select records from table<br><br> }<br><br> catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from Oracle<br><br> return 0;<br><br>}
+</pre>
+
+  <h2>Output</h2>
+  <pre>
+f1=8, f2=61 62 63 d0 9e d0 9b d0 ac d0 93 d0 90<br>f1=9, f2=61 62 63 d0 9e d0 9b d0 ac d0 93 d0 90<br>f1=10, f2=61 62 63 d0 9e d0 9b d0 ac d0 93 d0 90<br>f1=11, f2=61 62 63 d0 9e d0 9b d0 ac d0 93 d0 90<br>f1=12, f2=61 62 63 d0 9e d0 9b d0 ac d0 93 d0 90<br>f1=13, f2=61 62 63 d0 9e d0 9b d0 ac d0 93 d0 90<br>f1=14, f2=61 62 63 d0 9e d0 9b d0 ac d0 93 d0 90<br>f1=15, f2=61 62 63 d0 9e d0 9b d0 ac d0 93 d0 90<br>f1=16, f2=61 62 63 d0 9e d0 9b d0 ac d0 93 d0 90<br><br>
+</pre>
+  <hr width="100%">
+
+  <center>
+    <a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a href="home.htm">Go Home</a>
+  </center>
+
+  <p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com <script language="JavaScript" type="text/javascript">
+<!-- hide from old browsers
+  var modDate = new Date(document.lastModified)
+  document.write("<i> Last Updated:<\/i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+  //-->
+  </script></a>.</p>
+
+  <p><i>Permission to use, copy, modify and redistribute this document for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p><script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+  document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+  </script><script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+  pageTracker._trackPageview();
+  </script>
+</body>
+</html>

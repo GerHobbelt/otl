@@ -1,0 +1,170 @@
+#include <iostream>
+using namespace std;
+#include <stdio.h>
+
+#define OTL_ORA8I // Compile OTL 4.0/OCI8i
+//#define OTL_ORA7 // Uncomment this line to compile OTL 4.0/OCI7
+//#define OTL_ORA8I // Uncomment this line to compile OTL 4.0/OCI8
+//#define OTL_ORA9I // Uncomment this line to compile OTL 4.0/OCI9i
+
+// Default "numeric" NULLs to (-1)
+#define OTL_DEFAULT_NUMERIC_NULL_TO_VAL (-1)
+
+// Default "datetime" NULLs to otl_datetime(2000,1,1,0,0,0)
+#define OTL_DEFAULT_DATETIME_NULL_TO_VAL otl_datetime(2000,1,1,0,0,0)
+
+// Default "string" NULLs to "***NULL***"
+#define OTL_DEFAULT_STRING_NULL_TO_VAL "***NULL***"
+
+// Default "char" NULLs to '*'
+#define OTL_DEFAULT_CHAR_NULL_TO_VAL '*'
+
+#include <otlv4.h> // include the OTL 4.0 header file
+
+otl_connect db; // connect object
+
+void insert()
+// insert rows into table
+{ 
+ otl_stream o(50, // buffer size
+              "insert into test_tab "
+              "values(:f1<float>,:f2<char[31]>,NULL,:f4<timestamp>)",  
+                 // SQL statement
+              db // connect object
+             );
+ char tmp[32];
+ otl_datetime f4(2001,2,24,13,21,11);
+
+ for(int i=1;i<=100;++i){
+#if defined(_MSC_VER)
+#if (_MSC_VER >= 1400) // VC++ 8.0 or higher
+  sprintf_s(tmp,sizeof(tmp),"Name%d",i);
+#else
+  sprintf(tmp,"Name%d",i);
+#endif
+#else
+  sprintf(tmp,"Name%d",i);
+#endif
+  if(i==10)
+    o<<static_cast<float>(i)<<otl_null()<<otl_null();
+  else
+    o<<static_cast<float>(i)<<tmp<<f4;
+ }
+
+}
+
+void select()
+{ 
+ otl_stream i(50, // buffer size
+              "select f1,f2,f2 f22,f3,f4 "
+               "from test_tab "
+               "where f1>=:f11<int> and f1<=:f12<int>*2",
+                 // SELECT statement
+              db // connect object
+             ); 
+   // create select stream
+ 
+ float f1;
+ char f2[31];
+ char f22;
+ int f3;
+ otl_datetime f4;
+
+
+ 
+ i<<8<<8; // assigning :f11 = 8, :f12=8
+   // SELECT automatically executes when all input variables are
+   // assigned. First portion of output rows is fetched to the buffer
+
+ cout<<"=====> Fetching rows and printing out default values instead of NULLs"<<endl;
+ while(!i.eof()){ // while not end-of-data
+  i>>f1;
+  cout<<"f1="<<f1<<", ";
+  i>>f2;
+  cout<<"f2="<<f2<<", ";
+  i>>f22;
+  cout<<"f22="<<f22<<", ";
+  i>>f3;
+  cout<<"f3="<<f3<<", ";
+  i>>f4;
+  cout<<"f4="<<f4.month<<"/"
+      <<f4.day<<"/"
+      <<f4.year<<" "
+      <<f4.hour<<":"
+      <<f4.minute<<":"
+      <<f4.second;
+  cout<<endl;
+ }
+
+ i<<8<<8; // assigning :f11 = 8, :f12=8
+ cout<<"=====> Fetching rows and printing out NULLs"<<endl;
+ while(!i.eof()){ // while not end-of-data
+  i>>f1;
+  if(i.is_null())
+   cout<<"f1=NULL, ";
+  else
+   cout<<"f1="<<f1<<", ";
+  i>>f2;
+  if(i.is_null())
+   cout<<"f2=NULL, ";
+  else
+   cout<<"f2="<<f2<<", ";
+  i>>f22;
+  if(i.is_null())
+   cout<<"f22=NULL, ";
+  else
+   cout<<"f22="<<f22<<", ";
+  i>>f3;
+  if(i.is_null())
+   cout<<"f3=NULL, ";
+  else
+   cout<<"f3="<<f3<<", ";
+  i>>f4;
+  if(i.is_null())
+   cout<<"f4=NULL,";
+  else
+   cout<<"f4="<<f4.month<<"/"
+       <<f4.day<<"/"
+       <<f4.year<<" "
+       <<f4.hour<<":"
+       <<f4.minute<<":"
+       <<f4.second;
+  cout<<endl;
+ }
+
+}
+
+int main()
+{
+ otl_connect::otl_initialize(); // initialize OCI environment
+ try{
+
+  db.rlogon("scott/tiger"); // connect to Oracle
+
+  otl_cursor::direct_exec
+   (db,
+    "drop table test_tab",
+    otl_exception::disabled // disable OTL exceptions
+   ); // drop table
+
+  otl_cursor::direct_exec
+   (db,
+    "create table test_tab(f1 int, f2 varchar(30), f3 int, f4 date)"
+    );  // create table
+
+  insert(); // insert records into table
+  select(); // select records from table
+
+ }
+
+ catch(otl_exception& p){ // intercept OTL exceptions
+  cerr<<p.msg<<endl; // print out error message
+  cerr<<p.stm_text<<endl; // print out SQL that caused the error
+  cerr<<p.var_info<<endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from Oracle
+
+ return 0;
+
+}
