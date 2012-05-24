@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
   <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
+ content="text/html; charset=ISO-8859-1">
   <meta name="Author" content="Sergei Kuchin">
   <meta name="GENERATOR"
  content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
@@ -29,9 +29,11 @@ defined exception</a>.
   <tbody>
     <tr>
       <td style="vertical-align: top;"><span style="font-style: italic;">Function
-/ data member</span><br>
+/
+data member</span><br>
       </td>
       <td style="vertical-align: top;"><span style="font-style: italic;">Description
+
       </span><br>
       </td>
     </tr>
@@ -44,7 +46,11 @@ defined exception</a>.
 text of the SQL statement in which
 the
 otl_exception
-was raised.</td>
+was raised. When the stream label (sqlstm_label parameter in otl_stream
+constructors or <a href="otl3_stream_class.htm#otl_stream_open">open</a>()
+function ) is defined&nbsp; (!= NULL), it's used to populate the
+stm_text data member instead of the SQL statement text.<br>
+      </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
@@ -113,6 +119,7 @@ DB2-CLI diagnostic
 records, retrieved by the ODBC/DB2-CLI SQLGetDiagRec() function.
 otl_exception
 usually retrieves only the first diagnostic record and populates the <i>msg</i>,
+
       <i>code</i>, and <i>sqlstate </i>fields with it. In some cases,
 though,
 multiple diagnostic records can be retrieved. In these cases, the
@@ -123,7 +130,8 @@ the size of the xxx_arr[] fields. The xxx_arr[] fields get allocated
 and
 deallocated dynamically, if the arr_len&gt;0. <i>msg_arr[] </i>contains
 the
-diagnostic messages, <i>sqlstate_arr[] </i>--the SQLSTATE
+diagnostic
+messages, <i>sqlstate_arr[] </i>--the SQLSTATE
 information,
 and <i>code_arr[]</i> -- the error codes. <i>msg</i>, <i>code</i>,
 and <i>sqlstate</i> get always populated with the first diagnostic
@@ -159,8 +167,8 @@ statements</a></td>
  href="otl3_long_string.htm">Next</a><a href="otl3.htm">Contents</a>
 <a href="home.htm">Go Home</a></p>
 </center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from oldgmailsers
  var modDate = new Date(document.lastModified)
@@ -173,7 +181,14 @@ statements</a></td>
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i>
 </p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");

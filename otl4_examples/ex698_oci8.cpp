@@ -1,33 +1,21 @@
 #include <iostream>
 using namespace std;
-
 #include <stdio.h>
 
-#define OTL_ORA11G_R2 // Compile OTL 4.0/OCI11.2
-
-#if defined(_MSC_VER)||defined(__BORLANDC__) // VC++ or Borland C++
-
-// Enabling support for 64-bit signed integers
-// Since 64-bit integers are not part of the ANSI C++
-// standard, this definition is compiler specific.
-#define OTL_BIGINT __int64
-
-// Defining a bigint constant that is larger than
-// the max 32-bit integer value.
-const OTL_BIGINT BIGINT_VAL1=12345678901234000;
-
-#elif defined(__GNUC__) // GNU C++
-
-// Enabling support for 64-bit signed integers
-// Since 64-bit integers are not part of the ANSI C++
-// standard, this definition is compiler specific.
-#define OTL_BIGINT long long
-
-const OTL_BIGINT BIGINT_VAL1=12345678901234000LL;
-
+#define OTL_ORA11G_R2 // Compile OTL 4.0/OCI11R2
+#if defined(__BORLANDC__)
+#define OTL_BIGINT __int64 // Enabling G++ 64-bit integers
+#define OTL_UBIGINT unsigned __int64 // Enabling G++ 64-bit integers
+#elif !defined(_MSC_VER)
+#define OTL_BIGINT long long // Enabling G++ 64-bit integers
+#define OTL_UBIGINT unsigned long long // Enabling G++ 64-bit integers
+#else
+#define OTL_BIGINT __int64 // Enabling VC++ 64-bit integers
+#define OTL_UBIGINT unsigned __int64 // Enabling VC++ 64-bit integers
 #endif
-
 #include <otlv4.h> // include the OTL 4.0 header file
+
+const OTL_UBIGINT UBIG_VAL1=18446744073709551615ULL;
 
 otl_connect db; // connect object
 
@@ -35,39 +23,32 @@ void insert()
 // insert rows into table
 { 
  otl_stream o(50, // buffer size
-              "insert into test_tab values(:f1<bigint>,:f2<char[31]>)", 
+              "insert into test_tab values(:f1<bigint>,:f2<char[31]>,:f3<ubigint>)", 
                  // SQL statement
               db // connect object
              );
  char tmp[32];
 
- for(OTL_BIGINT i=BIGINT_VAL1;i<=BIGINT_VAL1+100;++i){
-  int ndx=static_cast<int>(i-BIGINT_VAL1);
+ for(OTL_BIGINT i=1;i<=100;++i){
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1400) // VC++ 8.0 or higher
-  sprintf_s(tmp,sizeof(tmp),"Name%d",ndx);
+   sprintf_s(tmp,sizeof(tmp),"Name%d",static_cast<int>(i));
 #else
-  sprintf(tmp,"Name%d",ndx);
+   sprintf(tmp,"Name%d",static_cast<int>(i));
 #endif
 #else
-  sprintf(tmp,"Name%d",ndx);
+   sprintf(tmp,"Name%d",static_cast<int>(i));
 #endif
-  o<<i<<tmp;
+   o<<i<<tmp<<UBIG_VAL1;
  }
 }
 
 void select()
 { 
  otl_stream i(50, // buffer size
-              "select f1 :#1<bigint>, f2 "
-                // the default mapping of f1 needs to be overriden 
-                // explicitly when bigint's are used in a combination
-                // OTL/OCIx, because the default mapping maps
-                // Oracle NUMBERs into double containers, which are not 
-                // big enough to hold 64-bit signed integer values.
+              "select f1 :#1<bigint>, f2, f3 :#3<ubigint> "
               "from test_tab "
-              "where f1>=:f<bigint> "
-              "  and f1<=:ff<bigint>",
+              "where f1>=:f<bigint> and f1<=:ff<bigint>*2",
                  // SELECT statement
               db // connect object
              ); 
@@ -75,28 +56,16 @@ void select()
  
  OTL_BIGINT f1;
  char f2[31];
-#if defined(_MSC_VER)
- char f1str[40];
-#endif
+ OTL_UBIGINT f3;
 
- i<<BIGINT_VAL1+8
-  <<BIGINT_VAL1+16; // assigning :f = 8; :ff = 8
+ i<<static_cast<OTL_BIGINT>(8)
+  <<static_cast<OTL_BIGINT>(8); // assigning :f = 8; :ff = 8
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
  while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2;
-  cout<<"f1=";
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400) // VC++ 8.0 or higher
-  _i64toa_s(f1,f1str,sizeof(f1str),10);
-#else
-  _i64toa(f1,f1str,10);
-#endif
-  cout<<f1str<<", f2="<<f2<<endl;
-#elif defined(__GNUC__)
-  cout<<f1<<", f2="<<f2<<endl;
-#endif
+   i>>f1>>f2>>f3;
+   printf("f1=%lld, f2=%s, f3=%llu\n",f1,f2,f3);
  }
 
 }
@@ -118,7 +87,7 @@ int main()
   otl_cursor::direct_exec
    (
     db,
-    "create table test_tab(f1 number, f2 varchar2(30))"
+    "create table test_tab(f1 number, f2 varchar2(30), f3 number)"
     );  // create table
 
   insert(); // insert records into table
@@ -129,6 +98,7 @@ int main()
  catch(otl_exception& p){ // intercept OTL exceptions
   cerr<<p.msg<<endl; // print out error message
   cerr<<p.stm_text<<endl; // print out SQL that caused the error
+  cerr<<p.sqlstate<<endl; // print out SQLSTATE message
   cerr<<p.var_info<<endl; // print out the variable that caused the error
  }
 

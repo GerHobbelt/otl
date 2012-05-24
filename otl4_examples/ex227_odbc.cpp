@@ -98,7 +98,7 @@ int main()
   otl_cursor::direct_exec
    (
     db,
-    "create table test_tab2(f1 int, f2 datetime, f3 date) type=innoDB"
+    "create table test_tab2(f1 int, f2 datetime, f3 date)"
     );  // create table
   insert(); // insert records into table
   select(); // select records from table

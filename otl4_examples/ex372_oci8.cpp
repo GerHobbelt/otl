@@ -7,7 +7,9 @@ using namespace std;
 // #define OTL_ORA8I // Compile OTL 4.0/OCI8i
 // #define OTL_ORA9I // Compile OTL 4.0/OCI9I
 // #define OTL_ORA10G // Compile OTL 4.0/OCI10g
+#if !defined(OTL_ORA10G_R2)
 #define OTL_ORA10G_R2 // Compile OTL 4.0/OCI10gR2
+#endif
 #include <otlv4.h> // include the OTL 4.0 header file
 
 otl_connect db; // connect object

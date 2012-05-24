@@ -10,7 +10,9 @@
 using namespace std;
 #include <time.h> // clock()
 
+#if !defined(OTL_ORA10G_R2)
 #define OTL_ORA10G_R2 // Compile OTL 4.0/OCI10gR2
+#endif
 #define OTL_ORA_SUBSCRIBE // Enable the otl_subscriber interface
 
 // The following two #define's are required for 
@@ -188,6 +190,12 @@ int main()
      otl_exception::disabled 
     ); // disable OTL exceptions
   db.direct_exec("create table test_tab(f1 number)" );
+/* [i_a]
+..\..\otl4_examples\ex585_oci9.cpp(191) : error C2259: 'TSubscriber' : cannot instantiate abstract class
+        due to following members:
+        'void otl_subscriber::OnException(const otl_exception &)' : is abstract
+        p:\prj\3actual\otl\otlv4_h\otlv4.h(31749) : see declaration of 'otl_subscriber::OnException'
+*/
   TSubscriber subs(&db);
   subs.subscribe();
   //------------------------

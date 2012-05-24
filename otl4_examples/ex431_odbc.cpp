@@ -2,8 +2,11 @@
 #include <stdio.h>
 using namespace std;
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 
 #if defined(_MSC_VER) || defined(__BORLANDC__) // VC++ || Borland C++
 
@@ -11,33 +14,6 @@ using namespace std;
 // Since 64-bit integers are not part of the ANSI C++
 // standard, this definition is compiler specific.
 #define OTL_BIGINT __int64
-
-// Defining a string-to-bigint conversion 
-// that is used by OTL internally.
-// Since 64-bit ineteger conversion functions are
-// not part of the ANSI C++ standard, the code
-// below is compiler specific
-#define OTL_STR_TO_BIGINT(str,n)                \
-{                                               \
-  n=_atoi64(str);                               \
-}
-
-// Defining a bigint-to-string conversion 
-// that is used by OTL internally.
-// Since 64-bit ineteger conversion functions are
-// not part of the ANSI C++ standard, the code
-// below is compiler specific
-#if (_MSC_VER >= 1400) // VC++ 8.0 or higher
-#define OTL_BIGINT_TO_STR(n,str)                \
-{                                               \
-  _i64toa_s(n,str,sizeof(str),10);              \
-}
-#else
-#define OTL_BIGINT_TO_STR(n,str)                \
-{                                               \
-  _i64toa(n,str,10);                            \
-}
-#endif
 
 #elif defined(__GNUC__) // GNU C++
 
@@ -47,27 +23,6 @@ using namespace std;
 // Since 64-bit integers are not part of the ANSI C++
 // standard, this definition is compiler specific.
 #define OTL_BIGINT long long
-
-// Defining a string-to-bigint conversion 
-// that is used by OTL internally.
-// Since 64-bit ineteger conversion functions are
-// not part of the ANSI C++ standard, the code
-// below is compiler specific.
-#define OTL_STR_TO_BIGINT(str,n)                \
-{                                               \
-  n=strtoll(str,0,10);                          \
-}
-
-// Defining a bigint-to-string conversion 
-// that is used by OTL internally.
-// Since 64-bit ineteger conversion functions are
-// not part of the ANSI C++ standard, the code
-// below is compiler specific
-#define OTL_BIGINT_TO_STR(n,str)                \
-{                                               \
-  sprintf(str,"%lld",n);                        \
-}
-
 
 #endif
 
@@ -119,7 +74,7 @@ void select()
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
   cout<<"f1=";
-  cout<<(int)f1<<", f2="<<f2<<endl;
+  cout<<static_cast<int>(f1)<<", f2="<<f2<<endl;
  }
 
 }

@@ -49,12 +49,12 @@ public:
                                                                 \
   virtual int getErrorCode(void) const                          \
   {                                                             \
-    return code;                                                \
+    return this->code;                                          \
   }                                                             \
                                                                 \
   virtual const unsigned char* getErrorMessage(void) const      \
   {                                                             \
-    return msg;                                                 \
+    return this->msg;                                           \
   }
 
 #include <otlv4.h> // include the OTL 4.0 header file

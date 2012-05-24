@@ -1,61 +1,57 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-   <TITLE>OTL 4.0, Example 3 (PL/SQL block)</TITLE>
-   <META NAME="Author" CONTENT="Sergei Kuchin">
-   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
-   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-</HEAD>
-<BODY>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
 
-<H1 ALIGN=CENTER>OTL 4.0, Example 3 (PL/SQL block)</H1>
-
-<H1><A NAME="example1"></A>Example 3 (PL/SQL block)</H1>
-
-<P>This example demonstrates a anonymous PL/SQL block with input and output
-variables.</P>
-
-<H2>Source Code</H2>
-
-<PRE>#include &lt;iostream&gt;
+    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <title>OTL 4.0, Example 3 (PL/SQL block)</title>
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+  </head>
+  <body>
+    <h1 align="CENTER">OTL 4.0, Example 3 (PL/SQL block)</h1>
+    <h1><a name="example1"></a>Example 3 (PL/SQL block)</h1>
+    <p>This example demonstrates a anonymous PL/SQL block with input and
+      output
+      variables.</p>
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;
 using namespace std;
 
-#include &lt;stdio.h&gt;</PRE>
-
-<PRE>#define OTL_ORA7 // Compile OTL 4.0/OCI7
+#include &lt;stdio.h&gt;</pre>
+    <pre>#define OTL_ORA7 // Compile OTL 4.0/OCI7
 #include &lt;otlv4.h&gt; // include the OTL 4.0 header file
 
-<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
-</PRE>
-
-<PRE>void plsql(void)
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
+</pre>
+    <pre>void plsql(void)
 // invoking PL/SQL block
 { 
- <A HREF="otl3_stream_class.htm">otl_stream</A> o(5, // buffer size
-              &quot;begin &quot;
-              &quot; :A&lt;int,inout&gt; := :A+1; &quot;
-              &quot; :B&lt;char[31],out&gt; := :C&lt;char[31],in&gt;; &quot;
-              &quot;end;&quot;,
+ <a href="otl3_stream_class.htm">otl_stream</a> o(5, // buffer size
+              "begin "
+              " :A&lt;int,inout&gt; := :A+1; "
+              " :B&lt;char[31],out&gt; := :C&lt;char[31],in&gt;; "
+              "end;",
                  // PL/SQL block
               db // connect object
-             );</PRE>
-
-<PRE> o.<A HREF="otl3_stream_class.htm#set_commit">set_commit</A>(0); // set stream auto-commit off since 
+             );</pre>
+    <pre> o.<a href="otl3_stream_class.htm#set_commit">set_commit</a>(0); // set stream auto-commit off since 
                   // the block does not have any transactions
-                  // to commit</PRE>
+                  // to commit</pre>
+    <pre> o&lt;&lt;1&lt;&lt;"Test String1"; // assigning :A = 1, :C = "Test String1"
+ o&lt;&lt;2&lt;&lt;"Test String2"; // assigning :A = 2, :C = "Test String2"
+ o&lt;&lt;3&lt;&lt;"Test String3"; // assigning :A = 3, :C = "Test String3"
 
-<PRE> o&lt;&lt;1&lt;&lt;&quot;Test String1&quot;; // assigning :A = 1, :C = &quot;Test String1&quot;
- o&lt;&lt;2&lt;&lt;&quot;Test String2&quot;; // assigning :A = 2, :C = &quot;Test String2&quot;
- o&lt;&lt;3&lt;&lt;&quot;Test String3&quot;; // assigning :A = 3, :C = &quot;Test String3&quot;
-
- o.<A HREF="otl3_stream_class.htm#flush">flush</A>(); // executing PL/SQL block 3 times
+ o.<a href="otl3_stream_class.htm#flush">flush</a>(); // executing PL/SQL block 3 times
 
  int a;
  char b[32];
 
  while(!o.eof()){ // not end-of-data
   o&gt;&gt;a&gt;&gt;b;
-  cout&lt;&lt;&quot;A=&quot;&lt;&lt;a&lt;&lt;&quot;, B=&quot;&lt;&lt;b&lt;&lt;endl;
+  cout&lt;&lt;"A="&lt;&lt;a&lt;&lt;", B="&lt;&lt;b&lt;&lt;endl;
  }
 
 }
@@ -63,16 +59,16 @@ using namespace std;
 
 int main()
 {
- <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize OCI environment
+ <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment
  try{
 
-  db.rlogon(&quot;scott/tiger&quot;); // connect to Oracle
+  db.rlogon("scott/tiger"); // connect to Oracle
 
   plsql();
 
  }
 
- catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+ catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
   cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
   cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
   cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
@@ -83,43 +79,50 @@ int main()
  return 0;
 
 }
-</PRE>
-
-<H2>Output</H2>
-
-<PRE>A=2, B=Test String1
+</pre>
+    <h2>Output</h2>
+    <pre>A=2, B=Test String1
 A=3, B=Test String2
 A=4, B=Test String3
 
 
 
-<HR WIDTH="100%"></PRE>
-
-<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
-<A HREF="home.htm">Go Home</A> </P></CENTER>
-
-<P>Copyright &copy; 1996-2009, Sergei Kuchin, email: <A HREF="mailto:skuchin@aceweb.com">skuchin@aceweb.com</A>,
-<A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com/A>.
-<SCRIPT Language="JavaScript">
+<hr width="100%"></pre>
+    <center>
+      <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+        <a href="home.htm">Go Home</a> </p>
+    </center>
+    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><a
+        href="mailto:skuchin@gmail.com">.
+        <script language="JavaScript">
 <!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
- </SCRIPT>
-</P>
-
-<P><I>Permission to use, copy, modify and redistribute this document for
-any purpose is hereby granted without fee, provided that the above copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
-
-<script type="text/javascript">
+ </script>
+      </a></p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for
+        any purpose is hereby granted without fee, provided that the
+        above copyright
+        notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
+        AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+        SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+        FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL,
+        DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+        WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+        IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+        ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+        THIS SOFTWARE. </i></p>
+    <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</BODY>
-</HTML>
+  </body>
+</html>

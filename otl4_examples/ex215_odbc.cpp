@@ -49,7 +49,7 @@ void select(const int af1)
  char stmbuf[1024];
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1400) // VC++ 8.0 or higher
- sprintf_s(stmbsizeof(stm),uf,
+ sprintf_s(stmbuf,
 #else
  sprintf(stmbuf,
 #endif

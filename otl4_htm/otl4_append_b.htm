@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
   <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
+ content="text/html; charset=ISO-8859-1">
   <meta name="Author" content="Sergei Kuchin">
   <meta name="GENERATOR"
  content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
@@ -23,55 +23,38 @@ system data dictionaries. OTL extends the stream notation for calling
 the
 following ODBC / DB2-CLI functions:
 <ul>
-  <li>
-SQLColumnPrivileges</li>
+  <li>SQLColumnPrivileges</li>
   <br>
 &nbsp;
   <ul>
-    <li>
-Parameter 1: CatalogName</li>
-    <li>
-Parameter 2: SchemaName</li>
-    <li>
-Parameter 3: TableName</li>
-    <li>
-Parameter 4: ColumnName</li>
+    <li>Parameter 1: CatalogName</li>
+    <li>Parameter 2: SchemaName</li>
+    <li>Parameter 3: TableName</li>
+    <li>Parameter 4: ColumnName</li>
     <br>
 &nbsp;
   </ul>
-  <li>
-SQLColumns</li>
+  <li>SQLColumns</li>
   <br>
 &nbsp;
   <ul>
-    <li>
-Parameter 1: CatalogName</li>
-    <li>
-Parameter 2: SchemaName</li>
-    <li>
-Parameter 3: TableName</li>
-    <li>
-Parameter 4: ColumnName</li>
+    <li>Parameter 1: CatalogName</li>
+    <li>Parameter 2: SchemaName</li>
+    <li>Parameter 3: TableName</li>
+    <li>Parameter 4: ColumnName</li>
   </ul>
 </ul>
 <ul>
-  <li>
-SQLForeignKeys</li>
+  <li>SQLForeignKeys</li>
 &nbsp;
 &nbsp;<br>
   <ul>
-    <li>
-Parameter 1: PKTableCatalog</li>
-    <li>
-Parameter 2: PKTableSchema</li>
-    <li>
-Parameter 3: PKTableName</li>
-    <li>
-Parameter 4: FKTableCatalog</li>
-    <li>
-Parameter 5: FKTableSchema</li>
-    <li>
-Parameter 6: FKTableName<br>
+    <li>Parameter 1: PKTableCatalog</li>
+    <li>Parameter 2: PKTableSchema</li>
+    <li>Parameter 3: PKTableName</li>
+    <li>Parameter 4: FKTableCatalog</li>
+    <li>Parameter 5: FKTableSchema</li>
+    <li>Parameter 6: FKTableName<br>
       <br>
     </li>
   </ul>
@@ -85,80 +68,74 @@ Parameter 6: FKTableName<br>
 </ul>
 <ul>
   <ul>
-&nbsp;
-    <br>
+&nbsp; <br>
   </ul>
-  <li>
-SQLPrimaryKeys</li>
+  <li>SQLPrimaryKeys</li>
   <br>
 &nbsp;
   <ul>
-    <li>
-Parameter 1: CatalogName</li>
-    <li>
-Parameter 2: SchemaName</li>
-    <li>
-Parameter 3: TableName</li>
+    <li>Parameter 1: CatalogName</li>
+    <li>Parameter 2: SchemaName</li>
+    <li>Parameter 3: TableName</li>
     <br>
 &nbsp;
   </ul>
-  <li>
-SQLProcedureColumns</li>
+  <li>SQLProcedureColumns</li>
   <br>
 &nbsp;
   <ul>
-    <li>
-Parameter 1: CatalogName</li>
-    <li>
-Parameter 2: SchemaName</li>
-    <li>
-Parameter 3: ProcName</li>
-    <li>
-Parameter 4: ColumnName</li>
+    <li>Parameter 1: CatalogName</li>
+    <li>Parameter 2: SchemaName</li>
+    <li>Parameter 3: ProcName</li>
+    <li>Parameter 4: ColumnName</li>
     <br>
 &nbsp;
   </ul>
-  <li>
-SQLProcedures</li>
+  <li>SQLProcedures</li>
   <br>
 &nbsp;
   <ul>
-    <li>
-Parameter 1: CatalogName</li>
-    <li>
-Parameter 2: SchemaName</li>
-    <li>
-Parameter 3: ProcName</li>
+    <li>Parameter 1: CatalogName</li>
+    <li>Parameter 2: SchemaName</li>
+    <li>Parameter 3: ProcName<br>
+      <br>
+    </li>
+  </ul>
+</ul>
+<ul>
+  <li><a name="SQLStatistics"></a>SQLStatistics<br>
+    <br>
+  </li>
+  <ul>
+    <li>CatalogName</li>
+    <li>SchemaName</li>
+    <li>TableName</li>
+    <li>4th parameter is always SQL_INDEX_ALL</li>
+  </ul>
+</ul>
+<ul>
+  <ul>
     <br>
 &nbsp;
   </ul>
-  <li>
-SQLTablePrivileges</li>
+  <li>SQLTablePrivileges</li>
   <br>
 &nbsp;
   <ul>
-    <li>
-Parameter 1: CatalogName</li>
-    <li>
-Parameter 2: SchemaName</li>
-    <li>
-Parameter 3: TableName</li>
+    <li>Parameter 1: CatalogName</li>
+    <li>Parameter 2: SchemaName</li>
+    <li>Parameter 3: TableName</li>
     <br>
 &nbsp;
   </ul>
-  <li>
-SQLTables</li>
+  <li>SQLTables</li>
   <br>
 &nbsp;
   <ul>
-    <li>
-Parameter 1: CatalogName</li>
-    <li>
-Parameter 2: SchemaName</li>
-    <li>
-Parameter 3: TableName</li>
-    <li>
-Parameter 4: TableType</li>
+    <li>Parameter 1: CatalogName</li>
+    <li>Parameter 2: SchemaName</li>
+    <li>Parameter 3: TableName</li>
+    <li>Parameter 4: TableType</li>
   </ul>
 </ul>
 The OTL stream extended format is as follows:
@@ -202,7 +179,8 @@ syntax:
 <tt>&nbsp; otl_stream s(100,</tt>
 <br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"$SQLTables $1:'%'",</tt>
+"$SQLTables
+$1:'%'",</tt>
 <br>
 <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 db);</tt>
@@ -234,8 +212,8 @@ ODBC functions like SQLTables().
  href="home.htm">Go
 Home</a></p>
 </center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from oldgmailsers
  var modDate = new Date(document.lastModified)
@@ -248,7 +226,14 @@ Home</a></p>
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

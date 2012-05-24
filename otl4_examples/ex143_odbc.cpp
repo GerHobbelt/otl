@@ -21,7 +21,7 @@ void insert(void)
  otl_long_string f2(7000); // define long string variable
  db.set_max_long_size(7000); // set maximum long string size for connect object
 
- otl_stream o(1, // PostgreSQL 8.1 and higher, the buffer can be > 1
+ otl_stream o(50, // PostgreSQL 8.1 and higher, the buffer can be > 1
               "insert into test_tab values(:f1<int>,:f2<varchar_long>)", 
                  // INSERT statement
               db // connect object

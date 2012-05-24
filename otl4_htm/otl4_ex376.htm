@@ -1,6 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
+
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
   <title>OTL 4.0, Example 376 (Simple Insert/Select,
 otl_connect::operator&lt;&lt;, &lt;&lt;=, &gt;&gt; )</title>
   <meta name="Author" content="Sergei Kuchin">
@@ -27,7 +29,7 @@ statements, and otl_connect::operator<a
  href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a> // required with PG ODBC on Windows<br>#endif<br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
  href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{ <br> <a
  href="otl3_stream_class.htm">otl_stream</a> o;<br> o.<a
- href="otl3_stream_class.htm#setBufSize">setBufSize</a>(1); // for PostgreSQL 8.1 and higher, the buffer size can be &gt; 1<br><br>// Send a message (SQL statement) to the otl_connect object.<br> db<a
+ href="otl3_stream_class.htm#setBufSize">setBufSize</a>(50); // for PostgreSQL 8.1 and higher, the buffer size can be &gt; 1<br><br>// Send a message (SQL statement) to the otl_connect object.<br> db<a
  href="otl3_connect_class.htm#operator_lle">&lt;&lt;=</a>"insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)";<br><br>// Send a message (SQL statement) from the connect object <br>// to the otl_stream object. <br><br> db<a
  href="otl3_connect_class.htm#operator_gg">&gt;&gt;</a>o;<br><br>// By and large, this is all syntactical sugar, but "some like it hot".<br><br> char tmp[32];<br><br> for(int i=1;i&lt;=100;++i){<br>  sprintf(tmp,"Name%d",i);<br>  o&lt;&lt;i&lt;&lt;tmp;<br> }<br>}<br><br>void select()<br>{ <br> <a
  href="otl3_stream_class.htm">otl_stream</a> i;<br><br> i.<a
@@ -47,8 +49,8 @@ statements, and otl_connect::operator<a
 <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
 <a href="home.htm">Go Home</a> </p>
 </center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com/A&gt;.
 <script language="JavaScript">
 <!-- hide from old browsers
@@ -61,7 +63,14 @@ statements, and otl_connect::operator<a
 modify and redistribute this document for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></a></p>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE. </i></a></p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

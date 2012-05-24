@@ -73,7 +73,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("scott/tiger@sapdbsql");
+  db.rlogon("SCOTT/TIGER@sapdbsql");
 
   otl_cursor::direct_exec
    (

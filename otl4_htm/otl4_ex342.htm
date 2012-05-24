@@ -1,6 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
 <head>
+
+<meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
   <title>OTL 4.0, Example 342 (OTL stream read iterator, "get by name"
 functions, PostgreSQL)</title>
   <meta name="Author" content="Sergei Kuchin">
@@ -23,7 +25,7 @@ functions, PostgreSQL)</title>
  href="otl3_compile.htm#OTL_STL">OTL_STL</a><br>#define <a
  href="otl3_compile.htm#OTL_STREAM_READ_ITERATOR_ON">OTL_STREAM_READ_ITERATOR_ON</a><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
  href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{ <br> <a
- href="otl3_stream_class.htm">otl_stream</a> o(1, // buffer size can be &gt; 1 in PostgreSQL 8.1 and higher<br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br> char tmp[32];<br><br> for(int i=1;i&lt;=100;++i){<br>  sprintf(tmp,"Name%d",i);<br>  o&lt;&lt;i&lt;&lt;tmp;<br> }<br>}<br><br>void select()<br>{ <br> <a
+ href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size can be &gt; 1 in PostgreSQL 8.1 and higher<br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br> char tmp[32];<br><br> for(int i=1;i&lt;=100;++i){<br>  sprintf(tmp,"Name%d",i);<br>  o&lt;&lt;i&lt;&lt;tmp;<br> }<br>}<br><br>void select()<br>{ <br> <a
  href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>              "select * from test_tab "<br>   	      "where f1&gt;=:f11&lt;int&gt; and f1&lt;=:f12&lt;int&gt;*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> int f1;<br> char f2[31];<br> <a
  href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>&lt;<a
  href="otl3_stream_class.htm">otl_stream</a>,<a
@@ -45,8 +47,8 @@ functions, PostgreSQL)</title>
 <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
 <a href="home.htm">Go Home</a> </p>
 </center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com/a&gt;.
 <script language="JavaScript">
 <!-- hide from old browsers
@@ -60,7 +62,14 @@ modify and redistribute this document
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></a></p>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE. </i></a></p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

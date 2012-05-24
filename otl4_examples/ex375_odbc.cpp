@@ -100,7 +100,7 @@ int main()
   // Send SQL statements to the connect obejct for immediate execution. 
   // Ignore any exception for the first statement.
   try{ db<<"drop table test_tab"; } catch(otl_exception&){}
-  db<<"create table test_tab(f1 int, f2 varchar(30)) type=innoDB";
+  db<<"create table test_tab(f1 int, f2 varchar(30))";
 
   insert(); // insert records into table
   select(); // select records from table

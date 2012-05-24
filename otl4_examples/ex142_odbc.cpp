@@ -21,7 +21,7 @@ void insert(void)
 // for PostgreSQL's temporal datatypes, DB2 compatible bind variable 
 // placeholder's datatypes should be used. PostgreSQL's ODBC driver behaves the same 
 // way as DB2 CLI, as far as temporal datatypes are concerned.
- otl_stream o(1, // PostgreSQL 8.1 and higher, the buffer can be > 1
+ otl_stream o(50, // PostgreSQL 8.1 and higher, the buffer can be > 1
               "insert into test_tab "
               "values(:f1<int>,:f2<db2date>, "
               "       :f3<db2time>,:f4<timestamp>)", 

@@ -2,8 +2,11 @@
 using namespace std;
 
 #include <stdio.h>
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-// #define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #include <otlv4.h>
 
 otl_connect db; // connect object
@@ -38,22 +41,22 @@ int main()
 {
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
-  db.rlogon("scott/tigger@sybsql"); // connect to ODBC
-  otl_cursor::direct_exec(db,"drop procedure my_proc",0);
-  otl_cursor::direct_exec
-   (db,
-    "CREATE PROCEDURE my_proc "
-    "  @A int out, "
-    "  @B varchar(60) out, "
-    "  @C varchar(60) "
-    "AS "
-    "BEGIN "
-    "  SELECT @A=@A+1"
-    "  SELECT @B=@C "
-    "END"
-   );  // create stored procedure
-
-  stored_proc(); // invoking stored procedure
+   db.rlogon("scott/tigger@sybsql"); // connect to ODBC
+   db.auto_commit_on();
+   otl_cursor::direct_exec(db,"drop procedure my_proc",0);
+   otl_cursor::direct_exec
+     (db,
+      "CREATE PROCEDURE my_proc "
+      "  @A int out, "
+      "  @B varchar(60) out, "
+      "  @C varchar(60) "
+      "AS "
+      "BEGIN "
+      "  SELECT @A=@A+1"
+      "  SELECT @B=@C "
+      "END"
+      );  // create stored procedure
+   stored_proc(); // invoking stored procedure
  }
  catch(otl_exception& p){ // intercept OTL exceptions
   cerr<<p.msg<<endl; // print out error message

@@ -17,7 +17,7 @@ otl_connect db; // connect object
 void insert()
 // insert rows into table
 { 
- otl_stream o(1, // PostgreSQL 8.1 and higher, the buffer can be > 1
+ otl_stream o(50, // PostgreSQL 8.1 and higher, the buffer can be > 1
               "insert into test_tab values(:f1<float>,:f2<char[31]>)", 
                  // SQL statement
               db // connect object

@@ -29,7 +29,9 @@ void insert()
  }catch(otl_exception& p){
   if(p.code==2601){
    // ... duplicate key ...
-   o.clean(1); // clean up the stream's buffer
+    cout<<"STREAM ERROR STATE="<<o.get_error_state()<<endl;
+
+    o.clean(1); // clean up the stream's buffer
                // and clean up the stream's internal
                // error flag as well. By doing this, 
                // it's possible to recover from 

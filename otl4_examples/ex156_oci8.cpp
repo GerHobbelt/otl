@@ -35,7 +35,7 @@ void insert()
  }
 }
 
-void select(void* dummy_par)
+void select(void* /*dummy_par*/)
 { 
  try{
   otl_stream i;

@@ -1,676 +1,887 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta content="text/html; charset=iso-8859-1"
- http-equiv="Content-Type">
-  <meta content="Sergei Kuchin" name="Author">
-  <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
- name="GENERATOR">
-  <meta
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library"
- name="KeyWords">
-  <title>OTL 4.0, OTL defined exceptions</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, OTL defined exceptions</h1>
-</center>
-<h1>
-<a name="otl_compile"></a>OTL defined exceptions</h1>
-The following <a href="otl3_exception_class.htm">OTL exceptions</a>
-can
-be raised by the <a href="otl3_stream_class.htm">OTL stream </a>functions:
-<p><a name="32000"></a><font size="+1"><b>Code=32000:</b> Incompatible
-data
-types in stream operation</font>
-</p>
-<ul>
-  <li> <b>Cause: </b>The data type of a variable used in the current
-stream operation
-is not compatible with the declared stream format</li>
-  <li> <b>Action: </b>Check placeholders and declarations of their
-data
-types</li>
-</ul>
-<font size="+1"><b>Code=32001:</b> Row must be full for flushing output
-stream</font>
-<ul>
-  <li> <b>Cause: </b>Stream is open for output and has a format of
-output
-rows.
-An output row is a tuple of all output variables put together. The
-current
-output row is not filled yet but the flush function is invoked. The
-stream
-buffer cannot be flushed until the current row of the output buffer is
-full.</li>
-  <li> <b>Action: </b>Fill the row first, then flush the stream.</li>
-</ul>
-<font size="+1"><b>Code=32004:</b> Not all input variables have been
-initialized</font>
-<ul>
-  <li> <b>Cause: </b>stream has input variables but not all the
-variables
-have
-been initialized. An attempt to read data from the stream was made.</li>
-  <li> <b>Action: </b>Assign all input variables first.</li>
-</ul>
-<font size="+1"><b>Code=32004:</b> No input variables have been defined
-in
-SQL statement</font>
-<ul>
-  <li> <b>Cause:</b> Stream has no input variables. An attempt to
-write
-objects
-into the stream via one of the operator &lt;&lt; was made.</li>
-  <li> <b>Action:</b> Do not call the operator &lt;&lt; for streams
-which
-have
-no input variables defined.</li>
-</ul>
-<a name="32008"></a><font size="+1"><b>Code=32005:</b> Input string
-value
-is too large to fit into the buffer</font>
-<ul>
-  <li> <b>Cause: </b>Stream is open for output, e.g. an INSERT
-statement.
-The
-actual string value is larger than the buffer size, e.g. "123456789" is
-the string and the placeholder was defined as :f2&lt;char[5]&gt;</li>
-  <li> <b>Action: </b>Truncate the input string or increase the size
-of
-the buffer
-of the placeholder &lt;char[<b>10</b>]&gt;</li>
-</ul>
-<font size="+1"><b>Code=32006:</b> Input otl_long_string value is too
-large
-to fit into the buffer</font>
-<ul>
-  <li> <b>Cause: </b>Stream is open for output, e.g. an INSERT
-statement.
-The
-actual otl_long_string is larger than the buffer size, defined by
-set_max_long_size(),
-e.g. "123456789" is the long string and the following function call was
-made set_max_long_size(5).</li>
-  <li> <b>Action: </b>Truncate the input long string or increase the
-size
-of the
-max long size: set_max_long_size(100)</li>
-</ul>
-<font size="+1"><b>Code=32007:</b> PL/SQL table size is too large
-(&gt;32767)</font>
-<ul>
-  <li> <b>Cause: </b>Size of PL/SQL.table to be declared in
-otl_stream is
-too
-large.</li>
-  <li> <b>Action: </b>The maximum size of PL/SQL table is limited to
-32767 elements.</li>
-</ul>
-<font size="+1"><b><a name="CLOB_32008"></a>Code=32008:</b> Writing
-CLOB/BLOB in stream mode: actual size is greater than specified, trying
-to store X1 bytes / Unicode characters at offset X2. New length: X3
-would be bigger than length of lob: X4.&nbsp;</font>
-<ul>
-  <li> <b>Cause: </b>Actual number of bytes to be written into the
-LOB
-stream
-is greater than specified in the otl_lob_stream::set_len() function.
-X1-X4 are specified either in bytes or Unicode characters (in case if
-#define OTL_UNICODE is used).<br>
-  </li>
-  <li> <b>Action: </b>Actual number of bytes to be written into the
-LOB
-stream
-should match the number, specified in the set_len() function.</li>
-</ul>
-<font size="+1"><b>Code=32009:</b> Closing CLOB/BLOB in stream mode:
-actual
-size is not equal to specified size</font>
-<ul>
-  <li> <b>Cause: </b>When otl_lob_stream::close() is called, it turns
-out
-that
-the number of bytes, written into the LOB stream, does not match the
-number
-of bytes, specified in otl_lob_stream::set_len().</li>
-  <li> <b>Action: </b>Actual number of bytes to be written into the
-LOB
-stream
-should match the number, specified in the set_len() function</li>
-</ul>
-<font size="+1"><b>Code=32010:</b> CLOB/BLOB stream is not open for
-writing</font>
-<ul>
-  <li> <b>Cause: </b>An attempt was made to write into the LOB
-stream,
-which was
-not initialized for writing.</li>
-  <li> <b>Action: </b>LOB stream that is not open for writing, cannot
-be
-used
-for writing.</li>
-</ul>
-<p><br>
-<font size="+1"><b>Code=32011:</b> CLOB/BLOB stream is not open for
-reading</font>
-</p>
-<ul>
-  <li> <b>Cause: </b>An attempt was made to read from the LOB stream,
-which was
-not initialized for reading.</li>
-  <li> <b>Action: </b>LOB stream that is not open for reading, cannot
-be
-used
-for reading.</li>
-</ul>
-<p><br>
-<font size="+1"><b>Code=32012:</b> First session must be started with
-session_begin()</font>
-</p>
-<ul>
-  <li> <b>Cause: </b>An attempt to call otl_connect::session_reopen()
-was
-made,
-before calling session_begin().</li>
-  <li> <b>Action: </b>Change the logic of the program to call
-session_begin()
-first, and only after that to call session_reopen().</li>
-</ul>
-<p><br>
-<a name="32013"></a><font size="+1"><b>Code=32013:</b> Invalid bind
-variable declaration</font>
-</p>
-<ul>
-  <li> <b>Cause: </b>There was a typo in the bind variable
-declaration,
-e.g. :var&lt;date&gt;,
-instead of :var&lt;timestamp&gt;.</li>
-  <li> <b>Action: </b>Correct the typo and try again.</li>
-</ul>
-<p><br>
-<a name="32014"></a><font size="+1"><b>Code=32014:</b> No stored
-procedure
-was found</font>
-</p>
-<ul>
-  <li> <b>Cause: </b>Stored procedure name, being passed into <a
- href="otl3_stream_class.htm#create_stored_proc_call">otl_stream::create_stored_proc_call</a>,
-cannot be found in the Oracle data dictionary.</li>
-  <li> <b>Action: </b>Correct the stored procedure name, and try
-again.</li>
-</ul>
-<p><br>
-<a name="32015"></a><font size="+1"><b>Code=32015:</b> Unsupported
-data type</font>
-</p>
-<ul>
-  <li> <b>Cause: </b>Data type of parameter of the stored procedure,
-specified
-in&nbsp; <a href="otl3_stream_class.htm#create_stored_proc_call">otl_stream::create_stored_proc_call</a>,
-is unsupported.</li>
-  <li> <a name="32015_action"></a><b>Action: </b>PL/SQL tables, as
-stored
-procedure
-parameters, are not supported by create_stored_proc_call(). Also, if a
-stored procedure, which returns a reference cursor as an output
-parameter,
-has INOUT, or OUT parameters, is not supported by
-create_stored_proc_call(). create_stored_proc_call() <a
- href="otl3_stream_class.htm#create_stored_proc_call_types">supports</a>
-a limited set of types of stored procedures.<br>
-  </li>
-</ul>
-<a name="32016"></a><font size="+1"><b>Code=32016:</b> Unsupported
-procedure
-type</font>
-<ul>
-  <li> <b>Cause: </b>Stored procedure name, being passed into <a
- href="otl3_stream_class.htm#create_stored_proc_call">otl_stream::create_stored_proc_call</a>,
-is of unsupported type..</li>
-  <li> <b>Action: </b>For more detail, see <a href="#32015_action">this</a>.</li>
-</ul>
-<a name="32017"></a><font size="+1"><b>Code=32017:</b> Stream buffer
-size
-can't be &gt; 1 in this case</font>
-<ul>
-  <li> <b>Cause: </b>In case if <a
- href="otl3_bind_variables.htm#varchar_long">varchar_long</a>, <a
- href="otl3_bind_variables.htm#raw_long">raw_long</a>
-are used in a combination with OTL/OCIx, the only allowed stream buffer
-size is 1.</li>
-  <p><br>
-In case if <a href="otl3_bind_variables.htm#clob">clob</a>, <a
- href="otl3_bind_variables.htm#blob">blob</a>
-are used in a combination with OTL/OCIx, the only allowed stream buffer
-size for INSERTs or UPDATEs is 1. Though, buffer sizes, larger than 1,
-are allowed
-for SELECT statements. </p>
-  <p>This exception gets raised when the above limitations are
-violated. <br>
-&nbsp; </p>
-  <li><b>Action: </b>Set the buffer size to 1.</li>
-</ul>
-<a name="32018"></a><font size="+1"><b>Code=32018:</b> ODBC / DB2 CLI
-function
-name is not recognized. It should be one of the following: SQLTables,
-SQLColumns,
-SQLProcedures, SQLColumnPrivileges, SQLTablePrivileges, SQLPrimaryKeys,
-SQLProcedureColumns, SQLForeignKeys</font>
-<ul>
-  <li> <b>Cause: </b>A stream is being instantiated with a call to
-ODBC /
-DB2
-CLI that returns a description of a system table catalog, or a
-description
-of table columns (see <a href="otl4_append_b.htm">appendix B</a> for
-more
-detail). The function name was not recognized as one from the list
-above.</li>
-  <br>
-&nbsp;
-  <li><b>Action: </b>Check the spelling of the function name
-that is
-being passed
-into the stream, fix it, recompile the program, and try again.</li>
-</ul>
-<br>
-<a name="32019"></a><font size="+1"><b>Code=32019:</b>
-otl_stream::operator&gt;&gt;() should have been called before
-otl_stream::operator int()</font>
-<ul>
-  <li><b>Cause: </b>One of the otl_stream::operators &gt;&gt;()
-should have been called before calling <a
- href="otl3_stream_class.htm#operator_int">otl_stream::operator int</a>().
-Operator int() works only for streams that have some output (SELECT
-statements, stored procedures returning result sets, etc.). Otherwise,
-the meaning of operator int() is not defined, so the operator returns
-incorrect values, or values that do not make any sense, and do not
-reflect anything meaningful. Therefore, this exception gets thrown as a
-warning, when an attempt is made to call operator int() before any
-operators &gt;&gt;() are called. That is, before anything was read from
-the stream, and yet, operator int() is called, which does not make any
-sense, because the operator returns an "end-of-file" (eof) status of
-the stream, after something is supposed to be read from the stream. The
-difference in semantic between operator int() and <a
- href="otl3_stream_class.htm#eof">eof</a>() is that eof() should be
-called before anything is read from the stream, and operator int()
-should be called after something is read from the stream. In other
-words, operator int() returns a deferred end-of-file status of the
-stream, for example:<br>
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+    <meta content="Sergei Kuchin" name="Author">
+    <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
+      name="GENERATOR">
+    <meta content="OTL, Oracle, ODBC, DB2, CLI, database API, C++,
+      Template Library" name="KeyWords">
+    <title>OTL 4.0, OTL defined exceptions</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, OTL defined exceptions</h1>
+    </center>
+    <h1> <a name="otl_compile"></a>OTL defined exceptions</h1>
+    The following <a href="otl3_exception_class.htm">OTL exceptions</a>
+    can be raised by the <a href="otl3_stream_class.htm">OTL stream </a>functions:
+
+
+
+
+    <p><a name="32000"></a><font size="+1"><b>Code=32000:</b>
+        Incompatible data types in stream operation</font> </p>
+    <ul>
+      <li> <b>Cause: </b>The data type of a variable used in the
+        current stream operation is not compatible with the declared
+        stream format</li>
+      <li> <b>Action: </b>Check placeholders and declarations of their
+        data types</li>
+    </ul>
+    <font size="+1"><b>Code=32001:</b> Row must be full for flushing
+      output stream</font>
+    <ul>
+      <li> <b>Cause: </b>Stream is open for output and has a format of
+        output rows. An output row is a tuple of all output variables
+        put together. The current output row is not filled yet but the
+        flush function is invoked. The stream buffer cannot be flushed
+        until the current row of the output buffer is full.</li>
+      <li> <b>Action: </b>Fill the row first, then flush the stream.</li>
+    </ul>
+    <font size="+1"><b>Code=32004:</b> Not all input variables have been
+      initialized</font>
+    <ul>
+      <li> <b>Cause: </b>stream has input variables but not all the
+        variables have been initialized. An attempt to read data from
+        the stream was made.</li>
+      <li> <b>Action: </b>Assign all input variables first.</li>
+    </ul>
+    <font size="+1"><b>Code=32004:</b> No input variables have been
+      defined in SQL statement</font>
+    <ul>
+      <li> <b>Cause:</b> Stream has no input variables. An attempt to
+        write objects into the stream via one of the operator &lt;&lt;
+        was made.</li>
+      <li> <b>Action:</b> Do not call the operator &lt;&lt; for streams
+        which have no input variables defined.</li>
+    </ul>
+    <a name="32005"></a><font size="+1"><b>Code=32005:</b> Input string
+      value is too large to fit into the buffer</font>
+    <ul>
+      <li> <b>Cause: </b>Stream is open for output, e.g. an INSERT
+        statement. The actual string value is larger than the buffer
+        size, e.g. "123456789" is the string and the placeholder was
+        defined as :f2&lt;char[5]&gt;</li>
+      <li> <b>Action: </b>Truncate the input string or increase the
+        size of the buffer of the placeholder &lt;char[<b>10</b>]&gt;</li>
+    </ul>
+    <font size="+1"><b>Code=32006:</b> Input otl_long_string value is
+      too large to fit into the buffer</font>
+    <ul>
+      <li> <b>Cause: </b>Stream is open for output, e.g. an INSERT
+        statement. The actual otl_long_string is larger than the buffer
+        size, defined by set_max_long_size(), e.g. "123456789" is the
+        long string and the following function call was made
+        set_max_long_size(5).</li>
+      <li> <b>Action: </b>Truncate the input long string or increase
+        the size of the max long size: set_max_long_size(100)</li>
+    </ul>
+    <font size="+1"><b>Code=32007:</b> PL/SQL table size is too large
+      (&gt;32767)</font>
+    <ul>
+      <li> <b>Cause: </b>Size of PL/SQL.table to be declared in
+        otl_stream is too large.</li>
+      <li> <b>Action: </b>The maximum size of PL/SQL table is limited
+        to 32767 elements.</li>
+    </ul>
+    <font size="+1"><b><a name="CLOB_32008"></a>Code=32008:</b> Writing
+      CLOB/BLOB in stream mode: actual size is greater than specified,
+      trying to store X1 bytes / Unicode characters at offset X2. New
+      length: X3 would be bigger than length of lob: X4.&nbsp;</font>
+    <ul>
+      <li> <b>Cause: </b>Actual number of bytes to be written into the
+        LOB stream is greater than specified in the
+        otl_lob_stream::set_len() function. X1-X4 are specified either
+        in bytes or Unicode characters (in case if #define OTL_UNICODE
+        is used).<br>
+      </li>
+      <li> <b>Action: </b>Actual number of bytes to be written into
+        the LOB stream should match the number, specified in the
+        set_len() function.</li>
+    </ul>
+    <font size="+1"><b>Code=32009:</b> Closing CLOB/BLOB in stream mode:
+      actual size is not equal to specified size</font>
+    <ul>
+      <li> <b>Cause: </b>When otl_lob_stream::close() is called, it
+        turns out that the number of bytes, written into the LOB stream,
+        does not match the number of bytes, specified in
+        otl_lob_stream::set_len().</li>
+      <li> <b>Action: </b>Actual number of bytes to be written into
+        the LOB stream should match the number, specified in the
+        set_len() function</li>
+    </ul>
+    <font size="+1"><b>Code=32010:</b> CLOB/BLOB stream is not open for
+      writing</font>
+    <ul>
+      <li> <b>Cause: </b>An attempt was made to write into the LOB
+        stream, which was not initialized for writing.</li>
+      <li> <b>Action: </b>LOB stream that is not open for writing,
+        cannot be used for writing.</li>
+    </ul>
+    <p><br>
+      <font size="+1"><b>Code=32012:</b> CLOB/BLOB stream is not open
+        for reading</font> </p>
+    <ul>
+      <li> <b>Cause: </b>An attempt was made to read from the LOB
+        stream, which was not initialized for reading.</li>
+      <li> <b>Action: </b>LOB stream that is not open for reading,
+        cannot be used for reading.</li>
+    </ul>
+    <p><br>
+      <font size="+1"><b>Code=32012:</b> First session must be started
+        with session_begin()</font> </p>
+    <ul>
+      <li> <b>Cause: </b>An attempt to call
+        otl_connect::session_reopen() was made, before calling
+        session_begin().</li>
+      <li> <b>Action: </b>Change the logic of the program to call
+        session_begin() first, and only after that to call
+        session_reopen().</li>
+    </ul>
+    <p><br>
+      <a name="32013"></a><font size="+1"><b>Code=32013:</b> Invalid
+        bind variable declaration</font> </p>
+    <ul>
+      <li> <b>Cause: </b>There was a typo in the bind variable
+        declaration, e.g. :var&lt;date&gt;, instead of
+        :var&lt;timestamp&gt;.</li>
+      <li> <b>Action: </b>Correct the typo and try again.</li>
+    </ul>
+    <p><br>
+      <a name="32014"></a><font size="+1"><b>Code=32014:</b> No stored
+        procedure was found</font> </p>
+    <ul>
+      <li> <b>Cause: </b>Stored procedure name, being passed into <a
+          href="otl3_stream_class.htm#create_stored_proc_call">otl_stream::create_stored_proc_call</a>,
+        cannot be found in the Oracle data dictionary.</li>
+      <li> <b>Action: </b>Correct the stored procedure name, and try
+        again.</li>
+    </ul>
+    <p><br>
+      <a name="32015"></a><font size="+1"><b>Code=32015:</b> Unsupported
+        data type</font> </p>
+    <ul>
+      <li> <b>Cause: </b>Data type of parameter of the stored
+        procedure, specified in&nbsp; <a
+          href="otl3_stream_class.htm#create_stored_proc_call">otl_stream::create_stored_proc_call</a>,
+        is unsupported.</li>
+      <li> <a name="32015_action"></a><b>Action: </b>PL/SQL tables, as
+        stored procedure parameters, are not supported by
+        create_stored_proc_call(). Also, if a stored procedure, which
+        returns a reference cursor as an output parameter, has INOUT, or
+        OUT parameters, is not supported by create_stored_proc_call().
+        create_stored_proc_call() <a
+          href="otl3_stream_class.htm#create_stored_proc_call_types">supports</a>
+        a limited set of types of stored procedures.<br>
+      </li>
+    </ul>
+    <a name="32016"></a><font size="+1"><b>Code=32016:</b> Unsupported
+      procedure type</font>
+    <ul>
+      <li> <b>Cause: </b>Stored procedure name, being passed into <a
+          href="otl3_stream_class.htm#create_stored_proc_call">otl_stream::create_stored_proc_call</a>,
+        is of unsupported type..</li>
+      <li> <b>Action: </b>For more detail, see <a
+          href="#32015_action">this</a>.</li>
+    </ul>
+    <a name="32017"></a><font size="+1"><b>Code=32017:</b> Stream buffer
+      size can't be &gt; 1 in this case</font>
+    <ul>
+      <li> <b>Cause: </b>In case if <a
+          href="otl3_bind_variables.htm#varchar_long">varchar_long</a>,
+        <a href="otl3_bind_variables.htm#raw_long">raw_long</a> are used
+        in a combination with OTL/OCIx, the only allowed stream buffer
+        size is 1.</li>
+      <p><br>
+        In case if <a href="otl3_bind_variables.htm#clob">clob</a>, <a
+          href="otl3_bind_variables.htm#blob">blob</a> are used in a
+        combination with OTL/OCIx, the only allowed stream buffer size
+        for INSERTs or UPDATEs is 1. Though, buffer sizes, larger than
+        1, are allowed for SELECT statements. </p>
+      <p>This exception gets raised when the above limitations are
+        violated. <br>
+        &nbsp; </p>
+      <li><b>Action: </b>Set the buffer size to 1.</li>
+    </ul>
+    <a name="32018"></a><font size="+1"><b>Code=32018:</b> ODBC / DB2
+      CLI function name is not recognized. It should be one of the
+      following: SQLTables, SQLColumns, SQLProcedures,
+      SQLColumnPrivileges, SQLTablePrivileges, SQLPrimaryKeys,
+      SQLProcedureColumns, SQLForeignKeys, SQLStatistics.</font>
+    <ul>
+      <li> <b>Cause: </b>A stream is being instantiated with a call to
+        ODBC / DB2 CLI that returns a description of a system table
+        catalog, or a description of table columns (see <a
+          href="otl4_append_b.htm">appendix B</a> for more detail). The
+        function name was not recognized as one from the list above.</li>
+      <br>
+      &nbsp;
+      <li><b>Action: </b>Check the spelling of the function name that
+        is being passed into the stream, fix it, recompile the program,
+        and try again.</li>
+    </ul>
     <br>
-    <span style="font-family: monospace;">&nbsp;
-while(s&gt;&gt;f1&gt;&gt;f2){ // operator int() gets called here AFTER</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp; &nbsp; &nbsp; // two
-operators &gt;&gt;() get called in the loop condition
-&nbsp;&nbsp;&nbsp; <br>
-    </span><br style="font-family: monospace;">
-&nbsp;versus the typical use of otl_stream::eof():<br>
-    <br>
-    <span style="font-family: monospace;">&nbsp; while(!s.eof()){ //
-eof() gets called BEFORE something gets read from the stream<br>
-&nbsp;&nbsp;&nbsp; s&gt;&gt;f1&gt;&gt;f2; // operators() &gt;&gt; get
-called AFTER the eof() status was checked<br>
-    </span><br>
-    <br>
-  </li>
-  <li><b>Action: </b>Change the logic of the program so that operator
-int() would be called only after some calls to operators
-&gt;&gt;()&nbsp; have already been made, or so that operator int()
-would not be called at all. Also, it is a good idea to use
-otl_stream::eof() instead of implicit calls to operator int().<br>
-  </li>
-</ul>
-<font size="+1"><b><a name="otl_stream_read_iterator_exc"></a>Code=32020:</b>
-<a href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
-otl_stream is not open</font>
-<ul>
-  <li> <span style="font-weight: bold;">Cause</span><b>: </b>The <a
- href="otl3_stream_class.htm">stream</a> the iterator is <a
- href="otl4_stream_read_iterator.htm#attach">attaching</a> to is not
-open .<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>OTL stream read iterator cannot be attached
-to a stream that was not opened yet. Make sure that the program logic
-is correct, and it does not try to attact to a closed stream.<br>
-  </li>
-</ul>
-<font size="+1"><b>Code=32021:</b> <a
- href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>: <a
- href="otl3_pl_tab.htm">PL/SQL table</a> and '<a
- href="otl4_refcur_stream.htm">refcur</a>' parameters are not supported</font>
-<ul>
-  <li> <b>Cause: </b>Specified features are not supported.<br>
-  </li>
-&nbsp;
-  <li><b>Action:&nbsp;</b> If you need to use "refcurs" or PL/SQL
-tables, use the OTL stream interface. <br>
-  </li>
-</ul>
-<font size="+1"><b>Code=32022:</b> <a
- href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
-otl_stream cannot be described</font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>: </b>otl_stream_read_iterator
-(in <a href="otl4_stream_read_iterator.htm#attach">attach</a>() or in <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>()) calls
-otl_stream::<a href="otl3_stream_class.htm#describe_out_vars">describe_out_vars</a>()
-under the covers. When describe_out_vars() returns a 0 pointer back to
-the caller function, it normally means that the underlying stream
-cannot desribe its output structure. Typically, this happens in the
-case of a stored procedure returning an implcit result set (ODBC,
-DB2-CLI), or a stored procedure that returns a referenced cursor
-(Oracle).<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>The stream output structure can be normally
-described after the execution of the underlying stored procedure.
-Therefore, the OTL stream read iterator should be attached to the
-stream after the execution of the stored procedure. Change your code
-accordingly.<br>
-  </li>
-</ul>
-<font size="+1"><b>Code=32023:</b> <a
- href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
-position is out of range</font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>: </b>OTL
-stream read iterator template class provides
-a JDBC-like <span style="font-style: italic;">getter </span>interface,
-which identifies output variables by their relative positions:
-1,2,3,... This exception gets thrown when the specified "pos" parameter
-(in <a href="otl4_stream_read_iterator.htm#get_functions">get</a>()
-functions or in <a href="otl4_stream_read_iterator.htm#is_null">is_null(</a>)
-function) is out of range.<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>Make<b> </b>sure that the specified pos is
-within the range. The whole set of output variables of the underlying
-stream can be describe by calling <a
- href="otl4_stream_read_iterator.htm#describe">otl_stream_read_iterator.htm::describe</a>().<br>
-  </li>
-</ul>
-<font size="+1"><b>Code=32024:</b> <a
- href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
-incompatible types in get()</font>
-<ul>
-  <li> Cause<b>: </b>The data type of a variable used in the current <a
- href="otl4_stream_read_iterator.htm#get_functions">get</a>()
+    <a name="32019"></a><font size="+1"><b>Code=32019:</b>
+      otl_stream::operator&gt;&gt;() should have been called before
+      otl_stream::operator int()</font>
+    <ul>
+      <li><b>Cause: </b>One of the otl_stream::operators &gt;&gt;()
+        should have been called before calling <a
+          href="otl3_stream_class.htm#operator_int">otl_stream::operator
+          int</a>(). Operator int() works only for streams that have
+        some output (SELECT statements, stored procedures returning
+        result sets, etc.). Otherwise, the meaning of operator int() is
+        not defined, so the operator returns incorrect values, or values
+        that do not make any sense, and do not reflect anything
+        meaningful. Therefore, this exception gets thrown as a warning,
+        when an attempt is made to call operator int() before any
+        operators &gt;&gt;() are called. That is, before anything was
+        read from the stream, and yet, operator int() is called, which
+        does not make any sense, because the operator returns an
+        "end-of-file" (eof) status of the stream, after something is
+        supposed to be read from the stream. The difference in semantic
+        between operator int() and <a href="otl3_stream_class.htm#eof">eof</a>()
+
+
+
+        is that eof() should be called before anything is read from the
+        stream, and operator int() should be called after something is
+        read from the stream. In other words, operator int() returns a
+        deferred end-of-file status of the stream, for example:<br>
+        <br>
+        <span style="font-family: monospace;">&nbsp;
+          while(s&gt;&gt;f1&gt;&gt;f2){ // operator int() gets called
+          here AFTER</span><br style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp; &nbsp; &nbsp; //
+          two operators &gt;&gt;() get called in the loop condition
+          &nbsp;&nbsp;&nbsp; <br>
+        </span><br style="font-family: monospace;">
+        &nbsp;versus the typical use of otl_stream::eof():<br>
+        <br>
+        <span style="font-family: monospace;">&nbsp; while(!s.eof()){ //
+          eof() gets called BEFORE something gets read from the stream<br>
+          &nbsp;&nbsp;&nbsp; s&gt;&gt;f1&gt;&gt;f2; // operators()
+          &gt;&gt; get called AFTER the eof() status was checked<br>
+        </span><br>
+        <br>
+      </li>
+      <li><b>Action: </b>Change the logic of the program so that
+        operator int() would be called only after some calls to
+        operators &gt;&gt;()&nbsp; have already been made, or so that
+        operator int() would not be called at all. Also, it is a good
+        idea to use otl_stream::eof() instead of implicit calls to
+        operator int().<br>
+      </li>
+    </ul>
+    <font size="+1"><b><a name="otl_stream_read_iterator_exc"></a>Code=32020:</b>
+      <a href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
+      otl_stream is not open</font>
+    <ul>
+      <li> <span style="font-weight: bold;">Cause</span><b>: </b>The <a
+          href="otl3_stream_class.htm">stream</a> the iterator is <a
+          href="otl4_stream_read_iterator.htm#attach">attaching</a> to
+        is not open .<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>OTL stream read iterator cannot be attached to
+        a stream that was not opened yet. Make sure that the program
+        logic is correct, and it does not try to attact to a closed
+        stream.<br>
+      </li>
+    </ul>
+    <font size="+1"><b>Code=32021:</b> <a
+        href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
+      <a href="otl3_pl_tab.htm">PL/SQL table</a> and '<a
+        href="otl4_refcur_stream.htm">refcur</a>' parameters are not
+      supported</font>
+    <ul>
+      <li> <b>Cause: </b>Specified features are not supported.<br>
+      </li>
+      &nbsp;
+      <li><b>Action:&nbsp;</b> If you need to use "refcurs" or PL/SQL
+        tables, use the OTL stream interface. <br>
+      </li>
+    </ul>
+    <font size="+1"><b>Code=32022:</b> <a
+        href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
+      otl_stream cannot be described</font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>: </b>otl_stream_read_iterator
+(in
+
+
+
+
+
+
+
+
+
+        <a href="otl4_stream_read_iterator.htm#attach">attach</a>() or
+        in <a href="otl4_stream_read_iterator.htm#describe">describe</a>())
+
+
+
+
+        calls otl_stream::<a
+          href="otl3_stream_class.htm#describe_out_vars">describe_out_vars</a>()
+under
+the
+covers.
+When
+describe_out_vars()
+returns
+
+
+
+
+        a 0 pointer back to the caller function, it normally means that
+        the underlying stream cannot desribe its output structure.
+        Typically, this happens in the case of a stored procedure
+        returning an implcit result set (ODBC, DB2-CLI), or a stored
+        procedure that returns a referenced cursor (Oracle).<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>The stream output structure can be normally
+        described after the execution of the underlying stored
+        procedure. Therefore, the OTL stream read iterator should be
+        attached to the stream after the execution of the stored
+        procedure. Change your code accordingly.<br>
+      </li>
+    </ul>
+    <font size="+1"><b>Code=32023:</b> <a
+        href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
+      position is out of range</font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>: </b>OTL
+        stream read iterator template class provides a JDBC-like <span
+          style="font-style: italic;">getter </span>interface, which
+        identifies output variables by their relative positions:
+        1,2,3,... This exception gets thrown when the specified "pos"
+        parameter (in <a
+          href="otl4_stream_read_iterator.htm#get_functions">get</a>()
+        functions or in <a href="otl4_stream_read_iterator.htm#is_null">is_null(</a>)
+        function) is out of range.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Make<b> </b>sure that the specified pos is
+        within the range. The whole set of output variables of the
+        underlying stream can be describe by calling <a
+          href="otl4_stream_read_iterator.htm#describe">otl_stream_read_iterator.htm::describe</a>().<br>
+      </li>
+    </ul>
+    <font size="+1"><b>Code=32024:</b> <a
+        href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
+      incompatible types in get()</font>
+    <ul>
+      <li> Cause<b>: </b>The data type of a variable used in the
+        current <a href="otl4_stream_read_iterator.htm#get_functions">get</a>()
 operation
-is not compatible with the declared stream format.</li>
-&nbsp;
-  <li><b>Action: </b>Make sure the data types are compatible.</li>
-</ul>
-<br>
-<font size="+1"><b><a name="32025"></a>Code=32025:</b> otl_stream::<a
- href="otl3_stream_class.htm#operator_int">operator int</a>() is not
-supported in the LOB stream mode</font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>operator
-int() is not supported in the LOB
-stream mode.</li>
-&nbsp;
-  <li><b>Action: </b>An attempt was made to call operator int()
-in the <a href="otl3_stream_class.htm#set_lob_stream_mode">LOB stream
-mode</a>.<br>
-  </li>
-</ul>
-<br>
-<font size="+1"><b><a name="32026"></a>Code=32026:</b> <a
- href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>: get(<a
- href="otl3_lob_stream.htm">otl_lob_stream</a>*&amp;) function can only
-be used if otl_stream::<a
- href="otl3_stream_class.htm#set_lob_stream_mode">set_lob_stream</a><a
- href="otl3_stream_class.htm#set_lob_stream_mode">_mode</a>(true) had
-been called before the iterator was attached to the stream</font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>otl_stream_read_iterator
-can only be used
-when the underlying otl_stream is in te LOB stream mode..</li>
-&nbsp;
-  <li><b>Action: </b>Set the underlying stream to the LOB stream
-mode.</li>
-</ul>
-<font size="+1"><b><a name="32027"></a>Code=32027:</b> <a
- href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>: :
-variable name is not recognized&nbsp;</font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream read iterator template class
+is
+
+
+
+
+        not compatible with the declared stream format.</li>
+      &nbsp;
+      <li><b>Action: </b>Make sure the data types are compatible.</li>
+    </ul>
+    <br>
+    <font size="+1"><b><a name="32025"></a>Code=32025:</b> otl_stream::<a
+        href="otl3_stream_class.htm#operator_int">operator int</a>() is
+      not supported in the LOB stream mode</font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>operator
+int()
+is
+not
+supported
+in
+the
+
+
+
+
+        LOB stream mode.</li>
+      &nbsp;
+      <li><b>Action: </b>An attempt was made to call operator int() in
+        the <a href="otl3_stream_class.htm#set_lob_stream_mode">LOB
+          stream mode</a>.<br>
+      </li>
+    </ul>
+    <br>
+    <font size="+1"><b><a name="32026"></a>Code=32026:</b> <a
+        href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
+      get(<a href="otl3_lob_stream.htm">otl_lob_stream</a>*&amp;)
+      function can only be used if otl_stream::<a
+        href="otl3_stream_class.htm#set_lob_stream_mode">set_lob_stream</a><a
+        href="otl3_stream_class.htm#set_lob_stream_mode">_mode</a>(true)
+      had been called before the iterator was attached to the stream</font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>otl_stream_read_iterator
+can
+only
+be
+used
+when
+the
+underlying
+
+
+
+
+        otl_stream is in te LOB stream mode..</li>
+      &nbsp;
+      <li><b>Action: </b>Set the underlying stream to the LOB stream
+        mode.</li>
+    </ul>
+    <font size="+1"><b><a name="32027"></a>Code=32027:</b> <a
+        href="otl4_stream_read_iterator.htm">otl_stream_read_iterator</a>:
+      : variable name is not recognized&nbsp;</font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
+stream
+read
+iterator
+template
+class
 provides
-a JDBC-like <span style="font-style: italic;">getter </span>interface,
-which identifies output columns / variables by their names This
-exception gets thrown when the specified "var_name" parameter
-(in <a href="otl4_stream_read_iterator.htm#get_by_name_functions">get</a>()
-functions or in <a href="otl4_stream_read_iterator.htm#is_null_by_name">is_null(</a>)
-function) is not recongnized.<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>Make<b> </b>sure that the specified name
-is among the output columns / variables. The whole set of output
-variables of the underlying
-stream can be described by calling <a
- href="otl4_stream_read_iterator.htm#describe">otl_stream_read_iterator.htm::describe</a>().<br>
-  </li>
-</ul>
-<font size="+1"><b><a name="32028"></a>Code=32028: Unsupported column
-data type</b></font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream finds a column in a SELECT
-statement / stored procedure call (ODBC, DB2 CLI) / reference cursor
-(Oracle) of an unsupported data type. For example, OTL does not support
-Oracle Objects.<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>Make sure that the data types of the all
-columns of your SELECT statement are supported by OTL. otl_exception::<a
- href="otl3_exception_class.htm#var_info">var_info</a> contains info on
-which column exactly has an unsopprted data type.</li>
-</ul>
-<font size="+1"><b><a name="32029"></a><a name="raw1"></a>Code=32029:</b>
-RAW value cannot be read with otl_lob_stream, use otl_long_string
-instead</font><br>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b><a
- href="otl4_stream_read_iterator.htm">OTL stream read iterator</a>
-template class
-can't read a <a href="otl3_bind_variables.htm#raw">raw</a> value with <a
- href="otl3_lob_stream.htm">otl_lob_stream</a>.<br>
-  </li>
-  <li><b>Action: </b><a href="otl3_long_string.htm">otl_long_string</a>
-needs to be used instead.</li>
-</ul>
-<font size="+1"><b><a name="32030"></a>Code=32030: otl_stream is
-already open</b></font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream was already open when otl_stream::open() was called on the same
-stream.<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>Before opening a stream, make sure that it's not
-already open by calling otl_stream::good() on the stream:<br>
+a
+JDBC-like
+
+
+
+
+        <span style="font-style: italic;">getter </span>interface,
+        which identifies output columns / variables by their names This
+        exception gets thrown when the specified "var_name" parameter
+        (in <a
+          href="otl4_stream_read_iterator.htm#get_by_name_functions">get</a>()
+functions
+or
+in
+
+
+
+
+
+
+
+        <a href="otl4_stream_read_iterator.htm#is_null_by_name">is_null(</a>)
+        function) is not recongnized.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Make<b> </b>sure that the specified name is
+        among the output columns / variables. The whole set of output
+        variables of the underlying stream can be described by calling <a
+          href="otl4_stream_read_iterator.htm#describe">otl_stream_read_iterator.htm::describe</a>().<br>
+      </li>
+    </ul>
+    <font size="+1"><b><a name="32028"></a>Code=32028: Unsupported
+        column data type</b></font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
+stream
+finds
+a
+column
+in
+a
+
+
+
+
+        SELECT statement / stored procedure call (ODBC, DB2 CLI) /
+        reference cursor (Oracle) of an unsupported data type. For
+        example, OTL does not support Oracle Objects.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Make sure that the data types of the all
+        columns of your SELECT statement are supported by OTL.
+        otl_exception::<a href="otl3_exception_class.htm#var_info">var_info</a>
+        contains info on which column exactly has an unsopprted data
+        type.</li>
+    </ul>
+    <font size="+1"><b><a name="32029"></a><a name="raw1"></a>Code=32029:</b>
+      RAW value cannot be read with otl_lob_stream, use otl_long_string
+      instead</font><br>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b><a
+          href="otl4_stream_read_iterator.htm">OTL stream read iterator</a>
+        template class can't read a <a
+          href="otl3_bind_variables.htm#raw">raw</a> value with <a
+          href="otl3_lob_stream.htm">otl_lob_stream</a>.<br>
+      </li>
+      <li><b>Action: </b><a href="otl3_long_string.htm">otl_long_string</a>
+        needs to be used instead.</li>
+    </ul>
+    <font size="+1"><b><a name="32030"></a>Code=32030: otl_stream is
+        already open</b></font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
+stream
+was
+already
+open
+when
+otl_stream::open()
+
+
+
+
+        was called on the same stream.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Before opening a stream, make sure that it's
+        not already open by calling otl_stream::good() on the stream:<br>
+        <br>
+        <span style="font-family: monospace;">&nbsp;&nbsp; if(!my_str.<a
+            href="otl3_stream_class.htm#good">good</a>()){<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; // stream is not open</span><br>
+      </li>
+    </ul>
+    <font size="+1"><b><a name="32031"></a>Code=32031: otl_connect is
+        already connected</b></font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
+connect
+object
+was
+already
+connected
+to
+
+
+
+
+        the database when otl_connect::rlogon() was called on the same
+        object.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Before connecting an otl_connect object to the
+        database, make sure that the object is not already connected:<br>
+        <br>
+        <span style="font-family: monospace;">&nbsp;&nbsp;
+          if(!my_connect.<a href="otl3_connect_class.htm#connected"><span
+              style="text-decoration: underline;">connected</span></a>){<br>
+          &nbsp;&nbsp;&nbsp;&nbsp; // connect object is not connected <br>
+        </span><br>
+      </li>
+      <span style="font-family: monospace;"></span>
+    </ul>
+    <font size="+1"><b><a name="32032"></a>Code=32032: SELECT otl_stream
+        buffer size for TimesTen should be in [0..128] range</b></font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
+stream
+uses
+the
+TimesTen
+TT_PREFETCH_COUNT
+under
+
+
+
+
+        #define <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_WIN">OTL_ODBC_TIMESTEN_WIN</a>,
+        and <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_UNIX">OTL_ODBC_TIMESTEN_UNIX</a>,
+        which has the range of [0..128].<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>The OTL stream size buffer needs to be changed
+        to a value in the range of [<span style="font-weight: bold;">0</span>..128].<br>
+        <br>
+      </li>
+    </ul>
+    <font size="+1"><b><a name="32033"></a>Code=32033: otl_connect
+        object needs to be connected to DB before using otl_subscriber</b></font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
+connect
+object
+needs
+to
+be
+connected
+
+
+
+
+        to the database, before <a href="otl4_subscriber.htm">otl_subscriber</a>
+        objects can be used with the otl_connect object..<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Connect your otl_connect object to the
+        database, and then try to use your otl_subscriber objects with
+        the otl_connect object.<br>
+        <br>
+      </li>
+    </ul>
+    <font size="+1"><b><a name="32034"></a>Code=32034: otl_stream buffer
+        size should be 1 when refcur or plsql table is used</b></font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
+stream
+uses
+a
+
+
+
+
+
+
+
+        <a href="otl3_bind_variables.htm#refcur">refcur</a> bind
+        variable (in a combination with&nbsp; <a
+          href="otl4_refcur_stream.htm">otl_refcur_stream</a>), or <a
+          href="otl3_bind_variables.htm#pl_tab">PL/SQL tables</a>, and
+        the stream buffer size is larger than 1.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Set the OTL stream buffer size to 1 and try
+        again.<br>
+        <br>
+      </li>
+    </ul>
+    <font size="+1"><b><a name="32035"></a>Code=32035: END-OF-ROW check
+        failed</b></font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>otl_stream::<a
+          href="otl3_stream_class.htm#check_end_of_row">check_end_of_row</a>()
+was
+
+
+
+
+        called to check the "end-of-row" condition. The condition was
+        not met, and the function threw this exception. The "end-of-row"
+        check addresses the "<a
+          href="http://soci.sourceforge.net/doc/rationale.html">row-tearing</a>"
+        problem in a SELECT statement, for example:<br>
+        <br>
+        <span style="font-family: monospace;">otl_stream sql(10,"select
+          a, b from some_table",db); // only TWO columns</span><br
+          style="font-family: monospace;">
+        <br style="font-family: monospace;">
+        <span style="font-family: monospace;">while(!sql.eof())</span><span
+          style="font-family: monospace;">{</span><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; int a,
+          b, c;</span><br style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+          sql&gt;&gt;a&gt;&gt;b&gt;&gt;c; // this causes "row-tearing"</span><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; // ...</span><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">}<br>
+          <br>
+        </span>The way OTL uses the C++ stream idiom is said to be
+        unsafe, and that it potentially could cause a "row-tearing"
+        problem, which could be very hard to troubleshoot and maintain.
+        The check_end_of_row() function addresses the problem, so, in
+        order to make sure the code is safe and maintainable, here's how
+        the example above can be rewritten:<br>
+        <br>
+        <span style="font-family: monospace;">otl_stream sql(10,"select
+          a, b from some_table",db); // only TWO columns</span><br
+          style="font-family: monospace;">
+        <br style="font-family: monospace;">
+        <span style="font-family: monospace;">while (!sql.eof())</span><span
+          style="font-family: monospace;">{</span><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; int a,
+          b;</span><br style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+          sql&gt;&gt;a&gt;&gt;b;<br>
+          &nbsp;&nbsp;&nbsp; sql.<a
+            href="otl3_stream_class.htm#check_end_of_row">check_end_of_row</a>();</span><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; // ...</span><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">}<br>
+          <br>
+        </span>or this way:<span style="font-family: monospace;"><br>
+          <br>
+        </span><span style="font-family: monospace;">otl_stream
+          sql(10,"select a, b from some_table",db); // only TWO columns</span><br
+          style="font-family: monospace;">
+        <br style="font-family: monospace;">
+        <span style="font-family: monospace;">while (!sql.eof())</span><span
+          style="font-family: monospace;">{</span><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; int a,
+          b;</span><br style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+          sql&gt;&gt;a&gt;&gt;b&gt;&gt;<a
+            href="otl3_stream_class.htm#check_end_of_row">endr</a>;<br>
+        </span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
+          // ...</span><br style="font-family: monospace;">
+        <span style="font-family: monospace;">}<br>
+        </span><span style="font-family: monospace;"><br>
+        </span>In case if the number of columns in the SELECT statement
+        changes, and the actual loop is not changed, the
+        check_end_of_row() function (or its alternative
+        operator&gt;&gt;() form) will throw this exception.<br>
+        <br>
+        Besides the row-tearing problem in SELECT statements, this OTL
+        defined exception also addresses a similar "row-tearing" in
+        INSERT / UPDATE /DELETE statements, or in calls to stored
+        procedures / anonymous PL/SQL blocks, for example:<br>
+        <br>
+        <span style="font-family: monospace;">otl_stream sql(10,"INSERT
+          INTO test_tab VALUES(:f1&lt;int&gt;,:f2&lt;int&gt;)",db); //
+          only TWO column<br>
+        </span><span style="font-family: monospace;">int f1, f2;<br>
+        </span>...<br>
+        <span style="font-family: monospace;">sql&lt;&lt;f1&lt;&lt;f2&lt;&lt;endr;<br>
+        </span><span style="font-family: monospace;">sql&lt;&lt;f1&lt;&lt;f2;<br>
+          sql&lt;&lt;f2&lt;&lt;endr;<br>
+        </span><br style="font-family: monospace;">
+        As table layout, and code change over time,&nbsp; "end-of-row"
+        check may play more important role in keeping the code base in
+        good shape, and reduce code rot.<br style="font-family:
+          monospace;">
+        &nbsp; </li>
+      <li><b>Action: </b>Modify your code so that the "end-of-row"
+        condition is met at the end of reading each row in your SELECT
+        statement, and try it again.<br>
+      </li>
+    </ul>
+    <font size="+1"><b><a name="32036"></a>Code=32036: otl_connect is
+        not connected to the database</b></font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>#define
+
+
+
+
+
+
+
+
+        <a
+href="otl3_compile.htm#OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION">OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION</a>
+        was enabled, OTL stream did the
+        otl_connect-not-connected-to-database check (<span
+          style="font-family: monospace;">if(!otl_connect::connected)</span>),
+and
+
+
+
+
+        the check returned true.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Make sure that the otl_connect object that is
+        passed into the otl_stream open() call was connected to the
+        database.</li>
+    </ul>
     <br>
-    <span style="font-family: monospace;">&nbsp;&nbsp; if(!my_str.<a
- href="otl3_stream_class.htm#good">good</a>()){<br>
-&nbsp;&nbsp;&nbsp;&nbsp; // stream is not open</span><br>
-  </li>
-</ul>
-<font size="+1"><b><a name="32031"></a>Code=32031: otl_connect is
-already connected</b></font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-connect object was already connected to the database when
-otl_connect::rlogon() was called on the same object.<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>Before connecting an otl_connect object to the
-database, make sure that the object is not already connected:<br>
-    <br>
-    <span style="font-family: monospace;">&nbsp;&nbsp; if(!my_connect.<a
- href="otl3_connect_class.htm#connected"><span
- style="text-decoration: underline;">connected</span></a>){<br>
-&nbsp;&nbsp;&nbsp;&nbsp; // connect object is not connected <br>
-    </span><br>
-  </li>
-  <span style="font-family: monospace;"></span>
-</ul>
-<font size="+1"><b><a name="32032"></a>Code=32032: SELECT otl_stream
-buffer size for TimesTen should be in [0..128] range</b></font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream uses the TimesTen TT_PREFETCH_COUNT under #define <a
- href="otl3_compile.htm#OTL_ODBC_TIMESTEN_WIN">OTL_ODBC_TIMESTEN_WIN</a>,
-and <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_UNIX">OTL_ODBC_TIMESTEN_UNIX</a>,
-which has the range of [0..128].<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>The OTL stream size buffer needs to be changed to
-a value in the range of [<span style="font-weight: bold;">0</span>..128].<br>
-    <br>
-  </li>
-</ul>
-<font size="+1"><b><a name="32033"></a>Code=32033: otl_connect object
-needs to be connected to DB before using otl_subscriber</b></font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-connect object needs to be connected to the database, before <a
- href="otl4_subscriber.htm">otl_subscriber</a> objects can be used with
-the otl_connect object..<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>Connect
-your otl_connect object to the
-database, and then try to use your otl_subscriber objects with the
-otl_connect object.<br>
-    <br>
-  </li>
-</ul>
-<font size="+1"><b><a name="32034"></a>Code=32034: otl_stream buffer
-size should be 1 when refcur or plsql table is used</b></font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp;&nbsp;</b>OTL
-stream uses a <a href="otl3_bind_variables.htm#refcur">refcur</a> bind
-variable (in a combination with&nbsp; <a href="otl4_refcur_stream.htm">otl_refcur_stream</a>),
-or <a href="otl3_bind_variables.htm#pl_tab">PL/SQL tables</a>, and the
-stream buffer size is larger than 1.<br>
-  </li>
-&nbsp;
-  <li><b>Action: </b>Set the OTL stream buffer size to 1 and try again.<br>
-    <br>
-  </li>
-</ul>
-<font size="+1"><b><a name="32035"></a>Code=32035: END-OF-ROW check
-failed</b></font>
-<ul>
-  <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>otl_stream::<a
- href="otl3_stream_class.htm#check_end_of_row">check_end_of_row</a>()
-was called to check the "end-of-row" condition. The condition was not
-met, and the function threw this exception. The "end-of-row" check
-addresses the "<a href="http://soci.sourceforge.net/doc/rationale.html">row-tearing</a>"
-problem in a SELECT statement, for example:<br>
-    <br>
-    <span style="font-family: monospace;">otl_stream sql(10,"select a,
-b from some_table",db); // only TWO columns</span><br
- style="font-family: monospace;">
-    <br style="font-family: monospace;">
-    <span style="font-family: monospace;">while(!sql.eof())</span><span
- style="font-family: monospace;">{</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; int a, b,
-c;</span><br style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
-sql&gt;&gt;a&gt;&gt;b&gt;&gt;c; // this causes "row-tearing"</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; // ...</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">}<br>
-    <br>
-    </span>The way OTL uses the C++ stream idiom is said to be unsafe,
-and that it potentially could cause a "row-tearing" problem, which
-could be very hard to troubleshoot and maintain. The check_end_of_row()
-function addresses the problem, so, in order to make sure the code is
-safe and maintainable, here's how the example above can be rewritten:<br>
-    <br>
-    <span style="font-family: monospace;">otl_stream sql(10,"select a,
-b from some_table",db); // only TWO columns</span><br
- style="font-family: monospace;">
-    <br style="font-family: monospace;">
-    <span style="font-family: monospace;">while (!sql.eof())</span><span
- style="font-family: monospace;">{</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; int a, b;</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
-sql&gt;&gt;a&gt;&gt;b;<br>
-&nbsp;&nbsp;&nbsp; sql.<a href="otl3_stream_class.htm#check_end_of_row">check_end_of_row</a>();</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; // ...</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">}<br>
-    <br>
-    </span>or this way:<span style="font-family: monospace;"><br>
-    <br>
-    </span><span style="font-family: monospace;">otl_stream
-sql(10,"select a, b from some_table",db); // only TWO columns</span><br
- style="font-family: monospace;">
-    <br style="font-family: monospace;">
-    <span style="font-family: monospace;">while (!sql.eof())</span><span
- style="font-family: monospace;">{</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; int a, b;</span><br
- style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
-sql&gt;&gt;a&gt;&gt;b&gt;&gt;<a
- href="otl3_stream_class.htm#check_end_of_row">endr</a>;<br>
-    </span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; //
-...</span><br style="font-family: monospace;">
-    <span style="font-family: monospace;">}<br>
-    </span><span style="font-family: monospace;"><br>
-    </span>In case if the number of columns in the SELECT statement
-changes, and the actual loop is not changed, the check_end_of_row()
-function (or its alternative operator&gt;&gt;() form) will throw this
-exception.<br style="font-family: monospace;">
-&nbsp; </li>
-  <li><b>Action: </b>Modify your code so that the "end-of-row"
-condition is met at the end of reading each row in your SELECT
-statement, and try it again.</li>
-</ul>
-<center>
-<hr width="100%">
-<p><a href="otl3_namespaces.htm">Prev</a> <a href="otl3.htm">Contents</a><a
- href="home.htm">Go
-Home</a><br>
-<br>
-</p>
-</center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
-<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
-<script language="JavaScript"><!-- hide from old browsers
+    <font size="+1"><b><a name="32037"></a>Code=32037: SQL Statement has
+        a white space in bind variable declaration</b></font>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>White
+
+
+
+        spaces <a href="otl3_bind_variables.htm#no_spaces">are not
+          allowed</a> in OTL bind variable declarations.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Fix the white spaces and try again.<br>
+      </li>
+    </ul>
+    <p><br>
+      <font size="+1"><b><a name="32038"></a>Code=32038:
+          otl_long_unicode_string should be used with strings when
+          OTL_UNICODE is enabled, and otl_long_string should be use with
+          strings when OTL_UNICODE is not enabled<br>
+        </b></font> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>a
+        variable of the <a href="otl3_long_string.htm">otl_long_string</a>
+        class when <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>
+        was enabled with VARCHAR / NVARCHAR / NTEXT / CLOB / NCLOB / etc
+        column types instead of <a href="otl3_long_string.htm">otl_long_unicode_string</a>.
+        Or otl_long_unicode_string was used when <a
+          href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> was not
+        enabled.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Use the appropriate "OTL long string" class
+        and try again.<br>
+      </li>
+    </ul>
+    <p><font size="+1"><b><br>
+          <a name="32039"></a>Code=32039: otl_long_string should be used
+          with nonstrings when OTL_UNICODE is enabled<br>
+        </b></font> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>a
+        variable of the <a href="otl3_long_string.htm">otl_long_unicode_string</a>
+        class when <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>
+        was enabled with RAW / VARBINARY / LONG / VARBINARY(MAX) / etc.
+        column types.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Use the appropriate "OTL long string" class
+        and try again.<br>
+      </li>
+    </ul>
+    <font size="+1"><b><br>
+        <a name="32040"></a>Code=32040: This type of otl_stream can only
+        have input variables<br>
+      </b></font>
+    <p> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>This
+        exception is raised when the stream is opening a call to a
+        stored procedure that returns an implicit result set, and the
+        stream finds output, or input/output parameters in the call.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Fix the stored procedure call (use only input
+        parameters), and try again.<br>
+      </li>
+    </ul>
+    <hr width="100%">
+    <p> </p>
+    <center>
+      <hr width="100%">
+      <p><a href="otl3_namespaces.htm">Prev</a> <a href="otl3.htm">Contents</a><a
+          href="home.htm">Go Home</a><br>
+        <br>
+      </p>
+    </center>
+    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com
+        <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
- </script></a>.
-</p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for
-any purpose is hereby granted without fee, provided that the above
-copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
-</p>
-<script type="text/javascript">
+ </script></a>. </p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
+    <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
+  </body>
 </html>
