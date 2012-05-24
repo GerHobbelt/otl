@@ -107,7 +107,7 @@ otl_connect db; // connect object
 void insert(void)
 // insert rows into table
 { 
- otl_stream o(1, // PostgreSQL 8.1 and higher, the buffer can be > 1
+ otl_stream o(50, // PostgreSQL 8.1 and higher, the buffer can be > 1
               "insert into test_tab values(:f1<int>,:f2<char[60]>, :f3<char[60]>)", 
               // INSERT statement, :f2, and :f3 need to be declared as char[XX]
               // in order for otl_datetime-to-string conversion to work.

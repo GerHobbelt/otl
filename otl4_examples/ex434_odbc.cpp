@@ -2,8 +2,11 @@
 using namespace std;
 #include <stdio.h>
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #include <otlv4.h> // include the OTL 4.0 header file
 
 otl_connect db; // connect object

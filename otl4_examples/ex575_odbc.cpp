@@ -20,8 +20,11 @@ unsigned int my_trace_level=
 #define OTL_TRACE_LINE_PREFIX "MY OTL TRACE ==> " 
    // redefines the default OTL trace line prefix. This #define is optional
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #include <otlv4.h> // include the OTL 4.0 header file
 
 otl_connect db; // connect object

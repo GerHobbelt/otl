@@ -1,58 +1,59 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <html>
-<head>
-  <title>OTL 4.0, Example 243 (64-bit integers (bigint), DB2,
-OTL/DB2-CLI)</title>
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/3.03Gold (Win95; I) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-</head>
-<body>
-<h1 align="center">OTL 4.0, Example 243 (64-bit integers (bigint), DB2,
-OTL/DB2-CLI)</h1>
-<h1>Example 243 (64-bit integers (bigint), DB2, OTL/DB2-CLI)</h1>
-<p>This example demonstrates the use of 64-bit integer bind variables
-with DB2, OTL/DB2-CLI.</p>
-<h2>Source Code</h2>
-<pre>#include &lt;iostream&gt;<br>#include &lt;stdio.h&gt;<br>using namespace std;<br><br>#define <a
- href="otl3_compile.htm#OTL_Db2_CLI">OTL_DB2_CLI</a> // Compile OTL 4.0/DB2-CLI<br><pre>#if defined(__GNUC__)<br>#define OTL_BIGINT long long // Enabling G++ 64-bit integers<br>#else<br>#define <a
- href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a> __int64 // Enabling VC++ 64-bit integers<br>#endif<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
- href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{ <br> <a
- href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>              "insert into test_tab values(:f1&lt;<a
- href="otl3_bind_variables.htm#bigint">bigint</a>&gt;,:f2&lt;char[31]&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br> char tmp[32];<br><br> for(OTL_BIGINT i=1;i&lt;=100;++i){<br>  sprintf(tmp,"Name%d",(int)i);<br>  o&lt;&lt;i&lt;&lt;tmp;<br> }<br>}<br><br>void select()<br>{ <br> <a
- href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>              "select * from test_tab where f1&gt;=:f&lt;bigint&gt; and f1&lt;=:ff&lt;bigint&gt;*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> OTL_BIGINT f1;<br> char f2[31];<br> char f1str[40];<br><br> i&lt;&lt;(OTL_BIGINT)8&lt;&lt;(OTL_BIGINT)8; // assigning :f = 8; :ff = 8<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1=";<br>#if defined(__GNUC__) // VC++ is being used<br>  cout&lt;&lt;f1;<br>#else<br>  _i64toa(f1,f1str,10);<br>  cout&lt;&lt;f1str;<br>#endif<br>  cout&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br> }<br><br>}<br><br>int main()<br>{<br> <a
- href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize DB2 CLI environment<br> try{<br><br>  db.rlogon("scott/tiger@db2sql"); // connect to DB2<br><br>  <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "drop table test_tab",<br>    otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "create table test_tab(f1 bigint, f2 varchar(30))"<br>    );  // create table<br><br>  insert(); // insert records into table<br>  select(); // select records from table<br><br> }<br><br> catch(<a
- href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from DB2<br><br> return 0;<br><br>}<br></pre>
-<h2>Output</h2>
-<pre>f1=8, f2=Name8<br>f1=9, f2=Name9<br>f1=10, f2=Name10<br>f1=11, f2=Name11<br>f1=12, f2=Name12<br>f1=13, f2=Name13<br>f1=14, f2=Name14<br>f1=15, f2=Name15<br>f1=16, f2=Name16<br><hr
- width="100%"></pre>
-<center>
-<p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
-<a href="home.htm">Go Home</a> </p>
-</center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,<br><a
- href="mailto:skuchin@gmail.com">skuchin@yahogmail</a>
-<script language="JavaScript">
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=ISO-8859-1">
+    <title>OTL 4.0, Example 243 (DB2, native support for 64-bit ints)</title>
+    <meta content="Sergei Kuchin" name="Author">
+    <meta content="Mozilla/3.03Gold (Win95; I) [Netscape]"
+      name="GENERATOR">
+    <meta content="OTL, Oracle, ODBC, DB2, CLI, database API, C++,
+      Template Library" name="KeyWords">
+  </head>
+  <body>
+    <h1 align="center">OTL 4.0, Example 243 (DB2, native support for
+      64-bit ints)</h1>
+    This example demonstrates a native support for signed 64-bit ints in
+    DB2.
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
+    <pre>#define <a href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a> // Compile OTL 4.0/DB2-CLI<br><br>#if defined(__BORLANDC__)<br>#define <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a> __int64 // Enabling G++ 64-bit integers<br>#define <a href="otl3_compile.htm#OTL_UBIGINT">OTL_UBIGINT</a> unsigned __int64 // Enabling G++ 64-bit integers<br>#elif !defined(_MSC_VER)<br>#define OTL_BIGINT long long // Enabling G++ 64-bit integers<br>#define OTL_UBIGINT unsigned long long // Enabling G++ 64-bit integers<br>#else<br>#define OTL_BIGINT __int64 // Enabling VC++ 64-bit integers<br>#define OTL_UBIGINT unsigned __int64 // Enabling VC++ 64-bit integers<br>#endif<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br>const OTL_UBIGINT UBIG_VAL1=18446744073709551615ULL;<br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{ <br> <a href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>              "insert into test_tab values(:f1&lt;<a href="otl3_bind_variables.htm#bigint">bigint</a>&gt;,:f2&lt;char[31]&gt;,:f3&lt;<a href="otl3_bind_variables.htm#ubigint">ubigint</a>&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br> char tmp[32];<br><br> for(OTL_BIGINT i=1;i&lt;=100;++i){<br>#if defined(_MSC_VER)<br>#if (_MSC_VER &gt;= 1400) // VC++ 8.0 or higher<br>   sprintf_s(tmp,sizeof(tmp),"Name%d",static_cast&lt;int&gt;(i));<br>#else<br>   sprintf(tmp,"Name%d",static_cast&lt;int&gt;(i));<br>#endif<br>#else<br>   sprintf(tmp,"Name%d",static_cast&lt;int&gt;(i));<br>#endif<br>   o&lt;&lt;i&lt;&lt;tmp&lt;&lt;UBIG_VAL1;<br> }<br>}<br><br>void select()<br>{ <br> otl_stream i(50, // buffer size<br>              "select f1 <a href="otl3_bind_variables.htm#SELECT_OVERRIDE">:#1</a>&lt;<a href="otl3_bind_variables.htm#bigint">bigint</a>&gt;, f2, f3 :#3&lt;<a href="otl3_bind_variables.htm#ubigint">ubigint</a>&gt; "<br>                // the default mapping of f1 and f3 needs to be overridden <br>                // <a href="otl3_bind_variables.htm#SELECT_OVERRIDE">explicitly</a>.<br>              "from test_tab "<br>              "where f1&gt;=:f&lt;bigint&gt; and f1&lt;=:ff&lt;bigint&gt;*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> OTL_BIGINT f1;<br> char f2[31];<br> OTL_UBIGINT f3;<br><br> i&lt;&lt;static_cast&lt;OTL_BIGINT&gt;(8)<br>  &lt;&lt;static_cast&lt;OTL_BIGINT&gt;(8); // assigning :f = 8; :ff = 8<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>   i&gt;&gt;f1&gt;&gt;f2&gt;&gt;f3;<br>   printf("f1=%lld, f2=%s, f3=%llu\n",f1,f2,f3);<br> }<br><br>}<br><br>int main()<br>{<br> <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize DB2-CLI environment<br> try{<br><br>  db.rlogon("scott/tiger@db2sql"); // connect to DB2<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "drop table test_tab",<br>    otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "create table test_tab(f1 bigint, f2 varchar(30), f3 DECIMAL(22))"<br>    );  // create table<br><br>  insert(); // insert records into table<br>  select(); // select records from table<br><br> }<br><br> catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from DB2<br><br> return 0;<br><br>}<br></pre>
+    <h2>Output</h2>
+    <pre>f1=8, f2=Name8, f3=18446744073709551615<br>f1=9, f2=Name9, f3=18446744073709551615<br>f1=10, f2=Name10, f3=18446744073709551615<br>f1=11, f2=Name11, f3=18446744073709551615<br>f1=12, f2=Name12, f3=18446744073709551615<br>f1=13, f2=Name13, f3=18446744073709551615<br>f1=14, f2=Name14, f3=18446744073709551615<br>f1=15, f2=Name15, f3=18446744073709551615<br>f1=16, f2=Name16, f3=18446744073709551615<br><br><hr width="100%"></pre>
+    <center>
+      <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+        <a href="home.htm">Go Home</a> </p>
+    </center>
+    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com/a&gt;.
+        <script language="JavaScript">
 <!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
- </script>.</p>
-<p><i>Permission to use, copy, modify and redistribute this document<br>for<br>any purpose is hereby granted without fee, provided that the above<br>copyright<br>notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
-</pre>
-<script type="text/javascript">
+ </script></a></p>
+    <p><a href="mailto:skuchin@gmail.com"><i>Permission to use, copy,
+          modify and redistribute this document for any purpose is
+          hereby granted without fee, provided that the above copyright
+          notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
+          AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS
+          SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+          AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+          SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
+          DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+          PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+          TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
+          OR PERFORMANCE OF THIS SOFTWARE. </i></a></p>
+    <a href="mailto:skuchin@gmail.com">
+      <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+      <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
-</script>
-</body>
+</script></a>
+  </body>
 </html>

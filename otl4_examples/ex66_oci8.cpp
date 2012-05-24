@@ -28,6 +28,7 @@ void insert()
  }catch(otl_exception& p){
   if(p.code==1){
    // ORA-0001: ... duplicate key ...
+    cout<<"STREAM ERROR STATE="<<o.get_error_state()<<endl;
    o.clean(1); // clean up the stream's buffer
                // and clean up thestream's internal
                // error flag as well. By doing this, 

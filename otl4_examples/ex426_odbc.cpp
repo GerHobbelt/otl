@@ -2,8 +2,11 @@
 #include <string>
 using namespace std;
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #define OTL_STL // Enable STL compatibily mode
 #include <otlv4.h> // include the OTL 4.0 header file
 
@@ -53,7 +56,7 @@ void select()
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[f2.length()-1]<<", len="
-      <<(int)f2.length()<<endl;
+      <<static_cast<int>(f2.length())<<endl;
  }
 
  i<<4<<4;
@@ -63,7 +66,7 @@ void select()
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[f2.length()-1]<<", len="
-      <<(int)f2.length()<<endl;
+      <<static_cast<int>(f2.length())<<endl;
  }
 
 }

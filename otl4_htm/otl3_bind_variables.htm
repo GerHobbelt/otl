@@ -1,620 +1,792 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, Declaration of bind variables</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, Declaration of bind variables</h1>
-</center>
-<h1>
-<a name="otl_bind_variables"></a>Declaration of bind variables</h1>
-This section explains in detail how to declare bind variables in the
-<a href="otl3_stream_class.htm">otl_stream</a>.
-<p>A SQL statement, PL/SQL block or a stored procedure call may have
-placeholders
-which are usually connected with bind variables in the program. OTL 4.0
-has a small parser that parses the SQL statement / PL/SQL block /
-stored
-procedure call and allocates the corresponding bind variables
-dynamically
-inside the stream.
-</p>
-<p><a name="NAMED_BV_NOTATION"></a>In Oracle, the naming convention of
-placeholders is quite different
-from
-the one in ODBC/DB2-CLI. Oracle placeholders are names, prefixed with
-the
-colon, e.g. <b>:f1</b>, <b>:supervisor_name</b>, <b>:employee_id. </b>A
-placeholder may be referenced more than once in the same SQL statement.
-</p>
-<p>In ODBC/DB2-CLI, placeholders are positional, presented as question
-marks, for example:
-</p>
-<pre>&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO my_table values(<b><font
- size="+2">?</font></b>,<b><font size="+2">?</font></b>,<b><font
- size="+2">?</font></b>,<b><font size="+2">?</font></b>)</pre>
-OTL 2.x/ODBC also had a positional notation for placeholders:
-<pre>&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO my_table values(<b><font
- size="+1">:1</font></b>&lt;int&gt;,<b><font size="+1">:2</font></b>&lt;char[32]&gt;,<b><font
- size="+1">:3</font></b>&lt;double&gt;,<b><font size="+1">:4</font></b>&lt;char[128]&gt;)</pre>
-<pre>:&lt;Number&gt; gets translated into ?.</pre>
-OTL 4.0/ODBC still supports the :&lt;Number&gt; notation for
-placeholders.
-However, OTL 4.0 for Oracle, ODBC, and DB2-CLI have the named notation
-for placeholders, so it is recommended to use it in both cases. There
-is
-only one restriction on named placeholders in OTL 4.0/ODBC and OTL
-4.0/DB2-CLI:
-the same placeholder may not be referenced more than once in the same
-SQL
-statement. This restriction is imposed by ODBC/DB2-CLI (see above).
-<p>The Oracle traditional named notation for placeholders was extended
-with data type specifications, e.g.:
-</p>
-<pre>&nbsp;&nbsp; INSERT INTO my_table2 values(<font size="+1">:</font>employee_id<b>&lt;int&gt;</b>,<font
- size="+1">:</font>supervisor_name<b>&lt;char[32]&gt;</b>)</pre>
-It makes the placeholder declaration complete, so there is no need to
-declare
-host arrays in the program and bind them by calling special bind
-functions<i>.
-</i>It
-is sufficient to define scalar data containers to hold just one row.
-In
-OTL 4.0, placeholders extended with data type declarations are called <i>extended
-placeholders</i> or simply <i>bind variables</i>.
-<p>The following data types for declaring extended placeholder are
-available
-in OTL 4.0:<br>
-</p>
-<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
- cellspacing="2">
-  <tbody>
-    <tr>
-      <td style="vertical-align: top;"><b><a name="bigint"></a>bigint</b></td>
-      <td style="vertical-align: top;">Signed 64-bit integer, for
-binding with BIGINT table columns (or stored procedure parameters) in
-MS
-SQL Server, DB2, MySQL, PostrgeSQL, etc. ODBC, and DB2 CLI support this
-kind bind variables natively, so does OTL. 32-bit OCIs prior to OCI
-11.2 do not have
-native
-support for 64-bit
-integers, so OTL has to emulate it via string (&lt;char[XXX]&gt;) bind
-variables internally and does string-to-bigint and bigint-to-string
-conversion. See also (1) <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>,&nbsp;
-(2) <a href="otl3_compile.htm#OTL_BIGINT_TO_STR">OTL_BIGINT_TO_STR,</a>&nbsp;
-(3) <a href="otl3_compile.htm#OTL_STR_TO_BIGINT">OTL_STR_TO_BIGINT</a>.
-With OTL/OCIx all three #defines (1), (2), and (3) need to be defined
-in order to make OTL compilable, because the bigint data type name, the
-bigint-to-string conversion code, and the string-to-bigint conversion
-code get expanded into the source code of the OTL header file in the
-process of compilation.<br>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=ISO-8859-1">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, Declaration of bind variables</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, Declaration of bind variables</h1>
+    </center>
+    <h1> <a name="otl_bind_variables"></a>Declaration of bind variables</h1>
+    This section explains in detail how to declare bind variables in the
+    <a href="otl3_stream_class.htm">otl_stream</a>.
+    <p>A SQL statement, PL/SQL block or a stored procedure call may have
+      placeholders which are usually connected with bind variables in
+      the program. OTL 4.0 has a small parser that parses the SQL
+      statement / PL/SQL block / stored procedure call and allocates the
+      corresponding bind variables dynamically inside the stream. </p>
+    <p><a name="NAMED_BV_NOTATION"></a>In Oracle, the naming convention
+      of placeholders is quite different from the one in ODBC/DB2-CLI.
+      Oracle placeholders are names, prefixed with the colon, e.g. <b>:f1</b>,
+      <b>:supervisor_name</b>, <b>:employee_id. </b>A placeholder may
+      be referenced more than once in the same SQL statement. </p>
+    <p>In ODBC/DB2-CLI, placeholders are positional, presented as
+      question marks, for example: </p>
+    <pre>&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO my_table values(<b><font size="+2">?</font></b>,<b><font size="+2">?</font></b>,<b><font size="+2">?</font></b>,<b><font size="+2">?</font></b>)</pre>
+    OTL 2.x/ODBC also had a positional notation for placeholders:
+    <pre>&nbsp;&nbsp;&nbsp;&nbsp; INSERT INTO my_table values(<b><font size="+1">:1</font></b>&lt;int&gt;,<b><font size="+1">:2</font></b>&lt;char[32]&gt;,<b><font size="+1">:3</font></b>&lt;double&gt;,<b><font size="+1">:4</font></b>&lt;char[128]&gt;)</pre>
+    <pre>:&lt;Number&gt; gets translated into ?.</pre>
+    OTL 4.0/ODBC still supports the :&lt;Number&gt; notation for
+    placeholders. However, OTL 4.0 for Oracle, ODBC, and DB2-CLI have
+    the named notation for placeholders, so it is recommended to use it
+    in both cases. There is only one restriction on named placeholders
+    in OTL 4.0/ODBC and OTL 4.0/DB2-CLI: the same placeholder may not be
+    referenced more than once in the same SQL statement. This
+    restriction is imposed by ODBC/DB2-CLI (see above).
+    <p>The Oracle traditional named notation for placeholders was
+      extended with data type specifications, e.g.: </p>
+    <pre>&nbsp;&nbsp; INSERT INTO my_table2 values(<font size="+1">:</font>employee_id<b>&lt;int&gt;</b>,<font size="+1">:</font>supervisor_name<b>&lt;char[32]&gt;</b>)</pre>
+    It makes the placeholder declaration complete, so there is no need
+    to declare host arrays in the program and bind them by calling
+    special bind functions<i>. </i>It is sufficient to define scalar
+    data containers to hold just one row. In OTL 4.0, placeholders
+    extended with data type declarations are called <i>extended
+      placeholders</i> or simply <i>bind variables</i>.
+    <p>The following data types for declaring extended placeholder are
+      available in OTL 4.0:<br>
+    </p>
+    <table style="text-align: left; width: 100%;" border="1"
+      cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top;"><b><a name="bigint"></a>bigint</b></td>
+          <td style="vertical-align: top;">Signed 64-bit integer, for
+            binding with BIGINT table columns (or stored procedure
+            parameters) in MS SQL Server, DB2, MySQL, PostrgeSQL, etc.
+            ODBC, and DB2 CLI support this kind bind variables natively,
+            so does OTL. 32-bit OCIs prior to OCI 11.2 do not have
+            native support for 64-bit integers, so OTL has to emulate it
+            via string (&lt;char[XXX]&gt;) bind variables internally and
+            does string-to-bigint and bigint-to-string conversion. See
+            also (1) <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>,&nbsp;
+
+
+
+
+
+
+
+
+
+            (2) <a href="otl3_compile.htm#OTL_BIGINT_TO_STR">OTL_BIGINT_TO_STR,</a>&nbsp;
+(3)
+
+
+
+
+
+
+
+
+
+
+            <a href="otl3_compile.htm#OTL_STR_TO_BIGINT">OTL_STR_TO_BIGINT</a>.
+            With OTL/OCIx all three #defines (1), (2), and (3) need to
+            be defined in order to make OTL compilable, because the
+            bigint data type name, the bigint-to-string conversion code,
+            and the string-to-bigint conversion code get expanded into
+            the source code of the OTL header file in the process of
+            compilation.<br>
+            <br>
+            64-bit OCIs have support for 64-bit integers in LP64
+            compliant platforms (which have 64-bit "long int").&nbsp;
+            64-bit Windows is LLP64 ("long int" is 32 bits), so it's
+            recommended to use OTL's "bigint". #define <a
+              href="otl3_compile.htm#OTL_ORA_MAP_BIGINT_TO_LONG">OTL_ORA_MAP_BIGINT_TO_LONG</a>
+            can be used to map &lt;bigint&gt; to 64-bit longs on LP64
+            platforms, which is more efficient than the char[XXX] OCI
+            binding for &lt;bigint&gt;. <br>
+            <br>
+            OCI 11.2 and higher has native support for signed 64-bit
+            ints, so it's sufficient to define <a
+              href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a> and <a
+              href="otl3_compile.htm#OTL_ORA11G_R2">OTL_ORA11G_R2</a>,
+            in order to enable native support for signed 64-bit ints<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="blob"></a><b>blob</b></td>
+          <td style="vertical-align: top;">for Oracle 8 and higer; BLOB</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="char"></a><b>char[</b>length<b>]<br>
+              <br>
+            </b>OTL 4.0.118 and higher:<span style="font-weight: bold;">
+              char<big><big>(</big></big></span>length<big><big><span
+                  style="font-weight: bold;">)</span></big></big><br>
+            <br>
+          </td>
+          <td style="vertical-align: top;">null terminated string;
+            length is database dependent: for Oracle in the range of
+            [3..32545] when the corresponding C++ side bind variable is
+            used with a PL/SQL VARCHAR2 data type, or in the range of
+            [3..2GB] when the C++ side variable is used with CLOB/ LONG
+            SQL data types; for ODBC it depends on the database backend
+            and the ODBC driver; for DB2-CLI &gt;2. In Unicode OTL (see
+            #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>),
+
+
+
+            this type of bind variable declaration means a null
+            terminated Unicode character string (two bytes per
+            character). The <i>length </i>field of this declaration
+            needs to include an extra byte / Unicode character, in order
+            to accommodate the null&nbsp; terminator itself (for example
+            char[11] can be used in binding with a VARCHAR(9) column),
+            unless #define <a
+              href="otl3_compile.htm#OTL_ADD_NULL_TERMINATOR_TO_STRING_SIZE">OTL_ADD_NULL_TERMINATOR_TO_STRING_SIZE</a>
+            is enabled. <br>
+            <br>
+            <a name="INVALID_CHAR"></a>"char" declaration without a
+            specified length is invalid and is going to result in an
+            otl_exception, for example:<br>
+            <br>
+            <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
+"INSERT
+
+
+
+
+
+
+
+
+
+              INTO test_tab VALUES(:f1&lt;int&gt;,:f2&lt;char&gt;)"<br>
+              <br>
+              &nbsp;&nbsp;&nbsp;&nbsp; Error code: 32013<br>
+              &nbsp;&nbsp;&nbsp;&nbsp; Error message: Invalid bind
+              variable declaration<br>
+              &nbsp;&nbsp;&nbsp;&nbsp; var info: f2 char<br>
+            </span><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-weight:
+              bold;"><a name="charz"></a>charz</span><br>
+          </td>
+          <td style="vertical-align: top;">Same as <a
+              href="otl3_bind_variables.htm#char">char</a>[] for <a
+              href="otl3_compile.htm#OTL_ORA7">OTL_ORA7,</a> <a
+              href="otl3_compile.htm#OTL_ORA8">OTL_ORA8,</a> <a
+              href="otl3_compile.htm#OTL_ORA8I">OTL_ORA8I</a>, <a
+              href="otl3_compile.htm#OTL_ORA9I">OTL_ORA9I</a>, <a
+              href="otl3_compile.htm#OTL_ORA10G">OTL_ORA10G</a>. Should
+            be used only when <a href="otl3_bind_variables.htm#pl_tab">PL/SQL
+
+
+
+
+
+
+
+
+              tables</a> of type CHAR(XXX) are used. charz is actually a
+            workaround for the following Oracle error: <span
+              style="font-style: italic;">PLS-00418: array bind type
+              must match PL/SQL table row type. </span>Normally, the
+            internal OCI data type that is used to bind VARCHAR2/CHAR
+            table columns / scalar PL/SQL procedure parameters works
+            fine, except for PL/SQL tables of CHAR(XXX). PL/SQL engine
+            does not like what OTL tries to bind with a PL/SQL table of
+            CHAR(XXX). <span style="font-style: italic;">charz[] </span>should
+
+
+
+
+
+
+
+
+            be used instead of char[] in cases like that.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="clob"></a><b>clob</b></td>
+          <td style="vertical-align: top;">for Oracle 8 and higher:
+            CLOB, NCLOB</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="db2date"></a><b>db2date</b></td>
+          <td style="vertical-align: top;">for DB2 DATEs; should be used
+            in the binding of a placeholder with a DB2 DATE column in
+            case of both</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="db2time"></a><b>db2time</b></td>
+          <td style="vertical-align: top;">for DB2 TIMEs; should be used
+            in the binding of a placeholder with a DB2 TIME column in
+            case of both OTL/DB2-CLI and OTL/ODBC for DB2; requires <a
+              href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>
+            as a data container. See example <a href="otl3_ex91.htm">91</a>
+            for more detail.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><b>double</b></td>
+          <td style="vertical-align: top;">8-byte floating point number</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><b>float&nbsp;</b></td>
+          <td style="vertical-align: top;">4-byte floating point number</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><b>int&nbsp;</b></td>
+          <td style="vertical-align: top;">signed 32-bit int</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-weight:
+              bold;"><a name="long"></a>long</span><br>
+          </td>
+          <td style="vertical-align: top;">
+            <ul>
+              <li>OCIs: signed 32-bit integer on 32-bit platforms and
+                LLP64 compliant platforms (64-bit Windows); signed
+                64-bit integer on LP64 compliant platforms (Linux, AIX,
+                Solaris, etc).<br>
+                <br>
+              </li>
+              <li>ODBC : signed 32-bit integer on 32-bit platforms;
+                signed 32-bit or 64-bit integer depending on the ODBC
+                driver. According&nbsp; to the ODBC standard, SQL_C_LONG
+                is a signed 32-bit integer, yet some ODBC drivers
+                implement it as a 64-bit integer. If you want to map
+                &lt;long&gt; to a signed 64-bit integer, use #define <a
+                  href="otl3_compile.htm#OTL_MAP_LONG_TO_SQL_C_SBIGINT">OTL_MAP_LONG_TO_SQL_C_SBIGINT</a>.<br>
+                <br>
+              </li>
+              <li>DB2-CLI: signed 32-bit integer of all platforms. If
+                you want to map &lt;long&gt; to a signed 64-bit integer,
+                use #define <a
+                  href="otl3_compile.htm#OTL_MAP_LONG_TO_SQL_C_SBIGINT">OTL_MAP_LONG_TO_SQL_C_SBIGINT</a>.<br>
+                <br>
+              </li>
+            </ul>
+            &lt;long&gt; is not recommended for use in portable
+            32/64-bit code that is supposed to work in Windows as well
+            as Linux/Unix, across multiple database types (Oracle, MS
+            SQL Server, DB2, etc). &lt;<a href="#bigint">bigint</a>&gt;
+            is a more portable option.<br>
+            <br>
+            If you develop code for a single platform for a single
+            database type, &lt;long&gt; is okay to use.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="ltz_timestamp"></a><b>ltz_timestamp</b><a
+              href="otl3_stream_class.htm#otl_datetime"></a></td>
+          <td style="vertical-align: top;">Oracle 9i TIMESTAMP WITH
+            LOCAL TIME ZONE, in a combination with #define <a
+              href="otl3_compile.htm#OTL_ORA_TIMESTAMP">OTL_ORA_TIMESTAMP</a>,
+            and <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-weight:
+              bold;"><a name="nchar"></a>nchar</span>[length]<br>
+          </td>
+          <td style="vertical-align: top;">Same as <a
+              href="otl3_bind_variables.htm#char">char</a>[] +
+            otl_connect::<a
+              href="otl3_connect_class.htm#set_character_set">set_character_set(</a>SQLCS_NCHAR)
+for
+Oracle
+
+
+
+
+
+
+
+
+
+            8i/9i/10g only, under #define <a
+              href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>., or
+            #define <a href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>.
+            nchar[] is required only when both VARCHAR2/CHAR and
+            NVARCHAR2/NCHAR need to be declared&nbsp; in the same SQL
+            statement, or PL/SQL block.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-weight:
+              bold;"><a name="nclob"></a>nclob</span><br>
+          </td>
+          <td style="vertical-align: top;">Same as <a href="#clob">clob</a>
+            + otl_connect::<a
+href="file:///D%7C/oscl/vc/doc/otl4/otl3_connect_class.htm#set_character_set">set_character_set(</a>SQLCS_NCHAR)
+for
+Oracle
+
+
+
+
+
+
+
+
+
+            8i/9i/10g only, under #define <a
+              href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>,
+            or #define <a href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>.
+            nclob is required only when both CLOB and NCLOB need to be
+            declared&nbsp; in the same SQL statement, or PL/SQL block. <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="raw"></a><b>raw[</b>length<b>]</b></td>
+          <td style="vertical-align: top;">for Oracle 7/8/9/10/11: RAW,
+            LONG RAW;&nbsp; for ODBC: SQL_BINARY (BINARY in MS SQL,
+            Sybase 15, MySQL; CHAR (XXX) BYTE in SAP/MAX DB),
+            SQL_VARBINARY (VARBINARY in MS SQL, Sybase 15, MySQL; BYTEA
+            in PostgreSQL, VARCHAR(XXX) BYTE in SAP/MAX DB). Columns of
+            this type can be written to / read from with <a
+              href="otl3_long_string.htm">otl_long_string</a>()'s. The
+            maximum allowed size is specific to each supported database
+            type. Also, see #define <a
+              href="otl3_compile.htm#OTL_MAP_SQL_VARBINARY_TO_RAW_LONG">OTL_MAP_SQL_VARBINARY_TO_RAW_LONG</a>,
+            #define <a href="otl3_compile.htm#OTL_MAP_SQL_GUID_TO_CHAR">OTL_MAP_SQL_GUID_TO_CHAR</a>,
+            #define <a
+              href="otl3_compile.htm#OTL_MAP_SQL_BINARY_TO_CHAR">OTL_MAP_SQL_BINARY_TO_CHAR</a><a
+href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_MAP_SQL_BINARY_TO_CHAR"><br>
+            </a> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="raw_long"></a><b>raw_long</b></td>
+          <td style="vertical-align: top;">for Oracle 7: RAW, LONG RAW;
+            for Oracle 8/9/10/11: RAW, LONG RAW; for ODBC:
+            SQL_LONGVARBINARY, SQL_VARBINARY; for DB2: BLOB</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-weight:
+              bold;"><a name="refcur"></a>refcur</span><br>
+          </td>
+          <td style="vertical-align: top;">for Oracle 8/9/10/11. When a
+            stored procedure returns a reference cursor, a bind variable
+            of <span style="font-style: italic;">refcur</span> type may
+            be declared in the PL/SQL block that calls the stored
+            procedure, for example:<br>
+            <br>
+            <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "begin "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " my_pkg.my_proc(:f1&lt;int,in&gt;,:f2&lt;int,in&gt;, "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :str1&lt;char[100],out&gt;, "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // :str1 is an output string parameter<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :cur1&lt;refcur,out[50]&gt;, "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :cur2&lt;refcur,out[50]&gt;); "<br>&nbsp;&nbsp;&nbsp;&nbsp; // :cur1, :cur2 are a bind variable names, refcur -- their types,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp; // out -- output parameter, 50 -- the buffer size when this<br>&nbsp;&nbsp;&nbsp;&nbsp; // reference cursor will be attached to <a href="otl4_refcur_stream.htm">otl_refcur_stream<br></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "end;"</pre>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><b>short</b></td>
+          <td style="vertical-align: top;">short int (16-bit signed
+            integer)<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="timestamp"></a><b>timestamp</b></td>
+          <td style="vertical-align: top;">MS SQL Server/Sybase
+            DATETIME, DB2 TIMESTAMP, Oracle DATE, Oracle 9i TIMESTAMP
+            (when #define <a href="otl3_compile.htm#OTL_ORA_TIMESTAMP">OTL_ORA_TIMESTAMP</a>
+            is enabled) ; it&nbsp; requires TIMESTAMP_STRUCT (OTL/ODBC,
+            OTL/DB2-CLI), or <a
+              href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>
+            (ODBC, DB2-CLI, and OCIx).&nbsp; OTL/DB2-CLI and OTL/ODBC
+            for DB2; requires <a
+              href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>
+            as a data container. See example <a href="otl3_ex91.htm">91</a>
+            for more detail</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="tz_timestamp"></a><b>tz_timestamp</b><a
+              href="otl3_stream_class.htm#otl_datetime"></a></td>
+          <td style="vertical-align: top;">Oracle 9i TIMESTAMP WITH TIME
+            ZONE, in a combination with #define <a
+              href="otl3_compile.htm#OTL_ORA_TIMESTAMP">OTL_ORA_TIMESTAMP</a>,
+            and <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="ubigint"></a><span
+              style="font-weight: bold;">ubigint</span><br>
+          </td>
+          <td style="vertical-align: top;">Natively supported unsigned
+            64-bit int. #define <a href="otl3_compile.htm#OTL_UBIGINT">OTL_UBIGINT</a>
+            needs to be enabled.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><b>unsigned</b></td>
+          <td style="vertical-align: top;">unsigned int (32-bit unsigned
+            integer)<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a name="varchar_long"></a><b>varchar_long</b></td>
+          <td style="vertical-align: top;">for Oracle 7: LONG; for
+            Oracle 8/9: LONG; for ODBC: SQL_LONGVARCHAR; for DB2: CLOB</td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <br>
+    varchar_long, raw_long clob and blob require the <a
+      href="otl3_long_string.htm">otl_long_string</a> class as a data
+    container. In order to set the maximum size for varchar_long,
+    raw_long, clob or blob, see the set_max_long_size() function in the
+    <a href="otl3_connect_class.htm">otl_connect</a> class for more
+    detail.
+    <p><a name="access_qualifiers"></a>For PL/SQL blocks (OTL 4.0/OCI7,
+      OTL4.0/OCI8/9) or stored procedure calls (OTL 4.0/ODBC, OTL
+      4.0/DB2-CLI), special qualifiers are introduced to distinguish
+      between input and output variables: </p>
+    <ul>
+      <li> <b>in</b> -- input variable</li>
+      <li> <b>out </b>-- output variable</li>
+      <li> <b>inout </b>-- input/output variable</li>
+    </ul>
+    <b>Example 1 (Oracle):</b>
+    <pre>&nbsp;BEGIN<br>&nbsp;&nbsp; :rc&lt;int,out&gt; := my_func(:salary&lt;float,in&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :ID&lt;int,inout&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :name&lt;char[32],out&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;END;</pre>
+    <b>Example 2 (ODBC or DB2-CLI):</b>
+    <p>New (OTL 4.0/ODBC, OTL 4.0/DB2-CLI) style </p>
+    <pre>&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; call :rc&lt;int,out&gt; := my_func(:salary&lt;float,in&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :ID&lt;int,inout&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :name&lt;char[32],out&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )<br>&nbsp;&nbsp; }</pre>
+    <pre>Old (OTL 2.0/ODBC) style:</pre>
+    <pre>&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; call :1&lt;int,out&gt; := my_func(:2&lt;float,in&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :3&lt;int,inout&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :4&lt;char[32],out&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )<br>&nbsp;&nbsp; }</pre>
+    <a name="no_spaces"></a>In the bind variable declaration, spaces in
+    the datatype section and in the access qualifier section ARE NOT
+    allowed, yet a whitespace in a bind variable declaration was found
+    in the SQL statement. The following code is invalid:
+    <p><b>Example 1</b> </p>
+    <pre>&nbsp; insert into tab1 values(:salary&lt; double &gt;, :name&lt; char [ 32 ] &gt; , :emp_id&lt; int&gt;);</pre>
+    <p><br>
+      <b>Example 2</b> </p>
+    <pre>&nbsp; :rc&lt; int, out &gt; := ...;<br><br></pre>
+    <h3><b><font><b><font size="+2"><a name="COLON_LITERAL"></a>Embedding
+colon
+
+
+
+
+
+
+
+
+
+              (":") literals into SQL statements in OTL/ODBC</font></b></font></b></h3>
+    <p>Informix Call Level Interface (CLI) can be used in a combination
+      with OTL/ODBC. Informix SQL allows colons (":") as legitimate
+      characters in Informix SQL statements. Therefore, there is a need
+      to embed colon literal into such SQL statements. The following
+      notation can be used for embedding colons into SQL statements
+      under OTL/ODBC: "<span style="font-family: monospace;">\\:</span>".
+
+
+
+
+
+
+
+
+
+      OTL/ODBC 4.0.68 and higher supports the notation.<b><font><b><font
+              size="+2"><br>
+            </font></b></font></b></p>
+    <h3><br>
+      <a name="SELECT_OVERRIDE"></a><b><font><b><font size="+2">Explicit
+              bind variables in output column definitions in SELECT
+              statements<br>
+            </font></b></font></b></h3>
+    <p>OTL describes output column names, data types, and column lengths
+      dynamically right after the SELECT statement is parsed. OTL maps
+      column internal data types into C++ external data types by
+      default. The default mapping can be overridden by <a
+        href="otl3_stream_class.htm#set_column_type">otl_stream::set_column_type</a>()
+
+
+
+
+
+
+
+
+
+      and <a href="otl3_stream_class.htm#set_all_column_types">otl_stream::set_all_column_types</a>()
+function
+calls.
+
+
+
+
+
+
+
+
+
+      However, it is not as convenient as defining explicit bind
+      variables right in the text of the SQL statement.In OTL 4.0.73, a
+      special kind of bind variables is introduced: explicit bind
+      variables for defining data types of output columns in SELECT
+      statements. The format for defining explicit bind variables in
+      SELECT statement's columns is as follows: <span
+        style="font-weight: bold;">:#N&lt;datatype&gt;</span>, where N
+      is 1,2,3 (column's relative position in the SELECT statement)...
+      SELECT output columns do not have a direct equivalent of <span
+        style="font-style: italic;"><span style="font-weight: bold;">:VAR</span>
+      </span>(OCI), or <span style="font-style: italic; font-weight:
+        bold;">?</span> (ODBC, DB2-CLI), so if an explicit bind variable
+      is defined for a column in a SELECT statement, the bind variable
+      has to be blanked out in the resulting format of the SELECT
+      statement that gets passed into the database API. For example:<br>
+    </p>
+    &nbsp;&nbsp;&nbsp; SELECT f1 <span style="font-style: italic;">:#1&lt;short&gt;</span>,
+    f2<br>
+    &nbsp;&nbsp;&nbsp; FROM test_tab<br>
+    &nbsp;&nbsp;&nbsp;&nbsp; ...<br>
+    <p>Here is the resulting SELECT statement that gets passed into the
+      database API:<br>
+    </p>
+    &nbsp;&nbsp;&nbsp; SELECT f1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ,
+    f2<br>
+    &nbsp;&nbsp;&nbsp; FROM test_tab<br>
+    <br>
+    <p>The set of datatypes allowed in <span style="font-style:
+        italic;">:#N&lt;datatype&gt;</span> is limited and database API
+      specific, In general, the following types are allowed:<br>
+    </p>
+    <ul>
+      <li>&nbsp;&lt;char[XXX]&gt;</li>
+      <li>&nbsp;&lt;double&gt;</li>
+      <li>&nbsp;&lt;float&gt;</li>
+      <li>&nbsp;&lt;int&gt;</li>
+      <li>&nbsp;&lt;bigint&gt; (which is supported natively in ODBC /
+        DB2-CLI&nbsp; / OCI11.2, and OTL internally emulates bigints via
+        strings (char[XXX]) for the rest of the OCIs).</li>
+      <li>&lt;ubigint&gt; (natively supported unsigned 64-bit ints for
+        database APIs that native support for unsigned 64-bit ints, for
+        example: Oracle 11.2, DB2)<br>
+      </li>
+      <li>&nbsp;&lt;unsigned&gt;</li>
+      <li>&nbsp;&lt;short&gt;</li>
+      <li>&nbsp;&lt;long&gt;</li>
+      <li><a name="raw2"></a>&lt;raw[XXX]&gt;<br>
+      </li>
+      <li>&lt;raw_long&gt;<br>
+      </li>
+      <li>&lt;timestamp&gt;</li>
+      <li>&lt;varchar_long&gt;<br>
+      </li>
+    </ul>
+    Also, it depends on the internal type of the column to be overridden
+    whether the target type (from the list above) is compatible with the
+    source / internal type of the column or not. For more detail, refer
+    to the corresponding database API manual. A quick way to figure out
+    if the types are compatible is through trial and error.<br>
+    <br>
+    The OTL internal to external default data type mapping for output
+    columns in SELECT statement works okay for the most part, except for
+    rare cases when there may be some special considerations for
+    performance, or external data type definitions (for example,
+    compatibility with predefined or general-purpose C++ containers).<br>
+    <br>
+    <a name="SP_COL_OVERRIDE"></a>In OTL 4.0.117 and higher, it is
+    possible to do the same kind of overriding (as described above)
+    for&nbsp; output column data types of an implicit result set
+    (ODBC/DB2-CLI), or a reference cursor (Oracle), for example:<br>
+    <br>
+    <span style="font-style: italic;">&nbsp;&nbsp;&nbsp; Oracle:<br>
       <br>
-64-bit OCIs have support for 64-bit integers in LP64 compliant
-platforms (which have 64-bit "long int").&nbsp; 64-bit Windows is LLP64
-("long int" is 32 bits), so it's recommended to
-use OTL's "bigint". #define <a
- href="otl3_compile.htm#OTL_ORA_MAP_BIGINT_TO_LONG">OTL_ORA_MAP_BIGINT_TO_LONG</a>
-can be used to map &lt;bigint&gt; to 64-bit longs on LP64 platforms,
-which is more efficient than the char[XXX] OCI binding for
-&lt;bigint&gt;. <br>
+    </span>&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">otl_stream
+
+
+
+
+
+
+
+
+
       <br>
-OCI 11.2 and higher has native support for signed 64-bit ints, so it's
-sufficient to define <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>
-and <a href="otl3_compile.htm#OTL_ORA11G_R2">OTL_ORA11G_R2</a>, in
-order to enable native support for signed 64-bit ints<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="blob"></a><b>blob</b></td>
-      <td style="vertical-align: top;">for Oracle 8/9/10/11; BLOB</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="char"></a><b>char[</b>length<b>]<br>
+      &nbsp;&nbsp;&nbsp;&nbsp; s(50,<br>
+    </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+    "<span style="font-family: monospace;">BEGIN "<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "
+      my_proc1(:f1&lt;int,in&gt;,:res_set); "<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;
+      :#1&lt;int,out&gt; "<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;
+      :#2&lt;char[31],out&gt; "<br>
+      &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "END;",<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db, // otl_connect object<br>
+    </span><span style="font-style: italic;"></span>&nbsp; &nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
+      style="font-family: monospace;">":res_set" // reference cursor /
+      result set's placeholder name<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>
       <br>
-      </b>OTL 4.0.118 and higher:<span style="font-weight: bold;"> char<big><big>(</big></big></span>length<big><big><span
- style="font-weight: bold;">)</span></big></big><br>
+    </span><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+      ODBC/DB2-CLI:<br>
       <br>
-      </td>
-      <td style="vertical-align: top;">null
-terminated
-string;
-length is database dependent; for Oracle in [3,32545]; for ODBC it
-depends
-on the database backend and the ODBC driver; for DB2-CLI &gt;2. In
-Unicode
-OTL (see #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>),
-this type of bind variable declaration means a null terminated Unicode
-character string (two bytes per character). The <i>length </i>field
-of
-this declarator needs to include an extra byte / Unicode character, in
-order to accomodate the null&nbsp; terminator itself (for example
-char[11]
-can be used in binding with a VARCHAR(9) column), unless #define <a
- href="otl3_compile.htm#OTL_ADD_NULL_TERMINATOR_TO_STRING_SIZE">OTL_ADD_NULL_TERMINATOR_TO_STRING_SIZE</a>
-is enabled.<br>
+    </span>&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">otl_stream
+
+
+
+
+
+
+
+
+
       <br>
-      <a name="INVALID_CHAR"></a>"char" declaration without a specified
-length is invalid and is going to result in an otl_exceprtion, for
-example:<br>
-      <br>
-      <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
-"INSERT INTO test_tab VALUES(:f1&lt;int&gt;,:f2&lt;char&gt;)"<br>
-      <br>
-&nbsp;&nbsp;&nbsp;&nbsp; Error code: 32013<br>
-&nbsp;&nbsp;&nbsp;&nbsp; Error message: Invalid bind variable
-declaration<br>
-&nbsp;&nbsp;&nbsp;&nbsp; var info: f2 char<br>
-      </span><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-weight: bold;"><a
- name="charz"></a>charz</span><br>
-      </td>
-      <td style="vertical-align: top;">Same as <a
- href="otl3_bind_variables.htm#char">char</a>[] for <a
- href="otl3_compile.htm#OTL_ORA7">OTL_ORA7,</a> <a
- href="otl3_compile.htm#OTL_ORA8">OTL_ORA8,</a> <a
- href="otl3_compile.htm#OTL_ORA8I">OTL_ORA8I</a>, <a
- href="otl3_compile.htm#OTL_ORA9I">OTL_ORA9I</a>, <a
- href="otl3_compile.htm#OTL_ORA10G">OTL_ORA10G</a>. Should be used only
-when <a href="otl3_bind_variables.htm#pl_tab">PL/SQL tables</a> of
-type CHAR(XXX) are used. charz is actually a workaround for the
-following Oracle error: <span style="font-style: italic;">PLS-00418:
-array bind type must match PL/SQL table row type. </span>Normally, the
-internal OCI datatype that is used to bind VARCHAR2/CHAR table columns
-/ scalar PL/SQL procedure parameters works fine, except for PL/SQL
-tables of CHAR(XXX). PL/SQL engine does not like what OTL tries to bind
-with a PL/SQL table of CHAR(XXX). <span style="font-style: italic;">charz[]
-      </span>should be used instead of char[] in cases like that.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="clob"></a><b>clob</b></td>
-      <td style="vertical-align: top;">for Oracle 8/9: CLOB, NCLOB</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="db2date"></a><b>db2date</b></td>
-      <td style="vertical-align: top;">for DB2 DATEs; should
-be
-used in
-the binding of a placeholder with a DB2 DATE column in case of both</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="db2time"></a><b>db2time</b></td>
-      <td style="vertical-align: top;">for DB2 TIMEs; should
-be
-used in
-the binding of a placeholder with a DB2 TIME column in case of both
-OTL/DB2-CLI
-and OTL/ODBC for DB2; requires <a
- href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>
-as a data container. See example <a href="otl3_ex91.htm">91</a> for
-more
-detail.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><b>double</b></td>
-      <td style="vertical-align: top;">8-byte floating point number</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><b>float&nbsp;</b></td>
-      <td style="vertical-align: top;">4-byte floating point number</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><b>int&nbsp;</b></td>
-      <td style="vertical-align: top;">signed 32-bit int</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-weight: bold;"><a
- name="long"></a>long</span><br>
-      </td>
-      <td style="vertical-align: top;">
-      <ul>
-        <li>OCIs: signed 32-bit integer on 32-bit platforms and LLP64
-compliant platforms (64-bit Windows); signed 64-bit integer on LP64
-compliant platforms (Linux, AIX, Solaris, etc).<br>
-          <br>
-        </li>
-        <li>ODBC : signed 32-bit integer on 32-bit platforms; signed
-32-bit or 64-bit integer depending on the ODBC driver. According&nbsp;
-to the ODBC standard, SQL_C_LONG is a signed 32-bit integer, yet some
-ODBC drivers implement it as a 64-bit integer. If you want to map
-&lt;long&gt; to a signed 64-bit integer, use #define <a
- href="otl3_compile.htm#OTL_MAP_LONG_TO_SQL_C_SBIGINT">OTL_MAP_LONG_TO_SQL_C_SBIGINT</a>.<br>
-          <br>
-        </li>
-        <li>DB2-CLI: signed 32-bit integer of all platforms. If you
-want to map &lt;long&gt; to a signed 64-bit integer, use #define <a
- href="otl3_compile.htm#OTL_MAP_LONG_TO_SQL_C_SBIGINT">OTL_MAP_LONG_TO_SQL_C_SBIGINT</a>.<br>
-          <br>
-        </li>
-      </ul>
-&lt;long&gt; is not recommended for use in portable 32/64-bit code that
-is supposed to work in Windows as well as Linux/Unix, across multiple
-database types (Oracle, MS SQL Server, DB2, etc). &lt;<a href="#bigint">bigint</a>&gt;
-is a more portable option.<br>
-      <br>
-If you develop code for a single platform for a single database type,
-&lt;long&gt; is okay to use.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="ltz_timestamp"></a><b>ltz_timestamp</b><a
- href="otl3_stream_class.htm#otl_datetime"></a></td>
-      <td style="vertical-align: top;">Oracle 9i
-TIMESTAMP WITH LOCAL TIME ZONE, in a combination with #define <a
- href="otl3_compile.htm#OTL_ORA_TIMESTAMP">OTL_ORA_TIMESTAMP</a>,
-and <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a></td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-weight: bold;"><a
- name="nchar"></a>nchar</span>[length]<br>
-      </td>
-      <td style="vertical-align: top;">Same as <a
- href="otl3_bind_variables.htm#char">char</a>[] + otl_connect::<a
- href="otl3_connect_class.htm#set_character_set">set_character_set(</a>SQLCS_NCHAR)
-for Oracle 8i/9i/10g only, under #define <a
- href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>., or #define <a
- href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>. nchar[] is
-required only when both VARCHAR2/CHAR and NVARCHAR2/NCHAR need to be
-declared&nbsp; in the same SQL statement, or PL/SQL block.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-weight: bold;"><a
- name="nclob"></a>nclob</span><br>
-      </td>
-      <td style="vertical-align: top;">Same as <a href="#clob">clob</a>
-+ otl_connect::<a
- href="file:///D%7C/oscl/vc/doc/otl4/otl3_connect_class.htm#set_character_set">set_character_set(</a>SQLCS_NCHAR)
-for Oracle 8i/9i/10g only, under #define <a
- href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>,
-or #define <a href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>.
-nclob is required only when both CLOB and NCLOB need to be
-declared&nbsp; in the same SQL statement, or PL/SQL block. <br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="raw"></a><b>raw[</b>length<b>]</b></td>
-      <td style="vertical-align: top;">for Oracle 7/8/9/10: RAW, LONG
-RAW;&nbsp; for ODBC: SQL_BINARY (BINARY in MS SQL, Sybase 15, MySQL;
-CHAR (XXX) BYTE in SAP/MAX DB),
-SQL_VARBINARY (VARBINARY in MS SQL, Sybase 15, MySQL; BYTEA in
-PostgreSQL, VARCHAR(XXX) BYTE in SAP/MAX DB). Columns of this type can
-be written to / read from with <a href="otl3_long_string.htm">otl_long_string</a>()'s.
-The maximum allowed size is specific to each supported database type.
-Also, see #define <a
- href="otl3_compile.htm#OTL_MAP_SQL_VARBINARY_TO_RAW_LONG">OTL_MAP_SQL_VARBINARY_TO_RAW_LONG</a>,
-#define <a href="otl3_compile.htm#OTL_MAP_SQL_GUID_TO_CHAR">OTL_MAP_SQL_GUID_TO_CHAR</a>,
-#define <a href="otl3_compile.htm#OTL_MAP_SQL_BINARY_TO_CHAR">OTL_MAP_SQL_BINARY_TO_CHAR</a><a
- href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_MAP_SQL_BINARY_TO_CHAR"><br>
-      </a> </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="raw_long"></a><b>raw_long</b></td>
-      <td style="vertical-align: top;">for Oracle 7: RAW,
-LONG
-RAW;
-for Oracle 8/9/10/11: RAW, LONG RAW; for ODBC: SQL_LONGVARBINARY,
-SQL_VARBINARY;
-for DB2: BLOB</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-weight: bold;"><a
- name="refcur"></a>refcur</span><br>
-      </td>
-      <td style="vertical-align: top;">for Oracle 8/9/10/11. When a
-stored procedure returns a reference cursor, a bind variable of <span
- style="font-style: italic;">refcur</span> type may be declared in the
-PL/SQL block that calls the stored procedure, for example:<br>
-      <br>
-      <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "begin "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " my_pkg.my_proc(:f1&lt;int,in&gt;,:f2&lt;int,in&gt;, "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :str1&lt;char[100],out&gt;, "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // :str1 is an output string parameter<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :cur1&lt;refcur,out[50]&gt;, "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :cur2&lt;refcur,out[50]&gt;); "<br>&nbsp;&nbsp;&nbsp;&nbsp; // :cur1, :cur2 are a bind variable names, refcur -- their types,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp; // out -- output parameter, 50 -- the buffer size when this<br>&nbsp;&nbsp;&nbsp;&nbsp; // reference cursor will be attached to <a
- href="otl4_refcur_stream.htm">otl_refcur_stream<br></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "end;"</pre>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><b>short</b></td>
-      <td style="vertical-align: top;">short int (16-bit signed integer)<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="timestamp"></a><b>timestamp</b></td>
-      <td style="vertical-align: top;">MS SQL
-Server/Sybase
-DATETIME,
-DB2 TIMESTAMP, Oracle DATE, Oracle 9i TIMESTAMP (when #define <a
- href="otl3_compile.htm#OTL_ORA_TIMESTAMP">OTL_ORA_TIMESTAMP</a>
-is enabled) ; it&nbsp; requires TIMESTAMP_STRUCT
-(OTL/ODBC, OTL/DB2-CLI), or <a
- href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>
-(ODBC, DB2-CLI, and OCIx).&nbsp; OTL/DB2-CLI
-and OTL/ODBC for DB2; requires <a
- href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>
-as a data container. See example <a href="otl3_ex91.htm">91</a> for
-more
-detail</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="tz_timestamp"></a><b>tz_timestamp</b><a
- href="otl3_stream_class.htm#otl_datetime"></a></td>
-      <td style="vertical-align: top;">Oracle 9i
-TIMESTAMP WITH TIME ZONE, in a combination with #define <a
- href="otl3_compile.htm#OTL_ORA_TIMESTAMP">OTL_ORA_TIMESTAMP</a>,
-and <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a></td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><b>unsigned</b></td>
-      <td style="vertical-align: top;">unsigned int (32-bit unsigned
-integer)<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a name="varchar_long"></a><b>varchar_long</b></td>
-      <td style="vertical-align: top;">for Oracle 7:
-LONG; for
-Oracle 8/9: LONG; for ODBC: SQL_LONGVARCHAR; for DB2: CLOB</td>
-    </tr>
-  </tbody>
-</table>
-<br>
-<br>
-varchar_long, raw_long clob and blob require the <a
- href="otl3_long_string.htm">otl_long_string</a>
-class as a data container. In order to set the maximum size for
-varchar_long,
-raw_long, clob or blob, see the set_max_long_size() function in the <a
- href="otl3_connect_class.htm">otl_connect</a>
-class for more detail.
-<p><a name="access_qualifiers"></a>For PL/SQL blocks (OTL 4.0/OCI7,
-OTL4.0/OCI8/9)
-or stored procedure calls (OTL 4.0/ODBC, OTL 4.0/DB2-CLI), special
-qualifiers
-are introduced to distinguish between input and output variables:
-</p>
-<ul>
-  <li> <b>in</b> -- input variable</li>
-  <li> <b>out </b>-- output variable</li>
-  <li> <b>inout </b>-- input/output variable</li>
-</ul>
-<b>Example 1 (Oracle):</b>
-<pre>&nbsp;BEGIN<br>&nbsp;&nbsp; :rc&lt;int,out&gt; := my_func(:salary&lt;float,in&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :ID&lt;int,inout&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :name&lt;char[32],out&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;END;</pre>
-<b>Example 2 (ODBC or DB2-CLI):</b>
-<p>New (OTL 4.0/ODBC, OTL 4.0/DB2-CLI) style
-</p>
-<pre>&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; call :rc&lt;int,out&gt; := my_func(:salary&lt;float,in&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :ID&lt;int,inout&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :name&lt;char[32],out&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )<br>&nbsp;&nbsp; }</pre>
-<pre>Old (OTL 2.0/ODBC) style:</pre>
-<pre>&nbsp;&nbsp; {<br>&nbsp;&nbsp;&nbsp; call :1&lt;int,out&gt; := my_func(:2&lt;float,in&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :3&lt;int,inout&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :4&lt;char[32],out&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; )<br>&nbsp;&nbsp; }</pre>
-In the bind variable declaration, spaces in the datatype section and in
-the access qualifier section ARE NOT allowed. The following code is
-invalid:
-<p><b>Example 1</b>
-</p>
-<pre>&nbsp; insert into tab1 values(:salary&lt; double &gt;, :name&lt; char [ 32 ] &gt; , :emp_id&lt; int&gt;);</pre>
-<p><br>
-<b>Example 2</b>
-</p>
-<pre>&nbsp; :rc&lt; int, out &gt; := ...;<br><br></pre>
-<h3><b><font><b><font size="+2"><a name="COLON_LITERAL"></a>Embedding
-colon (":") literals into SQL statements in OTL/ODBC</font></b></font></b></h3>
-<p>Informix Call Level Interface (CLI) can be used in a combination
-with OTL/ODBC. Informix SQL allows colons (":") as legitimate
-characters in Informix SQL statements. Therefore, there is a need to
-embed colon literal into such SQL statements. The following notation
-can be used for embedding colons into SQL statements under OTL/ODBC: "<span
- style="font-family: monospace;">\\:</span>". OTL/ODBC 4.0.68 and
-higher supports the notation.<b><font><b><font size="+2"><br>
-</font></b></font></b></p>
-<h3><br>
-<a name="SELECT_OVERRIDE"></a><b><font><b><font size="+2">Explicit bind
-variables in output column definitions in SELECT statements<br>
-</font></b></font></b></h3>
-<p>OTL describes output column names, data types, and column lengths
-dynamically right after the SELECT statement is parsed. OTL maps column
-internal data types into C++ external data types by default. The
-default
-mapping can be overridden by <a
- href="otl3_stream_class.htm#set_column_type">otl_stream::set_column_type</a>()
-and <a href="otl3_stream_class.htm#set_all_column_types">otl_stream::set_all_column_types</a>()
-function calls. However, it is not as convenient as defining explicit
-bind variables right in the text of the SQL statement.In OTL 4.0.73, a
-special kind of bind variables is introduced: explicit bind variables
-for defining data types of output columns in SELECT statements. The
-format for defining explicit bind variables in SELECT statement's
-columns is as follows: <span style="font-weight: bold;">:#N&lt;datatype&gt;</span>,
-where N is 1,2,3 (column's relative position in the SELECT
-statement)... SELECT
-output columns do not have a direct equivalent of <span
- style="font-style: italic;"><span style="font-weight: bold;">:VAR</span>
-</span>(OCI), or <span style="font-style: italic; font-weight: bold;">?</span>
-(ODBC, DB2-CLI), so if an explicit bind variable is defined for a
-column in a SELECT statement, the bind variable has to be blanked out
-in the resulting format of the SELECT statement that gets passed into
-the database API. For example:<br>
-</p>
-&nbsp;&nbsp;&nbsp; SELECT f1 <span style="font-style: italic;">:#1&lt;short&gt;</span>,
-f2<br>
-&nbsp;&nbsp;&nbsp; FROM test_tab<br>
-&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
-<p>Here is the resulting SELECT statement that gets passed into the
-database API:<br>
-</p>
-&nbsp;&nbsp;&nbsp; SELECT f1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; , f2<br>
-&nbsp;&nbsp;&nbsp; FROM test_tab<br>
-<br>
-<p>The set of datatypes allowed in <span style="font-style: italic;">:#N&lt;datatype&gt;</span>
-is limited and database API specific, In general, the following types
-are allowed:<br>
-</p>
-<ul>
-  <li>&nbsp;&lt;char[XXX]&gt;</li>
-  <li>&nbsp;&lt;double&gt;</li>
-  <li>&nbsp;&lt;float&gt;</li>
-  <li>&nbsp;&lt;int&gt;</li>
-  <li>&nbsp;&lt;bigint&gt; (which is supported natively in ODBC /
-DB2-CLI&nbsp; / OCI11.2, and OTL internally emulates bigints via
-strings (char[XXX])
-for the rest of the OCIs).<br>
-  </li>
-  <li>&nbsp;&lt;unsigned&gt;</li>
-  <li>&nbsp;&lt;short&gt;</li>
-  <li>&nbsp;&lt;long&gt;</li>
-  <li><a name="raw2"></a>&lt;raw[XXX]&gt;<br>
-  </li>
-  <li>&lt;raw_long&gt;<br>
-  </li>
-  <li>&lt;timestamp&gt;</li>
-  <li>&lt;varchar_long&gt;<br>
-  </li>
-</ul>
-Also, it depends on the internal type of the column to be overridden
-whether the target type (from the list above) is compatible with the
-source / internal type of the column or not. For more detail, refer to
-the corresponding database API manual. A quick way to figure out if the
-types are compatible is through trial and error.<br>
-<br>
-The OTL internal to external default data type mapping for output
-columns in SELECT statement works okay for the most part, except for
-rare cases when there may be some special considerations for
-performance, or external data type definitions (for example,
-compatibility
-with predefined or general-purpose C++ containers).<br>
-<br>
-<a name="SP_COL_OVERRIDE"></a>In OTL 4.0.117 and higher, it is possible
-to do the same kind of overriding (as described above) for&nbsp; output
-column data types of an implicit result set (ODBC/DB2-CLI), or a
-reference cursor (Oracle), for example:<br>
-<br>
-<span style="font-style: italic;">&nbsp;&nbsp;&nbsp; Oracle:<br>
-<br>
-</span>&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">otl_stream
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp; s(50,<br>
-</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"<span style="font-family: monospace;">BEGIN "<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "
-my_proc1(:f1&lt;int,in&gt;,:res_set); "<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp; :#1&lt;int,out&gt; "<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;
-:#2&lt;char[31],out&gt; "<br>
-&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "END;",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db, // otl_connect object<br>
-</span><span style="font-style: italic;"></span>&nbsp; &nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<span style="font-family: monospace;">":res_set" // reference cursor /
-result set's placeholder name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>
-<br>
-</span><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
-ODBC/DB2-CLI:<br>
-<br>
-</span>&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">otl_stream
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp; s(50,<br>
-</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"<span style="font-family: monospace;">{ "<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " my_proc1(:f1&lt;int,in&gt;) "<br>
-</span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-"&nbsp;&nbsp; :#1&lt;int,out&gt; "<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;
-:#2&lt;char[31],out&gt; "<br>
-</span><span style="font-family: monospace;">&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp; "}",<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db, // otl_connect object<br>
-</span><span style="font-style: italic;"></span>&nbsp; &nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
- style="font-family: monospace;">otl_implicit_select // implicit result
-set / select flag<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</span><br>
-<br>
-Output column overrides are optional. If a column is not overriden
-explicitly, the default datatype mapping applies..<br>
-<h3><a name="pl_tab"></a><b><font size="+2">Declaration of PL/SQL
-tables
-(OTL/OCIx)</font></b></h3>
-OTL 3.x/OCIx, release OTL 3.1.0 and higher, supports PL/SQL tables via
-the otl_stream class and special <a href="otl3_pl_tab.htm">template
-PL/SQL
-table container</a> classes. This feature works only for PL/SQL blocks
-and stored procedures. For example, a stored procedure, which takes
-PL/SQL
-tables as arguments, gets called in a block. The PL/SQL table
-containers
-can be used to read/write the whole PL/SQL table from/to the OTL stream
-in one shot. In the OCIx and Pro*C, it is a well known technique, only
-the interface is a way too complex.
-<p>In OTL 4.0/OCIx, in PL/SQL blocks, a PL/SQL table dimension can be
-added
-to the access qualifiers <b>in</b>/<b>out</b>/<b>inout</b>, e.g.:
-</p>
-<pre>&nbsp;BEGIN<br>&nbsp;&nbsp; my_pkg.my_proc(:salary&lt;float,in<b>[100]</b>&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :ID&lt;int,inout<b>[200]</b>&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :name&lt;char[32],out<b>[150]</b>&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;END;</pre>
-[100] is the maximum size of the <i>:salary</i> placeholder, which is
-an
-input PL/SQL table of float[100]. [200] is the maximum size of the <i>:ID</i>
-placeholder, which is an input/output PL/SQL table of int[100]. [150]
-is
-the maximum size of the <i>:name</i> placeholder, which is an output
-PL/SQL
-table of char[150][32].
-<p>The size of the otl_stream with the definition in the example above
-needs to be set to 1, since stored procedures cannot be called in bulk.
-However, PL/SQL table type parameters are not scalars, they are vectors
-with maximum sizes, predefined in the definitions of the bind
-variables.
-</p>
-<p><a name="PLSQL_table_size"></a>Starting with OTL 4.0.115 and on, the
-maximum PL/SQL table size is no longer limited to 32767. In order to
-turn the old limit of 32767 back on, use #define <a
- href="otl3_compile.htm#OTL_STREAM_LEGACY_BUFFER_SIZE_TYPE">OTL_STREAM_LEGACY_BUFFER_SIZE_TYPE</a>.<br>
-</p>
-<p>For more detail, see examples <a href="otl3_ex49.htm">49</a>, <a
- href="otl3_ex52.htm">50,
-51, 52.</a>
-</p>
-<center>
-<p></p>
-<hr width="100%">
-<p><a href="otl3_class.htm">Prev</a> <a href="otl3_connect_class.htm">Next</a><a
- href="otl3.htm">Contents</a><a href="home.htm">Go
-Home</a></p>
-</center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
-<a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>
-<script language="JavaScript"><!-- hide from old browsers
+      &nbsp;&nbsp;&nbsp;&nbsp; s(50,<br>
+    </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+    "<span style="font-family: monospace;">{ "<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " my_proc1(:f1&lt;int,in&gt;)
+      "<br>
+    </span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+"&nbsp;&nbsp;
+:#1&lt;int,out&gt;
+
+
+
+
+
+
+
+
+
+      "<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;
+      :#2&lt;char[31],out&gt; "<br>
+    </span><span style="font-family: monospace;">&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp; "}",<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db, // otl_connect object<br>
+    </span><span style="font-style: italic;"></span>&nbsp; &nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
+      style="font-family: monospace;">otl_implicit_select // implicit
+      result set / select flag<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</span><br>
+    <br>
+    Output column overrides are optional. If a column is not overriden
+    explicitly, the default datatype mapping applies..<br>
+    <h3><a name="pl_tab"></a><b><font size="+2">Declaration of PL/SQL
+          tables (OTL/OCIx)</font></b></h3>
+    OTL 3.x/OCIx, release OTL 3.1.0 and higher, supports PL/SQL tables
+    via the otl_stream class and special <a href="otl3_pl_tab.htm">template
+
+
+
+
+
+
+
+
+
+      PL/SQL table container</a> classes. This feature works only for
+    PL/SQL blocks and stored procedures. For example, a stored
+    procedure, which takes PL/SQL tables as arguments, gets called in a
+    block. The PL/SQL table containers can be used to read/write the
+    whole PL/SQL table from/to the OTL stream in one shot. In the OCIx
+    and Pro*C, it is a well known technique, only the interface is a way
+    too complex.
+    <p>In OTL 4.0/OCIx, in PL/SQL blocks, a PL/SQL table dimension can
+      be added to the access qualifiers <b>in</b>/<b>out</b>/<b>inout</b>,
+      e.g.: </p>
+    <pre>&nbsp;BEGIN<br>&nbsp;&nbsp; my_pkg.my_proc(:salary&lt;float,in<b>[100]</b>&gt;,&nbsp;&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :ID&lt;int,inout<b>[200]</b>&gt;,&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :name&lt;char[32],out<b>[150]</b>&gt;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;END;</pre>
+    [100] is the maximum size of the <i>:salary</i> placeholder, which
+    is an input PL/SQL table of float[100]. [200] is the maximum size of
+    the <i>:ID</i> placeholder, which is an input/output PL/SQL table
+    of int[100]. [150] is the maximum size of the <i>:name</i>
+    placeholder, which is an output PL/SQL table of char[150][32].
+    <p>The size of the otl_stream with the definition in the example
+      above needs to be set to 1, since stored procedures cannot be
+      called in bulk. However, PL/SQL table type parameters are not
+      scalars, they are vectors with maximum sizes, predefined in the
+      definitions of the bind variables. </p>
+    <p><a name="PLSQL_table_size"></a>Starting with OTL 4.0.115 and on,
+      the maximum PL/SQL table size is no longer limited to 32767. In
+      order to turn the old limit of 32767 back on, use #define <a
+        href="otl3_compile.htm#OTL_STREAM_LEGACY_BUFFER_SIZE_TYPE">OTL_STREAM_LEGACY_BUFFER_SIZE_TYPE</a>.<br>
+    </p>
+    <p>For more detail, see examples <a href="otl3_ex49.htm">49</a>, <a
+        href="otl3_ex52.htm">50, 51, 52.</a><br>
+    </p>
+    <h3><big><a name="sql_neut_bvar"></a>Declaration of SQL tool neutral
+        bind variables for Oracle</big></h3>
+    <p>OTL 4.0.209 and higher supports an alternative bind variable
+      notation that is neutral to SQL tools for Oracle. Neutral in this
+      context means that the same SQL statements / PLSQL blocks can be
+      executed both in the SQL tools and OTL. All OTL extended bind
+      variable declarations are made SQL comments, for example:<br>
+    </p>
+    <pre>	INSERT INTO test_tab VALUES(:f1/*int*/,:f2/*char[31]*/);<br></pre>
+    <p>In general, the regular <span style="font-family: monospace;">:var&lt;...&gt;</span>
+      syntax can be converted to <span style="font-family: monospace;">:var/*...*/</span>.
+      The same rule of "<a href="#no_spaces">no space characters</a> in
+      between" still applies. The rule was made in order to keep the OTL
+      SQL statement parser as light as possible (short of writing a
+      full-blown SQL parser). OTL also has SELECT column <a
+        href="#SELECT_OVERRIDE">override</a> syntax. The SELECT column
+      override variables get replaced with spaces in the SQL statement,
+      because they are not real placeholders. So, the SQL tool neutral
+      syntax for the SELECT column override variables puts the variables
+      into SQL comments, for example:<br>
+    </p>
+    <pre>	regular syntax ==&gt; SELECT f1, :#1&lt;int&gt; f2 :#2&lt;char[31]&gt; FROM test_tab WHERE f1=:f1&lt;int&gt;<br><br>	SQL neutral syntax ==&gt; SELECT f1 /*:#1&lt;int&gt;*/ f2 /*:#2&lt;char[31]&gt;*/ FROM test_tab WHERE f1=:f1/*int*/<br></pre>
+    <p>The SELECT statement that uses the SQL neutral syntax for its
+      bind variables can be copied and pasted into an SQL tool, and
+      executed without any changes. "EXPLAIN PLAN" can be run on the
+      SELECT statement.<br>
+    </p>
+    <pre></pre>
+    <pre></pre>
+    <center>
+      <p></p>
+      <hr width="100%">
+      <p><a href="otl3_class.htm">Prev</a> <a
+          href="otl3_connect_class.htm">Next</a><a href="otl3.htm">Contents</a><a
+          href="home.htm">Go Home</a></p>
+    </center>
+    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>
+      <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i>Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100);
  //-->
  </script></p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for
-any purpose is hereby granted without fee, provided that the above
-copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
-AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
-ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
-SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.</i>
-</p>
-<script type="text/javascript">
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
+    <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
+  </body>
 </html>

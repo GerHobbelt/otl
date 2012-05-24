@@ -5,12 +5,17 @@ using namespace std;
 #define OTL_DB2_CLI // Compile OTL 4.0/DB2-CLI
 #if defined(__BORLANDC__)
 #define OTL_BIGINT __int64 // Enabling G++ 64-bit integers
+#define OTL_UBIGINT unsigned __int64 // Enabling G++ 64-bit integers
 #elif !defined(_MSC_VER)
 #define OTL_BIGINT long long // Enabling G++ 64-bit integers
+#define OTL_UBIGINT unsigned long long // Enabling G++ 64-bit integers
 #else
 #define OTL_BIGINT __int64 // Enabling VC++ 64-bit integers
+#define OTL_UBIGINT unsigned __int64 // Enabling VC++ 64-bit integers
 #endif
 #include <otlv4.h> // include the OTL 4.0 header file
+
+const OTL_UBIGINT UBIG_VAL1=18446744073709551615ULL;
 
 otl_connect db; // connect object
 
@@ -18,7 +23,7 @@ void insert()
 // insert rows into table
 { 
  otl_stream o(50, // buffer size
-              "insert into test_tab values(:f1<bigint>,:f2<char[31]>)", 
+              "insert into test_tab values(:f1<bigint>,:f2<char[31]>,:f3<ubigint>)", 
                  // SQL statement
               db // connect object
              );
@@ -34,14 +39,16 @@ void insert()
 #else
    sprintf(tmp,"Name%d",static_cast<int>(i));
 #endif
-  o<<i<<tmp;
+   o<<i<<tmp<<UBIG_VAL1;
  }
 }
 
 void select()
 { 
  otl_stream i(50, // buffer size
-              "select * from test_tab where f1>=:f<bigint> and f1<=:ff<bigint>*2",
+              "select f1, f2, f3 :#3<ubigint> "
+              "from test_tab "
+              "where f1>=:f<bigint> and f1<=:ff<bigint>*2",
                  // SELECT statement
               db // connect object
              ); 
@@ -49,9 +56,7 @@ void select()
  
  OTL_BIGINT f1;
  char f2[31];
-#if defined(_MSC_VER)
- char f1str[40];
-#endif
+ OTL_UBIGINT f3;
 
  i<<static_cast<OTL_BIGINT>(8)
   <<static_cast<OTL_BIGINT>(8); // assigning :f = 8; :ff = 8
@@ -59,23 +64,8 @@ void select()
    // assigned. First portion of output rows is fetched to the buffer
 
  while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2;
-  cout<<"f1=";
-#if !defined(_MSC_VER)
-  cout<<f1;
-#else
-#if defined(_MSC_VER)
-#if (_MSC_VER >= 1400) // VC++ 8.0 or higher
-  _i64toa_s(f1,f1str,sizeof(f1str),10);
-#else
-  _i64toa(f1,f1str,10);
-#endif
-#else
-  _i64toa(f1,f1str,10);
-#endif
-  cout<<f1str;
-#endif
-  cout<<", f2="<<f2<<endl;
+   i>>f1>>f2>>f3;
+   printf("f1=%lld, f2=%s, f3=%llu\n",f1,f2,f3);
  }
 
 }
@@ -97,7 +87,7 @@ int main()
   otl_cursor::direct_exec
    (
     db,
-    "create table test_tab(f1 bigint, f2 varchar(30))"
+    "create table test_tab(f1 bigint, f2 varchar(30), f3 decimal(22))"
     );  // create table
 
   insert(); // insert records into table

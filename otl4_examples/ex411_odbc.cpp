@@ -92,6 +92,15 @@ public:
     buf[len]=0;
   }
 
+  void append(char* temp_buf, int len)
+  {
+    size_t cur_len=length();
+    for(int i=0;i<len;++i)
+      buf[cur_len+i]=temp_buf[i];
+    buf[cur_len+len]=0;
+  }
+
+
   char& operator[](int ndx)
   {
     return buf[ndx];
@@ -99,7 +108,7 @@ public:
 
   int length(void) const 
   {
-    return (int)strlen(buf);
+    return static_cast<int>(strlen(buf));
   }
 
 protected:
@@ -114,8 +123,11 @@ ostream& operator<<(ostream& s,const super_fast_string& str)
   return s;
 }
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #define OTL_VALUE_TEMPLATE_ON // Turn on otl_value<T>
 #define OTL_USER_DEFINED_STRING_CLASS_ON
 #define USER_DEFINED_STRING_CLASS super_fast_string

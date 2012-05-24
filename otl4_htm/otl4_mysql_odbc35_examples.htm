@@ -1,7 +1,7 @@
 <!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
-  <meta content="text/html; charset=iso-8859-1"
+  <meta content="text/html; charset=ISO-8859-1"
  http-equiv="Content-Type">
   <meta content="Sergei Kuchin" name="Author">
   <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
@@ -71,6 +71,10 @@ with VARBINARY datatype and otl_stream_read_iterator)</a></b></li>
 with BINARY datatype and otl_stream_read_iterator)</a></b></li>
   <li><b><a href="otl4_ex675.htm">Example 675 (Simple
 Insert/Select/Update #define OTL_ODBC_MULTI_MODE)</a></b></li>
+  <li><b><a href="otl4_ex715.htm">Example 715 (END-OF_ROW check)</a></b></li>
+  <li><b><a href="otl4_ex740.htm"><span style="font-weight: bold;">Example
+740 (Stored procedure with output parameter)</span></a><br>
+    </b></li>
 </ol>
 <b><a href="otl4_ex375.htm"></a></b></div>
 </center>
@@ -85,8 +89,8 @@ Insert/Select/Update #define OTL_ODBC_MULTI_MODE)</a></b></li>
 <p><a href="otl3_const_sql.htm">Prev</a> <a href="otl3_compile.htm">Next</a><a
  href="otl3.htm">Contents</a><a href="home.htm">Go Home</a></p>
 </center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
  href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
@@ -96,7 +100,14 @@ Insert/Select/Update #define OTL_ODBC_MULTI_MODE)</a></b></li>
  </script></a>.</p>
 <p><i>Permission to use, copy, modify and redistribute this document
 for any purpose is hereby granted without fee, provided that the above
-copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
+copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
+AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i> </p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));

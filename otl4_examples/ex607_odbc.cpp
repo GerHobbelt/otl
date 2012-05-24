@@ -63,6 +63,7 @@ void select()
   cerr<<p.var_info<<endl; // print out the variable that caused the error
   cerr<<"===> Cleaning up the stream's error flags"<<endl;
   i.clean();
+  db.commit();
  }
 
  cout<<"====> Starting another fetch sequence..."<<endl;

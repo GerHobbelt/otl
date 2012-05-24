@@ -1,208 +1,198 @@
 <!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta content="text/html; charset=iso-8859-1"
- http-equiv="Content-Type">
-  <meta content="Sergei Kuchin" name="Author">
-  <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
- name="GENERATOR">
-  <meta
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library"
- name="KeyWords">
-  <title>OTL 4.0, Examples for Oracle 7 / OCI</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, Examples for Oracle 7 / OCI</h1>
-<div style="text-align: left;">The examples below work with Oracle 7 /
-OCI7. In general, all of these examples should work with any Oracle
-version higher than Oracle 7, when OCI 7 is enabled in OTL by setting
-#define <a href="otl3_compile.htm#OTL_ORA7">OTL_ORA7</a>. OCI 7 is
-considered to be a <span style="font-style: italic;">classic</span>
-Oracle
-API for plain C, and
-it is present in all OCI libraries up to Oracle 11.1 on all known
-platforms.<br>
-</div>
-<br>
-</center>
-<ul>
-</ul>
-<ol>
-  <li> <b><a href="otl3_ex01.htm">Example 1 (Simple Insert/Select)</a></b></li>
-  <li> <b><a href="otl3_ex02.htm">Example 2 ("Incompatible datatypes
-in stream operation" exception)</a></b></li>
-  <li> <b><a href="otl3_ex03.htm">Example 3 (PL/SQL block)</a></b></li>
-  <li> <b><a href="otl3_ex04.htm">Example 4 (Insert and Select via
-referenced cursor)</a></b></li>
-  <li> <b><a href="otl3_ex05.htm">Example 5 (Simple Insert/Select
-with the LONG datatype)</a></b></li>
-  <li> <b><a href="otl3_ex06.htm">Example 6 (Simple Insert/Select
-with the LONG RAW datatype)</a></b></li>
-  <li> <b><a href="otl3_ex07.htm">Example 7
-(otl_stream::describe_select() with a simple Select)</a></b></li>
-  <li> <b><a href="otl3_ex08.htm">Example 8 (otl_stream::
-describe_select() with a referenced cursor)</a></b></li>
-  <li> <b><a href="otl3_ex09.htm">Example 9 (otl_stream and NULLs)</a></b></li>
-  <li><b><a href="otl3_ex35.htm">Example
-35 (otl_nocommit_stream in
-Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex38.htm">Examle
-38 (otl_datetime in
-Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex43.htm">Example
-43 (Get Rows Processed
-Count in Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex46.htm">Example
-46 ("Auto-commit every
-SQL statement / commit-on-success" mode in Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex49.htm">Example
-49 (PL/SQL tables as
-parameters, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex53.htm">Example
-53 (Datatype override
-in SELECT, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex58.htm">Example
-58 (Using OTL/OCI7 in
-Pro*C/C++ environment)</a></b></li>
-  <li><b><a href="otl3_ex65.htm">Example
-65 (Simple
-Insert/Select and otl_stream::clean() function for Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex68.htm">Example
-68 (Dynamically
-allocated PL/SQL tables as parameters, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex70.htm">Example
-70 (Dynamically allocated
-PL/SQL table of DATEs as parameter, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex72.htm">Example
-72 (STL std::strings,
-ANSI C++ typecasts, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex75.htm">Example
-75 (STL-compliant OTL
-stream iterators, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex85.htm">Example
-85 (STL vector based
-PL/SQL tables as parameters, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex87.htm">Example
-87 (STL vector based
-PL/SQL
-table of DATEs as parameter, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex97.htm">Example
-97
-(otl_value&lt;T&gt;,
-Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex101.htm">Example
-101 (#define
-OTL_UNCAUGHT_EXCEPTION_ON, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex110.htm">Example
-110 (Group data type
-override in SELECT, Oracle 7)</a></b></li>
-  <li><b><a href="otl3_ex113.htm">Example 113 (OTL stream
-pooling, Oracle 7/8/8i)</a></b></li>
-  <li><b><a href="otl3_ex116.htm">Example 116
-(otl_stream::set_flush(), Oracle 7/8/8i)</a></b></li>
-  <li><b><a href="otl3_ex119.htm">Example 119 (<font size="-1">OTL_VALUE_TEMPLATE_ON,
-OTL_USER_DEFINED_STRING_CLASS_ON</font>, Oracle 7/8/8i/9i)</a></b></li>
-  <li><b><a href="otl3_ex130.htm">Example 130 (Describe
-otl_stream's bind variables for Oracle 7/8/8i/9i)</a></b></li>
-  <li> <b><a href="otl4_ex159.htm">Example
-159 (otl_stream::clean(), cancelling SELECT's fetch sequence, Oracle
-7/8/8i/9i )</a></b></li>
-  <li><b><a href="otl4_ex162.htm">Example 162 (otl_stream::clean(),
-cancelling REF CURSOR's fetch sequence, Oracle 7/8/8i/9i)</a></b></li>
-  <li><b><a href="otl4_ex164.htm">Example 164
-(otl_stream::clean(), cleaning the SELECT stream's error flags, Oracle
-7/8/8i/9i )</a></b></li>
-  <li><b><a href="otl4_ex167.htm">Example 167 (otl_stream::clean(),
-cleaning the REF CURSOR otl_stream's error flags, Oracle 7/8/8i/9i )</a></b></li>
-  <li><b><a href="otl4_ex169.htm">Example
-169 (#define's OTL_DEFAULT_XXX_NULL_TO_VAL, Oracle 7/8/8i/9i)</a></b></li>
-  <li><b><a href="otl4_ex172.htm">Example
-172 (#define OTL_ORA_TEXT_ON, Oracle 8/8i/9i)</a></b></li>
-  <li><b><a href="otl4_ex173.htm">Example 173 (#define
-OTL_ORA_TEXT_ON, Oracle 8/8i/9i)</a></b></li>
-  <li><b><a href="otl4_ex205.htm">Example 205 (otl_exception, derived
-from a base
-class, Oracle)</a></b></li>
-  <li><b><a href="otl4_ex210.htm">Example
-210 (Oracle and RAW column)</a></b></li>
-  <li><b><a href="otl4_ex211.htm">Example
-211 (OTL_ADD_NULL_TERMINATOR_STRING_SIZE,Oracle)</a></b></li>
-  <li><b><a href="otl4_ex220.htm">Example
-220 (std::string and LONGs, Oracle 7)</a></b></li>
-  <li><b><a href="otl4_ex234.htm">Example
-234 (SQL statement label, Oracle 8,8i,9i)</a></b></li>
-  <li><b><a href="otl4_ex236.htm"></a></b><b><a href="otl4_ex244.htm">Example
-244 (user defined string class and LONGs, Oracle 7)</a></b></li>
-  <li><b><a href="otl4_ex249.htm">Example
-249 (OTL tracing, Oracle 7)</a></b></li>
-  <li><b><a href="otl4_ex253.htm">Example
-253 (Explict bind variables in SELECT statement column definitions,
-Oracle 7)</a></b></li>
-  <li><b><a href="otl4_ex257.htm">Example
-257 (64-bit signed integers,
-Oracle 7)</a></b></li>
-  <li><b><a href="otl4_ex260.htm">Example
-260 (OTL stream read iterator, simple SELECT,
-Oracle)</a></b></li>
-  <li><b><a href="otl4_ex261.htm">Example
-261 (OTL stream read iterator, reference cursor,
-Oracle)</a></b></li>
-  <li><b><a href="otl4_ex288.htm">Example 288 (Strict numeric type
-checking on SELECTs)</a></b></li>
-  <li><b><a href="otl4_ex307.htm">Example 307 (Stream buffer size as <span
- style="font-style: italic;">int</span>, simple Insert/Select)</a></b></li>
-  <li><b><a href="otl4_ex311.htm">Example 311 (Large PL/SQL tables as
-parameters<span style="font-style: italic;"></span>)</a></b></li>
-  <li><b><a href="otl4_ex313.htm">Example 313 (PL/SQL tables of CHAR
-and VARCHAR2 together as
-parameters, Oracle 7)</a></b></li>
-  <li><b><a href="otl4_ex371.htm">Example 371 (Simple Insert/Select,
-otl_connect::operator&lt;&lt;, &lt;&lt;=, &gt;&gt;)</a></b></li>
-  <li><b><a href="otl4_ex447.htm">Example 447 (Simple Insert/Select
-with Oracle RAW datatype)</a></b></li>
-  <li><b><a href="otl4_ex458.htm">Example 458 (Simple Insert/Select
-with Oracle RAW datatype and otl_stream_read_iterator)</a></b></li>
-  <li><b><a href="otl4_ex473.htm">Example 473 (OCI7, otl_datetime and
-Oracle 9i TIMESTAMP type)</a></b></li>
-  <li><b><a href="otl4_ex690.htm">Example 690 (Customizing the date
-format in OTL tracing via #define OTL_TRACE_FORMAT_DATETIME)</a></b></li>
-  <li> <b><a href="otl4_ex691.htm">Example 691 (Skipping to the end of
-the row with otl_stream::skip_to_end_of_row())</a></b></li>
-</ol>
-<ul>
-</ul>
-<center>
-<hr width="100%">
-<p><a href="otl3_const_sql.htm">Prev</a> <a href="otl3_compile.htm">Next</a><a
- href="otl3.htm">Contents</a><a href="home.htm">Go Home</a></p>
-</center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>, <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com
-<script language="JavaScript"><!-- hide from old browsers
+  <head>
+    <meta content="text/html; charset=ISO-8859-1"
+      http-equiv="Content-Type">
+    <meta content="Sergei Kuchin" name="Author">
+    <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
+      name="GENERATOR">
+    <meta content="OTL, Oracle, ODBC, DB2, CLI, database API, C++,
+      Template Library" name="KeyWords">
+    <title>OTL 4.0, Examples for Oracle 7 / OCI</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, Examples for Oracle 7 / OCI</h1>
+      <div style="text-align: left;">The examples below work with Oracle
+        7 / OCI7. In general, all of these examples should work with any
+        Oracle version higher than Oracle 7, when OCI 7 is enabled in
+        OTL by setting #define <a href="otl3_compile.htm#OTL_ORA7">OTL_ORA7</a>.
+        OCI 7 is considered to be a <span style="font-style: italic;">classic</span>
+        Oracle API for plain C, and it is present in all OCI libraries
+        up to Oracle 11.1 on all known platforms.<br>
+      </div>
+      <br>
+    </center>
+    <ul>
+    </ul>
+    <ol>
+      <li> <b><a href="otl3_ex01.htm">Example 1 (Simple Insert/Select)</a></b></li>
+      <li> <b><a href="otl3_ex02.htm">Example 2 ("Incompatible
+            datatypes in stream operation" exception)</a></b></li>
+      <li> <b><a href="otl3_ex03.htm">Example 3 (PL/SQL block)</a></b></li>
+      <li> <b><a href="otl3_ex04.htm">Example 4 (Insert and Select via
+            referenced cursor)</a></b></li>
+      <li> <b><a href="otl3_ex05.htm">Example 5 (Simple Insert/Select
+            with the LONG datatype)</a></b></li>
+      <li> <b><a href="otl3_ex06.htm">Example 6 (Simple Insert/Select
+            with the LONG RAW datatype)</a></b></li>
+      <li> <b><a href="otl3_ex07.htm">Example 7
+            (otl_stream::describe_select() with a simple Select)</a></b></li>
+      <li> <b><a href="otl3_ex08.htm">Example 8 (otl_stream::
+            describe_select() with a referenced cursor)</a></b></li>
+      <li> <b><a href="otl3_ex09.htm">Example 9 (otl_stream and NULLs)</a></b></li>
+      <li><b><a href="otl3_ex35.htm">Example 35 (otl_nocommit_stream in
+            Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex38.htm">Examle 38 (otl_datetime in Oracle
+            7)</a></b></li>
+      <li><b><a href="otl3_ex43.htm">Example 43 (Get Rows Processed
+            Count in Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex46.htm">Example 46 ("Auto-commit every SQL
+            statement / commit-on-success" mode in Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex49.htm">Example 49 (PL/SQL tables as
+            parameters, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex53.htm">Example 53 (Datatype override in
+            SELECT, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex58.htm">Example 58 (Using OTL/OCI7 in
+            Pro*C/C++ environment)</a></b></li>
+      <li><b><a href="otl3_ex65.htm">Example 65 (Simple Insert/Select
+            and otl_stream::clean() function for Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex68.htm">Example 68 (Dynamically allocated
+            PL/SQL tables as parameters, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex70.htm">Example 70 (Dynamically allocated
+            PL/SQL table of DATEs as parameter, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex72.htm">Example 72 (STL std::strings, ANSI
+            C++ typecasts, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex75.htm">Example 75 (STL-compliant OTL
+            stream iterators, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex85.htm">Example 85 (STL vector based PL/SQL
+            tables as parameters, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex87.htm">Example 87 (STL vector based PL/SQL
+            table of DATEs as parameter, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex97.htm">Example 97 (otl_value&lt;T&gt;,
+            Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex101.htm">Example 101 (#define
+            OTL_UNCAUGHT_EXCEPTION_ON, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex110.htm">Example 110 (Group data type
+            override in SELECT, Oracle 7)</a></b></li>
+      <li><b><a href="otl3_ex113.htm">Example 113 (OTL stream pooling,
+            Oracle 7/8/8i)</a></b></li>
+      <li><b><a href="otl3_ex116.htm">Example 116
+            (otl_stream::set_flush(), Oracle 7/8/8i)</a></b></li>
+      <li><b><a href="otl3_ex119.htm">Example 119 (<font size="-1">OTL_VALUE_TEMPLATE_ON,
+
+              OTL_USER_DEFINED_STRING_CLASS_ON</font>, Oracle 7/8/8i/9i)</a></b></li>
+      <li><b><a href="otl3_ex130.htm">Example 130 (Describe otl_stream's
+            bind variables for Oracle 7/8/8i/9i)</a></b></li>
+      <li> <b><a href="otl4_ex159.htm">Example 159
+            (otl_stream::clean(), cancelling SELECT's fetch sequence,
+            Oracle 7/8/8i/9i )</a></b></li>
+      <li><b><a href="otl4_ex162.htm">Example 162 (otl_stream::clean(),
+            cancelling REF CURSOR's fetch sequence, Oracle 7/8/8i/9i)</a></b></li>
+      <li><b><a href="otl4_ex164.htm">Example 164 (otl_stream::clean(),
+            cleaning the SELECT stream's error flags, Oracle 7/8/8i/9i )</a></b></li>
+      <li><b><a href="otl4_ex167.htm">Example 167 (otl_stream::clean(),
+            cleaning the REF CURSOR otl_stream's error flags, Oracle
+            7/8/8i/9i )</a></b></li>
+      <li><b><a href="otl4_ex169.htm">Example 169 (#define's
+            OTL_DEFAULT_XXX_NULL_TO_VAL, Oracle 7/8/8i/9i)</a></b></li>
+      <li><b><a href="otl4_ex172.htm">Example 172 (#define
+            OTL_ORA_TEXT_ON, Oracle 8/8i/9i)</a></b></li>
+      <li><b><a href="otl4_ex173.htm">Example 173 (#define
+            OTL_ORA_TEXT_ON, Oracle 8/8i/9i)</a></b></li>
+      <li><b><a href="otl4_ex205.htm">Example 205 (otl_exception,
+            derived from a base class, Oracle)</a></b></li>
+      <li><b><a href="otl4_ex210.htm">Example 210 (Oracle and RAW
+            column)</a></b></li>
+      <li><b><a href="otl4_ex211.htm">Example 211
+            (OTL_ADD_NULL_TERMINATOR_STRING_SIZE,Oracle)</a></b></li>
+      <li><b><a href="otl4_ex220.htm">Example 220 (std::string and
+            LONGs, Oracle 7)</a></b></li>
+      <li><b><a href="otl4_ex234.htm">Example 234 (SQL statement label,
+            Oracle 8,8i,9i)</a></b></li>
+      <li><b><a href="otl4_ex236.htm"></a></b><b><a
+            href="otl4_ex244.htm">Example 244 (user defined string class
+            and LONGs, Oracle 7)</a></b></li>
+      <li><b><a href="otl4_ex249.htm">Example 249 (OTL tracing, Oracle
+            7)</a></b></li>
+      <li><b><a href="otl4_ex253.htm">Example 253 (Explicit bind
+            variables in SELECT statement column definitions, Oracle 7)</a></b></li>
+      <li><b><a href="otl4_ex257.htm">Example 257 (64-bit signed
+            integers, Oracle 7)</a></b></li>
+      <li><b><a href="otl4_ex260.htm">Example 260 (OTL stream read
+            iterator, simple SELECT, Oracle)</a></b></li>
+      <li><b><a href="otl4_ex261.htm">Example 261 (OTL stream read
+            iterator, reference cursor, Oracle)</a></b></li>
+      <li><b><a href="otl4_ex288.htm">Example 288 (Strict numeric type
+            checking on SELECTs)</a></b></li>
+      <li><b><a href="otl4_ex307.htm">Example 307 (Stream buffer size as
+            <span style="font-style: italic;">int</span>, simple
+            Insert/Select)</a></b></li>
+      <li><b><a href="otl4_ex311.htm">Example 311 (Large PL/SQL tables
+            as parameters<span style="font-style: italic;"></span>)</a></b></li>
+      <li><b><a href="otl4_ex313.htm">Example 313 (PL/SQL tables of CHAR
+            and VARCHAR2 together as parameters, Oracle 7)</a></b></li>
+      <li><b><a href="otl4_ex371.htm">Example 371 (Simple Insert/Select,
+            otl_connect::operator&lt;&lt;, &lt;&lt;=, &gt;&gt;)</a></b></li>
+      <li><b><a href="otl4_ex447.htm">Example 447 (Simple Insert/Select
+            with Oracle RAW data type)</a></b></li>
+      <li><b><a href="otl4_ex458.htm">Example 458 (Simple Insert/Select
+            with Oracle RAW data type and otl_stream_read_iterator)</a></b></li>
+      <li><b><a href="otl4_ex473.htm">Example 473 (OCI7, otl_datetime
+            and Oracle 9i TIMESTAMP type)</a></b></li>
+      <li><b><a href="otl4_ex690.htm">Example 690 (Customizing the date
+            format in OTL tracing via #define OTL_TRACE_FORMAT_DATETIME)</a></b></li>
+      <li> <b><a href="otl4_ex691.htm">Example 691 (Skipping to the end
+            of the row with otl_stream::skip_to_end_of_row())</a></b></li>
+      <li> <b><a href="otl4_ex710.htm">Example 710 (END-OF_ROW check)</a></b></li>
+      <li><b><a href="otl4_ex720.htm">Example 720 (Oracle 10.2 and
+            higher,&nbsp; raw[XXX] and LONG RAWs combined with the bulk
+            interface (stream buffer size &gt;1 ))</a></b></li>
+      <li><b><a href="otl4_ex721.htm">Example 721 (Oracle 10.2 and
+            higher,&nbsp; char[XXX] and LONGs&nbsp; combined with the
+            bulk interface (stream buffer size &gt;1 ))</a></b></li>
+      <li><b><a href="otl4_ex737.htm">Example 737 (get_dirty_buf_len()
+            with INSERT and SELECT)</a></b></li>
+      <li><b><a href="otl4_ex742.htm">Example 742 (Extended / customized
+            numeric data type support)</a></b></li>
+      <li><b><a href="otl4_ex747.htm">Example 747 (VARCHAR column bound
+            as RAW[XXX] for reading/writing std::strings that have null
+            terminators ('\0') in the middle)</a></b></li>
+    </ol>
+    <br>
+    <hr style="width: 100%; height: 2px;">
+    <center>
+      <p><a href="otl3_const_sql.htm">Prev</a> <a
+          href="otl3_compile.htm">Next</a><a href="otl3.htm">Contents</a><a
+          href="home.htm">Go Home</a></p>
+    </center>
+    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com
+        <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
  </script></a>.</p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for any purpose is hereby granted without fee, provided that the above
-copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
-AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
-EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.</i> </p>
-<script type="text/javascript">
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
+    <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
+  </body>
 </html>

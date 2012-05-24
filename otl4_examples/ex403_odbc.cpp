@@ -1,8 +1,11 @@
 #include <iostream>
 #include <string>
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #define OTL_STL // Turn on STL features
 #if !defined(OTL_ANSI_CPP) 
 #define OTL_ANSI_CPP // Turn on ANSI C++ typecasts

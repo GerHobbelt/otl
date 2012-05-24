@@ -2,7 +2,9 @@
 using namespace std;
 #include <stdio.h>
 
-#define OTL_ORA11G_R2 // Compile OTL 4/OCI11.2
+#if !defined(OTL_ORA11G_R2)
+#define OTL_ORA11G_R2 // Compile OTL 4.0/OCI10gR2
+#endif
 #include <otlv4.h> // include the OTL 4 header file
 
 otl_connect db; // connect object

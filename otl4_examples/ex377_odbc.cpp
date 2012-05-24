@@ -84,7 +84,7 @@ int main()
  otl_connect::otl_initialize(); // initialize the database API environment
  try{
 
-  db<<"scott/tiger@sapdbsql"; // connect to the database
+  db<<"SCOTT/TIGER@sapdbsql"; // connect to the database
 
   // Send SQL statements to the connect obejct for immediate execution. 
   // Ignore any exception for the first statement.

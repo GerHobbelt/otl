@@ -81,11 +81,17 @@ void update()
  o<<lob; // Initialize otl_lob_stream by writing it
          // into otl_stream.
 
- lob.set_len(6001*4); // setting the total size of of the CLOB to be written
- for(int i=1;i<=4;++i)
-  lob<<f2; // writing chunks of the CLOB into the otl_lob_stream
-
- lob.close(); // closing the otl_lob_stream
+ long rpc=o.get_rpc(); // get the RPC count
+ if(rpc==1){
+   lob.set_len(6001*4); // setting the total size of of the CLOB to be written
+   for(int i=1;i<=4;++i)
+     lob<<f2; // writing chunks of the CLOB into the otl_lob_stream
+   lob.close(); // closing the otl_lob_stream
+ }else if(rpc==0){
+   // nothing to do, closing the LOB stream in the "don't throw
+   // otl_exception when size doesn't match" mode
+   lob.close(true);
+ }
 
  db.commit(); // committing transaction
 

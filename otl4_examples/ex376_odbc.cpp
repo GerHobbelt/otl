@@ -18,7 +18,7 @@ void insert()
 // insert rows into table
 { 
  otl_stream o;
- o.setBufSize(1); // for PG 8.1 and higher, the buffer size > 1
+ o.setBufSize(50); // for PG 8.1 and higher, the buffer size > 1
 
 // Send a message (SQL statement) to the otl_connect object.
  db<<="insert into test_tab values(:f1<int>,:f2<char[31]>)";

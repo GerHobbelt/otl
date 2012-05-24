@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+  <meta http-equiv="content-type"
+ content="text/html; charset=ISO-8859-1">
+  <title>OTL 4.0, Example 732 (Large numbers (larger than signed 64-bit
+int))</title>
+  <meta name="Author" content="Sergei Kuchin">
+  <meta name="GENERATOR"
+ content="Mozilla/3.03Gold (Win95; I) [Netscape]">
+  <meta name="KeyWords"
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+</head>
+<body>
+<h1 align="center">OTL 4.0, Example 732 (Large numbers (larger than
+signed 64-bit int) when using OTL_UNICODE)</h1>
+<p>This example demonstrates how to read/write large numbers from/to a
+table using OTL.<br>
+</p>
+<h2>Source Code</h2>
+<pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
+<pre>#define OTL_ORA9I // Compile OTL 4.0/OCI9i<br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a> // Enable Unicode OTL for OCI9i<br><br>#define <a
+ href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a> wchar_t<br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br>const OTL_UNICODE_CHAR_TYPE* BigNumber=L"12345678901234567890123456789012345678";<br><br>class MyBigNumber{<br>public:<br><br>  MyBigNumber(): val_()<br>  {<br>    val_[0]=0;<br>  }<br><br>  MyBigNumber(const OTL_UNICODE_CHAR_TYPE* str_number): val_()<br>  {<br>    // convert str_number to internal format<br>    toMyBigNumber(str_number);<br>  }<br><br>  void toMyBigNumber(const OTL_UNICODE_CHAR_TYPE* str_number)<br>  {<br>    // convert str_number to internal format<br>    OTL_UNICODE_CHAR_TYPE* c2=&amp;val_[0];   <br>    const OTL_UNICODE_CHAR_TYPE* c1=str_number;<br>    while(*c1)<br>     *c2++=*c1++;<br>    *c2=0;<br>  }<br><br>  void toString(OTL_UNICODE_CHAR_TYPE* str, int str_size) const<br>  {<br>    // convert from internal format to string format<br>    const OTL_UNICODE_CHAR_TYPE* c1=&amp;val_[0];   <br>    OTL_UNICODE_CHAR_TYPE* c2=str;<br>    int str_len=0;<br>    while(*c1 &amp;&amp; str_len&lt;str_size-1){<br>     *c2++=*c1++;<br>     ++str_len;<br>    } <br>    *c2=0;<br>  }<br><br>  ~MyBigNumber(){}<br><br>private:<br><br>  // internal stuff<br>  OTL_UNICODE_CHAR_TYPE val_[60];<br>};<br><br><br>otl_stream&amp; operator&gt;&gt;(otl_stream&amp; s, MyBigNumber&amp; bn)<br>{<br>  OTL_UNICODE_CHAR_TYPE temp_val[60];<br>  s&gt;&gt;temp_val;<br>  for(OTL_UNICODE_CHAR_TYPE* c=temp_val;*c;++c)<br>    cout&lt;&lt;(char)*c;<br>  bn.toMyBigNumber(temp_val);<br>  return s;<br>}<br><br>otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const MyBigNumber&amp; bn)<br>{<br>  OTL_UNICODE_CHAR_TYPE str[60];<br>  bn.toString(str,sizeof(str));<br>  s&lt;&lt;str;<br>  return s;<br>}<br><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{ <br> <a
+ href="otl3_stream_class.htm">otl_stream</a> o(5, // buffer size<br>              "insert into test_tab values(:f1&lt;char[60]&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br> MyBigNumber bn(BigNumber);<br> for(int i=1;i&lt;=10;++i){<br>   o&lt;&lt;bn;<br> }<br>}<br><br>void select()<br>{ <br> <a
+ href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>              "select f1 :#1&lt;char[60]&gt; "<br>              "from test_tab",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br> MyBigNumber bn;<br>   // create select stream<br> while(!i.eof()){ // while not end-of-data<br>   cout&lt;&lt;"F1=";<br>   i&gt;&gt;bn;<br>   cout&lt;&lt;endl;<br> }<br><br>}<br><br>int main()<br>{<br> <a
+ href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize DB API environment<br> try{<br><br>  db.rlogon("scott/tiger"); // connect to database<br><br>  <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "drop table test_tab",<br>    otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>   (<br>    db,<br>    "create table test_tab(f1 number)"<br>    );  // create table<br><br>  insert(); // insert records into table<br>  select(); // select records from table<br><br> }<br><br> catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from database<br><br> return 0;<br><br>}<br></pre>
+<h2>Output</h2>
+<pre>F1=12345678901234567890123456789012345678<br>F1=12345678901234567890123456789012345678<br>F1=12345678901234567890123456789012345678<br>F1=12345678901234567890123456789012345678<br>F1=12345678901234567890123456789012345678<br>F1=12345678901234567890123456789012345678<br>F1=12345678901234567890123456789012345678<br>F1=12345678901234567890123456789012345678<br>F1=12345678901234567890123456789012345678<br>F1=12345678901234567890123456789012345678<br><hr
+ width="100%"></pre>
+<center>
+<p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+<a href="home.htm">Go Home</a> </p>
+</center>
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>
+<script language="JavaScript"><!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script>.</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE. </i></p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

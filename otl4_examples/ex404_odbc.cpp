@@ -3,8 +3,11 @@
 #include <iterator>
 #include <string>
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #define OTL_STL // Turn on STL features
 #if !defined(OTL_ANSI_CPP) 
 #define OTL_ANSI_CPP // Turn on ANSI C++ typecasts
@@ -22,16 +25,14 @@ public:
  string f2;
 
 // default constructor
- row(){f1=0;}
+  row(): f1(0), f2(){}
 
 // destructor
  ~row(){}
 
 // copy constructor
- row(const row& arow)
+  row(const row& arow): f1(arow.f1), f2(arow.f2)
  {
-  f1=arow.f1;
-  f2=arow.f2;
  }
  
 // assignment operator
@@ -84,7 +85,7 @@ void insert()
   vo.push_back(r);
  }
 
- cout<<"vo.size="<<(int)vo.size()<<endl;
+ cout<<"vo.size="<<static_cast<int>(vo.size())<<endl;
 
 // insert vector into table
  copy(vo.begin(), 
@@ -117,7 +118,7 @@ void select()
       otl_input_iterator<row,ptrdiff_t>(),
       back_inserter(v));    
 
- cout<<"Size="<<(int)v.size()<<endl;
+ cout<<"Size="<<static_cast<int>(v.size())<<endl;
 
 // send the vector to cout
  copy(v.begin(), v.end(), ostream_iterator<row>(cout, "\n"));
@@ -134,7 +135,7 @@ void select()
       otl_input_iterator<row,ptrdiff_t>(),
       back_inserter(v));    
 
- cout<<"Size="<<(int)v.size()<<endl;
+ cout<<"Size="<<static_cast<int>(v.size())<<endl;
 
 // send the vector to cout
  copy(v.begin(), v.end(), ostream_iterator<row>(cout, "\n"));

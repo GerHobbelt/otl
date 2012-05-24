@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="Content-Type">
+  <meta content="Sergei Kuchin" name="Author">
+  <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
+ name="GENERATOR">
+  <meta
+ content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library"
+ name="KeyWords">
+  <title>OTL 4.0, Example 728 (MERGE statement, MS SQL)</title>
+</head>
+<body>
+<center>
+<h1>OTL 4.0, Example 728 (MERGE statement, MS SQL)</h1>
+</center>
+This example demonstrates simple INSERT/MERGE/SELECT with MS SQL.
+<h2>Source Code</h2>
+<pre>#include &lt;iostream&gt;<br>#include &lt;stdio.h&gt;<br>using namespace std;<br><br>#define OTL_ODBC_MSSQL_2008 // Compile OTL 4.0/MS SQL SNAC<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><pre><br><a
+ href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert(void)<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(10, // stream buffer size in logical rows.<br>              "insert into test_tab "<br>              "values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // INSERT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>  o&lt;&lt;1&lt;&lt;"Line1";<br>  o&lt;&lt;2&lt;&lt;"Line21";<br>  o.flush();<br>}<br><br><pre>void merge(void)<br>// merge rows into table<br>{&nbsp;<br>&nbsp;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(10, // stream buffer size in logical rows.<br>              "merge into test_tab as d  "<br>              "using (select cast(:f1&lt;int&gt; as int) f1,  "<br>              "              cast(:f2&lt;char[31]&gt; as varchar(30)) f2) s  "<br>              "on (s.f1=d.f1)  "<br>              "when matched then update set f2=s.f2+'--'+convert(varchar,s.f1)  "<br>              "when not matched then insert (f1,f2) values(s.f1,s.f2);",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // MERGE statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>  o&lt;&lt;2&lt;&lt;"Line22";<br>  o&lt;&lt;3&lt;&lt;"Line3";<br>  o.flush();<br>}<br></pre><br>void select(void)<br>{&nbsp;<br>&nbsp;otl_stream i(5, // stream buffer size in logical rows<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab ",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>// SELECT output columns<br>&nbsp;int f1;<br>&nbsp;char f2[31];<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br>&nbsp;}<br>&nbsp;<br>}</pre><br><pre>int main()<br>{<br>&nbsp;<a
+ href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize DB API environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tiger@mssql2008"); // connect to the database<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a
+ href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab (f1 int, f2 varchar(30))"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>  db&lt;&lt;"create unique index ind001 on test_tab(f1)";<br>     // create unique index<br><br>&nbsp; insert(); // insert records into table<br>  merge(); // merge records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
+ href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from the database<br><br>&nbsp;return 0;<br><br>}</pre><br><span
+ style="font-weight: bold;">Output</span><br><pre>f1=1, f2=Line1<br>f1=2, f2=Line22--2<br>f1=3, f2=Line3<br><hr
+ width="100%"></pre></pre>
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com
+</a>.</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for any purpose is hereby granted without fee, provided that the above
+copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
+AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
+INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i> </p>
+<pre></pre>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

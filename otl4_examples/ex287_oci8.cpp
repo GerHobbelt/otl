@@ -3,7 +3,9 @@ using namespace std;
 
 #include <stdio.h>
 
+#if !defined(ORA_VER_DEFINED)
 #define OTL_ORA8I // Compile OTL 4.0/OCI8i
+#endif
 //#define OTL_ORA9I // Compile OTL 4.0/OCI9i
 //#define OTL_ORA10G // Compile OTL 4.0/OCI10g
 #define OTL_UNICODE // Enable Unicode support

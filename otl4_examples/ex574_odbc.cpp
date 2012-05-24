@@ -100,6 +100,15 @@ public:
     buf[len]=0;
   }
 
+  void append(char* temp_buf, int len)
+  {
+    size_t cur_len=length();
+    for(int i=0;i<len;++i)
+      buf[cur_len+i]=temp_buf[i];
+    buf[cur_len+len]=0;
+  }
+
+
   char& operator[](int ndx)
   {
     return buf[ndx];
@@ -123,8 +132,11 @@ ostream& operator<<(ostream& s,const user_defined_string& str)
   return s;
 }
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #define OTL_USER_DEFINED_STRING_CLASS_ON
 #define USER_DEFINED_STRING_CLASS user_defined_string
 #include <otlv4.h> // include the OTL 4.0 header file
@@ -174,8 +186,8 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
-  cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[(int)f2.length()-1]<<", len="
-      <<(int)f2.length()<<endl;
+  cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[static_cast<int>(f2.length())-1]<<", len="
+      <<static_cast<int>(f2.length())<<endl;
  }
 
  i<<4<<4; // assigning :f11 = 4, :f12 = 4
@@ -184,8 +196,8 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
-  cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[(int)f2.length()-1]<<", len="
-      <<(int)f2.length()<<endl;
+  cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[static_cast<int>(f2.length())-1]<<", len="
+      <<static_cast<int>(f2.length())<<endl;
  }
 
 }

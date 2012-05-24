@@ -3,8 +3,11 @@ using namespace std;
 
 #include <stdio.h>
 
+#if !defined(_WIN32) && !defined(_WIN64) && !defined(__CYGWIN__)
+#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#else 
 #define OTL_ODBC
-//#define OTL_ODBC_UNIX // Compile OTL 4.0/ODBC
+#endif
 #define OTL_STRICT_NUMERIC_TYPE_CHECK_ON_SELECT
 #include <otlv4.h> // include the OTL 4.0 header file
 

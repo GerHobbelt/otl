@@ -1,8 +1,8 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
 <head>
   <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
+ content="text/html; charset=ISO-8859-1">
   <meta name="Author" content="Sergei Kuchin">
   <meta name="GENERATOR"
  content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
@@ -24,7 +24,7 @@ This example demonstrates the otl_stream with NULLs.
  href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a><br>#else <br>#define <a
  href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a> // required with PG ODBC on Windows<br>#endif<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
  href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
- href="otl3_stream_class.htm">otl_stream</a> o(1, // PostgreSQL 8.1 and higher, the buffer can be &gt; 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;float&gt;,:f2&lt;char[31]&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;char tmp[32];<br><br>&nbsp;for(int i=1;i&lt;=100;++i){<br>&nbsp; sprintf(tmp,"Name%d",i);<br>&nbsp; if(i==10)<br>&nbsp;&nbsp; o&lt;&lt;(float)i&lt;&lt;<a
+ href="otl3_stream_class.htm">otl_stream</a> o(50, // PostgreSQL 8.1 and higher, the buffer can be &gt; 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;float&gt;,:f2&lt;char[31]&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;char tmp[32];<br><br>&nbsp;for(int i=1;i&lt;=100;++i){<br>&nbsp; sprintf(tmp,"Name%d",i);<br>&nbsp; if(i==10)<br>&nbsp;&nbsp; o&lt;&lt;(float)i&lt;&lt;<a
  href="otl3_stream_class.htm#otl_null">otl_null</a>();<br>&nbsp; else<br>&nbsp;&nbsp; o&lt;&lt;(float)i&lt;&lt;tmp;<br>&nbsp;}<br>}<br><br>void select()<br>{&nbsp;<br>&nbsp;<a
  href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab where f1&gt;=:f11&lt;int&gt; and f1&lt;=:f12&lt;int&gt;*2",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;float f1;<br>&nbsp;char f2[31];<br><br>&nbsp;i&lt;&lt;8&lt;&lt;8; // assigning :f11 = 8, :f12=8<br>&nbsp;&nbsp; // SELECT automatically executes when all input variables are<br>&nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1;<br>&nbsp; if(i.is_null())<br>&nbsp;&nbsp; cout&lt;&lt;"f1=NULL,";<br>&nbsp; else<br>&nbsp;&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;",";<br>&nbsp; i&gt;&gt;f2;<br>&nbsp; if(i.is_null())<br>&nbsp;&nbsp; cout&lt;&lt;"f2=NULL";<br>&nbsp; else<br>&nbsp;&nbsp; cout&lt;&lt;"f2="&lt;&lt;f2;<br>&nbsp; cout&lt;&lt;endl;<br>&nbsp;}<br><br>}<br><br>int main()<br>{<br>&nbsp;<a
  href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("UID=scott;PWD=tiger;DSN=postgresql"); // connect to ODBC<br>//&nbsp; db.rlogon("scott/tiger@postgresql"); // connect to ODBC, alternative format<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of connect string&nbsp;<br>&nbsp; <a
@@ -38,8 +38,8 @@ Output</h2>
 <center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
  href="home.htm">Go
 Home</a></center>
-<p>Copyright &copy; 1996-2009, Sergei Kuchin, email: <a
- href="mailto:skuchin@aceweb.com">skuchin@aceweb.com</a>,
+<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+ href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
@@ -52,7 +52,14 @@ Home</a></center>
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i>
 </p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
