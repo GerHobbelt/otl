@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.265,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.268,
 // Copyright (C) 1996-2012, Sergei Kuchin (skuchin@gmail.com)
 // 
 // This library is free software. Permission to use, copy, modify,
@@ -26,7 +26,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x040109L)
+#define OTL_VERSION_NUMBER (0x04010CL)
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1600) || \
    (defined(__GNUC__) && (__GNUC__>=4) && defined(__GNUC_MINOR__) &&     \
@@ -308,6 +308,8 @@ OTL_NUMERIC_TYPE_2 macros are already defined
      strcmp(type_arr,"LONG")==0||               \
      strcmp(type_arr,"FLOAT")==0||              \
      strcmp(type_arr,"DOUBLE")==0||             \
+     strcmp(type_arr,"BFLOAT")==0||             \
+     strcmp(type_arr,"BDOUBLE")==0||            \
      strcmp(type_arr,"TIMESTAMP")==0||          \
      strcmp(type_arr,"TZ_TIMESTAMP")==0||       \
      strcmp(type_arr,"LTZ_TIMESTAMP")==0||      \
@@ -339,6 +341,8 @@ OTL_NUMERIC_TYPE_2 macros are already defined
      strcmp(type_arr,"LONG")==0||               \
      strcmp(type_arr,"FLOAT")==0||              \
      strcmp(type_arr,"DOUBLE")==0||             \
+     strcmp(type_arr,"BFLOAT")==0||             \
+     strcmp(type_arr,"BDOUBLE")==0||            \
      strcmp(type_arr,"TIMESTAMP")==0||          \
      strcmp(type_arr,"TZ_TIMESTAMP")==0||       \
      strcmp(type_arr,"LTZ_TIMESTAMP")==0||      \
@@ -370,6 +374,8 @@ OTL_NUMERIC_TYPE_2 macros are already defined
      strcmp(type_arr,"LONG")==0||               \
      strcmp(type_arr,"FLOAT")==0||              \
      strcmp(type_arr,"DOUBLE")==0||             \
+     strcmp(type_arr,"BFLOAT")==0||             \
+     strcmp(type_arr,"BDOUBLE")==0||            \
      strcmp(type_arr,"TIMESTAMP")==0||          \
      strcmp(type_arr,"TZ_TIMESTAMP")==0||       \
      strcmp(type_arr,"LTZ_TIMESTAMP")==0||      \
@@ -400,6 +406,8 @@ OTL_NUMERIC_TYPE_2 macros are already defined
      strcmp(type_arr,"LONG")==0||               \
      strcmp(type_arr,"FLOAT")==0||              \
      strcmp(type_arr,"DOUBLE")==0||             \
+     strcmp(type_arr,"BFLOAT")==0||             \
+     strcmp(type_arr,"BDOUBLE")==0||            \
      strcmp(type_arr,"TIMESTAMP")==0||          \
      strcmp(type_arr,"TZ_TIMESTAMP")==0||       \
      strcmp(type_arr,"LTZ_TIMESTAMP")==0||      \
@@ -2508,6 +2516,8 @@ const int otl_var_numeric_type_2=25;
 const int otl_var_numeric_type_3=26;
 #endif
 const int otl_var_ubigint=27;
+const int otl_var_bfloat=28;
+const int otl_var_bdouble=29;
 
 const int otl_var_lob_stream=100;
 
@@ -2825,6 +2835,8 @@ inline const char* otl_var_type_name(const int ftype)
   const char* const_CHAR="CHAR";
   const char* const_DOUBLE="DOUBLE";
   const char* const_FLOAT="FLOAT";
+  const char* const_BDOUBLE="BINARY_DOUBLE";
+  const char* const_BFLOAT="BINARY_FLOAT";
   const char* const_INT="INT";
   const char* const_UNSIGNED_INT="UNSIGNED INT";
   const char* const_SHORT_INT="SHORT INT";
@@ -2863,6 +2875,10 @@ inline const char* otl_var_type_name(const int ftype)
     return const_DOUBLE;
   case otl_var_float:
     return const_FLOAT;
+  case otl_var_bfloat:
+    return const_BFLOAT;
+  case otl_var_bdouble:
+    return const_BDOUBLE;
   case otl_var_int:
     return const_INT;
   case otl_var_unsigned_int:
@@ -3534,6 +3550,12 @@ inline int otl_numeric_convert_T2(const int ftype,const void* val,T& n)
   case otl_var_float:
     n=OTL_PCONV(T,float,val);
     break;
+  case otl_var_bfloat:
+    n=OTL_PCONV(T,float,val);
+    break;
+  case otl_var_bdouble:
+    n=OTL_PCONV(T,double,val);
+    break;
 #if defined(OTL_BIGINT)
   case otl_var_bigint:
     n=OTL_PCONV(T,OTL_BIGINT,val);
@@ -3592,6 +3614,12 @@ inline int otl_numeric_convert_T(const int ftype,const void* val,T& n)
     break;
   case otl_var_float:
     n=OTL_PCONV(T,float,val);
+    break;
+  case otl_var_bfloat:
+    n=OTL_PCONV(T,float,val);
+    break;
+  case otl_var_bdouble:
+    n=OTL_PCONV(T,double,val);
     break;
 #if defined(OTL_BIGINT)
   case otl_var_bigint:
@@ -6571,6 +6599,12 @@ private:
             data_len=pdb->get_max_long_size();
           else
             data_len=0;
+        }else if(t2=='F'){
+          data_type=otl_var_bfloat;
+          data_len=sizeof(float);
+        }else if(t2=='D'){
+          data_type=otl_var_bdouble;
+          data_len=sizeof(double);
         }
 #if defined(OTL_BIGINT)
         else if(t2=='I'){
@@ -6857,6 +6891,16 @@ private:
                     &adb.get_connect_struct(),
                     pl_tab_flag);
 #endif
+          else if(t2=='F')
+            v->init(false,otl_var_bfloat,
+                    sizeof(float),
+                    OTL_SCAST(otl_stream_buffer_size_type,array_size),
+                    &adb.get_connect_struct(),pl_tab_flag);
+          else if(t2=='D')
+            v->init(false,otl_var_bdouble,
+                    sizeof(double),
+                    OTL_SCAST(otl_stream_buffer_size_type,array_size),
+                    &adb.get_connect_struct(),pl_tab_flag);
           break;
 #if defined(OTL_ORA_UNICODE)||defined(OTL_ORA_UTF8)
         case 'N':
@@ -9428,6 +9472,10 @@ otl_uncaught_exception()){
    switch(this->vl[cur_x]->get_ftype()){
    case otl_var_char:
      if(type_code==otl_var_char)return 1;
+   case otl_var_bfloat:
+     if(type_code==otl_var_float)return 1;
+   case otl_var_bdouble:
+     if(type_code==otl_var_double)return 1;
    case otl_var_db2time:
    case otl_var_tz_timestamp:
    case otl_var_ltz_timestamp:
@@ -10057,7 +10105,23 @@ otl_uncaught_exception()){
                                       vec.get_p_v()))[0]),
                sizeof(double)*tmp_len);
       break;
+    case otl_var_bdouble:
+      if(tmp_len>0)
+        memcpy(OTL_RCAST(char*,this->vl[cur_x]->val()),
+               OTL_RCAST(char*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<double>*,
+                                      vec.get_p_v()))[0]),
+               sizeof(double)*tmp_len);
+      break;
     case otl_var_float:
+      if(tmp_len>0)
+        memcpy(OTL_RCAST(char*,this->vl[cur_x]->val()),
+               OTL_RCAST(char*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<float>*,
+                                      vec.get_p_v()))[0]),
+               sizeof(float)*tmp_len);
+      break;
+    case otl_var_bfloat:
       if(tmp_len>0)
         memcpy(OTL_RCAST(char*,this->vl[cur_x]->val()),
                OTL_RCAST(char*,
@@ -10745,6 +10809,12 @@ public:
     case otl_var_char:
       if(type_code==otl_var_char)
         return 1;
+    case otl_var_bdouble:
+      if(type_code==otl_var_double)
+        return 1;
+    case otl_var_bfloat:
+      if(type_code==otl_var_float)
+        return 1;
     default:
       if(in_vl[cur_in_x]->get_ftype()==type_code &&
          in_vl[cur_in_x]->get_elem_size()==tsize)
@@ -11042,7 +11112,21 @@ public:
                OTL_RCAST(char*,in_vl[cur_in_x]->val()),
                sizeof(double)*tmp_len);
         break;
+      case otl_var_bdouble:
+        memcpy(OTL_RCAST(char*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<double>*,
+                                      vec.get_p_v()))[0]),
+               OTL_RCAST(char*,in_vl[cur_in_x]->val()),
+               sizeof(double)*tmp_len);
+        break;
       case otl_var_float:
+        memcpy(OTL_RCAST(char*,
+                         &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<float>*,
+                                      vec.get_p_v()))[0]),
+               OTL_RCAST(char*,in_vl[cur_in_x]->val()),
+               sizeof(float)*tmp_len);
+        break;
+      case otl_var_bfloat:
         memcpy(OTL_RCAST(char*,
                          &(*OTL_RCAST(STD_NAMESPACE_PREFIX vector<float>*,
                                       vec.get_p_v()))[0]),
@@ -13007,6 +13091,11 @@ public:
   void set_nls_flag(const bool){}
 #endif
 
+  void reset_lob_len()
+  {
+    lob_len=0;
+  }
+
   int get_otl_adapter() const {return otl_adapter;}
 
   void set_lob_stream_mode(const bool alob_stream_mode)
@@ -13683,7 +13772,13 @@ to function
    case otl_var_double:
     elem_size=sizeof(double);
     break;
+   case otl_var_bdouble:
+    elem_size=sizeof(double);
+    break;
    case otl_var_float:
+    elem_size=sizeof(float);
+    break;
+   case otl_var_bfloat:
     elem_size=sizeof(float);
     break;
    case otl_var_int:
@@ -16049,9 +16144,15 @@ private:
   char* temp_char_buf;
   bool written_to_flag;
   bool closed_flag;
+  int last_read_lob_len;
 
 public:
-  
+
+  void reset_last_read_lob_len()
+  {
+    last_read_lob_len=0;
+  }
+
  void init
  (void* avar,void* aconnect,void* acursor,
   int andx,int amode,const int alob_is_null=0)
@@ -16083,8 +16184,10 @@ public:
   lob_len=0;
   eof_flag=0;
   in_destructor=0;
-  if(bind_var)
+  if(bind_var){
     bind_var->get_var_struct().set_lob_stream_flag();
+    bind_var->get_var_struct().reset_lob_len();
+  }
  }
 
  void set_len(void) OTL_NO_THROW
@@ -16103,7 +16206,8 @@ public:
    temp_buf(nullptr),
    temp_char_buf(nullptr),
    written_to_flag(false),
-   closed_flag(false)
+   closed_flag(false),
+   last_read_lob_len(0)  
  {
   init(nullptr,nullptr,nullptr,0,otl_lob_stream_zero_mode);
  }
@@ -16186,6 +16290,8 @@ public:
    OTL_THROWS_OTL_EXCEPTION
  {
    bool in_unicode_mode=sizeof(OTL_CHAR)>1;
+   if(bind_var && bind_var->get_ftype()==otl_var_raw_long)
+     in_unicode_mode=false;
    if(s.get_unicode_flag() != in_unicode_mode){
      throw OTL_TMPL_EXCEPTION
        (otl_error_msg_37,
@@ -16245,6 +16351,8 @@ public:
    OTL_THROWS_OTL_EXCEPTION
  {
    bool in_unicode_mode=sizeof(OTL_CHAR)>1;
+   if(bind_var && bind_var->get_ftype()==otl_var_raw_long)
+     in_unicode_mode=false;
    if(s.get_unicode_flag() != in_unicode_mode){
      throw OTL_TMPL_EXCEPTION
        (otl_error_msg_37,
@@ -16285,6 +16393,7 @@ public:
    if(offset==0)offset=1;
    retcode=bind_var->get_var_struct().read_blob
      (cursor->get_cursor_struct(),s,ndx,offset,eof_flag);
+   len();
    if(retcode){
      if(eof())
        close();
@@ -16308,11 +16417,16 @@ public:
 
  int len(void) OTL_THROWS_OTL_EXCEPTION
  {
-  if(cursor==nullptr||connect==nullptr||
-     bind_var==nullptr||lob_is_null)return 0;
-  int alen;
+   if(last_read_lob_len>0)
+     return last_read_lob_len;
+   if(cursor==nullptr||connect==nullptr||
+      bind_var==nullptr||lob_is_null)return 0;
+   int alen;
   retcode=bind_var->get_var_struct().get_blob_len(ndx,alen);
-  if(retcode)return alen;
+  if(retcode){
+    last_read_lob_len=alen;
+    return alen;
+  }
   if(this->connect)this->connect->increment_throw_count();
   if(this->connect&&this->connect->get_throw_count()>1)return 0;
   if(otl_uncaught_exception()) return 0; 
@@ -16395,7 +16509,8 @@ private:
    temp_buf(nullptr),
    temp_char_buf(nullptr),
    written_to_flag(false),
-   closed_flag(false)
+   closed_flag(false),
+   last_read_lob_len(0)  
  {
  }
 
@@ -17451,6 +17566,7 @@ public:
      (*io)->operator>>(s);
      break;
    case otl_odbc_select_stream:
+     s.reset_last_read_lob_len();
      last_eof_rc=(*ss)->eof();
      (*ss)->operator>>(s);
      break;
@@ -20185,7 +20301,13 @@ public:
    case otl_var_double:
      elem_size=sizeof(double);
      break;
+   case otl_var_bdouble:
+     elem_size=sizeof(double);
+     break;
    case otl_var_float:
+     elem_size=sizeof(float);
+     break;
+   case otl_var_bfloat:
      elem_size=sizeof(float);
      break;
    case otl_var_int:
@@ -27369,7 +27491,11 @@ public:
     &&!defined(OTL_ORA_LEGACY_NUMERIC_TYPES)
   case otl_var_double:
     return extBDouble;
+  case otl_var_bdouble:
+    return extBDouble;
   case otl_var_float:
+    return extBFloat;
+  case otl_var_bfloat:
     return extBFloat;
 #else
   case otl_var_double:
@@ -28361,6 +28487,8 @@ public:
    OTL_THROWS_OTL_EXCEPTION
  {
    bool in_unicode_mode=sizeof(OTL_CHAR)>1;
+   if(bind_var && bind_var->get_ftype()==otl_var_blob)
+     in_unicode_mode=false;
    if(s.get_unicode_flag() != in_unicode_mode){
      throw OTL_TMPL_EXCEPTION
        (otl_error_msg_37,
@@ -28466,6 +28594,8 @@ public:
    OTL_THROWS_OTL_EXCEPTION
  {
    bool in_unicode_mode=sizeof(OTL_CHAR)>1;
+   if(bind_var && bind_var->get_ftype()==otl_var_blob)
+     in_unicode_mode=false;
    if(s.get_unicode_flag() != in_unicode_mode){
      throw OTL_TMPL_EXCEPTION
        (otl_error_msg_37,
@@ -31653,7 +31783,7 @@ public:
   const char* sqlstm,
   const char* acur_placeholder,
   otl_connect& db,
-  const char* sqlstm_label=0)
+  const char* sqlstm_label=nullptr)
    :otl_ref_cursor
     (db,
      acur_placeholder,
@@ -33217,6 +33347,8 @@ protected:
   out_buf[0]=0;
   if(strcmp(datatype,"BINARY_INTEGER")==0||
      strcmp(datatype,"NATIVE INTEGER")==0||
+     strcmp(datatype,"BINARY_FLOAT")==0||
+     strcmp(datatype,"BINARY_DOUBLE")==0||
      strcmp(datatype,"FLOAT")==0||
      strcmp(datatype,"NUMBER")==0){
    switch(all_num2type){
@@ -33240,6 +33372,12 @@ protected:
     break;
    case otl_var_short:
     OTL_STRCPY_S(out_buf,out_buf_sz,"short");
+    break;
+   case otl_var_bfloat:
+    OTL_STRCPY_S(out_buf,out_buf_sz,"bfloat");
+    break;
+   case otl_var_bdouble:
+    OTL_STRCPY_S(out_buf,out_buf_sz,"bdouble");
     break;
    default:
     break;

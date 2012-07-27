@@ -110,6 +110,30 @@
 and
 OTL
 example
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <a href="otl4_ex675.htm">675</a>.<br>
           </td>
         </tr>
@@ -227,6 +251,17 @@ example
           <td style="vertical-align: top;">for <a
               href="http://www.borland.com/devsupport/interbase/opensource/">Interbase</a>
             6.x via <a href="http://www.xtgsystems.com/">XTG Systems'</a>&nbsp;
+
+
+
+
+
+
+
+
+
+
+
             <a href="http://www.xtgsystems.com/ib6odbc.php3">ODBC driver</a>.
             The reason for introducing this #define is that the ODBC
             driver is the only Open Source ODBC driver for Interbase.
@@ -315,6 +350,17 @@ example
             with Adaptive Communication Environment (<a
               href="http://www.cs.wustl.edu/%7Eschmidt/ACE.html">ACE</a>)).
 This
+
+
+
+
+
+
+
+
+
+
+
             #defines makes OTL compile with ACE. Most features of OTL,
             which require #define OTL_STL to be on, compile with ACE,
             except for <a href="otl3_output_iterator.htm">otl_output_iterator</a>,
@@ -678,15 +724,59 @@ This
               std::exception</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">#define <a
                 href="#OTL_EXCEPTION_HAS_MEMBERS">OTL_EXCEPTION_HAS_MEMBERS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
               virtual const char* what()
               const&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
               {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
+
+
+
+
               return reinterpret_cast&lt;const
               char*&gt;(msg);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               \</span><br style="font-family: monospace;">
@@ -779,6 +869,17 @@ This
                 _EXCEPTION</b>&nbsp;</font></td>
           <td style="vertical-align: top;">(for enabling the
             otl_exception's <a href="otl3_exception_class.htm#EXTENDED">extended
+
+
+
+
+
+
+
+
+
+
+
               fields</a> for OTL/ODBC and OTL/DB2-CLI). This is for
             fixing problem <a href="otl3_prob.htm#prob47">47.</a> </td>
         </tr>

@@ -75,8 +75,14 @@
 
 
 
+
+
+
             (2) <a href="otl3_compile.htm#OTL_BIGINT_TO_STR">OTL_BIGINT_TO_STR,</a>&nbsp;
 (3)
+
+
+
 
 
 
@@ -113,7 +119,46 @@
         </tr>
         <tr>
           <td style="vertical-align: top;"><a name="blob"></a><b>blob</b></td>
-          <td style="vertical-align: top;">for Oracle 8 and higer; BLOB</td>
+          <td style="vertical-align: top;">for Oracle 8 and higher; BLOB</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-weight:
+              bold;"><a name="bdouble"></a>bdouble</span><br>
+          </td>
+          <td style="vertical-align: top;">Same as <a href="#double">double</a>
+            for OTL/OCI10 and higher. Should only be used when <a
+              href="otl3_bind_variables.htm#pl_tab">PL/SQL tables</a> of
+            type BINARY_DOUBLE are used. bdouble is actually a
+            workaround for the following Oracle error: <span
+              style="font-style: italic;">PLS-00418: array bind type
+              must match PL/SQL table row type. </span>Normally, the
+            internal OCI data type that is used to bind BINARY_DOUBLE
+            table columns / scalar PL/SQL procedure parameters works
+            fine, except for PL/SQL tables of BINARY_DOUBLE. PL/SQL
+            engine does not like what OTL tries to bind with a PL/SQL
+            table of BINARY_DOUBLE. bdouble should be used instead of
+            double in cases like that.<span style="font-style: italic;"><br>
+            </span></td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-weight:
+              bold;"><a name="bfloat"></a>bfloat</span><br>
+          </td>
+          <td style="vertical-align: top;">Same as <a href="#float">float</a>
+            for OTL/OCI10 and higher. Should only be used when <a
+              href="file:///C:/oscl/vc/doc/otl4/otl3_bind_variables.htm#pl_tab">PL/SQL
+
+
+              tables</a> of type BINARY_FLOAT are used. bfloat is
+            actually a workaround for the following Oracle error: <span
+              style="font-style: italic;">PLS-00418: array bind type
+              must match PL/SQL table row type. </span>Normally, the
+            internal OCI data type that is used to bind BINARY_FLOAT
+            table columns / scalar PL/SQL procedure parameters works
+            fine, except for PL/SQL tables of BINARY_FLOAT. PL/SQL
+            engine does not like what OTL tries to bind with a PL/SQL
+            table of BINARY_FLOAT. bfloat should be used instead of
+            float in cases like that.</td>
         </tr>
         <tr>
           <td style="vertical-align: top;"><a name="char"></a><b>char[</b>length<b>]<br>
@@ -134,6 +179,9 @@
 
 
 
+
+
+
             this type of bind variable declaration means a null
             terminated Unicode character string (two bytes per
             character). The <i>length </i>field of this declaration
@@ -150,6 +198,9 @@
             <br>
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 "INSERT
+
+
+
 
 
 
@@ -188,6 +239,9 @@
 
 
 
+
+
+
               tables</a> of type CHAR(XXX) are used. charz is actually a
             workaround for the following Oracle error: <span
               style="font-style: italic;">PLS-00418: array bind type
@@ -197,6 +251,9 @@
             fine, except for PL/SQL tables of CHAR(XXX). PL/SQL engine
             does not like what OTL tries to bind with a PL/SQL table of
             CHAR(XXX). <span style="font-style: italic;">charz[] </span>should
+
+
+
 
 
 
@@ -229,11 +286,11 @@
             for more detail.</td>
         </tr>
         <tr>
-          <td style="vertical-align: top;"><b>double</b></td>
+          <td style="vertical-align: top;"><b><a name="double"></a>double</b></td>
           <td style="vertical-align: top;">8-byte floating point number</td>
         </tr>
         <tr>
-          <td style="vertical-align: top;"><b>float&nbsp;</b></td>
+          <td style="vertical-align: top;"><b><a name="float"></a>float&nbsp;</b></td>
           <td style="vertical-align: top;">4-byte floating point number</td>
         </tr>
         <tr>
@@ -305,6 +362,9 @@ Oracle
 
 
 
+
+
+
             8i/9i/10g only, under #define <a
               href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>., or
             #define <a href="otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>.
@@ -321,6 +381,9 @@ Oracle
 href="file:///D%7C/oscl/vc/doc/otl4/otl3_connect_class.htm#set_character_set">set_character_set(</a>SQLCS_NCHAR)
 for
 Oracle
+
+
+
 
 
 
@@ -468,6 +531,9 @@ colon
 
 
 
+
+
+
               (":") literals into SQL statements in OTL/ODBC</font></b></font></b></h3>
     <p>Informix Call Level Interface (CLI) can be used in a combination
       with OTL/ODBC. Informix SQL allows colons (":") as legitimate
@@ -475,6 +541,9 @@ colon
       to embed colon literal into such SQL statements. The following
       notation can be used for embedding colons into SQL statements
       under OTL/ODBC: "<span style="font-family: monospace;">\\:</span>".
+
+
+
 
 
 
@@ -506,9 +575,15 @@ colon
 
 
 
+
+
+
       and <a href="otl3_stream_class.htm#set_all_column_types">otl_stream::set_all_column_types</a>()
 function
 calls.
+
+
+
 
 
 
@@ -601,9 +676,15 @@ calls.
 
 
 
+
+
+
       <br>
       &nbsp;&nbsp;&nbsp;&nbsp; s(50,<br>
     </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
 
 
 
@@ -641,9 +722,15 @@ calls.
 
 
 
+
+
+
       <br>
       &nbsp;&nbsp;&nbsp;&nbsp; s(50,<br>
     </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
 
 
 
@@ -659,6 +746,9 @@ calls.
     </span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 "&nbsp;&nbsp;
 :#1&lt;int,out&gt;
+
+
+
 
 
 
@@ -686,6 +776,9 @@ calls.
           tables (OTL/OCIx)</font></b></h3>
     OTL 3.x/OCIx, release OTL 3.1.0 and higher, supports PL/SQL tables
     via the otl_stream class and special <a href="otl3_pl_tab.htm">template
+
+
+
 
 
 
