@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.268,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.272,
 // Copyright (C) 1996-2012, Sergei Kuchin (skuchin@gmail.com)
 // 
 // This library is free software. Permission to use, copy, modify,
@@ -26,7 +26,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x04010CL)
+#define OTL_VERSION_NUMBER (0x040110L)
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1600) || \
    (defined(__GNUC__) && (__GNUC__>=4) && defined(__GNUC_MINOR__) &&     \
@@ -164,10 +164,16 @@ s.month<<"/"<<s.day<<"/"<<s.year                                \
 
 #if defined(OTL_ORA11G)
 #define OTL_ORA10G_R2
+#if defined(OTL_UNICODE)
+#define OTL_ORA_UNICODE_LONG_LENGTH_IN_BYTES
+#endif
 #endif
 
 #if defined(OTL_ORA11G_R2)
 #define OTL_ORA10G_R2
+#if defined(OTL_UNICODE)
+#define OTL_ORA_UNICODE_LONG_LENGTH_IN_BYTES
+#endif
 #endif
 
 #if defined(OTL_STREAM_LEGACY_BUFFER_SIZE_TYPE)
@@ -239,6 +245,9 @@ typedef int otl_stream_buffer_size_type;
 #if defined(OTL_ORA10G)||defined(OTL_ORA10G_R2)
 #define  OTL_ORA9I
 #define OTL_ORA_NATIVE_TYPES
+#if defined(OTL_UNICODE)
+#define OTL_ORA_UNICODE_LONG_LENGTH_IN_BYTES
+#endif
 #endif
 
 #if defined(OTL_ORA9I)
@@ -1242,7 +1251,7 @@ OTL_SCAST(_to,*OTL_RCAST(_from*,OTL_CCAST(void*,_val)))
 #if defined(OTL_ACE)
 
 #include <ace/SString.h>
-#include <ace/Array.h>
+#include <ace/Containers_T.h>
 #include <ace/Null_Mutex.h>
 #include <ace/Functor.h>
 #include <ace/RB_Tree.h>
@@ -1433,10 +1442,19 @@ inline bool otl_uncaught_exception()
 
 // ====== COMMON NON-TEMPLATE OBJECTS: CONSTANTS, CLASSES, ETC. ===========
 
+#if defined(OTL_INITIAL_VAR_LIST_SIZE)
+
+const int otl_var_list_size=OTL_INITIAL_VAR_LIST_SIZE;
+
+#else
+
 #if defined(OTL_ORA8)
 const int otl_var_list_size=1024;
 #else
 const int otl_var_list_size=512;
+
+#endif
+
 #endif
 
 const int otl_error_code_0=32000;
@@ -1885,7 +1903,7 @@ public:
   
   void add_override(const int andx, const int atype, const int asize=0)
   {
-    if(len==otl_var_list_size){
+    if(len==container_size_){
       int temp_container_size=container_size_;
       container_size_*=2;
       short int* temp_col_ndx=nullptr;
@@ -8163,7 +8181,13 @@ public:
       break;
     case otl_var_varchar_long:
       if(!eof_intern()){
+#if defined(OTL_ORA_UNICODE_LONG_LENGTH_IN_BYTES)
+        int source_len=sl[cur_col].get_var_struct().get_len(this->cur_row);
+        OTL_CHAR* source=OTL_RCAST(OTL_CHAR*,sl[cur_col].val(this->cur_row));
+        s.assign(OTL_RCAST(OTL_UNICODE_CHAR_TYPE*,source),source_len);
+#else
         s=OTL_RCAST(OTL_UNICODE_CHAR_TYPE*,sl[cur_col].val(this->cur_row));
+#endif
         look_ahead();
       }
       break;
@@ -8351,10 +8375,18 @@ public:
          int len2=0;
          OTL_CHAR* source=OTL_RCAST(OTL_CHAR*,sl[cur_col].val(this->cur_row));
          OTL_CHAR* target=OTL_RCAST(OTL_CHAR*,s.v);
+#if defined(OTL_ORA_UNICODE_LONG_LENGTH_IN_BYTES)
+         int source_len=sl[cur_col].get_var_struct().get_len(this->cur_row);
+         while(*source && len2<s.get_buf_size() && len2<source_len){
+           *target++=*source++;
+           ++len2;
+         }
+#else
          while(*source && len2<s.get_buf_size()){
            *target++=*source++;
            ++len2;
          }
+#endif
          s.null_terminate_string(len2);
          s.set_len(len2);
          look_ahead();
@@ -9146,7 +9178,7 @@ public:
        this->stm_label=nullptr;
      }
      size_t len=strlen(sqlstm_label)+1;
-     this->stm_label=new char[strlen(sqlstm_label)+1];
+     this->stm_label=new char[len];
      OTL_STRCPY_S(this->stm_label,len,sqlstm_label);
    }
    dirty=0;
@@ -26815,10 +26847,17 @@ public:
     return 0;
    else{
 #if defined(OTL_UNICODE)
-    if(ftype==otl_var_varchar_long)
-      return (*OTL_RCAST(sb4*,p_v))/sizeof(OTL_CHAR);
-    else
+#if defined(OTL_ORA_UNICODE_LONG_LENGTH_IN_BYTES)
+     if(ftype==otl_var_varchar_long)
+       return *OTL_RCAST(sb4*,p_v);
+     else
+       return *OTL_RCAST(sb4*,p_v);
+#else
+     if(ftype==otl_var_varchar_long)
+       return (*OTL_RCAST(sb4*,p_v))/sizeof(OTL_CHAR);
+     else
       return *OTL_RCAST(sb4*,p_v);
+#endif
 #else
     return *OTL_RCAST(sb4*,p_v);
 #endif
