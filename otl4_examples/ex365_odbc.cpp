@@ -29,9 +29,9 @@ int main()
  otl_connect::otl_initialize(); // initialize the database API environment
  try{
 // Special Unicode rlogon function
-  db.rlogon(L"scott",
-            L"tiger",
-            L"mssqlxxx"
+   db.rlogon((const SQLWCHAR*)L"scott",
+            (const SQLWCHAR*)L"tiger",
+             (const SQLWCHAR*)L"mssqlxxx"
            ); // connect to the database
 
  }

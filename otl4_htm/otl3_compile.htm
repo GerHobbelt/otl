@@ -19,9 +19,10 @@
     <h1> <a name="otl_compile"></a>How to compile OTL</h1>
     OTL 4.0 is an integrated library which contains a template stream
     framework and OTL-adapters for the OCI7, OCI8, OCI8i, OCI9i, OCI10g,
-    ODBC 2.5, ODBC 3.x, DB2 CLI, and Informix CLI. The following macro
-    definitions (#define's) need to be used in order to compile OTL for
-    each type of the underlying database API from the list above:<br>
+    OCI10gR2, OCI11g, OCI11gR2, ODBC 2.5, ODBC 3.x, DB2 CLI, Informix
+    CLI, TimesTen CLI, etc. The following macro definitions (#define's)
+    need to be used in order to compile OTL for each type of the
+    underlying database API from the list above:<br>
     <br>
     <table style="text-align: left; width: 100%;" border="1"
       cellpadding="2" cellspacing="2">
@@ -110,6 +111,13 @@
 and
 OTL
 example
+
+
+
+
+
+
+
 
 
 
@@ -262,6 +270,13 @@ example
 
 
 
+
+
+
+
+
+
+
             <a href="http://www.xtgsystems.com/ib6odbc.php3">ODBC driver</a>.
             The reason for introducing this #define is that the ODBC
             driver is the only Open Source ODBC driver for Interbase.
@@ -350,6 +365,13 @@ example
             with Adaptive Communication Environment (<a
               href="http://www.cs.wustl.edu/%7Eschmidt/ACE.html">ACE</a>)).
 This
+
+
+
+
+
+
+
 
 
 
@@ -735,10 +757,24 @@ This
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
               virtual const char* what()
               const&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -764,8 +800,22 @@ This
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -880,8 +930,36 @@ This
 
 
 
+
+
+
+
+
+
+
               fields</a> for OTL/ODBC and OTL/DB2-CLI). This is for
             fixing problem <a href="otl3_prob.htm#prob47">47.</a> </td>
+        </tr>
+        <tr>
+          <td valign="top"><b><a name="OTL_INITIAL_VAR_LIST_SIZE"></a>OTL_INITIAL_VAR_LIST_SIZE</b><br>
+          </td>
+          <td valign="top">OTL internally uses arrays of bind variable
+            descriptors. Initial sizes of such arrays are in the range
+            of [512..1024], depending on the underlying database APIs.
+            If an SQL statement contains more [than the initial size of
+            such an array] bind variables, or SELECT output columns, OTL
+            may resize internal arrays of bind variable descriptors
+            dynamically, as it parses out the SQL statement. Some
+            programs open and close OTL streams a lot, and are supposed
+            to stay up and running for months, which eventually results
+            in dynamic heap fragmentation. This #define can override the
+            initial size in order to avoid dynamic heap fragmentation.
+            It's recommended to lower down the size to, say, 64, or 128
+            in case if heap fragmentation is of a concern:<br>
+            <br>
+            <tt>#define</tt><tt> OTL_INITIAL_VAR_LIST_SIZE (128)<br>
+            </tt><br>
+          </td>
         </tr>
         <tr>
           <td style="vertical-align: top;"><span style="font-weight:
@@ -910,8 +988,22 @@ This
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">s.year&lt;&lt;"-"&lt;&lt;s.month&lt;&lt;"-"&lt;&lt;s.day&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -926,6 +1018,13 @@ This
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&lt;&lt;"
                 "&lt;&lt;s.hour&lt;&lt;":"&lt;&lt;s.minute&lt;&lt;":"&lt;&lt;s.second&lt;&lt;"."&lt;&lt;s.fraction&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -955,10 +1054,24 @@ This
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;"></span></small><small><span
                 style="font-family: monospace;">s.year&lt;&lt;"-"&lt;&lt;s.month&lt;&lt;"-"&lt;&lt;s.day</span></small><small><span
                 style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -989,8 +1102,22 @@ This
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">s.month&lt;&lt;"/"&lt;&lt;s.day&lt;&lt;"/"&lt;&lt;s.year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1005,6 +1132,13 @@ This
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&lt;&lt;"
                 "&lt;&lt;s.hour&lt;&lt;":"&lt;&lt;s.minute&lt;&lt;":"&lt;&lt;s.second&lt;&lt;"."&lt;&lt;s.fraction&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1034,8 +1168,22 @@ This
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">s.month&lt;&lt;"/"&lt;&lt;s.day&lt;&lt;"/"&lt;&lt;s.year&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1116,6 +1264,13 @@ This
           <td style="vertical-align: top;">This #define defines
             conversion from the string/varchar format to the timestamp
             format (<a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>),
+
+
+
+
+
+
+
 
 
 
@@ -1272,6 +1427,13 @@ the
 
 
 
+
+
+
+
+
+
+
             #define is enabled, OTL executes "begin transaction"
             statement before each transaction. otl_connect::commit() or
             otl_connect::rollback() can be used to commit or roll back
@@ -1282,6 +1444,13 @@ the
             the time being, this #define is recommended for use with
             FreeTDS/ODBC against MS SQL. otl_connect::<a
               href="otl3_connect_class.htm#auto_commit_on">auto_commit_on</a>()
+
+
+
+
+
+
+
 
 
 
@@ -1323,6 +1492,13 @@ to
 
 
 
+
+
+
+
+
+
+
             use them.<br>
             <br>
             Sybase is slightly d<span style="font-weight: bold;">i</span>fferent:
@@ -1337,7 +1513,21 @@ to
 
 
 
+
+
+
+
+
+
+
             otl_connect::<a href="otl3_connect_class.htm#auto_commit_on">auto_commit_on</a>()
+
+
+
+
+
+
+
 
 
 
@@ -1369,6 +1559,13 @@ been
 called,
 it's
 recommended
+
+
+
+
+
+
+
 
 
 
@@ -1413,6 +1610,13 @@ explicit
 server
 side
 settings
+
+
+
+
+
+
+
 
 
 
@@ -1570,6 +1774,13 @@ specification
 
 
 
+
+
+
+
+
+
+
               clause </i>(introduced in OTL 4.0.50) in all OTL
             functions, to make them explicitly declare what type C++
             exceptions the function may throw. It looks like there is no
@@ -1601,8 +1812,22 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1626,9 +1851,23 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
               elem_size=sizeof(int);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1652,10 +1891,24 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
               elem_size=sizeof(short
               int);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1675,9 +1928,23 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
               ftype=otl_var_double;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1697,9 +1964,23 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;
               }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1788,6 +2069,13 @@ specification
 
 
 
+
+
+
+
+
+
+
             for 64-bit OCIs for LP64 platforms to signed 64-bit longs.
             It's a more efficient alternative to the char[XXX] binding
             and bigint-string / string-bigint conversion (see also the
@@ -1803,7 +2091,21 @@ specification
 
 
 
+
+
+
+
+
+
+
             <a href="otl3_compile.htm#OTL_BIGINT_TO_STR">OTL_BIGINT_TO_STR,</a>&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1953,8 +2255,22 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1969,6 +2285,13 @@ specification
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;
               sscanf(str,"%lu",&amp;n);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -1997,8 +2320,22 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2013,6 +2350,13 @@ specification
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;
               sprintf(str,"%lu",n);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2052,8 +2396,22 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2068,6 +2426,13 @@ specification
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;
               sscanf(str,"%llu",&amp;n);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2096,8 +2461,22 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2112,6 +2491,13 @@ specification
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;
               sprintf(str,"%llu",n);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2149,8 +2535,22 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2164,6 +2564,13 @@ specification
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;
               sscanf(str,"%Lf",&amp;n);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2190,8 +2597,22 @@ specification
 
 
 
+
+
+
+
+
+
+
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2205,6 +2626,13 @@ specification
               \</span><br style="font-family: monospace;">
             <span style="font-family: monospace;">&nbsp;
               sprintf(str,"%Lf",n);&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2332,8 +2760,22 @@ specification
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2359,8 +2801,22 @@ specification
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2387,9 +2843,23 @@ tm.month,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 tm.day,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2415,9 +2885,23 @@ tm.year,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 tm.hour,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2443,9 +2927,23 @@ tm.minute,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 tm.second,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2471,9 +2969,23 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2502,8 +3014,22 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2529,8 +3055,22 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2557,9 +3097,23 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &amp;tm.day,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2585,9 +3139,23 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &amp;tm.hour,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2613,9 +3181,23 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &amp;tm.second,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2641,9 +3223,23 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2680,6 +3276,13 @@ string-to-timestamp
 and
 timestamp-to-string
 conversion
+
+
+
+
+
+
+
 
 
 
@@ -2728,8 +3331,22 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_TIMESTAMP_TO_STRIN
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2755,8 +3372,22 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_TIMESTAMP_TO_STRIN
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2783,9 +3414,23 @@ tm.month,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 tm.day,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2811,9 +3456,23 @@ tm.year,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 tm.hour,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2839,9 +3498,23 @@ tm.minute,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 tm.second,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2867,9 +3540,23 @@ tm.fraction&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2898,8 +3585,22 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAM
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2925,8 +3626,22 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAM
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2953,9 +3668,23 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAM
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &amp;tm.day,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -2981,9 +3710,23 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAM
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &amp;tm.hour,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -3009,9 +3752,23 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAM
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &amp;tm.second,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -3037,9 +3794,23 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAM
 
 
 
+
+
+
+
+
+
+
                 \</span><br style="font-family: monospace;">
               <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 );&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -3218,7 +3989,21 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAM
 
 
 
+
+
+
+
+
+
+
             or <a href="otl3_connect_class.htm#server_attach">server_attach(</a>).
+
+
+
+
+
+
+
 
 
 
@@ -3529,12 +4314,26 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAM
 
 
 
+
+
+
+
+
+
+
               u) = 0;</span><big><big><big><big><big><br>
                     </big></big></big></big></big> <span
               style="font-family: monospace;"></span><span
               style="font-family: monospace;">&nbsp; virtual
               otl_read_stream_interface&amp; </span><span
               style="font-family: monospace;">operator&gt;&gt;(short&amp;
+
+
+
+
+
+
+
 
 
 
@@ -3569,12 +4368,26 @@ href="file:///D%7C/oscl/vc/doc/otl4/otl3_compile.htm#OTL_ORA7_STRING_TO_TIMESTAM
 
 
 
+
+
+
+
+
+
+
               f) = 0;</span><big><big><big><big><big><br>
                     </big></big></big></big></big> <span
               style="font-family: monospace;"></span><span
               style="font-family: monospace;">&nbsp; virtual
               otl_read_stream_interface&amp; </span><span
               style="font-family: monospace;">operator&gt;&gt;(double&amp;
+
+
+
+
+
+
+
 
 
 
@@ -3604,6 +4417,13 @@ s)
 
 
 
+
+
+
+
+
+
+
               = 0;</span><big><big><big><big><big><br>
                     </big></big></big></big></big> <span
               style="font-family: monospace;"></span><span
@@ -3611,6 +4431,13 @@ s)
               otl_read_stream_interface&amp; </span><span
               style="font-family: monospace;">operator&gt;&gt;(otl_lob_stream&amp;
 s)
+
+
+
+
+
+
+
 
 
 
@@ -3809,6 +4636,13 @@ raising
 
 
 
+
+
+
+
+
+
+
             an exception on SQL_SUCCESS_WITH_INFO, OTL makes it possible
             to communicate messages that would normally get retrieved
             via SQLGetDiagRec() calls right after SQLExecute() /
@@ -3903,6 +4737,13 @@ raising
                 statement bodies. See The Oracle, DB2-CLI, and ODBC
                 specific <a
                   href="otl3_stream_class.htm#otl_stream_otl_stream">otl_stream
+
+
+
+
+
+
+
 
 
 
@@ -4064,6 +4905,13 @@ STL's
 
 
 
+
+
+
+
+
+
+
                     <i>std::string, </i>for reading from/writing to the
                     otl_stream). This #define goes in pair with #define
                     <b>USER_DEFINED_STRING_CLASS</b>, which is used to
@@ -4185,6 +5033,13 @@ STL's
 
 
 
+
+
+
+
+
+
+
             <a href="otl3_exception_class.htm#unicode_msg"><span
                 style="font-style: italic;">msg</span></a>, <a
               href="otl3_exception_class.htm#unicode_sqlstate"><span
@@ -4208,6 +5063,13 @@ enabled
 only
 when
 #define
+
+
+
+
+
+
+
 
 
 
@@ -4253,6 +5115,13 @@ when
 
 
 
+
+
+
+
+
+
+
             corresponds to 2-byte Unicode:<br>
             <br>
             <span style="font-family: monospace;">#define OTL_UNICODE</span><br>
@@ -4267,6 +5136,13 @@ when
               style="font-family: monospace;">std::basic_string&lt;XXX&gt;</span>,
             where XXX is your 2-byte Unicode type, for example, your
             2-byte Unicode is <span style="font-family: monospace;">unsigned
+
+
+
+
+
+
+
 
 
 
@@ -4425,6 +5301,13 @@ when
     <p>In order to compile and link OTL with an underlying database API,
       the following header files and libraries of the database API are
       needed (&lt;<span style="font-style: italic;">ORACLE_HOME</span>&gt;,&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -4600,6 +5483,13 @@ when
 
 
 
+
+
+
+
+
+
+
             -I$(ORACLE_HOME)/rdbms/public<br>
           </td>
           <td style="vertical-align: top;">-L$(ORACLE_HOME)/lib/
@@ -4610,6 +5500,13 @@ when
           <td style="vertical-align: top;">OCI8<br>
           </td>
           <td style="vertical-align: top;">-I$(ORACLE_HOME)/rdbms/demo&nbsp;
+
+
+
+
+
+
+
 
 
 
@@ -4641,6 +5538,13 @@ when
 
 
 
+
+
+
+
+
+
+
             -I$(ORACLE_HOME)/rdbms/public</td>
           <td style="vertical-align: top;">-L$(ORACLE_HOME)/lib/
             -lclntsh<br>
@@ -4661,6 +5565,13 @@ when
 
 
 
+
+
+
+
+
+
+
             -I$(ORACLE_HOME)/rdbms/public</td>
           <td style="vertical-align: top;">-L$(ORACLE_HOME)/lib/
             -lclntsh<br>
@@ -4670,6 +5581,13 @@ when
           <td style="vertical-align: top;">OCI10g<br>
           </td>
           <td style="vertical-align: top;">-I$(ORACLE_HOME)/rdbms/demo&nbsp;
+
+
+
+
+
+
+
 
 
 
