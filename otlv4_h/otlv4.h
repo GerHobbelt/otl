@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.446,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.447,
 // Copyright (C) 1996-2019, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401BEL)
+#define OTL_VERSION_NUMBER (0x0401BFL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -2452,10 +2452,27 @@ inline void convert_date(otl_oracle_date &t, const otl_datetime &s) {
 
 class otl_null {
 public:
+#if defined(OTL_CPP_11_ON)
+  otl_null() = default;
+  ~otl_null() = default;
+  otl_null(const otl_null&) = default;
+  otl_null(otl_null&&) = default;
+  otl_null& operator=(const otl_null&) = default;
+  otl_null& operator=(otl_null&&) = default;
+#else
   otl_null() {}
   ~otl_null() {}
   otl_null(const otl_null&){}
+#endif
 };
+
+#if defined(OTL_CPP_11_ON)
+#define OTL_NULL_PARM otl_null
+#else
+#define OTL_NULL_PARM const otl_null &
+#endif
+
+
 #if defined(OTL_ORA_SDO_GEOMETRY)
 struct OCIType;
 #endif
@@ -4263,7 +4280,7 @@ public:
 
   otl_value(const TData &var) : v(var), ind(false) {}
 
-  otl_value(const otl_null &) : v(), ind(true) {}
+  otl_value(OTL_NULL_PARM ) : v(), ind(true) {}
 
   otl_value<TData> &operator=(const otl_value<TData> &var) {
     v = var.v;
@@ -4277,7 +4294,7 @@ public:
     return *this;
   }
 
-  otl_value<TData> &operator=(const otl_null) {
+  otl_value<TData> &operator=(OTL_NULL_PARM ) {
     ind = true;
     return *this;
   }
@@ -4301,7 +4318,7 @@ public:
 
   otl_compact_value(const TData &var) : v(var) {}
 
-  otl_compact_value(const otl_null) : v(null_value) {}
+  otl_compact_value(OTL_NULL_PARM ) : v(null_value) {}
 
   otl_compact_value<TData,null_value> &operator=(const otl_compact_value<TData,null_value> &var) {
     v = var.v;
@@ -4313,7 +4330,7 @@ public:
     return *this;
   }
 
-  otl_compact_value<TData,null_value> &operator=(const otl_null) {
+  otl_compact_value<TData,null_value> &operator=(OTL_NULL_PARM ) {
     v=null_value;
     return *this;
   }
@@ -8245,7 +8262,7 @@ public:
     }
   }
 
-  OTL_TMPL_SELECT_STREAM &operator<<(const otl_null & /* n */) {
+  OTL_TMPL_SELECT_STREAM &operator<<(OTL_NULL_PARM /* n */) {
     check_in_var();
     this->vl[cur_in]->set_null(0);
     get_in_next();
@@ -9751,7 +9768,7 @@ public:
   }
 #endif
 
-  OTL_TMPL_OUT_STREAM &operator<<(const otl_null & /* n */) {
+  OTL_TMPL_OUT_STREAM &operator<<(OTL_NULL_PARM /* n */) {
     if (this->vl_len > 0) {
       get_next();
       this->vl[cur_x]->set_null(cur_y);
@@ -18854,7 +18871,7 @@ OTL_THROWS_OTL_EXCEPTION:
 
   OTL_LTLT_OPERATOR_2(double,otl_var_double);
 
-  otl_stream &operator<<(const otl_null &n) OTL_THROWS_OTL_EXCEPTION {
+  otl_stream &operator<<(OTL_NULL_PARM n) OTL_THROWS_OTL_EXCEPTION {
     last_oper_was_read_op = false;
     reset_end_marker();
     OTL_TRACE_READ("NULL", "operator <<", "otl_null&");
@@ -25163,7 +25180,7 @@ public:
 
 #endif
 
-  otl_inout_stream &operator<<(const otl_null &n) {
+  otl_inout_stream &operator<<(OTL_NULL_PARM n) {
     otl_ora8_inout_stream::operator<<(n);
     return *this;
   }
@@ -26429,7 +26446,7 @@ public:
   }
 #endif
 
-  otl_ref_select_stream &operator<<(const otl_null & /*n*/) {
+  otl_ref_select_stream &operator<<(OTL_NULL_PARM /*n*/) {
     check_in_var();
     this->vl[cur_in]->set_null(0);
     get_in_next();
@@ -30764,7 +30781,7 @@ public:
 
   OTL_LTLT_OPERATOR_3(double,otl_var_double);
 
-  otl_stream &operator<<(const otl_null &n) OTL_THROWS_OTL_EXCEPTION {
+  otl_stream &operator<<(OTL_NULL_PARM n) OTL_THROWS_OTL_EXCEPTION {
     last_oper_was_read_op = false;
     reset_end_marker();
     OTL_TRACE_READ("NULL", "operator <<", "otl_null&");
