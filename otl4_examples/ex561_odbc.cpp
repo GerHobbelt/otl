@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -49,7 +53,7 @@ void select(otl_connect& db)
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<4<<4; // assigning :f = 4, :ff = 4
@@ -68,9 +72,9 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db1.rlogon("scott/tigger@freetds_sybsql"); // connect to ODBC
-  db2.rlogon("scott/tigger@freetds_sybsql"); // connect to ODBC
-  db3.rlogon("scott/tigger@freetds_sybsql"); // connect to ODBC
+  db1.rlogon("sa/tigger@freetds_sybsql"); // connect to ODBC
+  db2.rlogon("sa/tigger@freetds_sybsql"); // connect to ODBC
+  db3.rlogon("sa/tigger@freetds_sybsql"); // connect to ODBC
 
 // FreeTDS 0.82RC3 and higher doesn't require call to auto_commit_off().
 //   db1.auto_commit_off();

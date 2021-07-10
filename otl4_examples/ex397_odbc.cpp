@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -44,7 +48,7 @@ void select(void)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  TIMESTAMP_STRUCT tm,f2;
 
  tm.year=1998;
@@ -54,6 +58,14 @@ void select(void)
  tm.minute=12;
  tm.second=12;
  tm.fraction=0;
+
+ f2.year=1900;
+ f2.month=1;
+ f2.day=1;
+ f2.hour=0;
+ f2.minute=0;
+ f2.second=0;
+ f2.fraction=0;
 
  i<<tm; // assigning :f1 = tm
    // SELECT automatically executes when all input variables are
@@ -74,7 +86,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("scott/tigger@sybsql"); // connect to ODBC
+  db.rlogon("sa/tigger@sybsql"); // connect to ODBC
 
   otl_cursor::direct_exec
    (

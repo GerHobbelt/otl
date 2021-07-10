@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -25,8 +29,8 @@ void stored_proc(void)
 
  o<<1<<"Test String1"; // assigning :A = 1, :C = "Test String1"
 
- int rc;
- int a;
+ int rc=0;
+ int a=0;
  char b[31];
 
  o>>rc>>a>>b;

@@ -1,221 +1,204 @@
 <!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=ISO-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, Examples for Sybase SQL Server/ ODBC</title>
-</head>
-<body>
-<center>
-<h1> OTL 4.0, Examples for Sybase SQL Server / ODBC</h1>
-<div style="text-align: left;">
-The examples below work with Sybase SQL Server via ODBC. The examples
-were tested with Sybase SQL Server 15.0 on&nbsp; Linux and Windows with
-the Sybase
-15.0's default ODBC driver. The underlying database had "allow NULLs by
-default", and "ddl in transactions" enabled. Sybase
-15.0's default ODBC driver has a limit of 32767 bytes on SELECTing TEXT
-and IMAGE columns. So, if you want to be able to fetch longer TEXT and
-IMAGE values from the database, you may want to try to use ODBC drivers
-from EasySoft or DataDirect.<br>
-<br>
-<ol>
-  <li><b><a href="otl4_ex396.htm">Example
-396 (Sybase SQL&nbsp; Server stored
-procedure call)</a></b></li>
-  <li><b><a href="otl4_ex397.htm">Example
-397 (TIMESTAMP_STRUCT and Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex398.htm">Example
-398 (Sybase SQL Server and TEXT
-column)</a></b></li>
-  <li><b><a href="otl4_ex399.htm">Example
-399 (Sybase SQL&nbsp; Server and
-IMAGE
-column)</a></b></li>
-  <li><b><a href="otl4_ex400.htm">Example
-400 (Sybase SQL&nbsp; Server:
-otl_stream::describe_select() and result sets)</a></b></li>
-  <li><b><a href="otl4_ex401.htm">Example
-401 (Datatype override in
-SELECT, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex402.htm">Example
-402 (Simple Insert/Select
-and otl_stream::clean() function for OTL/ODBC and Sybase SQL&nbsp;
-Server)</a></b></li>
-  <li><b><a href="otl4_ex403.htm">Example
-403 (STL std::strings, ANSI
-C++ typecasts, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex404.htm">Example
-404 (STL-compliant OTL/ODBC
-stream iterators, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex405.htm">Example
-405 (otl_value&lt;T&gt;,
-ODBC / Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex406.htm">Example
-406 (#define
-OTL_UNCAUGHT_EXCEPTION_ON, ODBC / Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex407.htm">Example
-407 (#define
-OTL_EXTENDED_EXCEPTION, ODBC / Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex409.htm">Example
-409 (OTL/ODBC and bulk
-operations with Sybase SQL&nbsp; Server's TEXT)</a></b></li>
-  <li><b><a href="otl4_ex410.htm">Example
-410 (Group data type
-override in SELECT, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex411.htm">Example
-411 (<font size="-1">OTL_VALUE_TEMPLATE_ON,
-OTL_USER_DEFINED_STRING_CLASS_ON</font>,&nbsp; ODBC / Sybase SQL <br>
-    </a></b></li>
-  <li><b><a href="otl4_ex412.htm">Example
-412 (Insert/Update/Select
-with Sybase SQL&nbsp; Server TEXT&nbsp; in stream mode)</a></b></li>
-  <li><b><a href="otl4_ex413.htm">Example
-413 (Insert/Update/Select
-with&nbsp; Sybase SQL&nbsp; Server IMAGE in stream mode)</a></b></li>
-  <li><b><a href="otl4_ex414.htm">Example
-414 (Describe
-otl_stream's
-bind variables for Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex415.htm">Example
-415
-(set_transaction_isolation_level, ODBC, Sybase SQL )</a></b></li>
-  <li><b><a href="otl4_ex416.htm">Example
-416 (external logon,
-ODBC, Sybase SQL )</a></b></li>
-  <li><b><a href="otl4_ex417.htm">Example
-417 (otl_stream::clean(),
-cancelling SELECT's fetch sequence, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex418.htm">Example
-418 (otl_stream::clean(),
-cancelling Result Set's fetch sequence, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex419.htm">Example
-419 (otl_stream::clean(),
-cleaning the SELECT stream's error flags, Sybase SQL&nbsp; Server )</a></b></li>
-  <li><b><a href="otl4_ex420.htm">Example
-420 (otl_stream::clean(),
-cleaning the Result Set stream's error flags, Sybase SQL&nbsp; Server )</a></b></li>
-  <li><b><a href="otl4_ex421.htm">Example
-421 (#define's
-OTL_DEFAULT_XXX_NULL_TO_VAL, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex422.htm">Example
-422 (otl_datetime
-container with Datetime values down to milliseconds in Sybase SQL&nbsp;
-Server)</a></b></li>
-  <li><b><a href="otl4_ex423.htm">Example
-423 (otl_exception,
-derived from a base class, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex425.htm">Example
-425
-(OTL_ADD_NULL_TERMINATOR_STRING_SIZE,Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex426.htm">Example
-426 (std::string and
-TEXTs, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex427.htm">Example
-427 (SQL statement label, Sybase SQL&nbsp; Server)</a></b></li>
-  <li> <b><a href="otl4_ex428.htm">Example
-428
-(OTL/ODBC, accessing the system data dictionary via ODBC functions,
-Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex429.htm">Example
-429 (OTL/ODBC, accessing
-the system data dictionary via ODBC functions, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex430.htm">Example
-430 (OTL/ODBC, accessing
-the system data dictionary via ODBC functions, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex431.htm">Example
-431 (64-bit integers (bigint), Sybase SQL&nbsp; Server, OTL/ODBC)</a></b></li>
-  <li><b><a href="otl4_ex432.htm">Example
-432 (user defined string class and TEXTs, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex433.htm">Example
-433 (OTL tracing, ODBC, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex434.htm">Example
-434 (Explict bind variables in SELECT statement column definitions,
-ODBC, Sybase SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex435.htm">Example
-435 (#define OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO, ODBC, Sybase
-SQL&nbsp; Server)</a></b></li>
-  <li><b><a href="otl4_ex436.htm">Example
-436 (OTL stream read iterator, simple SELECT, Sybase SQL&nbsp; / ODBC)</a></b></li>
-  <li><b><a href="otl4_ex437.htm">Example
-437 (OTL stream read iterator, implicit result set, Sybase SQL&nbsp; /
-ODBC)</a></b></li>
-  <li><b><a href="otl4_ex438.htm">Example
-438 (Strict numeric type checking on SELECTs)</a></b></li>
-  <li><b><a href="otl4_ex439.htm">Example 439 (Stream buffer size as <span
- style="font-style: italic;">int</span>, simple Insert/Select)</a></b></li>
-  <li><b><a href="otl4_ex440.htm">Example 440 (Insert/Update/Select
-with Sybase SQL&nbsp; Server TEXT&nbsp; in stream mode and
-otl_stream_read_iterator)</a></b></li>
-  <li><b><a href="otl4_ex441.htm">Example 441 (Insert/Update/Select
-with Sybase SQL&nbsp; Server IMAGE&nbsp; in stream mode and
-otl_stream_read_iterator)</a></b></li>
-  <li><b><a href="otl4_ex442.htm">Example 442 (OTL stream read
-iterator, "get by name" functions, Sybase SQL&nbsp; / ODBC)</a></b></li>
-  <li><b><a href="otl4_ex443.htm">Example 443
-(Simple Insert/Select,
-otl_connect::operator&lt;&lt;, &lt;&lt;=, &gt;&gt;)</a></b></li>
-  <li><b><a href="otl4_ex444.htm">Example 444
-(Insert/Update/Select, Sybase SQL IMAGE in stream mode, and
-std:strings)</a></b></li>
-  <li><b><a href="otl4_ex445.htm">Example 445 (Insert/Update/Select
-with Sybase SQL Server TEXT in stream mode, without
-otl_lob_stream::set_len())</a></b></li>
-  <li value="52"><b><a href="otl4_ex450.htm">Example 450 (Simple
-Insert/Select
-with VARBINARY datatype)</a></b></li>
-  <li><b><a href="otl4_ex451.htm">Example 451 (Simple Insert/Select
-with BINARY datatype)</a></b></li>
-  <li value="54"><b><a href="otl4_ex461.htm">Example 461
-(Simple Insert/Select
-with VARBINARY datatype and otl_stream_read_iterator)</a></b></li>
-  <li><b><a href="otl4_ex462.htm">Example
-462 (Simple Insert/Select
-with BINARY datatype and otl_stream_read_iterator)</a></b></li>
-  <li><b><a href="otl4_ex675.htm">Example 675 (Simple
-Insert/Select/Update #define OTL_ODBC_MULTI_MODE)</a></b></li>
-  <li> <b><a href="otl4_ex714.htm">Example 714 (END-OF_ROW check)</a></b></li>
-</ol>
-<ul>
-</ul>
-<center>
-<hr width="100%">
-<p><a href="otl3_const_sql.htm">Prev</a> <a href="otl3_compile.htm">Next</a><a
- href="otl3.htm">Contents</a><a href="home.htm">Go Home</a></p>
-</center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com
-<script language="JavaScript"><!-- hide from old browsers
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, Examples for Sybase SQL Server/ ODBC</title>
+  </head>
+  <body>
+    <center>
+      <h1> OTL 4.0, Examples for Sybase SQL Server / ODBC</h1>
+      <div style="text-align: left;"> The examples below work with
+        Sybase SQL Server via ODBC. The examples were tested with Sybase
+        SQL Server 15.0 against Sybase stock ODBC drivers. The
+        underlying database had "allow NULLs by default", and "ddl in
+        transactions" enabled. Sybase stock ODBC drivers have a limit of
+        32767 bytes on SELECTing TEXT and IMAGE columns. So, if you want
+        to be able to fetch longer TEXT and IMAGE values from the
+        database, you may want to try to use ODBC drivers from EasySoft
+        or DataDirect.<br>
+        <br>
+        <ol>
+          <li><b><a href="otl4_ex396.htm">Example 396 (Sybase SQL&nbsp;
+                Server stored procedure call)</a></b></li>
+          <li><b><a href="otl4_ex397.htm">Example 397 (TIMESTAMP_STRUCT
+                and Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex398.htm">Example 398 (Sybase SQL Server
+                and TEXT column)</a></b></li>
+          <li><b><a href="otl4_ex399.htm">Example 399 (Sybase SQL&nbsp;
+                Server and IMAGE column)</a></b></li>
+          <li><b><a href="otl4_ex400.htm">Example 400 (Sybase SQL&nbsp;
+                Server: otl_stream::describe_select() and result sets)</a></b></li>
+          <li><b><a href="otl4_ex401.htm">Example 401 (Datatype override
+                in SELECT, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex402.htm">Example 402 (Simple
+                Insert/Select and otl_stream::clean() function for
+                OTL/ODBC and Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex403.htm">Example 403 (STL std::strings,
+                ANSI C++ typecasts, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex404.htm">Example 404 (STL-compliant
+                OTL/ODBC stream iterators, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex405.htm">Example 405
+                (otl_value&lt;T&gt;, ODBC / Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex406.htm">Example 406 (#define
+                OTL_UNCAUGHT_EXCEPTION_ON, ODBC / Sybase SQL&nbsp;
+                Server)</a></b></li>
+          <li><b><a href="otl4_ex407.htm">Example 407 (#define
+                OTL_EXTENDED_EXCEPTION, ODBC / Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex409.htm">Example 409 (OTL/ODBC and bulk
+                operations with Sybase SQL&nbsp; Server's TEXT)</a></b></li>
+          <li><b><a href="otl4_ex410.htm">Example 410 (Group data type
+                override in SELECT, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex411.htm">Example 411 (<font size="-1">OTL_VALUE_TEMPLATE_ON,
+
+
+                  OTL_USER_DEFINED_STRING_CLASS_ON</font>,&nbsp; ODBC /
+                Sybase SQL <br>
+              </a></b></li>
+          <li><b><a href="otl4_ex412.htm">Example 412
+                (Insert/Update/Select with Sybase SQL&nbsp; Server
+                TEXT&nbsp; in stream mode)</a></b></li>
+          <li><b><a href="otl4_ex413.htm">Example 413
+                (Insert/Update/Select with&nbsp; Sybase SQL&nbsp; Server
+                IMAGE in stream mode)</a></b></li>
+          <li><b><a href="otl4_ex414.htm">Example 414 (Describe
+                otl_stream's bind variables for Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex415.htm">Example 415
+                (set_transaction_isolation_level, ODBC, Sybase SQL )</a></b></li>
+          <li><b><a href="otl4_ex416.htm">Example 416 (external logon,
+                ODBC, Sybase SQL )</a></b></li>
+          <li><b><a href="otl4_ex417.htm">Example 417
+                (otl_stream::clean(), cancelling SELECT's fetch
+                sequence, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex418.htm">Example 418
+                (otl_stream::clean(), cancelling Result Set's fetch
+                sequence, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex419.htm">Example 419
+                (otl_stream::clean(), cleaning the SELECT stream's error
+                flags, Sybase SQL&nbsp; Server )</a></b></li>
+          <li><b><a href="otl4_ex420.htm">Example 420
+                (otl_stream::clean(), cleaning the Result Set stream's
+                error flags, Sybase SQL&nbsp; Server )</a></b></li>
+          <li><b><a href="otl4_ex421.htm">Example 421 (#define's
+                OTL_DEFAULT_XXX_NULL_TO_VAL, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex422.htm">Example 422 (otl_datetime
+                container with Datetime values down to milliseconds in
+                Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex423.htm">Example 423 (otl_exception,
+                derived from a base class, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex425.htm">Example 425
+                (OTL_ADD_NULL_TERMINATOR_STRING_SIZE,Sybase SQL&nbsp;
+                Server)</a></b></li>
+          <li><b><a href="otl4_ex426.htm">Example 426 (std::string and
+                TEXTs, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex427.htm">Example 427 (SQL statement
+                label, Sybase SQL&nbsp; Server)</a></b></li>
+          <li> <b><a href="otl4_ex428.htm">Example 428 (OTL/ODBC,
+                accessing the system data dictionary via ODBC functions,
+                Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex429.htm">Example 429 (OTL/ODBC,
+                accessing the system data dictionary via ODBC functions,
+                Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex430.htm">Example 430 (OTL/ODBC,
+                accessing the system data dictionary via ODBC functions,
+                Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex431.htm">Example 431 (64-bit integers
+                (bigint), Sybase SQL&nbsp; Server, OTL/ODBC)</a></b></li>
+          <li><b><a href="otl4_ex432.htm">Example 432 (user defined
+                string class and TEXTs, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex433.htm">Example 433 (OTL tracing,
+                ODBC, Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex434.htm">Example 434 (Explict bind
+                variables in SELECT statement column definitions, ODBC,
+                Sybase SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex435.htm">Example 435 (#define
+                OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO, ODBC, Sybase
+                SQL&nbsp; Server)</a></b></li>
+          <li><b><a href="otl4_ex436.htm">Example 436 (OTL stream read
+                iterator, simple SELECT, Sybase SQL&nbsp; / ODBC)</a></b></li>
+          <li><b><a href="otl4_ex437.htm">Example 437 (OTL stream read
+                iterator, implicit result set, Sybase SQL&nbsp; / ODBC)</a></b></li>
+          <li><b><a href="otl4_ex438.htm">Example 438 (Strict numeric
+                type checking on SELECTs)</a></b></li>
+          <li><b><a href="otl4_ex439.htm">Example 439 (Stream buffer
+                size as <span style="font-style: italic;">int</span>,
+                simple Insert/Select)</a></b></li>
+          <li><b><a href="otl4_ex440.htm">Example 440
+                (Insert/Update/Select with Sybase SQL&nbsp; Server
+                TEXT&nbsp; in stream mode and otl_stream_read_iterator)</a></b></li>
+          <li><b><a href="otl4_ex441.htm">Example 441
+                (Insert/Update/Select with Sybase SQL&nbsp; Server
+                IMAGE&nbsp; in stream mode and otl_stream_read_iterator)</a></b></li>
+          <li><b><a href="otl4_ex442.htm">Example 442 (OTL stream read
+                iterator, "get by name" functions, Sybase SQL&nbsp; /
+                ODBC)</a></b></li>
+          <li><b><a href="otl4_ex443.htm">Example 443 (Simple
+                Insert/Select, otl_connect::operator&lt;&lt;, &lt;&lt;=,
+                &gt;&gt;)</a></b></li>
+          <li><b><a href="otl4_ex444.htm">Example 444
+                (Insert/Update/Select, Sybase SQL IMAGE in stream mode,
+                and std:strings)</a></b></li>
+          <li><b><a href="otl4_ex445.htm">Example 445
+                (Insert/Update/Select with Sybase SQL Server TEXT in
+                stream mode, without otl_lob_stream::set_len())</a></b></li>
+          <li value="52"><b><a href="otl4_ex450.htm">Example 450 (Simple
+                Insert/Select with VARBINARY datatype)</a></b></li>
+          <li><b><a href="otl4_ex451.htm">Example 451 (Simple
+                Insert/Select with BINARY datatype)</a></b></li>
+          <li value="54"><b><a href="otl4_ex461.htm">Example 461 (Simple
+                Insert/Select with VARBINARY datatype and
+                otl_stream_read_iterator)</a></b></li>
+          <li><b><a href="otl4_ex462.htm">Example 462 (Simple
+                Insert/Select with BINARY datatype and
+                otl_stream_read_iterator)</a></b></li>
+          <li><b><a href="otl4_ex675.htm">Example 675 (Simple
+                Insert/Select/Update #define OTL_ODBC_MULTI_MODE)</a></b></li>
+          <li> <b><a href="otl4_ex714.htm">Example 714 (END-OF_ROW
+                check)</a></b></li>
+        </ol>
+        <ul>
+        </ul>
+        <center>
+          <hr width="100%">
+          <p><a href="otl3_const_sql.htm">Prev</a> <a
+              href="otl3_compile.htm">Next</a><a href="otl3.htm">Contents</a><a
+              href="home.htm">Go Home</a></p>
+        </center>
+        <p>Copyright © 1996-2020, Sergei Kuchin, email: <a
+            href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+            href="mailto:skuchin@gmail.com">skuchin@gmail.com
+            <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
  </script></a>.</p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for any purpose is hereby granted without fee, provided that the above
-copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
-AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
-EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.</i> </p>
-</div>
-</center>
-<script type="text/javascript">
+        <p><i>Permission to use, copy, modify and redistribute this
+            document for any purpose is hereby granted without fee,
+            provided that the above copyright notice appear in all
+            copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR
+            DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
+            INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+            FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+            SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
+            DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+            PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+            OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH
+            THE USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
+      </div>
+    </center>
+    <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
+  </body>
 </html>

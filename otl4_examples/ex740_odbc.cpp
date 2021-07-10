@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -23,8 +27,8 @@ void insert()
                db
               );
   o.set_commit(0); // set stream auto-commit to OFF
-  char f2_in[32];
-  int f1_out;
+  char f2_in[32]={0};
+  int f1_out=0;
 
   // stream to read the value of the output parameter
   otl_stream s(1, "select @f1_1  :#1<int>", db, otl_implicit_select);

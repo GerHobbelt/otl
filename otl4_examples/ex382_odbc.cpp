@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <string>
 using namespace std;
@@ -87,7 +91,7 @@ void select()
        ); 
    // create select stream
  
- int f1;
+ int f1=0;
  otl_lob_stream lob; // Stream for reading LONGTEXT
 
  lob.setStringBuffer(40000); // Set a bigger internal buffer (default is 4096 bytes)

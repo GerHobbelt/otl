@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -132,7 +136,7 @@ void select()
         ); 
    // create select stream
  
- int f1;
+ int f1=0;
  otl_lob_stream* lob; // Pointer to Stream for reading IMAGE
  otl_lob_stream* lob2; // Pointer to Stream for reading IMAGE
 
@@ -176,7 +180,7 @@ int main()
  otl_connect::otl_initialize(); // initialize the environment
  try{
 
-  db.rlogon("scott/tigger@sybsql"); // connect to the database
+  db.rlogon("sa/tigger@sybsql"); // connect to the database
 
   otl_cursor::direct_exec
    (

@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -29,7 +33,7 @@ void insert()
 #else
   sprintf(reinterpret_cast<char*>(tmp),"<TAG>MyXML%d</TAG>",i);
 #endif
-  int len=(int)strlen(tmp);
+  int len=static_cast<int>(strlen(tmp));
   otl_long_string f2(tmp,len,len); // define long string variable
   o<<i<<f2;
  }
@@ -51,7 +55,7 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8 
    // SELECT automatically executes when all input variables are
@@ -59,7 +63,7 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
-  cout<<"f1="<<f1<<", f2="<<(char*)&f2[0]<<endl;
+  cout<<"f1="<<f1<<", f2="<<reinterpret_cast<char*>(&f2[0])<<endl;
  }
 
 }

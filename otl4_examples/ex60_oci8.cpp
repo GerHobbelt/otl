@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -40,7 +44,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<4; // assigning :f = 4
@@ -59,7 +63,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (
@@ -78,13 +82,13 @@ int main()
  
   db.logoff(); // disconnect from Oracle
 
-  db.server_attach(); // attach to the local Oracle server
+  db.server_attach("myora_tns"); // attach to the local Oracle server
                       // In order to connect to a remote server,
                       // a TNS alias needs to be specified
 
   for(int i=1;i<=100;++i){
    cout<<"Session begin ==> "<<i<<endl;
-   db.session_begin("scott","tiger");
+   db.session_begin("system","oracle");
      // begin session; this function is much faster
      // than rlogon() and should be used (see the Oracle
      // manuals for more detail) in high-speed processing

@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -13,19 +17,19 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db1.server_attach(); // Attach to a local Oracle server,
-                      // In case of a remote server, specify 
-                      // a TNS alias
+   db1.server_attach("myora_tns"); // Attach to a local Oracle server,
+   // In case of a remote server, specify 
+   // a TNS alias
 
-  cout<<"Changing scott's password to 'pussycat'"<<endl;
-  db1.change_password("scott","tiger","pussycat");
-  cout<<"Connecting to scott/pussycat..."<<endl;
-  db2.rlogon("scott/pussycat");
+  cout<<"Changing system's password to 'pussycat'"<<endl;
+  db1.change_password("system","oracle","pussycat");
+  cout<<"Connecting to system/pussycat..."<<endl;
+  db2.rlogon("system/pussycat@myora_tns");
   cout<<"Connected"<<endl;
   cout<<"Changing the password back to 'tiger'"<<endl;
-  db1.change_password("scott","pussycat","tiger");
-  cout<<"Connecting to scott/tiger..."<<endl;
-  db3.rlogon("scott/tiger");
+  db1.change_password("system","pussycat","oracle");
+  cout<<"Connecting to system/oracle..."<<endl;
+  db3.rlogon("system/oracle@myora_tns");
   cout<<"Connected"<<endl;
  }
 

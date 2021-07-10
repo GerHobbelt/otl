@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <string.h>
@@ -68,10 +72,10 @@ public:
 
   void append(char* temp_buf, int len)
   {
-    size_t cur_len=length();
+    size_t cur_len=static_cast<size_t>(length());
     for(int i=0;i<len;++i)
-      buf[cur_len+i]=temp_buf[i];
-    buf[cur_len+len]=0;
+      buf[cur_len+static_cast<size_t>(i)]=temp_buf[i];
+    buf[cur_len+static_cast<size_t>(len)]=0;
   }
 
   char& operator[](int ndx)
@@ -81,7 +85,7 @@ public:
 
   int length(void) const 
   {
-    return (int)strlen(buf);
+    return static_cast<int>(strlen(buf));
   }
 
   user_defined_string& operator=(const user_defined_string& s)
@@ -174,7 +178,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8
    // SELECT automatically executes when all input variables are

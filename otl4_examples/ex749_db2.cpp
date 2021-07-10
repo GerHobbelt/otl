@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -5,6 +9,25 @@ using namespace std;
 
 #define OTL_STL
 #define OTL_DB2_CLI // Compile OTL 4.0/DB2 CLI 
+
+#if (defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 900)) && \
+     (defined(OTL_CPP_14_ON))
+#include <experimental/string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::experimental::string_view
+#elif (defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 900)) && \
+     (defined(OTL_CPP_17_ON))
+#include <string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::string_view
+#elif (defined(__clang__) && (__clang_major__*100+__clang_minor__ < 900) || defined(__GNUC__)) && \
+     (defined(OTL_CPP_14_ON) || defined(OTL_CPP_17_ON))
+#include <experimental/string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::experimental::string_view
+#elif defined(_MSC_VER) && (_MSC_VER>=1910) && defined(OTL_CPP_17_ON)
+// VC++ 2017 or higher when /std=c++latest is used
+#include <string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::string_view
+#endif
+
 #include <otlv4.h> // include the OTL 4.0 header file
 
 string str_val("123456" "\0" "7890", 11); // std::string with a null terminator in the middle.
@@ -20,7 +43,12 @@ void insert()
              );
 
  for(int i=1;i<=4;++i){
+#if defined(OTL_STD_STRING_VIEW_CLASS)
+  OTL_STD_STRING_VIEW_CLASS str_val_sv(str_val.c_str(),str_val.length());
+  o<<i<<str_val_sv;
+#else
   o<<i<<str_val;
+#endif
  }
 }
 
@@ -35,7 +63,7 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  string f2;
 
  i<<str_val; // assigning :f2in = str_val

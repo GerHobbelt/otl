@@ -1,7 +1,7 @@
 <!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
   <head>
-    <meta content="text/html; charset=ISO-8859-1"
+    <meta content="text/html; charset=windows-1252"
       http-equiv="Content-Type">
     <meta content="Sergei Kuchin" name="Author">
     <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
@@ -16,11 +16,15 @@
       </h1>
     </center>
     The examples below work with PostgreSQL via ODBC. In general, all of
-    these examples should work with any PostgreSQL 8.0 and higher, when
-    ODBC&nbsp; is enabled in OTL by setting #define <a
+    these examples should work with the latest version of PostgreSQL,
+    when ODBC&nbsp; is enabled in OTL by setting #define <a
       href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>, or #define <a
       href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a>.
     For more examples, see the <a href="otl4_gen_odbc_examples.htm">Generic
+
+
+
+
       ODBC</a> examples.<br>
     <ol>
       <li><b><a href="otl4_ex140.htm">Example 140 (Simple
@@ -92,6 +96,16 @@
       <li><b><a href="otl4_ex716.htm">Example 716 (END-OF_ROW check)</a></b></li>
       <li><b><a href="otl4_ex745.htm">Example 745 (UTF-8 client
             encoding: Insert/Select)</a></b></li>
+      <li><b><a href="otl4_ex758.htm">Example 758
+            (otl_read_from_stream() / otl_write_to_stream() and STL
+            containers)</a></b></li>
+      <li><b><a href="otl4_ex762.htm">Example 762 (JSON as
+            varchar_long/std::string&nbsp; on SELECT and
+            varchar_long/std::string on INSERT)</a></b></li>
+      <li><b><a href="otl4_ex767.htm">Example 767 (otl_connect_pool)</a></b></li>
+      <li><b><a href="otl4_ex768.htm">Example 768 (PostgreSQL 9.5 UPSERT,&nbsp;
+            otl_read_row() and otl_write_row())</a><br>
+        </b></li>
     </ol>
     <ul>
     </ul>
@@ -99,7 +113,7 @@
       <hr width="100%"><a href="otl3_const_sql.htm">Prev</a> <a
         href="otl3_compile.htm">Next</a><a href="otl3.htm">Contents</a><a
         href="home.htm">Go Home</a> </center>
-    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+    <p>Copyright © 1996-2020, Sergei Kuchin, email: <a
         href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
         href="mailto:skuchin@gmail.com">skuchin@gmail.com
         <script language="JavaScript"><!-- hide from old browsers

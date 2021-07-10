@@ -1,8 +1,14 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
 
+#if !defined(OTL_ORA11G_R2)
 #define OTL_ORA11G_R2 // Compile OTL 4.0/OCI11R2
+#endif
 #if defined(__BORLANDC__)
 #define OTL_BIGINT __int64 // Enabling G++ 64-bit integers
 #define OTL_UBIGINT unsigned __int64 // Enabling G++ 64-bit integers
@@ -54,9 +60,9 @@ void select()
              ); 
    // create select stream
  
- OTL_BIGINT f1;
- char f2[31];
- OTL_UBIGINT f3;
+ OTL_BIGINT f1=0;
+ char f2[31]={0};
+ OTL_UBIGINT f3=0;
 
  i<<static_cast<OTL_BIGINT>(8)
   <<static_cast<OTL_BIGINT>(8); // assigning :f = 8; :ff = 8
@@ -75,7 +81,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <string>
 
@@ -6,6 +10,25 @@
 #ifndef OTL_ANSI_CPP
 #define OTL_ANSI_CPP // Turn on ANSI C++ typecasts
 #endif
+
+#if (defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 900)) && \
+     (defined(OTL_CPP_14_ON))
+#include <experimental/string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::experimental::string_view
+#elif (defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 900)) && \
+     (defined(OTL_CPP_17_ON))
+#include <string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::string_view
+#elif (defined(__clang__) && (__clang_major__*100+__clang_minor__ < 900) || defined(__GNUC__)) && \
+     (defined(OTL_CPP_14_ON) || defined(OTL_CPP_17_ON))
+#include <experimental/string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::experimental::string_view
+#elif defined(_MSC_VER) && (_MSC_VER>=1910) && defined(OTL_CPP_17_ON)
+// VC++ 2017 or higher when /std=c++latest is used
+#include <string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::string_view
+#endif
+
 #include <otlv4.h> // include the OTL 4 header file
 
 using namespace std;
@@ -24,7 +47,12 @@ void insert()
 
  for(int i=1;i<=100;++i){
   f2="NameXXX";
+#if defined(OTL_STD_STRING_VIEW_CLASS)
+ OTL_STD_STRING_VIEW_CLASS f2_sv(f2.c_str(),f2.length());
+  o<<i<<f2_sv;
+#else
   o<<i<<f2;
+#endif
  }
 }
 
@@ -37,7 +65,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  string f2;
 
  i<<8; // assigning :f = 8
@@ -65,7 +93,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (
@@ -94,5 +122,4 @@ int main()
  db.logoff(); // disconnect from Oracle
 
  return 0;
-
 }

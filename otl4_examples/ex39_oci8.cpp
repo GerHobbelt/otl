@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -38,7 +42,7 @@ void select(void)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  otl_datetime tm,f2;
 
  tm.year=1998;
@@ -66,7 +70,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI8 environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

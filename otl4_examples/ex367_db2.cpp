@@ -1,3 +1,8 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#define _HAS_STREAM_INSERTION_OPERATORS_DELETED_IN_CXX20 1
+#endif
 #include <iostream>
 #include <string>
 using namespace std;
@@ -21,6 +26,20 @@ namespace std{
 
 #define OTL_UNICODE_CHAR_TYPE wchar_t
 #define OTL_UNICODE_STRING_TYPE wstring
+#endif
+
+#if (defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 900)) && \
+     (defined(OTL_CPP_14_ON) || defined(OTL_CPP_17_ON))
+#include <string_view>
+#define OTL_UNICODE_STD_STRING_VIEW_CLASS std::basic_string_view<unicode_char>
+#elif (defined(__clang__) && (__clang_major__*100+__clang_minor__ < 900) || defined(__GNUC__)) && \
+     (defined(OTL_CPP_14_ON) || defined(OTL_CPP_17_ON))
+#include <experimental/string_view>
+#define OTL_UNICODE_STD_STRING_VIEW_CLASS std::experimental::basic_string_view<unicode_char>
+#elif defined(_MSC_VER) && (_MSC_VER>=1910) && defined(OTL_CPP_17_ON)
+// VC++ 2017 or higher when /std=c++latest is used
+#include <string_view>
+#define OTL_UNICODE_STD_STRING_VIEW_CLASS std::basic_string_view<wchar_t>
 #endif
 
 #include <otlv4.h> // include the OTL 4.0 header file
@@ -47,7 +66,12 @@ void insert()
   tmp[3]=4444; // Unicode chracater (decimal code of 4444)
   tmp[4]=0; // Unicode null terminator 
   tmp2=tmp;
+#if defined(OTL_STD_UNICODE_STRING_VIEW_CLASS)
+  OTL_STD_UNICODE_STRING_VIEW_CLASS tmp2_sv(tmp2.c_str(),tmp2.length());
+  o<<tmp2_sv; 
+#else
   o<<tmp2; 
+#endif
  }
 
 }
@@ -64,7 +88,7 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  OTL_UNICODE_STRING_TYPE f2;
 
  i<<8<<8; // assigning :f11 = 8, f12 = 8

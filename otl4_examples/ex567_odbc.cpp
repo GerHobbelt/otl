@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -97,7 +101,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<8<<8; // assigning :f12 = 8, :f12 = 8
@@ -125,7 +129,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("scott/tigger@freetds_sybsql"); // connect to Sybase
+  db.rlogon("sa/tigger@freetds_sybsql"); // connect to Sybase
   db.auto_commit_off();
 
   otl_cursor::direct_exec

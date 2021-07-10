@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -45,7 +49,7 @@ void select(void)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8
    // SELECT automatically executes when all input variables are
@@ -72,7 +76,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("UID=scott;PWD=tiger;DSN=my_db"); // connect to ODBC
+  db.rlogon("UID=system;PWD=oracle;DSN=my_db"); // connect to ODBC
 
   otl_cursor::direct_exec
    (

@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -46,9 +50,9 @@ void insert()
   sprintf(tmp,"Name%d",i);
 #endif
   if(i==10)
-   o<<(float)i<<otl_null()<<otl_null();
+    o<<static_cast<float>(i)<<otl_null()<<otl_null();
   else
-   o<<(float)i<<tmp<<f4;
+    o<<static_cast<float>(i)<<tmp<<f4;
  }
 
 }
@@ -64,10 +68,10 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
- char f22;
- int f3;
+ char f22=0;
+ int f3=0;
  otl_datetime f4;
 
 

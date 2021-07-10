@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;
-      charset=ISO-8859-1">
+      charset=windows-1252">
     <meta name="Author" content="Sergei Kuchin">
     <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
       [Netscape]">
@@ -20,8 +20,8 @@
     class is the class for creating and handling <i>connect</i> objects
     together with transaction management.
     <pre><font size="+2">class otl_connect{&nbsp;<br>public:<br></font></pre>
-    <table style="text-align: left; width: 100%;" border="1"
-      cellpadding="2" cellspacing="2">
+    <table style="text-align: left; width: 100%;" cellspacing="2"
+      cellpadding="2" border="1">
       <tbody>
         <tr>
           <td style="vertical-align: top;"><span style="font-style:
@@ -36,6 +36,17 @@
             <pre>int connected;</pre>
           </td>
           <td style="vertical-align: top;"> <i><a name="connected"></a>Connection
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -81,6 +92,17 @@ OTL
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             environment. It needs to be called only once at the
             beginning of the program before making the very first
             connection to the database. The <i>threaded_mode </i>is a
@@ -110,6 +132,17 @@ Oracle
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             OCI environment. It needs to be called only once at the end
             of the program after closing the very last database
             connection. This function is just a wrapper around the
@@ -131,6 +164,17 @@ Oracle
 
 
 
+
+
+
+
+
+
+
+
+
+
+
               only<b>. </b></i>Cancel any operation / database call,
             executing / active in the connect object / database session.
             Say, the database session is in the <i>active </i>state,
@@ -144,8 +188,8 @@ Oracle
         <tr>
           <td style="vertical-align: top;">
             <pre>void change_password(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -185,6 +229,17 @@ Oracle
 
 
 
+
+
+
+
+
+
+
+
+
+
+
               only</i>. This function changes Oracle user's passwords.
             The program needs to attach to an Oracle server, and only
             then this function can be called</td>
@@ -203,6 +258,17 @@ Oracle
             <br>
             OTL/ODBC and OTL/DB2-CLI define the following global
             constants, which can be used as substitutes for the <i>level
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -231,6 +297,17 @@ size
 for
 operations
 with
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -307,6 +384,17 @@ on
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             the same connect object that is being used to execute the
             SQL statement. <br>
             <br>
@@ -317,6 +405,23 @@ on
             <br>
             In the future, if the OCI or the DB2 CLI provides similar
             functionality, this function may be implemented. <br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><a name="set_lob_prefetch_size"></a><tt>void
+              set_lob_prefetch_size</tt><tt><br>
+              (const int prefetch_size=0);</tt><br>
+          </td>
+          <td valign="top"><i>OTL/</i><i><a
+                href="otl3_compile.htm#OTL_ORA11G_R2">OCI11GR2</a></i><i>/</i><i><a
+                href="otl3_compile.htm#OTL_ORA12C">OCI12C</a></i> only.
+            Sets the <code>OCI_ATTR_DEFAULT_LOBPREFETCH_SIZE</code>
+            attribute for the session. The value of this attribute will
+            indicate the default prefetch data size for a LOB locator.
+            This enables you to enable prefetching for all the LOB
+            locators fetched in the session. Default value for this
+            attribute is zero (no prefetch of LOB data).<br>
             <br>
           </td>
         </tr>
@@ -339,14 +444,25 @@ and
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             then calls the <a href="otl3_connect_class.htm#rlogon">rlogon()</a>
             function. </td>
         </tr>
         <tr>
           <td style="vertical-align: top;">
             <pre>void rlogon(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -403,11 +519,22 @@ and
               <big> </big>
               <ul>
                 <big> </big>
-                <li><big> <font size="-1"><big>"USER/PASSWORD/@DSN"
+                <li><big> <font size="-1"><big>"USER/PASSWORD@DSN"
                         (Oracle-like style for ODBC or DB2-CLI
                         connections)</big></font></big></li>
                 <big> </big>
                 <li><big> <font size="-1"><big>"DSN=value;UID=value;PWD=value"
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -424,12 +551,16 @@ and
                 OTL/ODBC/OCI8/OCI8i/OCI9i/OCI10g/OCI11g, it is possible
                 for a&nbsp; password value to have a "@" (commercial at
                 character) in it. In order to specify a "@" in a
-                password, the character has to be prefixed&nbsp; with a
-                "<span style="font-weight: bold;">\</span>", for
-                example: "userid/pass\\@word@DSN", or
-                "UID=scott;PWD=ti\\@ger;DSN=mssql" (in these examples,
-                "\\" was used because the examples show C++ string
-                literals).</big><br>
+                password<font size="-1">, or in a<font size="-1"> <font
+                      size="-1">UID</font></font></font>, the character
+                has to be prefixed&nbsp; with a "<span
+                  style="font-weight: bold;">\</span>", for example:
+                "userid/pass\\@word@DSN", or
+                "UID=scott;PWD=ti\\@ger;DSN=mssql", <font size="-1">or&nbsp;</font></big></font><font
+              size="-1"><big><font size="-1"><font size="-1"><big>
+                      "UID=scott\\@servername;PWD=ti\\@ger;DSN=mssql"</big></font>.
+                  <font size="-1">I</font></font>n these examples, "\\"
+                was used because the examples show C++ string literals.</big><br>
               <br>
             </font><a name="auto_commit"></a>The auto_commit parameter
             in this function is used for setting the connection
@@ -454,9 +585,9 @@ and
           <td style="vertical-align: top;"><tt>void rlogon(Lda_Def*
               lda);</tt> </td>
           <td style="vertical-align: top;"> <a name="attach7"></a>Logs
-            on / connect to / attach to the primary database connection,
-            which was made in Pro*C/C++ or any other third-party
-            library. This function works for <b><i>OTL/OCI7</i></b>
+            on / connects to / attaches to the primary database
+            connection, which was made in Pro*C/C++ or any other
+            third-party library. This function works for <b><i>OTL/OCI7</i></b>
             only, and it helps to make transition from the legacy
             environment to the OTL environment smoother. See also
             example <a href="otl3_ex58.htm">58</a>.<br>
@@ -466,8 +597,8 @@ and
         <tr>
           <td style="vertical-align: top;"><tt>void rlogon(...);<br>
             </tt>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -502,7 +633,7 @@ and
           <td style="vertical-align: top;"><a name="ext_logon_odbc"></a>Logs
 on
 /
-connect
+connects
 to
 /
 
@@ -512,9 +643,20 @@ to
 
 
 
-            attach to the primary database connection, which was made in
-            straight ODBC, DB2-CLI, or any other third-party (ODBC, or
-            DB2-CLI based) library. This function works for <span
+
+
+
+
+
+
+
+
+
+
+
+            attaches to the primary database connection, which was made
+            in straight ODBC, DB2-CLI, or any other third-party (ODBC,
+            or DB2-CLI based) library. This function works for <span
               style="font-style: italic;">OTL/ODBC, DB2-CLI</span> <span
               style="font-style: italic;">only</span>, and it helps make
             transition from the legacy environment to the OTL
@@ -525,8 +667,8 @@ to
         <tr>
           <td style="vertical-align: top;"><span style="font-family:
               monospace;"><a name="rlogon3"></a>void rlogon(...);</span><br>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -561,27 +703,14 @@ to
               </tbody>
             </table>
             <br>
-          </td>
-          <td style="vertical-align: top;"><a name="logon_odbc_unicode"></a><i>OTL/ODBC,
-
-
-
-
-
-
-
-              DB2-CLI</i> <span style="font-style: italic;">only. </span>Under
-#define
-
-
-
-
-
-
-
-            <a href="otl3_compile.htm#OTL_UNICODE_EXCEPTION_AND_RLOGON">OTL_UNICODE_EXCEPTION_AND_RLOGON</a>.<br>
             <br>
-            Logs on / connect to the database (DSN / database alias).
+          </td>
+          <td style="vertical-align: top;"><i><a
+                name="logon_odbc_unicode"></a>OTL/ODBC, DB2-CLI</i> <span
+              style="font-style: italic;">only. </span>Under #define <a
+              href="otl3_compile.htm#OTL_UNICODE_EXCEPTION_AND_RLOGON">OTL_UNICODE_EXCEPTION_AND_RLOGON</a>.<br>
+            <br>
+            Logs on / connects to the database (DSN / database alias).
             This function works <span style="font-style: italic;"></span>
             when Unicode ODBC driver functions are enabled (via the C++
             standard<span style="font-family: monospace;"> #define
@@ -592,10 +721,88 @@ to
           </td>
         </tr>
         <tr>
+          <td valign="top">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-family: monospace;"><a name="rlogon4"></a>void
+
+
+
+
+
+
+                      rlogon(...);</span><br>
+                    <table style="text-align: left; width: 100%;"
+                      cellspacing="2" cellpadding="2" border="1">
+                      <tbody>
+                        <tr>
+                          <td style="vertical-align: top;"><span
+                              style="font-style: italic;">Function</span><br>
+                          </td>
+                          <td style="vertical-align: top;"><span
+                              style="font-style: italic;">Description</span><br>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">const char*
+                            username</td>
+                          <td style="vertical-align: top;">user name</td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">const char*
+                            passwd</td>
+                          <td style="vertical-align: top;">password</td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">const char*
+                            dsn</td>
+                          <td style="vertical-align: top;">data source
+                            name</td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">const int
+                            auto_commit=0 </td>
+                          <td style="vertical-align: top;">connect
+                            auto-commit mode</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <br>
+                    <br>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td valign="top"><i>OTL/ODBC, DB2-CLI</i> <span
+              style="font-style: italic;">only. <br>
+              <br>
+            </span>When !defined(<a
+              href="otl3_compile.htm#OTL_UNICODE_EXCEPTION_AND_RLOGON">OTL_UNICODE_EXCEPTION_AND_RLOGON</a>)
+            &amp;&amp; <br>
+            (ODBCVER&gt;=0x300 || defined(<a
+              href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a>)).<br>
+            <br>
+            Logs on / connect to the database (DSN / database alias).
+            This function is available when #define
+            OTL_UNICODE_EXCEPTION_AND_LOGON is not enabled, for ODBC/
+            DB2 CLI drivers that support ODBC/DB2 CLI versions &gt;= 300
+            (not older than 25-27 years old in 2018)<span
+              style="font-family: monospace;">.</span> The function
+            allows one-byte character string user names, passwords, and
+            DSNs to be passed into the ODBC/DB2 CLI layer. The function
+            should be used when passwords have special characters.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
           <td style="vertical-align: top;">
             <pre>otl_connect(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -635,14 +842,25 @@ to
 
 
 
+
+
+
+
+
+
+
+
+
+
+
                 DB2-CLI</i></b> only, and it helps make transition from
             the legacy environment to the OTL environment smoother. </td>
         </tr>
         <tr>
           <td style="vertical-align: top;">
             <pre>void rlogon(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -687,8 +905,8 @@ to
         <tr>
           <td style="vertical-align: top;">
             <pre>void rlogon(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -755,8 +973,8 @@ to
         <tr>
           <td style="vertical-align: top;">
             <pre><a name="server_attach"></a>void server_attach(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -803,6 +1021,17 @@ to
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             to Oracle (<span style="font-style: italic;">OTL/OCI8/8i/9i/10g/11g</span><span
               style="font-style: italic;"> only</span>). This function
             is a wrapper around the ServerAttach function of the
@@ -838,7 +1067,7 @@ to
           <td style="vertical-align: top;">
             <pre><a name="session_begin"></a>void session_begin(...);<br></pre>
             <table style="text-align: left; width: 431px; height:
-              206px;" border="1" cellpadding="2" cellspacing="2">
+              206px;" cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -872,6 +1101,14 @@ to
                     mode, the user is authenticated for SYSDBA
                     access.&nbsp; OCI_SYSOPER -- in this mode, the user
                     is authenticated for SYSOPER access.<br>
+                    OCI_MIGRATE -- in this mode, the new user session
+                    context may be set in a service handle with a
+                    different server handle. </td>
+                </tr>
+                <tr>
+                  <td valign="top">OCISession* authp=nullptr<br>
+                  </td>
+                  <td valign="top">OCI session handle<br>
                   </td>
                 </tr>
               </tbody>
@@ -901,6 +1138,17 @@ and
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             <a href="otl3_connect_class.htm#server_detach">server_detach</a>()
 functions,
 could
@@ -913,9 +1161,26 @@ used
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             for implementing a connection management mechanism that is
             several times more efficient [thus, more scalable] than the
-            traditional connection pooling.</td>
+            traditional connection pooling.<br>
+            <br>
+            For more detail on OCISession* and OCI_MIGRATE, see the <a
+href="https://docs.oracle.com/cd/B10501_01/appdev.920/a96584/oci15r13.htm">OCI
+
+              Relational Functions/OCISessionBegin</a>.<br>
+          </td>
         </tr>
         <tr>
           <td style="vertical-align: top;">
@@ -930,8 +1195,8 @@ used
         <tr>
           <td style="vertical-align: top;">
             <pre><a name="session_reopen"></a>void session_reopen(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -964,6 +1229,17 @@ for
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             a given <i>username/password</i> and then closed via <a
               href="otl3_connect_class.htm#session_end">session_end</a>(),
 another
@@ -973,6 +1249,17 @@ be
 started
 faster
 (5-10%)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1009,12 +1296,34 @@ faster
             must call <a href="otl3_stream_class.htm#flush">otl_stream::flush</a>()
 
 
+
+
+
+
+
+
+
+
+
+
+
             on any open INSERT / UPDATE / DELETE / stored procedure call
             (that modifies the database) first, otherwise the buffered
             data may not be written to the database in time for the
             commit.&nbsp; Note that there is an implicit call to flush()
             in the otl_stream destructor, unless <a
               href="otl3_stream_class.htm#set_flush">otl_stream::set_flush</a>(false)
+
+
+
+
+
+
+
+
+
+
+
 
 
             was called before the corresponding otl_stream was opened.<br>
@@ -1055,6 +1364,17 @@ faster
               href="otl3_stream_class.htm#set_flush">otl_stream::set_flush</a>(false)
 
 
+
+
+
+
+
+
+
+
+
+
+
             was called before the corresponding otl_stream was opened.</td>
         </tr>
         <tr>
@@ -1077,14 +1397,39 @@ faster
               href="otl3_compile.htm#OTL_STREAM_POOLING_ON">OTL_STREAM_POOLING_ON,</a>
             used together with #define <a
               href="otl3_compile.htm#OTL_STL">OTL_STL</a> (or #define <a
-              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a>). If
-            OTL_STREAM_POOLING_ON is defined in the program, the
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a>, or #define <a
+              href="otl3_compile.htm#OTL_UNICODE_STRING_TYPE">OTL_UNICODE_STRING_TYPE</a>).
+
+
+
+
+
+
+
+
+
+            If OTL_STREAM_POOLING_ON is defined in the program, the
             function body gets included into the target code. Also, a
             default stream pool gets allocated as part the otl_connect
             object, even if the function doesn't get called. Therefore,
             a call to the function will reallocate all the resources,
             allocated by the default stream pool, or by previous calls
-            to set_stream_pool_size().</td>
+            to set_stream_pool_size().<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt>void set_fetch_scroll_mode(bool
+              use_fetch_scroll=true);</tt><br>
+          </td>
+          <td valign="top"><a name="set_fetch_scroll_mode"></a>Sets the
+            "SQLFetchScroll" mode, meaning that otl_stream instances
+            opened under a given otl_connect will use SQLFetchScroll()
+            instead of SQLExtendedFetch(). This function can be
+            activated with #define <a
+href="otl3_compile.htm#OTL_ODBC_USES_SQL_FETCH_SCROLL_WHEN_SPECIFIED_IN_OTL_CONNECT">OTL_ODBC_USES_SQL_FETCH_SCROLL_WHEN_SPECIFIED_IN_OTL_CONNECT</a>.<br>
+            <br>
+          </td>
         </tr>
         <tr>
           <td style="vertical-align: top;"><span style="font-family:
@@ -1097,6 +1442,17 @@ faster
               get_stream_pool_enabled_flag() const;</span><br>
           </td>
           <td style="vertical-align: top;"><a name="stream_pool_enable"></a>These
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1120,6 +1476,17 @@ faster
           <td style="vertical-align: top;"><tt>void set_character_set<br>
               (const int char_set=SQLCS_IMPLICIT);</tt></td>
           <td style="vertical-align: top;"><a name="set_character_set"></a>This
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1203,6 +1570,17 @@ string
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             to the otl_connect object. If the object is not connected to
             a database then the string is a connection string in the
             "userid/passwd@db" format and it makes the object connect to
@@ -1216,6 +1594,17 @@ string
               operator&lt;&lt;=(const char* str);</tt></td>
           <td style="vertical-align: top;"><a name="operator_lle"></a>Sends
 a
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1243,6 +1632,17 @@ the
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             SQL statement that was saved with operator <a
               href="#operator_lle">&lt;&lt;=</a> to an otl_stream
             object. It makes the otl_stream object open the SQL
@@ -1256,8 +1656,8 @@ the
         <tr>
           <td style="vertical-align: top;"><tt>long direct_exec(...);<br>
             </tt>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
               <tbody>
                 <tr>
                   <td style="vertical-align: top;"><span
@@ -1286,6 +1686,17 @@ the
 executes
 a
 static
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1329,6 +1740,17 @@ an
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             <a href="otl3_exception_class.htm">otl_exception</a> if
             there is an SQL error.<br>
           </td>
@@ -1349,6 +1771,17 @@ an
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             <a href="otl3_compile.htm#OTL_ODBC_MULTI_MODE">OTL_ODBC_MULTI_MODE</a>
             is enabled, OTL allows ODBC connections to more than one
             database type to be made from the same program at the same
@@ -1358,6 +1791,17 @@ an
             Sets connection mode before otl_connect::rlogon() is called.
             See the <a
               href="otl3_connect_class.htm#connection_mode_list">connection
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1433,6 +1877,17 @@ of
 
 
 
+
+
+
+
+
+
+
+
+
+
+
                 <a href="otl3_compile.htm#OTL_ODBC_MSSQL_2008">OTL_ODBC_MSSQL_2008</a>)</li>
             </ul>
             <br>
@@ -1490,22 +1945,52 @@ of
           href="otl3_exception_class.htm">Next</a><a href="otl3.htm">Contents</a><a
           href="home.htm">Go Home</a> <br>
       </p>
-      <div style="text-align: left;">Copyright &copy; 1996-2012, Sergei
+      <div style="text-align: left;">Copyright © 1996-2020, Sergei
         Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
         <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
           <script language="JavaScript"><!-- hide from old browsers
+
+
+
  var modDate = new Date(document.lastModified)
+
+
+
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+
+
+
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100);
+
+
+
  //-->
+
+
+
 </script> </a>.<br>
       </div>
     </center>
     <script language="JavaScript"><!-- hide from old browsers
+
+
+
  var modDate = new Date(document.lastModified)
+
+
+
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+
+
+
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+
+
+
  //-->
+
+
+
  </script>
     <p></p>
     <p><i>Permission to use, copy, modify and redistribute this document
@@ -1520,11 +2005,26 @@ of
         OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
         USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
     <script type="text/javascript">
+
+
+
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+
+
+
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+
+
 </script>
     <script type="text/javascript">
+
+
+
 var pageTracker = _gat._getTracker("UA-5456201-1");
+
+
+
 pageTracker._trackPageview();</script>com
   </body>
 </html>

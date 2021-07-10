@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.75 [en] (Win98; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, otl_read_from_stream / otl_write_to_stream template
+      functions</title>
+    <meta content="Sergei Kuchin" name="author">
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, otl_read_from_stream / otl_write_to_stream template
+        functions<br>
+      </h1>
+    </center>
+    otl_read_from_stream / otl_write_to_stream functions are a
+    simplified, more efficient version of the <a
+      href="otl3_iterators.htm">STL-compliant stream iterators</a> by
+    usage. std::copy() works fine with the STL-compliant stream
+    iterators, but it calls too many copy / move constructors for the
+    underlying class. otl_read_from_stream / otl_write_to_stream
+    functions are template stand alone functions defined in the global
+    namespace. Here are the signatures of the functions:<br>
+    <br>
+    <pre>template&lt;typename OTLStream,typename OutputIterator&gt;<br>void otl_read_from_stream<br>(OTLStream&amp; s, <br> OutputIterator result, <br> size_t max_number_of_rows_to_read=0);<br><br>template&lt;typename OTLStream,typename InputIterator&gt;<br>void otl_write_to_stream(InputIterator first, InputIterator last, OTLStream &amp;s);<br></pre>
+otl_read_from_stream can be used with std::back_inserter, or 
+std::inserter template functions. otl_write_to_stream can be used with 
+begin() / end() member or global template functions defined in STL 
+containers like std::vector, std::set/multiset, std::map/multimap, etc. 
+These functions should be used as a replacement for less efficient, 
+STL-compliant stream iterator based code, if performance is a concern. 
+Conversion from the STL-compliant stream iterators to calls to 
+otl_read_from_stream / otl_write_to_stream is straightforward. <br><br><i>max_number_of_rows_to_read</i> specifies the maximum number of rows to be read from the stream. Default value of 0 means "to read the whole result set". A positive number puts a cap on how many rows should be read from the stream.<br><br>Also, see
+ code example <a href="otl4_ex754.htm">754</a> (OCI7), <a href="otl4_ex755.htm">755</a> (OCI8 and higher), <a href="otl4_ex756.htm">756</a> (MS SQL), <a href="otl4_ex757.htm">757</a> (DB2), <a href="otl4_ex758.htm">758</a> (PostgreSQL). These code examples may be easily modified to work with the rest of the OTL supported database types.<br>
+
+<hr width="100%">
+<center>
+<p><a href="home.htm">Go
+Home</a></p>
+</center>
+<p>Copyright © 1996-2020, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE 
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING 
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL
+ THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR 
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF 
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR 
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR 
+PERFORMANCE OF THIS SOFTWARE.</i>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script></p>
+
+
+
+</body></html>

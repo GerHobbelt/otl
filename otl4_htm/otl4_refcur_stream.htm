@@ -1,50 +1,40 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, OTL reference cursor stream</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, OTL reference cursor stream class</h1>
-</center>
-<h1>
-<a name="otl_refcur_stream"></a>OTL reference cursor stream class</h1>
-This class (otl_refcur_stream) is used for reading rows from a <a
- href="otl3_bind_variables.htm#refcur">reference
-cursor</a> bind variable. The class is defined for OTL/OCI8/8i/9i/10g
-only.
-It's
-similar to the <a href="otl3_stream_class.htm">otl_stream</a> class
-itself,
-when the otl_stream is instantiated with a SELECT statement, or with a
-single reference cursor. otl_refcur_stream can be initiliazed by <a
- href="otl3_stream_class.htm#stream_read_refcur">reading</a>
-a reference cursor descriptor from an otl_stream. The class, in tandem
-with the <a href="otl3_bind_variables.htm#refcur">refcur</a>
-placeholder,
-allows the otl_stream to return multiple reference cursors from a
-stored
-procedure call in one shot.
-<p>Potentially, the otl_refcur_stream class may raise an <a
- href="otl3_exc_list.htm">OTL
-defined exception</a>.
-</p>
-<p>All of the functions, defined in this class, mimick the <a
- href="otl3_stream_class.htm">otl_stream</a>
-functions, therefore, see the descriptions of the corresponding
-functions
-in <a href="otl3_stream_class.htm">otl_stream</a>.
-</p>
-<pre><font size="+2">class otl_refcur_stream {<br>public:<br></font></pre>
-<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
- cellspacing="2">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, OTL reference cursor stream</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, OTL reference cursor stream class</h1>
+    </center>
+    <h1> <a name="otl_refcur_stream"></a>OTL reference cursor stream
+      class</h1>
+    This class (otl_refcur_stream) is used for reading rows from a <a
+      href="otl3_bind_variables.htm#refcur">reference cursor</a> bind
+    variable. The class is defined for OTL/OCI8/8i/9i/10g only. It's
+    similar to the <a href="otl3_stream_class.htm">otl_stream</a> class
+    itself, when the otl_stream is instantiated with a SELECT statement,
+    or with a single reference cursor. otl_refcur_stream can be
+    initiliazed by <a href="otl3_stream_class.htm#stream_read_refcur">reading</a>
+    a reference cursor descriptor from an otl_stream. The class, in
+    tandem with the <a href="otl3_bind_variables.htm#refcur">refcur</a>
+    placeholder, allows the otl_stream to return multiple reference
+    cursors from a stored procedure call in one shot.
+    <p>Potentially, the otl_refcur_stream class may raise an <a
+        href="otl3_exc_list.htm">OTL defined exception</a>. </p>
+    <p>All of the functions, defined in this class, mimic the <a
+        href="otl3_stream_class.htm">otl_stream</a> functions,
+      therefore, see the descriptions of the corresponding functions in
+      <a href="otl3_stream_class.htm">otl_stream</a>. </p>
+    <pre><font size="+2">class otl_refcur_stream {<br>public:<br></font></pre>
+<table style="text-align: left; width: 100%;" cellspacing="2" cellpadding="2" border="1">
   <tbody>
     <tr>
       <td style="vertical-align: top;"><span style="font-style: italic;">Function</span><br>
@@ -55,15 +45,12 @@ in <a href="otl3_stream_class.htm">otl_stream</a>.
     <tr>
       <td style="vertical-align: top;">
       <pre>void set_column_type(...);<br></pre>
-      <table style="text-align: left; width: 100%;" border="1"
- cellpadding="2" cellspacing="2">
+      <table style="text-align: left; width: 100%;" cellspacing="2" cellpadding="2" border="1">
         <tbody>
           <tr>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Parameter</span><br>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Parameter</span><br>
             </td>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Description</span><br>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
             </td>
           </tr>
           <tr>
@@ -75,8 +62,7 @@ query: 1,2,3... </td>
           </tr>
           <tr>
             <td style="vertical-align: top;">const int col_type</td>
-            <td style="vertical-align: top;">one of the <a
- href="file:///D%7C/oscl/vc/doc/otl4/otl3_stream_class.htm#otl_var_dbtype">data
+            <td style="vertical-align: top;">one of the <a href="file:///D%7C/oscl/vc/doc/otl4/otl3_stream_class.htm#otl_var_dbtype">data
 type
 constants</a>,
 defined by OTL. </td>
@@ -148,15 +134,13 @@ has
 the same meaning as the eof() funtion in C++ streams </td>
     </tr>
     <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="skip_to_end_of_row"></a>void
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="skip_to_end_of_row"></a>void
 skip_to_end_of_row()</span><br>
       </td>
       <td style="vertical-align: top;">Skips
 to the end of the current row, for example:<br>
 &nbsp;&nbsp;&nbsp;&nbsp; <br>
-      <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
- style="font-family: monospace;">while(!s.eof()){</span><br>
+      <small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">while(!s.eof()){</span><br>
       <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;&nbsp;
 s&gt;&gt;f1;<br>
 &nbsp;&nbsp;&nbsp;&nbsp; ...<br>
@@ -181,8 +165,7 @@ logical row, or reach the end of the fetch sequence.</td>
       <td style="vertical-align: top;">
       <pre>otl_column_desc* describe_select(int&amp; desc_len);</pre>
       </td>
-      <td style="vertical-align: top;"><a
- href="otl3_stream_class.htm#describe_select">Describes</a> the output
+      <td style="vertical-align: top;"><a href="otl3_stream_class.htm#describe_select">Describes</a> the output
 columns of the reference cursor.<br>
       </td>
     </tr>
@@ -190,8 +173,7 @@ columns of the reference cursor.<br>
       <td style="vertical-align: top;">
       <pre><a name="describe_out_vars"></a>otl_var_desc* describe_out_vars(int&amp; desc_len);</pre>
       </td>
-      <td style="vertical-align: top;"><a
- href="otl3_stream_class.htm#describe_out_vars">Describes</a> stream's
+      <td style="vertical-align: top;"><a href="otl3_stream_class.htm#describe_out_vars">Describes</a> stream's
 output bind variables.<br>
       </td>
     </tr>
@@ -199,9 +181,7 @@ output bind variables.<br>
       <td style="vertical-align: top;">
       <pre><a name="describe_next_out_var"></a>otl_var_desc* describe_next_out_var(void); </pre>
       </td>
-      <td style="vertical-align: top;"><a
- href="otl3_stream_class.htm#describe_next_out_var">Describes</a> the <span
- style="font-style: italic;">next</span> output bind variable.<br>
+      <td style="vertical-align: top;"><a href="otl3_stream_class.htm#describe_next_out_var">Describes</a> the <span style="font-style: italic;">next</span> output bind variable.<br>
       </td>
     </tr>
     <tr>
@@ -274,8 +254,7 @@ value </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre><a name="OTL_BIGINT"></a>otl_refcur_stream&amp; operator&gt;&gt;(<a
- href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>&amp; n);</pre>
+      <pre><a name="OTL_BIGINT"></a>otl_refcur_stream&amp; operator&gt;&gt;(<a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>&amp; n);</pre>
       </td>
       <td style="vertical-align: top;">Reads a string (char) value from
 the stream and converts it to a signed 64-bit integer. This operator is
@@ -286,22 +265,19 @@ numeric values to strings, for example: LTRIM(TO_CHAR(my_large_num)) </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a
- href="otl3_long_string.htm">otl_long_string</a>&amp; s); </pre>
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a href="otl3_long_string.htm">otl_long_string</a>&amp; s); </pre>
       </td>
       <td style="vertical-align: top;">Reads the LOB from the stream </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a
- href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&amp; dt); </pre>
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&amp; dt); </pre>
       </td>
       <td style="vertical-align: top;">Reads date/time from the stream </td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a
- href="otl3_lob_stream.htm">otl_lob_stream</a>&amp; lob);&nbsp;</pre>
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a href="otl3_lob_stream.htm">otl_lob_stream</a>&amp; lob);&nbsp;</pre>
       </td>
       <td style="vertical-align: top;">Reads reference to CLOB/BLOB
 from otl_refcur_stream into otl_lob_stream (OCI8). In other words,
@@ -311,8 +287,7 @@ initialize otl_lob_stream for reading CLOB/BLOB in stream mode </td>
       <td style="vertical-align: top;">
       <pre>otl_refcur_stream&amp; operator&gt;&gt;(std::string&amp; s);&nbsp;</pre>
       </td>
-      <td style="vertical-align: top;">Under #define <a
- href="otl3_compile.htm#OTL_STL">OTL_STL</a><br>
+      <td style="vertical-align: top;">Under #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a><br>
       <br>
 Reads the ANSI C++ std::string. This operator can&nbsp; read
 VARCHAR/CHAR table fields as well as large string objects (TEXT, LONG,
@@ -323,8 +298,7 @@ CLOB, etc.)<br>
       <td style="vertical-align: top;">
       <pre>otl_refcur_stream&amp; operator&gt;&gt;(ACE_TString&amp; s);&nbsp;</pre>
       </td>
-      <td style="vertical-align: top;">Under #define <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a><br>
+      <td style="vertical-align: top;">Under #define <a href="otl3_compile.htm#OTL_ACE">OTL_ACE</a><br>
       <br>
 Reads the ACE_TString. This operator can read VARCHAR/CHAR table fields
 as well as large string objects (TEXT, LONG, CLOB, etc.)<br>
@@ -334,8 +308,7 @@ as well as large string objects (TEXT, LONG, CLOB, etc.)<br>
       <td style="vertical-align: top;">
       <pre>otl_refcur_stream&amp; operator&gt;&gt;(unsigned char* s);</pre>
       </td>
-      <td style="vertical-align: top;">Under #define <a
- href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a><br>
+      <td style="vertical-align: top;">Under #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a><br>
       <br>
 Returns a null terminated array of unsigned short's&nbsp; (double-byte
 Unicode characters). Therefore, "unsigned char*" needs to be type cast
@@ -345,11 +318,9 @@ each Unicode character. plus 2 bytes per possible surrogate character.<br>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a
- href="otl3_long_string.htm#otl_long_unicode_string">otl_long_unicode_string</a>&amp; s);&nbsp;</pre>
+      <pre>otl_refcur_stream&amp; operator&gt;&gt;(<a href="otl3_long_string.htm#otl_long_unicode_string">otl_long_unicode_string</a>&amp; s);&nbsp;</pre>
       </td>
-      <td style="vertical-align: top;">Under #define <a
- href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a><br>
+      <td style="vertical-align: top;">Under #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a><br>
       <br>
 Reads the Unicode LOB from the stream<br>
       </td>
@@ -358,8 +329,7 @@ Reads the Unicode LOB from the stream<br>
       <td style="vertical-align: top;">
       <pre>otl_refcur_stream&amp; operator&gt;&gt;(OTL_UNICODE_CHAR_TYPE* s);</pre>
       </td>
-      <td style="vertical-align: top;">Under #define <a
- href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a><br>
+      <td style="vertical-align: top;">Under #define <a href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a><br>
       <br>
 Reads a NULL terminated string of Unicode characters<br>
       </td>
@@ -368,13 +338,16 @@ Reads a NULL terminated string of Unicode characters<br>
       <td style="vertical-align: top;">
       <pre>otl_refcur_stream&amp; operator&gt;&gt;(OTL_UNICODE_STRING_TYPE&amp; s);</pre>
       </td>
-      <td style="vertical-align: top;">Under #define <a
- href="otl3_compile.htm#OTL_UNICODE_STRING_TYPE">OTL_UNICODE_STRING_TYPE</a><br>
+      <td style="vertical-align: top;">Under #define <a href="otl3_compile.htm#OTL_UNICODE_STRING_TYPE">OTL_UNICODE_STRING_TYPE</a><br>
       <br>
 Reads an std::string compliant (by interface) string of
 OTL_UNICODE_STRING_TYPE<br>
       </td>
-    </tr>
+    </tr><tr><td valign="top"><tt><a name="OTL_REFCUR_STREAM_OCI_SPATIAL_GEOMETRY"></a>otl_refcur_stream&amp; operator&gt;&gt;<br>
+(<a href="otl3_stream_class.htm#OCI_SPATIAL_GEOMETRY">oci_spatial_geometry</a>&amp; g);<br>
+<br>
+otl_refcur_stream&amp; operator&lt;&lt;<br>
+(const <a href="otl3_stream_class.htm#OCI_SPATIAL_GEOMETRY">oci_spatial_geometry</a>&amp; g);</tt></td><td valign="top">Under #define <a href="otl3_compile.htm#OTL_ORA_SDO_GEOMETRY">OTL_ORA_SDO_GEOMETRY</a>, operators for reading / writing MDSYS.SDO_GEOMETRY values from / to the following OTL defined container: <a href="otl3_stream_class.htm#OCI_SPATIAL_GEOMETRY">oci_spatial_geometry</a>.<br><br>For more detail on MDSYS.SDO_GEOMETRY, see the corresponding Oracle manual.<br></td></tr><tr><td valign="top"><tt>#if defined (<a href="otl3_compile.htm#OTL_STD_STRING_VIEW_CLASS">OTL_STD_STRING_VIEW_CLASS</a>)</tt><tt><br></tt><tt><br></tt><tt><a name="OTL_STD_STRING_VIEW_CLASS"></a>otl_refcur_stream&amp; operator&lt;&lt;<br>(OTL_STD_STRING_VIEW_CLASS s);</tt><tt><br></tt><tt><br></tt><tt>#endif</tt></td><td valign="top">This operator &lt;&lt; allows otl_refcur_stream to be used with <a href="http://en.cppreference.com/w/cpp/string/basic_string_view">std::string_view</a> or <a href="http://en.cppreference.com/w/cpp/experimental/basic_string_view">std::experimental::string_view</a> classes. std::string_view is a replacement for read only std::string / "const std::string&amp;" in C++17 standard. </td></tr><tr><td valign="top"><tt>#if defined (<a href="file:///C:/oscl/vc/doc/otl4/otl3_compile.htm#OTL_STD_STRING_VIEW_CLASS">OTL_STD_UNICODE_STRING_VIEW_CLASS</a>)</tt><tt><br></tt><tt><br></tt><tt><a name="OTL_STD_UNICODE_STRING_VIEW_CLASS"></a>otl_refcur_stream&amp; operator&lt;&lt;<br>(OTL_STD_UNICODE_STRING_VIEW_CLASS s);</tt><tt><br></tt><tt><br></tt><tt>#endif</tt></td><td valign="top">This operator &lt;&lt; allows otl_refcur_stream to be used with <a href="http://en.cppreference.com/w/cpp/string/basic_string_view">std::basic_string_view</a> or <a href="http://en.cppreference.com/w/cpp/experimental/basic_string_view">std::experimental::basic_string_view</a> classes. std::basic_string_view is a replacement for read only standard strings in C++17 standard. </td></tr>
   </tbody>
 </table>
 <p></p>
@@ -388,8 +361,7 @@ OTL_UNICODE_STRING_TYPE<br>
 </a><a href="home.htm">Go
 Home</a></p>
 </center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<p>Copyright © 1996-2020, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
@@ -419,5 +391,7 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
-</html>
+
+
+
+</body></html>

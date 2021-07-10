@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.75 [en] (Win98; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, otl_read_from_stream / otl_write_to_stream template
+      functions</title>
+    <meta content="Sergei Kuchin" name="author">
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, otl_read_row / otl_write_row template functions<br>
+      </h1>
+    </center>
+    otl_read_row / otl_write_row functions exist as variadic templates
+    (for an arbitrary number of parameters), and as nonvariadic
+    templates (for a number of parameters in the range of [1..15]). The
+    variadic templates are supported under #define <a
+      href="otl3_compile.htm#OTL_CPP_11_ON">OTL_CPP_11_ON</a> (or any
+    higher levels of C++XX standard support, for example under&nbsp; <a
+      href="otl3_compile.htm#OTL_CPP_14_ON">OTL_CPP_14_ON</a>, or <a
+      href="otl3_compile.htm#OTL_CPP_17_ON">OTL_CPP_17_ON</a>), and are
+    enabled for C++ compilers that support variadic template
+    functions.&nbsp; The functions are enabled for g++ 4.7 and higher
+    under #define OTL_CPP_11_ON, or CLANG++ 3.4 and higher (typically
+    when the following command line options are enabled: -DOTL_CPP_11_ON
+    -std=c++11), and automatically for Visual C++ 2013. Visual C++ 2015
+    requires #define <a href="otl3_compile.htm#OTL_CPP_11_ON">OTL_CPP_11_ON</a>
+    or <a href="otl3_compile.htm#OTL_CPP_14_ON">OTL_CPP_14_ON</a>. The
+    nonvariadic templates are supported by any C++ compilers.<br>
+    <br>
+    Here are the signatures of the variadic template functions:<br>
+    <br>
+    <pre>template&lt;typename OTLStream,typename Arg1,typename...Args&gt; <br>void otl_read_row(OTLStream&amp; s,Arg1&amp; arg1,Args&amp;...args);<br><br><a name="variadic_otl_write_row"></a>template&lt;typename OTLStream,typename Arg1, typename...Args&gt; <br>void otl_write_row(OTLStream&amp; s,Arg1&amp;&amp; arg1,Args&amp;&amp;...args);<br><br></pre>
+    <p>Here are the signatures of the nonvariadic template functions for
+      pre-C++11 compilers:<br>
+    </p>
+    <pre>template&lt;typename OTLStream,typename Arg1&gt; void otl_read_row(OTLStream&amp; s,Arg1&amp; arg1);<br>template&lt;typename OTLStream,typename Arg1,typename Arg2&gt; void otl_read_row(OTLStream&amp; s,Arg1&amp; arg1,Arg2&amp; arg2);<br>...<br></pre>
+    <pre><a name="nonvariadic_precpp11_write_row"></a>template&lt;typename OTLStream,typename Arg1&gt; void otl_write_row(OTLStream&amp; s,Arg1&amp; arg1);<br>template&lt;typename OTLStream,typename Arg1&gt; void otl_write_row(OTLStream&amp; s,const Arg1&amp; arg1);<br>template&lt;typename OTLStream,typename Arg1,typename Arg2&gt; void otl_write_row(OTLStream&amp; s,Arg1&amp; arg1,Arg2&amp; arg2);<br>template&lt;typename OTLStream,typename Arg1,typename Arg2&gt; void otl_write_row(OTLStream&amp; s,const Arg1&amp; arg1,const Arg2&amp; arg2);<br>...<br></pre>
+    <p>Here are the signatures of the nonvariadic functions for Visual
+      C++ 2010, and Visual C++ 2012, which do not support variadic
+      templates, but do support <a href="#universal_references">universal
+
+
+
+
+        references</a> (see the explanation below at the end of this
+      page):<br>
+    </p>
+    <pre>template&lt;typename OTLStream,typename Arg1&gt; void otl_read_row(OTLStream&amp; s,Arg1&amp; arg1);<br>template&lt;typename OTLStream,typename Arg1,typename Arg2&gt; void otl_read_row(OTLStream&amp; s,Arg1&amp; arg1,Arg2&amp; arg2);<br>...<br></pre>
+    <pre><a name="nonvariadic_cpp11_write_row"></a>template&lt;typename OTLStream,typename Arg1&gt; void otl_write_row(OTLStream&amp; s,Arg1&amp;&amp; arg1);<br>template&lt;typename OTLStream,typename Arg1,typename Arg2&gt; void otl_write_row(OTLStream&amp; s,Arg1&amp;&amp; arg1,Arg2&amp;&amp; arg2);<br>...<br></pre>
+    <p>The list of nonvariadic template functions goes up to 15
+      parameters. The intention here is that similar (even though more
+      limited) functionality should be available to users of pre-C++11
+      compilers. When such users migrate their C++ code to a C++11
+      compiler, everything should just work.<br>
+    </p>
+    The functions are intended for reading / writing whole logical rows,
+    and they automatically check at the end of the argument list whether
+    the "<a href="otl3_stream_class.htm#check_end_of_row">end-of-row</a>"
+    condition is true or not. It completely eliminates the "<a
+      href="http://soci.sourceforge.net/doc/3.1/rationale.html">row
+      tearing</a>" problem. If the condition is false, OTL throws the <a
+      href="otl3_exc_list.htm#32035">END-OF-ROW check failed</a>
+    exception. The use of the functions is pretty straightforward:<br>
+    <br>
+    <pre>    otl_write_row(s,f1); is equivalent to s&lt;&lt;f1&lt;&lt;<a href="otl3_stream_class.htm#ENDR">endr</a>;<br>    otl_write_row(s,f1,f2); is equivalent to s&lt;&lt;f1&lt;&lt;f2&lt;&lt;<a href="otl3_stream_class.htm#ENDR">endr</a>;<br>    ...<br>
+    otl_read_row(s,f1); is equivalent to s&gt;&gt;f1&gt;&gt;<a href="otl3_stream_class.htm#ENDR">endr</a>;<br>    otl_read_row(s,f1,f2); is equivalent to s&gt;&gt;f1&gt;&gt;f2&gt;&gt;<a href="otl3_stream_class.htm#ENDR">endr</a>;<br>    ...<br></pre>
+    where s is an otl_stream, and f1, f2... are variables of the data
+    types that are supported by the otl_stream operators
+    &gt;&gt;()/&lt;&lt;(). The functions are defined in the global
+    namespace. In order to retrieve information on NULL values,
+    instantiations of the <a href="otl3_value.htm">otl_value&lt;T&gt;</a>
+    template can be used as parameters that get passed into the
+    otl_read_row / otl_write_row functions, for example:<br>
+    <br>
+    <tt>&nbsp;&nbsp; otl_value&lt;int&gt; f1;<br>
+      &nbsp;&nbsp; otl_value&lt;otl_datetime&gt; f2;<br>
+      &nbsp;&nbsp; otl_value&lt;std::string&gt; f3;<br>
+      &nbsp;&nbsp; ...<br>
+      &nbsp;&nbsp; otl_write_row(s,f1,f2,f3);<br>
+      &nbsp;&nbsp; ...<br>
+      &nbsp;&nbsp; otl_read_row(s,f1,f2);<br>
+      &nbsp;&nbsp; ...</tt><br>
+    <p>There is a subtle difference between the variadic version of
+      these template functions and the nonvariadic version for pre-C++11
+      compilers. The variadic otl_write_row() uses universal references
+      that accept all types of parameters. The nonvariadic versions of
+      otl_write_row() for pre-C++11 compilers accept either all const
+      T&amp;, or all non-const T&amp;, which is more limited than the
+      variadic version. <a name="universal_references"></a>The
+      nonvariadic versions of otl_write_row() for Visual C++ 2010/2012
+      accept all types of parameters. "Universal references" is a term
+      coined by Scott Meyers. There is plenty of videos, or articles by
+      Scott Meyers, so if you're curious, just google "universal
+      references C++".<br>
+    </p>
+    <tt> </tt>
+    <hr width="100%">
+    <center>
+      <p><a href="home.htm">Go Home</a></p>
+    </center>
+    <p>Copyright © 1996-2020, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com
+        <script language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>. </p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+      <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+      <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script></p>
+  </body>
+</html>

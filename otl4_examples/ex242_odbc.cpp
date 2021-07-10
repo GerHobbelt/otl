@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -49,10 +53,11 @@ void select()
              ); 
    // create select stream
  
- OTL_BIGINT f1;
+ OTL_BIGINT f1=0;
  char f2[31];
 
- i<<(OTL_BIGINT)8<<(OTL_BIGINT)8; // assigning :f = 8; :ff = 8
+ i<<static_cast<OTL_BIGINT>(8)
+  <<static_cast<OTL_BIGINT>(8); // assigning :f = 8; :ff = 8
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 

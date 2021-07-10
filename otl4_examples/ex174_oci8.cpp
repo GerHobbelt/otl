@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -5,7 +9,15 @@ using namespace std;
 #define OTL_ORA8I // Compile OTL 4.0/OCI8i
 #endif
 #define OTL_UNICODE // Enable Unicode OTL for OCI8i
+#define OTL_STREAM_WITH_STD_UNICODE_CHAR_ARRAY_ON
+#if !defined(OTL_CPP_14_ON)
+#define OTL_CPP_14_ON
+#endif
 #include <otlv4.h> // include the OTL 4.0 header file
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#pragma warning(disable : 28199)
+#endif
 
 otl_connect db; // connect object
 
@@ -13,12 +25,12 @@ void insert()
 // insert rows into table
 { 
  otl_stream o(50, // buffer size
-              "insert into test_tab values(:f1<float>,:f2<char[31]>)", 
+              "insert into test_tab values(:f1<int>,:f2<char[31]>)", 
                  // SQL statement
               db // connect object
              );
  char tmp[32];
- unsigned short tmp2[32]; // Null terminated Unicode character array.
+ std::array<char16_t,31> tmp2; // Null terminated Unicode character array.
 
  for(int i=1;i<=100;++i){
 #if defined(_MSC_VER)
@@ -30,7 +42,7 @@ void insert()
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  unsigned short* c2=tmp2;
+  char16_t* c2=&tmp2[0];
   char* c1=tmp;
 // Unicode's first 128 characters are ASCII (0..127), so
 // all is needed for converting ASCII into Unicode is as follows:
@@ -41,12 +53,8 @@ void insert()
   *c2=0; // target Unicode string is null terminated,
          // only the null terminator is a two-byte character, 
          // not one-byte
-  o<<static_cast<float>(i);
-  o<<OTL_RCAST(unsigned char*,tmp2); 
-   // overloaded operator<<(const unsigned char*) in the case of Unicode
-   // OTL accepts a pointer to a Unicode character array.
-   // operator<<(const unsigned short*) wasn't overloaded
-   // in order to avoid ambiguity in C++ type casting.
+  o<<i;
+  o<<tmp2; 
  }
 
 }
@@ -60,8 +68,8 @@ void select()
              ); 
    // create select stream
  
- float f1;
- unsigned short f2[32];
+ float f1=0;
+ std::array<char16_t,31> f2;
 
  i<<8; // assigning :f = 8
    // SELECT automatically executes when all input variables are
@@ -69,16 +77,12 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i>>f1;
-  i>>OTL_RCAST(unsigned char*,f2);
-    // overloaded operator>>(unsigned char*) in the case of Unicode
-    // OTL accepts a pointer to a Unicode chracter array.
-    // operator>>(unsigned short*) wasn't overloaded 
-    // in order to avoid ambiguity in C++ type casting.
+  i>>f2;
   cout<<"f1="<<f1<<", f2=";
 // Unicode's first 128 characters are ASCII, so in order
 // to convert Unicode back to ASCII all is needed is
 // as follows:
-   for(int j=0;f2[j]!=0;++j){
+   for(size_t j=0;f2[j]!=0;++j){
      cout<<OTL_SCAST(char,f2[j]);
    }
    cout<<endl;
@@ -89,9 +93,9 @@ void select()
    // assigned. First portion of output rows is fetched to the buffer
 
  while(!i.eof()){ // while not end-of-data
-   i>>f1>>OTL_RCAST(unsigned char*,f2);
+   i>>f1>>f2;
   cout<<"f1="<<f1<<", f2=";
-   for(int j=0;f2[j]!=0;++j){
+  for(size_t j=0;f2[j]!=0;++j){
      cout<<OTL_SCAST(char,f2[j]);
    }
    cout<<endl;
@@ -104,7 +108,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

@@ -1,8 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
-  <head>
+<html><head>
 
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
     <title>OTL 4.0, Example 1 (Simple Insert/Select)</title>
     <meta name="Author" content="Sergei Kuchin">
     <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
@@ -37,8 +36,7 @@ void insert()
 
  for(int i=1;i&lt;=100;++i){
   sprintf(tmp,"Name%d",i);
-  o&lt;&lt;(float)i&lt;&lt;tmp;
- }
+#if defined(<a href="otl3_compile.htm#OTL_ANSI_CPP_11_VARIADIC_TEMPLATES">OTL_ANSI_CPP_11_VARIADIC_TEMPLATES</a>)<br>  <a href="otl4_read_row.htm">otl_write_row</a>(o,static_cast&lt;float&gt;(i),tmp);<br>#else<br>  // when variadic template functions are not supported by the C++<br>  // compiler, OTL provides nonvariadic versions of the same template<br>  // functions in the range of [1..15] parameters<br>  <a href="otl4_read_row.htm">otl_write_row</a>(o,static_cast&lt;float&gt;(i),tmp);<br><br>  // the old way (operators &gt;&gt;() / &lt;&lt;()) is available as always:<br>  //  o&lt;&lt;static_cast&lt;float&gt;(i)&lt;&lt;tmp;<br>#endif<br> }
 }
 
 void select()
@@ -58,8 +56,7 @@ void select()
    // assigned. First portion of output rows is fetched to the buffer
 
  while(!i.eof()){ // while not end-of-data
-  i&gt;&gt;f1&gt;&gt;f2;
-  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;
+#if defined(<a href="otl3_compile.htm#OTL_ANSI_CPP_11_VARIADIC_TEMPLATES">OTL_ANSI_CPP_11_VARIADIC_TEMPLATES</a>)<br>   <a href="otl4_read_row.htm">otl_read_row</a>(i,f1,f2);<br>#else<br>    // when variadic template functions are not supported by the C++<br>  // compiler, OTL provides nonvariadic versions of the same template<br>  // functions in the range of [1..15] parameters<br>   <a href="otl4_read_row.htm">otl_read_row</a>(i,f1,f2);<br>  // the old way (operators &gt;&gt;() / &lt;&lt;()) is available as always:<br>  //   i&gt;&gt;f1&gt;&gt;f2;<br>#endif<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;
  }
 
  i&lt;&lt;4; // assigning :f = 4
@@ -133,9 +130,7 @@ f1=8, f2=Name8
       <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
         <a href="home.htm">Go Home</a> </p>
     </center>
-    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
-        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><a
-        href="mailto:skuchin@gmail.com">.
+    <p>Copyright © 1996-2020, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><a href="mailto:skuchin@gmail.com">.
       </a></p>
     <p><i>Permission to use, copy, modify and redistribute this document
         for
@@ -158,5 +153,6 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script></a>
-  </body>
-</html>
+  
+
+</body></html>

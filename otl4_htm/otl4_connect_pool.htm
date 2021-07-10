@@ -1,0 +1,415 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.75 [en] (Win98; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, Template
+      otl_connect_pool&lt;OTLConnect,OTLException&gt;</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, Template
+        otl_connect_pool&lt;OTLConnect,OTLException&gt;</h1>
+    </center>
+    <h1> <a name="otl_connect_pool_class"></a>Template
+      otl_connect_pool&lt;OTLConnect,OTLException&gt;</h1>
+    This is an OTL template class that allows the users to pool <a
+      href="otl3_connect_class.htm">otl_connect</a> objects. It requires
+    C++11 compilers like more or less recent GNU C++ / CLANG (when
+    -std=c++11 on the compiler command line and #define <a
+      href="otl3_compile.htm#OTL_CPP_11_ON">OTL_CPP_11_ON</a> are
+    used),&nbsp; or Visual C++ Studio (2012, or 2013). This connect pool
+    class uses std::unique pointers in order to cleanly transfer
+    (std::move()) connect object's ownership between the pool and the
+    callers, and avoid memory leaks. All functions in this connect pool
+    class are thread safe.<br>
+    <br>
+    The otl_connect_pool class can be activated with #define <a
+      href="otl3_compile.htm#OTL_CONNECT_POOL_ON">OTL_CONNECT_POOL_ON</a><br>
+    <br>
+    <pre><font size="+2">template&lt;typename OTLConnect, typename OTLException&gt;&nbsp;<br>class otl_connect_pool{<br>public:<br></font></pre>
+    <table style="text-align: left; width: 100%;" cellspacing="2"
+      cellpadding="2" border="1">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">Function </span>/ <i>typedef</i><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">Description</span><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="otl_connect_pool"></a>otl_connect_pool();</pre>
+          </td>
+          <td style="vertical-align: top;">Default constructor<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family:
+              monospace;">otl_connect_pool(...);<br>
+              <br>
+            </span>
+            <table style="text-align: left;" width="682" height="256"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char*
+                    connect_str </td>
+                  <td style="vertical-align: top;">connect string (see
+                    otl_connect::<a href="otl3_connect_class.htm#rlogon">rlogon</a>()
+
+
+
+
+
+
+
+
+
+
+                    for more detail)<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> bool
+                    auto_commit=false</td>
+                  <td style="vertical-align: top;">connect auto_commit
+                    flag<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> size_t
+                    min_pool_size=8<br>
+                  </td>
+                  <td style="vertical-align: top;">minimum pool size.
+                    The connect pool allocates the specified number
+                    (min_pool_size) of otl_connect objects, and connects
+                    all of the connect objects to the database. If one
+                    of the connects fails, this function throws an <a
+                      href="otl3_exception_class.htm">otl_exception</a>.<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">size_t max_pool_size=32<br>
+                  </td>
+                  <td valign="top">maximum pool size. The pool size can
+                    only grow up to the specified maximum size. When the
+                    pool is full, no more connect objects can be put
+                    into the pool.<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">size_t grow_pool_in_increments=1<br>
+                  </td>
+                  <td valign="top">When the pool needs to grow, this
+                    parameter specifies how many connections get added
+                    to the pool, but still less or equal to the maximum
+                    size.<br>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+          </td>
+          <td style="vertical-align: top;">General constructor. It may
+            throw an <a href="otl3_exception_class.htm">otl_exception</a>.<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt>~otl_connect_pool();</tt><br>
+          </td>
+          <td valign="top">Destructor. <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="open"></a>void open(...);</tt><br>
+            <br>
+            <table style="text-align: left;" width="687" height="244"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char*
+                    connect_str </td>
+                  <td style="vertical-align: top;">connect string (see
+                    otl_connect::<a href="otl3_connect_class.htm#rlogon">rlogon</a>()
+
+
+
+
+
+
+
+
+
+
+                    for more detail)<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> bool
+                    auto_commit=false</td>
+                  <td style="vertical-align: top;">connect auto_commit
+                    flag<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> size_t
+                    min_pool_size=8<br>
+                  </td>
+                  <td style="vertical-align: top;">minimum pool size.
+                    The connect pool allocates the specified number
+                    (min_pool_size) of otl_connect objects, and connects
+                    all of the connect objects to the database. If one
+                    of the connects fails, this function throws an <a
+                      href="otl3_exception_class.htm">otl_exception</a>.<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">size_t max_pool_size=32<br>
+                  </td>
+                  <td valign="top">maximum pool size. The pool size can
+                    only grow up to the specified maximum size. When the
+                    pool is full, no more connect objects can be put
+                    into the pool.<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td valign="top">size_t grow_pool_in_increments=1</td>
+                  <td valign="top">When the pool needs to grow, this
+                    parameter specifies how many connections get added
+                    to the pool, but still less or equal to the maximum
+                    size.</td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+          </td>
+          <td valign="top">Opens the pool and prepopulates it to the
+            specified minimum size. If the pool was already opened,
+            closes it first. It may throw an <a
+              href="otl3_exception_class.htm">otl_exception</a>.<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="close"></a>void close(bool
+              ignore_errors=false);</tt><br>
+          </td>
+          <td valign="top">Closes the pool: disconnects all connect
+            objects from the database, and dealloactes the objects. If
+            ignore_errors is set to false, then this function may throw
+            an <a href="otl3_exception_class.htm">otl_exception</a>. If
+            ignore_errors is set to true, all possible database
+            disconnect errors are ignored.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="change_max_pool_size"></a>void </tt><tt>change_max_pool_size(const
+
+
+
+
+
+
+              size_t new_max_pool_size)</tt><tt>;</tt><br>
+          </td>
+          <td valign="top">Changes the maximum pool size if the current
+            maximum pool size. If the current pool size is larger than
+            the new maximum pool size, the pool <a href="#shrink_pool">shrinks</a>
+            to the new size.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="shrink_pool"></a>void
+              shrink_pool(...);</tt><br>
+            <br>
+            <table style="text-align: left;" width="689" height="113"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">size_t min_pool_size<br>
+                  </td>
+                  <td style="vertical-align: top;">new minimum pool size<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> bool
+                    ignore_errors=false<br>
+                  </td>
+                  <td style="vertical-align: top;">ignore any database
+                    errors<br>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+          </td>
+          <td valign="top">Shrinks (disconnects from the database and
+            deallocates the underlying connect objects) the pool size to
+            the new specified minimum pool size. If the pools size is
+            already smaller than the new specified minimum pool size,
+            the function doesn't do anything. If ignore_errors is set to
+            false, the function may throw an otl_exception. This
+            function can be called by a timer to shrink excessive
+            capacity of the pool. OTL doesn't use timers because timers
+            aren't available in the C++ standard library yet.<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="connect_ptr"></a>typedef
+              std::unique_ptr&lt;OTLConnect&gt; connect_ptr;</tt><br>
+          </td>
+          <td valign="top">(C++11) Unique pointer to the connect object.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="get"></a>connect_ptr get(const
+              ignore_errors=true)</tt>;<br>
+          </td>
+          <td valign="top">Gets a connect object from the pool. The
+            ownership of the connect object is transferred / moved (the
+            caller should use std::move()) from the pool to the caller.
+            If the pool is empty / at its maximum capacity or closed,
+            the function returns an empty unique pointer. If
+            ignore_errors is set to false, the function may throw an <a
+              href="otl3_exception_class.htm">otl_exception</a>.<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="put"></a>bool
+              put(connect_ptr&amp;&amp; p);</tt><br>
+          </td>
+          <td valign="top">Puts a connect object into the pool. The
+            ownership of the connect object is transferred / moved
+            (std::move()) from the caller to the pool. The function
+            returns false if the pool is closed or full (filled to its
+            maximum pool size). Otherwise, the function returns true. If
+            the pool is full, the input unique pointer to the underlying
+            connect object does not get moved, so it is the caller's
+            responsibility to dispose of the connect object or reuse in
+            some way.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="is_open"></a>bool is_open();</tt><br>
+          </td>
+          <td valign="top">Returns the "pool open" flag.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="min_pool_size"></a>size_t
+              min_pool_size();</tt><br>
+          </td>
+          <td valign="top">Returns the "minimum pool size".<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="max_pool_size"></a>size_t
+              min_pool_size();</tt><br>
+          </td>
+          <td valign="top">Returns the "maximum pool size".<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="current_pool_size"></a>size_t
+              current_pool_size();</tt><br>
+          </td>
+          <td valign="top">Returns the "current / dynamic pool size".<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt><a name="get_mutex"></a>std::recursive_mutex&amp;
+
+
+
+
+
+              get_mutex();</tt><br>
+          </td>
+          <td valign="top">Returns a read/write reference to the
+            underlying mutex. It should be used when a sequence of more
+            than one call needs to be done under a single mutex lock for
+            consistency.<br>
+            <br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+    <pre></pre>
+    <pre><font size="+2">}; // end of otl_connect_pool</font><br></pre>
+    <hr width="100%">
+    <center>
+      <p><a href="otl3_iterators.htm">Prev</a> <a
+          href="otl3_const_sql.htm">Next</a><a href="otl3.htm">Contents</a><a
+          href="home.htm">Go Home</a></p>
+    </center>
+    <p>Copyright © 1996-2020, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com
+        <script language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>. </p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+      <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+      <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script></p>
+  </body>
+</html>

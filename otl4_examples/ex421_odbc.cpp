@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -66,10 +70,10 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
- char f22;
- int f3;
+ char f22=0;
+ int f3=0;
  otl_datetime f4;
 
 
@@ -141,7 +145,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("scott/tigger@sybsql"); // connect to MS SQL Server
+  db.rlogon("sa/tigger@sybsql"); // connect to MS SQL Server
 
   otl_cursor::direct_exec
    (db,

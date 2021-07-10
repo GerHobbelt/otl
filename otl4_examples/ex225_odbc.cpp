@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -76,8 +80,20 @@ void update(const int af1)
                  // UPDATE statement
               db // connect object
              );
- o<<"Name changed"<<af1;
- o<<otl_null()<<af1+1; // set f2 to NULL
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+ otl_write_row(o,"Name changed",af1);
+ otl_write_row(o,otl_null(),af1+1); // set f2 to NULL
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+ const char* name_changed="Name changed";
+ otl_write_row(o,name_changed,af1);
+ otl_write_row(o,otl_null(),af1+1); // set f2 to NULL
+  // the old way (operators >>() / <<()) is available as always:
+  //  o<<"Name changed"<<af1;
+  //  o<<otl_null()<<af1+1; // set f2 to NULL
+#endif
 
 }
 
@@ -92,10 +108,34 @@ void select(const int af1)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  char f2[31];
 
- i<<af1<<af1; // :f11 = af1, :f12 = af1
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+ otl_write_row(i,af1,af1); // :f11 = af1, :f12 = af1
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+ otl_write_row(i,af1,af1); // :f11 = af1, :f12 = af1
+  // the old way (operators >>() / <<()) is available as always:
+  // i<<af1<<af1; // :f11 = af1, :f12 = af1
+#endif
+
+#if (defined(_MSC_VER) && _MSC_VER>=1600) || defined(OTL_CPP_11_ON)
+// C++11 (or higher) compiler
+ for(auto& it : i){
+  it>>f1;
+  cout<<"f1="<<f1<<", f2=";
+  it>>f2;
+  if(it.is_null())
+   cout<<"NULL";
+  else
+   cout<<f2;
+  cout<<endl;
+ }
+#else
+// C++98/03 compiler
  while(!i.eof()){ // while not end-of-data
   i>>f1;
   cout<<"f1="<<f1<<", f2=";
@@ -106,6 +146,7 @@ void select(const int af1)
    cout<<f2;
   cout<<endl;
  }
+#endif
 
 }
 
