@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.463,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.464,
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401CFL)
+#define OTL_VERSION_NUMBER (0x0401D0L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -3049,6 +3049,7 @@ public:
     this_is_last_piece_ = s.this_is_last_piece_;
     length = s.length;
     extern_buffer_flag = s.extern_buffer_flag;
+    buf_size=s.buf_size;
     v = s.v;
     s.v = nullptr;
     s.length = 0;
