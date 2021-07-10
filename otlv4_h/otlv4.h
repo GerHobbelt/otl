@@ -459,7 +459,7 @@ OTL_NUMERIC_TYPE_2 macros are already defined
 
 #if defined(OTL_SANITY_CHECKS_ENABLED)
 #ifndef OTL_ASSERT
-// just a rudimentary macro: it throws an otl_out_of_range_exception
+// [i_a] just a rudimentary macro: it throws an otl_out_of_range_exception
 // when the assertion fails; you SHOULD provide your own OTL_ASSERT
 // instead...
 #define OTL_ASSERT(e)							\
@@ -777,7 +777,7 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
     OTL_TRACE_STREAM<<"otl_exception, code=";           \
     OTL_TRACE_STREAM<<code;                             \
     OTL_TRACE_STREAM<<", msg=";                         \
-    const char* c=OTL_RCAST(const char*,msg);           \
+    const char* c=OTL_RCAST(const char*,msg); /* [i_a] ensure proper operator method is used and no error issued due to 'overloads have similar conversions' */     \
     while(*c && *c!='\n'){                              \
       OTL_TRACE_STREAM<<*c;                             \
       ++c;                                              \
@@ -1650,11 +1650,11 @@ const int otl_error_code_39=32040;
 #define otl_error_msg_39 \
 "This type of otl_stream can only have input variables"
 
-const int otl_error_code_40=32040;
+const int otl_error_code_40=32041;
 #define otl_error_msg_40 \
 "otl_long_string: array index is out of permissible range"
 
-const int otl_error_code_41=32038;
+const int otl_error_code_41=32042;
 #define otl_error_msg_41 \
 "otl_long_string::c_str(): length is too large to allow us to add a NUL sentinel"
 
@@ -2713,10 +2713,10 @@ public:
         v=new unsigned char[buf_size+1];
       }
       length=s.length;
-      extern_buffer_flag=0; // same code as before, but clearer this way
+      extern_buffer_flag=0; // [i_a] same code as before, but clearer this way
       memcpy(v,s.v,length);
 	  OTL_ASSERT(buf_size >= length);
-      //if(length<buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
+      //if(length<buf_size /*&&s.v[length]==0 */) // [i_a] why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
         v[length]=0;
     }
     return *this;
@@ -2739,7 +2739,7 @@ public:
       v=new unsigned char[buf_size+1];
       memcpy(v,s.v,length);
 	  OTL_ASSERT(buf_size >= length);
-      // if(length<=buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
+      // if(length<=buf_size /*&&s.v[length]==0 */) // [i_a] why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
         v[length]=0;
     }
   }
@@ -2802,7 +2802,7 @@ public:
     return this_is_last_piece_;
   }
 
-#if !defined(OTL_UNICODE) /* due to C++ not accepting polymorphism for return type, we'd better get rid of these when we're in unicode mode to prevent possible screwups */
+#if !defined(OTL_UNICODE) /* [i_a] due to C++ not accepting polymorphism for return type, we'd better get rid of these when we're in unicode mode to prevent possible screwups */
   /* virtual */ unsigned char& operator[](int ndx) /* [i_a] */
       OTL_THROWS_EX_OUT_OF_RANGE
   {
@@ -2847,7 +2847,7 @@ public:
 	}
   }
 
-#if !defined(OTL_UNICODE) /* due to C++ not accepting polymorphism for return type, we'd better get rid of this one when we're in unicode mode to prevent possible screwups */
+#if !defined(OTL_UNICODE) /* [i_a] due to C++ not accepting polymorphism for return type, we'd better get rid of this one when we're in unicode mode to prevent possible screwups */
   /* virtual */ unsigned char *c_str() /* [i_a] no use to put 'virtual' here; different return types, so unicode gets wc_str() */
       OTL_THROWS_EX_OUT_OF_RANGE
   {
@@ -2886,7 +2886,7 @@ public:
     return extern_buffer_flag;
   }
 
-  // for diagnostics/validation purposes: 1: regular, 2/4: unicode, ...
+  // [i_a] for diagnostics/validation purposes: 1: regular, 2/4: unicode, ...
   virtual int get_char_width() const
   {
       return 1;
@@ -2963,7 +2963,7 @@ public:
     else{
       v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
       memcpy(v,s.v,length*sizeof(OTL_CHAR));
-      // if(length<=buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
+      // if(length<=buf_size /*&&s.v[length]==0 */) // [i_a] why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
         OTL_RCAST(OTL_CHAR*,v)[length]=0;       // no need for the operator[] overhead here, even while it may be minimal
     }
   }
@@ -2999,7 +2999,7 @@ public:
       extern_buffer_flag=0; // same code as before, but clearer this way
 	  OTL_ASSERT(buf_size >= length);
       memcpy(v,s.v,length*sizeof(OTL_CHAR));
-      //if(length<=buf_size /*&&s.v[length]==0 */) // why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
+      //if(length<=buf_size /*&&s.v[length]==0 */) // [i_a] why check for the nul sentinel in the source - should've been !=0 anyway; why not drop in a sentinel anyway if buf_size allows?
         OTL_RCAST(OTL_CHAR*,v)[length]=0;       // no need for the operator[] overhead here, even while it may be minimal
     }
     return *this;
@@ -3074,7 +3074,7 @@ public:
 		  alen = 0;
 	  else if (alen > buf_size)
 		  alen = buf_size;
-      // write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
+      // [i_a] write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
     if (OTL_RCAST(OTL_CHAR*,v)[alen])
 	{
 		OTL_ASSERT(!extern_buffer_flag);
@@ -3095,7 +3095,7 @@ public:
           OTL_ASSERT(s.length == 0);
           v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
         }
-        // write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
+        // [i_a] write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
         if (OTL_RCAST(OTL_CHAR*,v)[length])
 		{
 			OTL_ASSERT(!extern_buffer_flag);
@@ -3109,7 +3109,7 @@ public:
 //    return NULL;
   }
 
-  // for diagnostics/validation purposes: 1: regular, 2/4: unicode, ...
+  // [i_a] for diagnostics/validation purposes: 1: regular, 2/4: unicode, ...
   virtual int get_char_width() const
   {
       return sizeof(OTL_CHAR);
@@ -5303,8 +5303,8 @@ OTL_EXCEPTION_IS_DERIVED_FROM_STD_EXCEPTION cannot be used
 #define OTL_EXCEPTION_HAS_MEMBERS                       \
   virtual const char* what() const throw()              \
   {                                                     \
-    return reinterpret_cast<const char*>(msg);          \
-  }
+    return reinterpret_cast<const char*>(this->msg);    \
+  } 
 #endif
 #endif
 
@@ -8726,7 +8726,7 @@ public:
          int len2=sl[cur_col].get_len(this->cur_row);
          if(len2>s.get_buf_size())
            len2=s.get_buf_size();
-		 OTL_ASSERT(s.get_char_width() == 1); // make sure the otl_long_string supports the correct character width (regular)!
+		 OTL_ASSERT(s.get_char_width() == 1); // [i_a] make sure the otl_long_string supports the correct character width (regular)!
          otl_memcpy(s.v,c,len2,sl[cur_col].get_ftype());
          s.null_terminate_string(len2); // [i_a] BLOB instead of CLOB but still we NUL-sentinel the bugger...
          s.set_len(len2);
@@ -8743,7 +8743,7 @@ public:
 #if defined(OTL_UNICODE) // [i_a] the only differences is the absence of the use of the length 'sl[cur_col].get_len(this->cur_row)' in here. Is this correct for ORA8 in Unicode mode only?
   		   int len2=0;
            OTL_CHAR* source=OTL_RCAST(OTL_CHAR*,sl[cur_col].val(this->cur_row));
-           OTL_ASSERT(s.get_char_width() == sizeof(OTL_CHAR)); // make sure the otl_long_string supports UNICODE!
+           OTL_ASSERT(s.get_char_width() == sizeof(OTL_CHAR)); // [i_a] make sure the otl_long_string supports UNICODE!
            OTL_CHAR* target=OTL_RCAST(OTL_CHAR*,s.v);
            while(*source && len2<s.get_buf_size()){
              *target++=*source++;
@@ -8757,7 +8757,7 @@ public:
            int len2=sl[cur_col].get_len(this->cur_row);
            if(len2>s.get_buf_size())
              len2=s.get_buf_size();
-		   OTL_ASSERT(s.get_char_width() == sizeof(OTL_CHAR)); // make sure the otl_long_string supports the correct character width (Unicode or regular)!
+		   OTL_ASSERT(s.get_char_width() == sizeof(OTL_CHAR)); // [i_a] make sure the otl_long_string supports the correct character width (Unicode or regular)!
            otl_memcpy(s.v,c,len2,sl[cur_col].get_ftype());
            s.null_terminate_string(len2);
            s.set_len(len2);
@@ -11303,7 +11303,7 @@ public:
     {
       int len=0;
       int max_long_sz=this->adb->get_max_long_size();
-      otl_auto_array_ptr<unsigned char> loc_ptr(max_long_sz/*+1 -- not needed here*/);
+      otl_auto_array_ptr<unsigned char> loc_ptr(max_long_sz/*+1 -- not needed here [i_a] */);
       unsigned char* temp_buf=loc_ptr.get_ptr();
       int rc=in_vl[cur_in_x]->get_var_struct().get_blob
         (cur_in_y,
@@ -13756,7 +13756,7 @@ public:
   int& len)
  {
      len = 0;
-  return 1;	 // --> shouldn't this be '0' (failure) ?
+  return 1;	 // --> shouldn't this be '0' (failure)? ([i_a]) 
  }
 
  int save_blob
@@ -16708,7 +16708,7 @@ public:
     temp_buf=nullptr;
 //    temp_char_buf=new char[chunk_size+1];
     OTL_ASSERT(chunk_size > 0);
-    temp_buf=new otl_long_string(chunk_size); // otl_long_string can allocate space itself
+    temp_buf=new otl_long_string(chunk_size); // [i_a] otl_long_string can allocate space itself
   }
 
   otl_lob_stream_generic& operator>>(OTL_STRING_CONTAINER& s)
@@ -17250,6 +17250,7 @@ public:
     }
     return 0;
   }
+
   /* [i_a] fix END */
 
   operator int(void) OTL_THROWS_OTL_EXCEPTION
@@ -26964,7 +26965,7 @@ public:
   // but that's an edit I'll leave for another day. I hoped the transition between
   // 0-based C/C++ thinking and 1-based SQL would've been nicer, but the way it is,
   // it ... is. The alternative makes a mess in a few of the other routines, so
-  // that kinda balances out this little agony here.
+  // that kinda balances out this little agony here.                          [i_a] 
   int rc;
 #if defined(OTL_UNICODE)
   if(ftype==otl_var_clob||ftype==otl_var_nclob)
@@ -26980,7 +26981,7 @@ public:
   if (rc!=0) {  // shouldn't this read: if (rc == 0) (if file locator is NOT initialized)
                 // after all, OCILobRead() further down expects an INITIALIZED lob locator...
       len = 0;
-      return 0; // uh? '0'? shouldn't this be '1' (failure)
+      return 0; // uh? '0'? shouldn't this be '1' (failure)                        [i_a] 
   }
   if (!is_init){
    len=0;
@@ -27019,7 +27020,7 @@ public:
     len=0;
     return 0; // uh? '0'? shouldn't this be '1' (failure)
   }
-  return 1; // shouldn't this be '0' (success)
+  return 1; // shouldn't this be '0' (success)       [i_a] 
  }
 
  void set_lob_stream_flag(const int flg=1)
@@ -32930,7 +32931,7 @@ public:
            this->stm_text);
       }
       if(!eof_intern()){
-        int len;  //=0;    code reviewed; get_blob() takes care of it now always
+        int len;  //=0;    code reviewed; get_blob() takes care of it now always    [i_a] 
         int rc=sl[cur_col].get_var_struct().get_blob
           (cur_row,s.v,s.get_buf_size(),len);
         if(rc==0){
