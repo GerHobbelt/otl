@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.444,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.445,
 // Copyright (C) 1996-2019, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401BCL)
+#define OTL_VERSION_NUMBER (0x0401BDL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -11609,6 +11609,10 @@ public:
     ubigint_size = otl_ubigint_str_size
 #endif
   };
+
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__==408)
+#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
+#endif
 
   void cleanup(void) {}
 
