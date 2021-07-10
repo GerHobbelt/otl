@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.461,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.462,
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401CDL)
+#define OTL_VERSION_NUMBER (0x0401CEL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -13930,10 +13930,30 @@ public:
                                      OTL_RCAST(unsigned char *, stm_text));
         status = SQLExecDirect(cda, temp_stm_text, SQL_NTS);
         delete[] temp_stm_text;
+#if defined(OTL_ODBC_LEGACY_RPC)
+        _rpc = 0;
+        if (!do_not_call_sql_row_count) {
+          OTL_SQLLEN tmp_rpc = 0;
+          SQLRETURN diag_status = sql_row_count(&tmp_rpc);
+          if (diag_status == SQL_SUCCESS ||
+              diag_status == SQL_SUCCESS_WITH_INFO)
+            _rpc = OTL_SCAST(long, tmp_rpc);
+        }
+#endif
       }
 #else
       status =
           SQLExecDirect(cda, OTL_RCAST(OTL_SQLCHAR_PTR, stm_text), SQL_NTS);
+#if defined(OTL_ODBC_LEGACY_RPC)
+        _rpc = 0;
+        if (!do_not_call_sql_row_count) {
+          OTL_SQLLEN tmp_rpc = 0;
+          SQLRETURN diag_status = sql_row_count(&tmp_rpc);
+          if (diag_status == SQL_SUCCESS ||
+              diag_status == SQL_SUCCESS_WITH_INFO)
+            _rpc = OTL_SCAST(long, tmp_rpc);
+        }
+#endif
 #endif
 
 #if defined(OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO)
@@ -13962,6 +13982,7 @@ public:
           )
         return 0;
       else {
+#if !defined(OTL_ODBC_LEGACY_RPC)
         _rpc = 0;
         if (!do_not_call_sql_row_count) {
           OTL_SQLLEN tmp_rpc = 0;
@@ -13970,6 +13991,7 @@ public:
               diag_status == SQL_SUCCESS_WITH_INFO)
             _rpc = OTL_SCAST(long, tmp_rpc);
         }
+#endif
         return 1;
       }
     }
