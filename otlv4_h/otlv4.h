@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.447,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.448,
 // Copyright (C) 1996-2019, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401BFL)
+#define OTL_VERSION_NUMBER (0x0401C0L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -5643,7 +5643,7 @@ public:
 
   virtual ~otl_tmpl_cursor() OTL_THROWS_OTL_EXCEPTION2 {
     in_destructor = 1;
-    close();
+    otl_tmpl_cursor::close();
     delete[] stm_label;
     stm_label = nullptr;
     delete[] stm_text;
@@ -15553,7 +15553,7 @@ public:
     written_to_flag(false),
     closed_flag(false),
     last_read_lob_len(0) {
-    init(nullptr, nullptr, nullptr, 0, OTL_SCAST(int,OTL_LOB_STREAM_MODE_ENUM otl_lob_stream_zero_mode));
+    otl_tmpl_lob_stream::init(nullptr, nullptr, nullptr, 0, OTL_SCAST(int,OTL_LOB_STREAM_MODE_ENUM otl_lob_stream_zero_mode));
   }
 
   ~otl_tmpl_lob_stream()
@@ -15575,13 +15575,13 @@ public:
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     try {
       if (!closed_flag)
-        close();
+        otl_tmpl_lob_stream::close();
     }
     catch (OTL_CONST_EXCEPTION otl_exception &) {
     }
 #else
     if (!closed_flag)
-      close();
+      otl_tmpl_lob_stream::close();
 #endif
   }
 
@@ -22908,7 +22908,7 @@ public:
                                        cursor(nullptr),
                                        temp_buf(nullptr),
                                        temp_char_buf(nullptr) {
-    init(nullptr, nullptr, nullptr, 0, OTL_SCAST(int,OTL_LOB_STREAM_MODE_ENUM otl_lob_stream_zero_mode));
+    otl_tmpl_lob_stream::init(nullptr, nullptr, nullptr, 0, OTL_SCAST(int,OTL_LOB_STREAM_MODE_ENUM otl_lob_stream_zero_mode));
   }
 
   virtual ~otl_tmpl_lob_stream()
@@ -22929,12 +22929,12 @@ public:
     }
 #if defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     try {
-      close();
+      otl_tmpl_lob_stream::close();
     }
     catch (OTL_CONST_EXCEPTION otl_exception &) {
     }
 #else
-    close();
+    otl_tmpl_lob_stream::close();
 #endif
   }
 
@@ -24078,7 +24078,7 @@ OTL_THROWS_OTL_EXCEPTION:
 
   virtual ~otl_refcur_stream() OTL_THROWS_OTL_EXCEPTION {
     cleanup();
-    close();
+    otl_refcur_stream::close();
   }
 
   OTL_NODISCARD int is_null(void) OTL_NO_THROW { return null_fetched; }
