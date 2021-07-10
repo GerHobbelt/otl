@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.456
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.457
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401C8L)
+#define OTL_VERSION_NUMBER (0x0401C9L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -19351,7 +19351,13 @@ public:
 
   OTL_NODISCARD OCIEnv *get_envhp() { return envhp; }
 
-  OTL_NODISCARD OCIError *get_errhp() { return errhp; }
+  OTL_NODISCARD OCIError* get_errhp() { return errhp; }
+
+  void set_svchp(OCISvcCtx* x) {  svchp = x; }
+
+  void set_srvhp(OCIServer* x) {  srvhp = x; }
+
+  void set_authp(OCISession* x) { authp = x; }
 
   OTL_NODISCARD OCISvcCtx *get_svchp() { return svchp; }
 
@@ -19603,11 +19609,17 @@ public:
     return 1;
   }
 
+
+
   OTL_NODISCARD int session_begin(const char *userid, const char *password,
                                   const int aauto_commit,
-                                  const int session_mode = OCI_DEFAULT) {
+                                  const int session_mode = OCI_DEFAULT,
+                                  OCISession* authp2 = nullptr) {
     int &status = last_status;
     int cred_type;
+    OCISession* authp1 = authp;
+    if (authp2)
+        authp1 = authp2;
 
     if (!attached)
       return 0;
@@ -19618,14 +19630,14 @@ public:
     } else {
       ext_cred = 0;
       cred_type = OCI_CRED_RDBMS;
-      status = OCIAttrSet(OTL_RCAST(dvoid *, authp),
+      status = OCIAttrSet(OTL_RCAST(dvoid *, authp1),
                           OTL_SCAST(ub4, OCI_HTYPE_SESSION),
                           OTL_RCAST(dvoid *, OTL_CCAST(char *, userid)),
                           OTL_SCAST(ub4, strlen(OTL_CCAST(char *, userid))),
                           OTL_SCAST(ub4, OCI_ATTR_USERNAME), errhp);
       if (status)
         return 0;
-      status = OCIAttrSet(OTL_RCAST(dvoid *, authp),
+      status = OCIAttrSet(OTL_RCAST(dvoid *, authp1),
                           OTL_SCAST(ub4, OCI_HTYPE_SESSION),
                           OTL_RCAST(dvoid *, OTL_CCAST(char *, password)),
                           OTL_SCAST(ub4, strlen(OTL_CCAST(char *, password))),
@@ -19635,13 +19647,13 @@ public:
     }
     session_mode_ = session_mode;
     status =
-        OCISessionBegin(svchp, errhp, authp, OTL_SCAST(unsigned, cred_type),
+        OCISessionBegin(svchp, errhp, authp1, OTL_SCAST(unsigned, cred_type),
                         OTL_SCAST(ub4, session_mode_));
     if (status != OCI_SUCCESS && status != OCI_SUCCESS_WITH_INFO)
       return 0;
     status = OCIAttrSet(
         OTL_RCAST(dvoid *, svchp), OTL_SCAST(ub4, OCI_HTYPE_SVCCTX),
-        OTL_RCAST(dvoid *, authp), 0, OTL_SCAST(ub4, OCI_ATTR_SESSION), errhp);
+        OTL_RCAST(dvoid *, authp1), 0, OTL_SCAST(ub4, OCI_ATTR_SESSION), errhp);
     if (status)return 0;
 #if defined(OTL_ORA_SDO_GEOMETRY)
     OCIParam *paramp = nullptr;
@@ -23641,18 +23653,19 @@ OTL_THROWS_OTL_EXCEPTION:
 
   void session_begin(
       const char *username, const char *password, const int auto_commit = 0,
-      const int session_mode = OCI_DEFAULT
+      const int session_mode = OCI_DEFAULT,      
       // OCI_SYSDBA -- in this mode, the user is authenticated for SYSDBA
       // access.
       // OCI_SYSOPER -- in this mode, the user is authenticated
       // for SYSOPER access.
+      OCISession* authp1 = nullptr
       ) OTL_THROWS_OTL_EXCEPTION {
     if (cmd_) {
       delete[] cmd_;
       cmd_ = nullptr;
     }
     retcode = connect_struct.session_begin(username, password, auto_commit,
-                                           session_mode);
+                                           session_mode, authp1);
     if (retcode)
       connected = 1;
     else {
