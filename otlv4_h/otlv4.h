@@ -19,8 +19,9 @@
 // (http://www.openbsd.org/cgi-bin/cvsweb/~checkout~/src/share/misc/license.template
 // =================================================================================
 
-#ifndef OTL_H
-#define OTL_H
+#ifndef __OTL_H__
+#define __OTL_H__
+
 #if defined(OTL_INCLUDE_0)
 #include "otl_include_0.h"
 #endif
@@ -477,25 +478,13 @@ inline int otl_sprintf_s(char* dest, size_t /* dest_sz */, const char* fmt, ...)
           << s.fraction << " " << s.tz_hour << ":"                             \
           << s.tz_minute
 
+#else
+
 #define OTL_TRACE_FORMAT_DATETIME(s)                                           \
   s.month << "/" << s.day << "/" << s.year << " " << s.hour << ":" << s.minute \
           << ":" << s.second << "."                                            \
           << OTL_SETFILL                                                       \
           << OTL_SETW(s)                                                       \
-          << s.fraction
-#else
-
-#define OTL_TRACE_FORMAT_TZ_DATETIME(s)                                        \
-  s.month << "/" << s.day << "/" << s.year << " " << s.hour << ":" << s.minute \
-          << ":" << s.second << "."                                            \
-          << s.fraction << " " << s.tz_hour << ":"                             \
-          << s.tz_minute
-
-#else
-
-#define OTL_TRACE_FORMAT_DATETIME(s)                                           \
-  s.month << "/" << s.day << "/" << s.year << " " << s.hour << ":" << s.minute \
-          << ":" << s.second << "."                                            \
           << s.fraction
 
 #endif
@@ -17418,6 +17407,92 @@ OTL_THROWS_OTL_EXCEPTION:
     return *this;
   }
 
+ /* [i_a] swapped order of appearance of
+          otl_datetime >> and << operators
+          so OTL_TRACE_WRITE() in the << can
+          use it; using a forward function reference
+          here is no use as MSVC2008 just complains
+          in another way then (unless we'd completely
+          move that function implementation out of
+          here, which is not our intent.
+  */
+  otl_stream &operator<<(const otl_datetime &s) OTL_THROWS_OTL_EXCEPTION {
+    otl_time tmp;
+    last_oper_was_read_op = false;
+    reset_end_marker();
+#if defined(OTL_ODBC_TIMESTAMP_TO_STRING)
+    otl_var_desc *temp_next_var = describe_next_in_var();
+    if (temp_next_var != nullptr && temp_next_var->ftype == otl_var_char) {
+#if defined(OTL_UNICODE)
+#if defined(OTL_UNICODE_CHAR_TYPE)
+      OTL_UNICODE_CHAR_TYPE tmp_str[100];
+#else
+      OTL_CHAR tmp_str[100];
+#endif
+#else
+      char tmp_str[100];
+#endif
+      OTL_ODBC_TIMESTAMP_TO_STRING(s, tmp_str);
+      OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s), "operator <<",
+                     "otl_datetime&");
+      (*this) << tmp_str;
+      return *this;
+    } else {
+        int scale =         /* [i_a] */
+#if (ODBCVER >= 0x0300)
+#if defined(OTL_ODBC_MULTI_MODE)
+     (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2008_ODBC_CONNECT)? 7 :
+      (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2005_ODBC_CONNECT)? 3 :
+      otl_odbc_date_scale;
+#else
+     otl_odbc_date_scale;
+#endif
+#else
+     otl_odbc_date_scale;
+#endif
+      tmp.year = OTL_SCAST(SQLSMALLINT, s.year);
+      tmp.month = OTL_SCAST(SQLUSMALLINT, s.month);
+      tmp.day = OTL_SCAST(SQLUSMALLINT, s.day);
+      tmp.hour = OTL_SCAST(SQLUSMALLINT, s.hour);
+      tmp.minute = OTL_SCAST(SQLUSMALLINT, s.minute);
+      tmp.second = OTL_SCAST(SQLUSMALLINT, s.second);
+      tmp.fraction = otl_clip_fraction(otl_to_fraction(OTL_SCAST(unsigned int, s.fraction),
+                                     s.frac_precision), scale); /* [i_a] fix, see comment at [otl_odbc_date_scale] */
+      (*this) << tmp;
+      OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s), "operator <<", /* [i_a] wrong text fix */
+                     "otl_datetime&");
+      inc_next_iov();
+      return *this;
+    }
+#else
+        int scale =                     /* [i_a] */
+#if (ODBCVER >= 0x0300)
+#if defined(OTL_ODBC_MULTI_MODE)
+     (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2008_ODBC_CONNECT)? 7 :
+      (this->adb[0]->get_connect_struct().get_connection_type()==OTL_MSSQL_2005_ODBC_CONNECT)? 3 :
+      otl_odbc_date_scale;
+#else
+     otl_odbc_date_scale;
+#endif
+#else
+     otl_odbc_date_scale;
+#endif
+    tmp.year = OTL_SCAST(SQLSMALLINT, s.year);
+    tmp.month = OTL_SCAST(SQLUSMALLINT, s.month);
+    tmp.day = OTL_SCAST(SQLUSMALLINT, s.day);
+    tmp.hour = OTL_SCAST(SQLUSMALLINT, s.hour);
+    tmp.minute = OTL_SCAST(SQLUSMALLINT, s.minute);
+    tmp.second = OTL_SCAST(SQLUSMALLINT, s.second);
+    tmp.fraction=otl_clip_fraction(otl_to_fraction(OTL_SCAST(unsigned int, s.fraction), s.frac_precision), scale); /* [i_a] fix, see comment at [otl_odbc_date_scale] */
+    (*this) << tmp;
+    OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s), "operator <<",
+                   "otl_datetime&");
+    inc_next_iov();
+    return *this;
+#endif
+  }
+
+
   otl_stream &operator>>(otl_datetime &s) OTL_THROWS_OTL_EXCEPTION {
     last_oper_was_read_op = true;
 #if defined(OTL_ODBC_STRING_TO_TIMESTAMP)
@@ -17441,13 +17516,8 @@ OTL_THROWS_OTL_EXCEPTION:
 #else
       OTL_ODBC_STRING_TO_TIMESTAMP(tmp_str, s);
 #endif
-#if defined(OTL_ODBC_TIME_ZONE)
-      OTL_TRACE_WRITE(OTL_TRACE_FORMAT_TZ_DATETIME(s), "operator >>",
-                      "otl_datetime&");
-#else
       OTL_TRACE_WRITE(OTL_TRACE_FORMAT_DATETIME(s), "operator >>",
                       "otl_datetime&");
-#endif
       return *this;
     } else {
       otl_time tmp;
@@ -17528,63 +17598,6 @@ OTL_THROWS_OTL_EXCEPTION:
     return *this;
   }
 
-  otl_stream &operator<<(const otl_datetime &s) OTL_THROWS_OTL_EXCEPTION {
-    otl_time tmp;
-    last_oper_was_read_op = false;
-    reset_end_marker();
-#if defined(OTL_ODBC_TIMESTAMP_TO_STRING)
-    otl_var_desc *temp_next_var = describe_next_in_var();
-    if (temp_next_var != nullptr && temp_next_var->ftype == otl_var_char) {
-#if defined(OTL_UNICODE)
-#if defined(OTL_UNICODE_CHAR_TYPE)
-      OTL_UNICODE_CHAR_TYPE tmp_str[100];
-#else
-      OTL_CHAR tmp_str[100];
-#endif
-#else
-      char tmp_str[100];
-#endif
-      OTL_ODBC_TIMESTAMP_TO_STRING(s, tmp_str);
-#if defined(OTL_ODBC_TIME_ZONE)
-      OTL_TRACE_READ(OTL_TRACE_FORMAT_TZ_DATETIME(s), "operator <<",
-                     "otl_datetime&");
-#else
-      OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s), "operator <<",
-                     "otl_datetime&");
-#endif
-      (*this) << tmp_str;
-      return *this;
-    } else {
-      tmp.year = OTL_SCAST(SQLSMALLINT, s.year);
-      tmp.month = OTL_SCAST(SQLUSMALLINT, s.month);
-      tmp.day = OTL_SCAST(SQLUSMALLINT, s.day);
-      tmp.hour = OTL_SCAST(SQLUSMALLINT, s.hour);
-      tmp.minute = OTL_SCAST(SQLUSMALLINT, s.minute);
-      tmp.second = OTL_SCAST(SQLUSMALLINT, s.second);
-      tmp.fraction = otl_to_fraction(OTL_SCAST(unsigned int, s.fraction),
-                                     s.frac_precision);
-      (*this) << tmp;
-      OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s), "operator >>",
-                     "otl_datetime&");
-      inc_next_iov();
-      return *this;
-    }
-#else
-    tmp.year = OTL_SCAST(SQLSMALLINT, s.year);
-    tmp.month = OTL_SCAST(SQLUSMALLINT, s.month);
-    tmp.day = OTL_SCAST(SQLUSMALLINT, s.day);
-    tmp.hour = OTL_SCAST(SQLUSMALLINT, s.hour);
-    tmp.minute = OTL_SCAST(SQLUSMALLINT, s.minute);
-    tmp.second = OTL_SCAST(SQLUSMALLINT, s.second);
-    tmp.fraction =
-        otl_to_fraction(OTL_SCAST(unsigned int, s.fraction), s.frac_precision);
-    (*this) << tmp;
-    OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s), "operator <<",
-                   "otl_datetime&");
-    inc_next_iov();
-    return *this;
-#endif
-  }
 
 #if !defined(OTL_UNICODE)
   otl_stream &operator>>(char &c) OTL_THROWS_OTL_EXCEPTION {
