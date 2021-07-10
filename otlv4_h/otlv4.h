@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.457
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.458,
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401C9L)
+#define OTL_VERSION_NUMBER (0x0401CAL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -10130,8 +10130,10 @@ public:
                      otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct,
                                           TExceptionStruct, TConnectStruct,
                                           TCursorStruct>::out) {
-            ++iv_len;
-            in_vl[iv_len - 1] = v;
+            if (in_vl != nullptr){
+              ++iv_len;
+              in_vl[iv_len - 1] = v;
+            }
             v->set_param_type(otl_output_param);
           } else if (hvd.get_inout(j) ==
                      otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct,
