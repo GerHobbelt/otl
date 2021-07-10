@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.459,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.460,
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401CBL)
+#define OTL_VERSION_NUMBER (0x0401CCL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -27063,14 +27063,17 @@ protected:
     case otl_var_char:
       if (type_code == otl_var_char)
         return 1;
+      break;
     case otl_var_raw:
       if (type_code == otl_var_raw)
         return 1;
+      break;
     case otl_var_timestamp:
     case otl_var_tz_timestamp:
     case otl_var_ltz_timestamp:
       if (type_code == otl_var_timestamp)
         return 1;
+      break;
     default:
 #if defined(OTL_CHECK_IN_TYPE_FUNC)
       if ((vl[cur_in]->get_ftype() == type_code &&
@@ -27082,6 +27085,7 @@ protected:
       if (vl[cur_in]->get_ftype() == type_code &&
           vl[cur_in]->get_elem_size() == tsize)
         return 1;
+      break;
 #endif
     }
     return check_in_type_throw(type_code);
