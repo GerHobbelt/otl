@@ -1,6 +1,6 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.450
-// Copyright (C) 1996-2019, Sergei Kuchin (skuchin@gmail.com)
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.451
+// Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
 // and/or distribute this software for any purpose with or without fee
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401C2L)
+#define OTL_VERSION_NUMBER (0x0401C3L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -18977,7 +18977,7 @@ private:
 #if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
 inline bool operator!=(const otl_for_range_loop_odbc_stream_adapter& a1,
                        const otl_for_range_loop_odbc_stream_adapter& /*a2*/){
-  return !a1.str_->eof();
+  return a1.str_!=nullptr && !a1.str_->eof();
 }
 #endif
 
@@ -30960,7 +30960,7 @@ private:
 #if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
 inline bool operator!=(const otl_for_range_loop_ora_stream_adapter& a1,
                        const otl_for_range_loop_ora_stream_adapter& /*a2*/){
-  return !a1.str_->eof();
+  return a1.str_!=nullptr && !a1.str_->eof();
 }
 #endif
 
@@ -31642,7 +31642,7 @@ public:
   otl_for_range_loop_adapter():iter_(nullptr) {}
 
   bool operator!=(const otl_for_range_loop_adapter& /*that*/){
-    return !iter_->get_last_eof();
+    return iter_!=nullptr && !iter_->get_last_eof();
   }
 
   read_iter_type& operator*(){
