@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.455
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.456
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401C7L)
+#define OTL_VERSION_NUMBER (0x0401C8L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -8823,12 +8823,12 @@ public:
       return;
     }
 
-#if defined(OTL_STL) && defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON)
+#if defined(OTL_STL) && defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON) && !defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     if (otl_uncaught_exception()) {
       clean();
       return;
     }
-#elif defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON)
+#elif defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON) && !defined(OTL_DESTRUCTORS_DO_NOT_THROW)
     if (otl_uncaught_exception()) {
       clean();
       return;
