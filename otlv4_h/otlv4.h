@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.453
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.454
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401C5L)
+#define OTL_VERSION_NUMBER (0x0401C6L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -10143,6 +10143,22 @@ public:
             if (in_vl != nullptr)
               in_vl[iv_len - 1] = v;
             v->set_param_type(otl_inout_param);
+          }else{
+            delete v;
+#if !defined(__BORLANDC__)
+            v = nullptr;
+#endif
+            if (avl != nullptr)
+              for (int k = 0; k < j; ++k) {
+                delete avl[k];
+                avl[k] = nullptr;
+              }
+            delete[] avl;
+            avl = nullptr;
+            this->vl_len = 0;
+            OTL_THROW((OTL_TMPL_EXCEPTION(
+                         otl_error_msg_12, otl_error_code_12,
+                         hvd.stm_label() ? hvd.stm_label() : hvd.stm_text(), hvd[j])));
           }
         }
       }
