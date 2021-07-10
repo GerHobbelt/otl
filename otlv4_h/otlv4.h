@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.454
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.455
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401C6L)
+#define OTL_VERSION_NUMBER (0x0401C7L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -20319,6 +20319,11 @@ public:
     return 1;
 #endif
   }
+
+#if defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 1000)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmisleading-indentation"
+#endif
 
   OTL_NODISCARD int actual_elem_size(void) { return act_elem_size; }
 
