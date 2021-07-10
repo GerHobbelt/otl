@@ -17246,7 +17246,7 @@ OTL_THROWS_OTL_EXCEPTION:
       tmp.fraction = otl_to_fraction(OTL_SCAST(unsigned int, s.fraction),
                                      s.frac_precision);
       (*this) << tmp;
-      OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s), "operator >>",
+      OTL_TRACE_READ(OTL_TRACE_FORMAT_DATETIME(s), "operator <<",
                      "otl_datetime&");
       inc_next_iov();
       return *this;
