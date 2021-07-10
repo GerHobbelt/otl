@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.451
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.452
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401C3L)
+#define OTL_VERSION_NUMBER (0x0401C4L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -20973,9 +20973,6 @@ public:
       geometry.isNull = true;
       return 0;
     }
-    if((geometry.gtype / 100) % 10 != 0){
-      return 0;
-    }
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
@@ -24217,6 +24214,22 @@ OTL_THROWS_OTL_EXCEPTION:
   }
 #endif
 
+#if defined(OTL_ORA_SDO_GEOMETRY)
+  OTL_ORA_REFCUR_COMMON_READ_STREAM &
+	  operator>>(oci_spatial_geometry &s) OTL_THROWS_OTL_EXCEPTION{
+	  check_if_executed();
+	  if (eof_intern())
+		  return *this;
+	  get_next();
+	  if ((sl[cur_col].get_ftype() == otl_var_sdo_geometry) && !eof_intern()){
+            (void)sl[cur_col].get_var_struct().read_geometry(s, cur_col);
+            look_ahead();
+	  }
+	  inc_next_ov();
+	  return *this;
+  }
+#endif
+
   OTL_ORA_REFCUR_COMMON_READ_STREAM &
   operator>>(char &c) OTL_THROWS_OTL_EXCEPTION {
     check_if_executed();
@@ -25094,7 +25107,11 @@ protected:
 #endif
       sl[j].init(true, ftype, elem_size,
                  OTL_SCAST(otl_stream_buffer_size_type, array_size),
-                 &adb->get_connect_struct());
+                 &adb->get_connect_struct()
+#if defined(OTL_ORA_SDO_GEOMETRY)
+		  , 0, sl_desc_tmp[j].colOCIType
+#endif
+	  );
     }
     if (sl_desc) {
       delete[] sl_desc;
