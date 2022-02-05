@@ -1,6 +1,6 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.467,
-// Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.468,
+// Copyright (C) 1996-2022, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
 // and/or distribute this software for any purpose with or without fee
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401D3L)
+#define OTL_VERSION_NUMBER (0x0401D4L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -20776,7 +20776,7 @@ public:
       offset = 1;
     int rc;
     int is_init = 0;
-    rc = OCILobLocatorIsInit(connect->get_envhp(), connect->get_errhp(), lob[0],
+    rc = OCILobLocatorIsInit(connect->get_envhp(), connect->get_errhp(), lob[andx],
                              &is_init);
     if (rc != OCI_SUCCESS)
       return 0;
