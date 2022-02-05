@@ -1,503 +1,497 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
-<html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, OTL Long String, Long Unicode String classes</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, OTL Long String, Long Unicode String&nbsp; classes</h1>
-</center>
-<h1>
-<a name="otl_class"></a>OTL Long String, Long Unicode String classes</h1>
-These classes are used in operations with Large Objects (LOB). In OTL
-4.0,
-otl_long_string can hold a LOB of any type as well as RAW / BINARY: <br>
-<ul>
-  <li>Oracle 7: LONG, RAW, LONG RAW</li>
-  <li>Oracle 8, 8i, 9i, 10g, 11g: LONG, RAW, LONG RAW; CLOB, BLOB</li>
-  <li>MS SQL Server: TEXT, IMAGE, VARBINARY, BINARY, VARCHAR(MAX),
-VARBINARY(MAX)<br>
-  </li>
-  <li>DB2: CLOB, BLOB</li>
-  <li>Sybase: TEXT, IMAGE, VARBINARY, BINARY<br>
-  </li>
-  <li>PostgreSQL: TEXT, BYTEA,<br>
-  </li>
-  <li>SAP/MAX DB: CHAR() BYTE, VARCHAR() BYTE, LONG VARCHAR, LONG
-VARCHAR BYTE<br>
-  </li>
-  <li>MySQL: LONGTEXT, LONGBLOB, VARBINARY, BINARY</li>
-</ul>
-otl_long_unicode_string is specialized for Unicode character based
-large
-strings.
-otl_long_unicode_string
-can hold the following data types:
-<ul>
-  <li>Oracle 8i, 9i, 10g: LONG,&nbsp; CLOB; the database default
-character set may
-be set to ASCII, or UTF-8, etc</li>
-  <li>Oracle 8i, 9i, 10g: NCLOB; the database national character set
-may be set to
-whatever is allowed for a concrete version of the database (8i and
-9i/10g
-differ
-/ are not the same in that regard, as far as supporting different
-versions
-of Unicode, and what sets are allowed for national character data types)</li>
-  <li>MS SQL NTEXT</li>
-  <li>DB2 CLOB / DBCLOB when the database supports Unicode (UTF-8,
-UCS-2, etc.)</li>
-</ul>
-In the case if Unicode OTL is enabled by #define <a
- href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>,
-otl_long_string needs to be used for Oracle LONG RAWs, BLOBs, MS SQL
-IMAGEs, DB2 BLOBs, etc (large binary strings, generally speaking),
-because
-they still remain the large byte strings, without any character
-semantic
-attached.
-<br>
-<br>
-OTL 4.0 defines the following <a href="otl3_bind_variables.htm">bind
-variable
-</a>data types for manipulating LOBs:
-<ul>
-  <li> <a href="otl3_bind_variables.htm#varchar_long">varchar_long</a>
-for
-Oracle
-7/8/8i/9i/10g LONG, MS SQL Server/Sybase TEXT/NTEXT, DB2 CLOB/DBCLOB</li>
-  <li> <a href="otl3_bind_variables.htm#raw_long">raw_long</a> for
-Oracle
-7/8/8i/9i/10g
-RAW, LONG RAW, MS SQL Server/Sybase IMAGE, DB2 BLOB</li>
-  <li> <a href="otl3_bind_variables.htm#clob">clob</a> for Oracle
-8/8i/9i/10g
-CLOB,
-NCLOB (if #define OTL_UNICODE is enabled).</li>
-  <li> <a href="otl3_bind_variables.htm#blob">blob </a>for Oracle
-8/8i/9i/10g
-BLOB</li>
-</ul>
-<h2>
-<a name="LOB_and_NULL"></a><font size="+2">Large Objects (LOBs) and
-NULLs</font></h2>
-Behavior of LOBs is slightly different from the other table column
-data types
-as far as NULLs are concerned:
-<ul>
-  <li> <a name="LOB_LIST"></a>Oracle 7/8/8i/9i/10g's LONG, Oracle
-7/8's LONG
-RAW,
-MS SQL Server/Sybase's TEXT, MS SQL Server/Sybase's IMAGE, DB2's
-CLOB/BLOB:<br>
-    <br>
-  </li>
-As opposed to normal data types of columns in tables, the above LOBs
-can be set to NULL in two ways: either writing <a
- href="otl3_stream_class.htm#otl_null">otl_null</a>()
-into the otl_stream or setting the length of the LOB to 0 by calling
-otl_long_string::<a href="#set_len">set_len</a>(0)
-and the writing the LOB into the otl_stream.
-  <p>On the output, when the LOB is being read from the otl_stream, the
-checking
-for the NULL value can be done in two ways: either by calling
-otl_stream::<a href="otl3_stream_class.htm#is_null">is_null</a>()
-or by calling otl_long_string::<a href="#len">len</a>() and checking if
-it returns 0. <br>
-&nbsp; </p>
-  <li>Oracle 8/8i/9i/10g's CLOB, Oracle 8/8i/9i/10g's BLOB:<br>
-    <br>
-  </li>
-  <br>
-On the input, behavior of Oracle's CLOBs and BLOBs is the same as the
-other LOB datatypes, that is otl_null() or set_len(0) can be used when
-writing a CLOB or BLOB into the database.
-  <p>On the output, when the Oracle 8 CLOB/BLOB is being read from the
-otl_stream,
-the checking for the NULL value can be done only in one way by calling
-otl_long_string::len() and checking if it returns 0. The
-otl_stream::is_null()
-function always returns 0 for CLOBs/BLOBs. So, it is recommended to use
-the len() function and check it for 0 instead of using is_null().</p>
-</ul>
-<pre><font size="+2">class otl_long_string{<br>public:<br></font></pre>
-<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
- cellspacing="2">
-  <tbody>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Function
-/ data member</span><br>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>unsigned char* v;</pre>
-      </td>
-      <td style="vertical-align: top;"><i></i>Pointer to the LOB value.
-In other
-words, the
-field
-is a pointer to the LOB buffer.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>otl_long_string(...);<br></pre>
-      <table style="text-align: left; width: 100%;" border="1"
- cellpadding="2" cellspacing="2">
-        <tbody>
-          <tr>
-            <td style="vertical-align: top;">
-            <p><span style="font-style: italic;">Parameter</span></p>
-            </td>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Description</span><br>
-            </td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const int buffer_size=32760</td>
-            <td style="vertical-align: top;">It defines the size of the
-LOB
-buffer.
-By default, the size is 32760.</td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const int input_length=0</td>
-            <td style="vertical-align: top;">It defines the actual
-length of the
-string on the input. If this parameter is used, then the <a
- href="otl3_long_string.htm#set_len">set_len</a>()
-function does not need to be called.</td>
-          </tr>
-        </tbody>
-      </table>
-      <span style="font-family: monospace;"><br>
-      </span></td>
-      <td style="vertical-align: top;"><a name="gen_constr0"></a>General
-constructor. It creates an
-otl_long_string
-instance: allocates memory for the LOB buffer and sets internal
-variables. In addition to setting the size of
-otl_long_string,
-the <a href="otl3_connect_class.htm#set_max_long_size">otl_connect::set_max_long_size</a>()
-needs to be called with the same or a greater size.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>otl_long_string(...);<br></pre>
-      <table style="text-align: left; width: 100%;" border="1"
- cellpadding="2" cellspacing="2">
-        <tbody>
-          <tr>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Parameter</span><br>
-            </td>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Description</span><br>
-            </td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">
-            <p>const void* external_buffer</p>
-            </td>
-            <td style="vertical-align: top;">Pointer to an external
-buffer<br>
-            </td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const int buffer_size</td>
-            <td style="vertical-align: top;">Buffer size defines the
-size of the external
-buffer for the otl_long_string.</td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const int input_length=0</td>
-            <td style="vertical-align: top;">Input length is the actual
-length of the
-string on
-the input. If this parameter is used, then there is no need to call the
-            <a href="otl3_long_string.htm#set_len">set_len</a>()
-function.</td>
-          </tr>
-        </tbody>
-      </table>
-      <pre><br></pre>
-      </td>
-      <td style="vertical-align: top;"><a name="gen_constr"></a>General
-constructor. It creates an
-otl_long_string
-instance: it sets the <i>v </i>field to the value of <i>external_buffer
-      </i>and
-sets internal variables. In case if this constructor is called, memory
-for the LOB buffer is not allocated, the address of an external buffer
-is used instead. This constructor is provided for more efficient
-manipulation
-of LOBs. If it is critical for performance or memory reasons, this
-constructor
-can be used for passing the address of a user defined buffer into the <a
- href="otl3_stream_class.htm">otl_stream</a>
-operations with LOBs.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="set_len"></a>void set_len(const int len=0);</pre>
-      </td>
-      <td style="vertical-align: top;">This function sets the dynamic
-length of the LOB. The function
-needs to
-be called before <a href="otl3_stream_class.htm#long_string_write">writing</a>
-the LOB into the otl_stream. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><a
- style="font-family: monospace;" name="set_last_piece"></a><span
- style="font-family: monospace;">void set_last_piece<br>
-(const bool
-last_piece=false);</span></td>
-      <td style="vertical-align: top;">When an otl_long_string is used
-with an <a href="otl3_lob_stream.htm">otl_lob_stream</a> and
-OTL/OCI8i/9i/10g/11g,
-this function indicates that the otl_string_string is the last piece /
-chunk in a sequence of LOB chunks being written into the
-otl_lob_stream. The function exists for OTL/ODBC/DB2-CLI but it does
-not have any effect.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="len"></a>int len();</pre>
-      </td>
-      <td style="vertical-align: top;">This function returns the
-dynamic length of the LOB. The function
-needs
-to be called after <a href="otl3_stream_class.htm#long_string_read">reading</a>
-the LOB from the otl_stream</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>unsigned char&amp; operator[](int ndx);</pre>
-      </td>
-      <td style="vertical-align: top;">This operator allows the user to
-access individual bytes of the
-LOB.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>otl_long_string&amp; operator=<br>(const otl_long_string&amp;);</pre>
-      </td>
-      <td style="vertical-align: top;">Assignment operator</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>otl_long_string<br>(const otl_long_string&amp;);</pre>
-      </td>
-      <td style="vertical-align: top;">Copy constructor</td>
-    </tr>
-  </tbody>
-</table>
-<pre><font size="+2">}; // end of otl_long_string<br><br><a
- name="otl_long_unicode_string"></a>class otl_long_unicode_string: public otl_long_string{<br>public:<br></font></pre>
-<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
- cellspacing="2">
-  <tbody>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Function
-/ data member</span><br>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>otl_long_unicode_string(...);<br></pre>
-      <table style="text-align: left; width: 100%;" border="1"
- cellpadding="2" cellspacing="2">
-        <tbody>
-          <tr>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Parameter</span><br>
-            </td>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Description</span><br>
-            </td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const int buffer_size=32760</td>
-            <td style="vertical-align: top;">defines the size of the
-LOB
-buffer.</td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const int input_length=0</td>
-            <td style="vertical-align: top;">defines the actual length
-of the
-string on the input. If this parameter is used, then the <a
- href="otl3_long_string.htm#unicode_set_len">set_len</a>()
-function does not need to be called.</td>
-          </tr>
-        </tbody>
-      </table>
-      <pre><br></pre>
-      </td>
-      <td style="vertical-align: top;"> <a name="unicode_gen_constr0"></a>General
-constructor. It
-creates
-an otl_long_unicode_string
-instance: allocates memory for the LOB buffer and sets internal
-variables.&nbsp;
-By default, the size is 32760 Unicode characters. In addition to
-setting
-the size of otl_long_unicode_string, the <a
- href="otl3_connect_class.htm#set_max_long_size">otl_connect::set_max_long_size</a>()
-needs to be called with the same or a greater size.Note: all sizes for
-Unicode strings are given not in bytes but in Unicode characters (2
-bytes
-per character times 2 to accommodate a possible surrogate character).<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>otl_long_unicode_string(...);<br></pre>
-      <table style="text-align: left; width: 100%;" border="1"
- cellpadding="2" cellspacing="2">
-        <tbody>
-          <tr>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Parameter</span><br>
-            </td>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Description</span><br>
-            </td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const void* external_buffer</td>
-            <td style="vertical-align: top;">Pointer to the external
-buffer<br>
-            </td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const int buffer_size</td>
-            <td style="vertical-align: top;">defines the size of the
-external
-buffer
-for the otl_long_unicode_string.</td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const int input_length=0</td>
-            <td style="vertical-align: top;">the actual length of the
-string on
-the input. If this parameter is used, then there is no need to call the
-            <a href="otl3_long_string.htm#unicode_set_len">set_len</a>()
-function.</td>
-          </tr>
-        </tbody>
-      </table>
-      <pre><br></pre>
-      </td>
-      <td style="vertical-align: top;"> <a name="unicode_gen_constr"></a>General
-constructor. It
-creates an
-otl_long_unicode_string
-instance: it saves the value of <i>external_buffer </i>and sets
-internal
-variables. In case if this constructor is called, memory for the LOB
-buffer
-is not allocated, the address of an external buffer is used instead.
-This
-constructor is provided for more efficient manipulation of LOBs. If it
-is critical for performance or memory reasons, this constructor can be
-used for passing the address of a user defined buffer into the <a
- href="otl3_stream_class.htm">otl_stream</a>
-operations with LOBs.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="unicode_set_len"></a>void set_len(const int len=0);</pre>
-      </td>
-      <td style="vertical-align: top;">This function sets the dynamic
-length of the LOB in Unicode
-characters
-(2 bytes per each). The function needs to called before <a
- href="otl3_stream_class.htm#long_string_write">writing</a>
-the LOB into the otl_stream</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="unicode_len"></a>int len(void);</pre>
-      </td>
-      <td style="vertical-align: top;">This function returns the
-dynimac length of the LOB in Unicode
-characters
-(2 bytes per character). The function needs to be called after <a
- href="otl3_stream_class.htm#long_string_read">reading</a>
-the LOB from the otl_stream</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>unsigned short&amp; operator[](int ndx);</pre>
-      </td>
-      <td style="vertical-align: top;">This operator allows the user to
-access individual Unicode
-characters
-of
-the LOB.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="assignment_operator"></a>otl_long_unicode_string&amp; operator=<br>(const otl_long_unicode_string&amp;);</pre>
-      </td>
-      <td style="vertical-align: top;">Assignment operator<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="copy_constructor"></a>otl_long_unicode_string<br>(const otl_long_unicode_string&amp;);</pre>
-      </td>
-      <td style="vertical-align: top;">Copy constructor<br>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<br>
-<pre><font size="+2">}; // end of otl_long_unicode_string</font></pre>
-<hr width="100%">
-<center>
-<p><a href="otl3_exception_class.htm">Prev</a> <a
- href="otl3_const_sql.htm">Next</a><a href="otl3.htm">Contents</a><a
- href="home.htm">Go
-Home</a></p>
-</center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
-<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
-<script language="JavaScript"><!-- hide from old browsers
- var modDate = new Date(document.lastModified)
- document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
- //-->
- </script></a>.
-</p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for
-any purpose is hereby granted without fee, provided that the above
-copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
-</p>
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-5456201-1");
-pageTracker._trackPageview();
-</script>
-</body>
-</html>
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, OTL Long String, Long Unicode String classes</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, OTL Long String, Long Unicode String&nbsp; classes</h1>
+    </center>
+    <h1>
+      <a name="otl_class"></a>OTL Long String, Long Unicode String
+      classes</h1>
+    These classes are used in operations with Large Objects (LOB). In
+    OTL
+    4.0,
+    otl_long_string can hold a LOB of any type as well as RAW / BINARY:
+    <br>
+    <ul>
+      <li>Oracle 7: LONG, RAW, LONG RAW</li>
+      <li>Oracle 8, 8i, 9i, 10g, 11g: LONG, RAW, LONG RAW; CLOB, BLOB</li>
+      <li>MS SQL Server: TEXT, IMAGE, VARBINARY, BINARY, VARCHAR(MAX),
+        VARBINARY(MAX)<br>
+      </li>
+      <li>DB2: CLOB, BLOB</li>
+      <li>Sybase: TEXT, IMAGE, VARBINARY, BINARY<br>
+      </li>
+      <li>PostgreSQL: TEXT, BYTEA,<br>
+      </li>
+      <li>SAP/MAX DB: CHAR() BYTE, VARCHAR() BYTE, LONG VARCHAR, LONG
+        VARCHAR BYTE<br>
+      </li>
+      <li>MySQL: LONGTEXT, LONGBLOB, VARBINARY, BINARY</li>
+    </ul>
+    otl_long_unicode_string is specialized for Unicode character based
+    large
+    strings.
+    otl_long_unicode_string
+    can hold the following data types:
+    <ul>
+      <li>Oracle 8i, 9i, 10g: LONG,&nbsp; CLOB; the database default
+        character set may
+        be set to ASCII, or UTF-8, etc</li>
+      <li>Oracle 8i, 9i, 10g: NCLOB; the database national character set
+        may be set to
+        whatever is allowed for a concrete version of the database (8i
+        and
+        9i/10g
+        differ
+        / are not the same in that regard, as far as supporting
+        different
+        versions
+        of Unicode, and what sets are allowed for national character
+        data types)</li>
+      <li>MS SQL NTEXT</li>
+      <li>DB2 CLOB / DBCLOB when the database supports Unicode (UTF-8,
+        UCS-2, etc.)</li>
+    </ul>
+    In the case if Unicode OTL is enabled by #define <a
+      href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>,
+    otl_long_string needs to be used for Oracle LONG RAWs, BLOBs, MS SQL
+    IMAGEs, DB2 BLOBs, etc (large binary strings, generally speaking),
+    because
+    they still remain the large byte strings, without any character
+    semantic
+    attached.
+    <br>
+    <br>
+    OTL 4.0 defines the following <a href="otl3_bind_variables.htm">bind
+      variable
+    </a>data types for manipulating LOBs:
+    <ul>
+      <li> <a href="otl3_bind_variables.htm#varchar_long">varchar_long</a>
+        for
+        Oracle
+        7/8/8i/9i/10g LONG, MS SQL Server/Sybase TEXT/NTEXT, DB2
+        CLOB/DBCLOB</li>
+      <li> <a href="otl3_bind_variables.htm#raw_long">raw_long</a> for
+        Oracle
+        7/8/8i/9i/10g
+        RAW, LONG RAW, MS SQL Server/Sybase IMAGE, DB2 BLOB</li>
+      <li> <a href="otl3_bind_variables.htm#clob">clob</a> for Oracle
+        8/8i/9i/10g
+        CLOB,
+        NCLOB (if #define OTL_UNICODE is enabled).</li>
+      <li> <a href="otl3_bind_variables.htm#blob">blob </a>for Oracle
+        8/8i/9i/10g
+        BLOB</li>
+    </ul>
+    <h2>
+      <a name="LOB_and_NULL"></a><font size="+2">Large Objects (LOBs)
+        and
+        NULLs</font></h2>
+    Behavior of LOBs is slightly different from the other table column
+    data types
+    as far as NULLs are concerned:
+    <ul>
+      <li> <a name="LOB_LIST"></a>Oracle 7/8/8i/9i/10g's LONG, Oracle
+        7/8's LONG
+        RAW,
+        MS SQL Server/Sybase's TEXT, MS SQL Server/Sybase's IMAGE, DB2's
+        CLOB/BLOB:<br>
+        <br>
+      </li>
+      As opposed to normal data types of columns in tables, the above
+      LOBs
+      can be set to NULL in two ways: either writing <a
+        href="otl3_stream_class.htm#otl_null">otl_null</a>()
+      into the otl_stream or setting the length of the LOB to 0 by
+      calling
+      otl_long_string::<a href="#set_len">set_len</a>(0)
+      and the writing the LOB into the otl_stream.
+      <p>On the output, when the LOB is being read from the otl_stream,
+        the
+        checking
+        for the NULL value can be done in two ways: either by calling
+        otl_stream::<a href="otl3_stream_class.htm#is_null">is_null</a>()
+or
+        by calling otl_long_string::<a href="#len">len</a>() and
+        checking if
+        it returns 0. <br>
+        &nbsp; </p>
+      <li>Oracle 8/8i/9i/10g's CLOB, Oracle 8/8i/9i/10g's BLOB:<br>
+        <br>
+      </li>
+      <br>
+      On the input, behavior of Oracle's CLOBs and BLOBs is the same as
+      the
+      other LOB datatypes, that is otl_null() or set_len(0) can be used
+      when
+      writing a CLOB or BLOB into the database.
+      <p>On the output, when the Oracle 8 CLOB/BLOB is being read from
+        the
+        otl_stream,
+        the checking for the NULL value can be done only in one way by
+        calling
+        otl_long_string::len() and checking if it returns 0. The
+        otl_stream::is_null()
+        function always returns 0 for CLOBs/BLOBs. So, it is recommended
+        to use
+        the len() function and check it for 0 instead of using
+        is_null().</p>
+    </ul>
+    <pre><font size="+2">class otl_long_string{<br>public:<br></font></pre>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Function
+/ data member</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>unsigned char* v;</pre>
+      </td>
+      <td style="vertical-align: top;"><i></i>Pointer to the LOB value.
+In other
+words, the
+field
+is a pointer to the LOB buffer.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_long_string(...);<br></pre>
+      <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;">
+            <p><span style="font-style: italic;">Parameter</span></p>
+            </td>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int buffer_size=32760</td>
+            <td style="vertical-align: top;">It defines the size of the
+LOB
+buffer.
+By default, the size is 32760.</td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int input_length=0</td>
+            <td style="vertical-align: top;">It defines the actual
+length of the
+string on the input. If this parameter is used, then the <a href="otl3_long_string.htm#set_len">set_len</a>()
+function does not need to be called.</td>
+          </tr>
+        </tbody>
+      </table>
+      <span style="font-family: monospace;"><br>
+      </span></td>
+      <td style="vertical-align: top;"><a name="gen_constr0"></a>General
+constructor. It creates an
+otl_long_string
+instance: allocates memory for the LOB buffer and sets internal
+variables. In addition to setting the size of
+otl_long_string,
+the <a href="otl3_connect_class.htm#set_max_long_size">otl_connect::set_max_long_size</a>()
+needs to be called with the same or a greater size.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_long_string(...);<br></pre>
+      <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Parameter</span><br>
+            </td>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">
+            <p>const void* external_buffer</p>
+            </td>
+            <td style="vertical-align: top;">Pointer to an external
+buffer<br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int buffer_size</td>
+            <td style="vertical-align: top;">Buffer size defines the
+size of the external
+buffer for the otl_long_string.</td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int input_length=0</td>
+            <td style="vertical-align: top;">Input length is the actual
+length of the
+string on
+the input. If this parameter is used, then there is no need to call the
+            <a href="otl3_long_string.htm#set_len">set_len</a>()
+function.</td>
+          </tr>
+        </tbody>
+      </table>
+      <pre><br></pre>
+      </td>
+      <td style="vertical-align: top;"><a name="gen_constr"></a>General
+constructor. It creates an
+otl_long_string
+instance: it sets the <i>v </i>field to the value of <i>external_buffer
+      </i>and
+sets internal variables. In case if this constructor is called, memory
+for the LOB buffer is not allocated, the address of an external buffer
+is used instead. This constructor is provided for more efficient
+manipulation
+of LOBs. If it is critical for performance or memory reasons, this
+constructor
+can be used for passing the address of a user defined buffer into the <a href="otl3_stream_class.htm">otl_stream</a>
+operations with LOBs.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="set_len"></a>void set_len(const int len=0);</pre>
+      </td>
+      <td style="vertical-align: top;">This function sets the dynamic
+length of the LOB. The function
+needs to
+be called before <a href="otl3_stream_class.htm#long_string_write">writing</a>
+the LOB into the otl_stream. </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><a style="font-family: monospace;" name="set_last_piece"></a><span style="font-family: monospace;">void set_last_piece<br>
+(const bool
+last_piece=false);</span></td>
+      <td style="vertical-align: top;">When an otl_long_string is used
+with an <a href="otl3_lob_stream.htm">otl_lob_stream</a> and
+OTL/OCI8i/9i/10g/11g,
+this function indicates that the otl_string_string is the last piece /
+chunk in a sequence of LOB chunks being written into the
+otl_lob_stream. The function exists for OTL/ODBC/DB2-CLI but it does
+not have any effect.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="len"></a>int len();</pre>
+      </td>
+      <td style="vertical-align: top;">This function returns the
+dynamic length of the LOB. The function
+needs
+to be called after <a href="otl3_stream_class.htm#long_string_read">reading</a>
+the LOB from the otl_stream</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>unsigned char&amp; operator[](int ndx);<br><br>const unsigned char&amp; operator[](int ndx) const;<br></pre>
+      </td>
+      <td style="vertical-align: top;">These operators allow the user to
+access individual bytes of the
+LOB.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_long_string&amp; operator=<br>(const otl_long_string&amp;);</pre>
+      </td>
+      <td style="vertical-align: top;">Assignment operator</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_long_string<br>(const otl_long_string&amp;);</pre>
+      </td>
+      <td style="vertical-align: top;">Copy constructor</td>
+    </tr>
+  </tbody>
+</table>
+<pre><font size="+2">}; // end of otl_long_string<br><br><a name="otl_long_unicode_string"></a>class otl_long_unicode_string: public otl_long_string{<br>public:<br></font></pre>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Function
+/ data member</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_long_unicode_string(...);<br></pre>
+      <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Parameter</span><br>
+            </td>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int buffer_size=32760</td>
+            <td style="vertical-align: top;">defines the size of the
+LOB
+buffer.</td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int input_length=0</td>
+            <td style="vertical-align: top;">defines the actual length
+of the
+string on the input. If this parameter is used, then the <a href="otl3_long_string.htm#unicode_set_len">set_len</a>()
+function does not need to be called.</td>
+          </tr>
+        </tbody>
+      </table>
+      <pre><br></pre>
+      </td>
+      <td style="vertical-align: top;"> <a name="unicode_gen_constr0"></a>General
+constructor. It
+creates
+an otl_long_unicode_string
+instance: allocates memory for the LOB buffer and sets internal
+variables.&nbsp;
+By default, the size is 32760 Unicode characters. In addition to
+setting
+the size of otl_long_unicode_string, the <a href="otl3_connect_class.htm#set_max_long_size">otl_connect::set_max_long_size</a>()
+needs to be called with the same or a greater size.Note: all sizes for
+Unicode strings are given not in bytes but in Unicode characters (2
+bytes
+per character times 2 to accommodate a possible surrogate character).<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_long_unicode_string(...);<br></pre>
+      <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Parameter</span><br>
+            </td>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const void* external_buffer</td>
+            <td style="vertical-align: top;">Pointer to the external
+buffer<br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int buffer_size</td>
+            <td style="vertical-align: top;">defines the size of the
+external
+buffer
+for the otl_long_unicode_string.</td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const int input_length=0</td>
+            <td style="vertical-align: top;">the actual length of the
+string on
+the input. If this parameter is used, then there is no need to call the
+            <a href="otl3_long_string.htm#unicode_set_len">set_len</a>()
+function.</td>
+          </tr>
+        </tbody>
+      </table>
+      <pre><br></pre>
+      </td>
+      <td style="vertical-align: top;"> <a name="unicode_gen_constr"></a>General
+constructor. It
+creates an
+otl_long_unicode_string
+instance: it saves the value of <i>external_buffer </i>and sets
+internal
+variables. In case if this constructor is called, memory for the LOB
+buffer
+is not allocated, the address of an external buffer is used instead.
+This
+constructor is provided for more efficient manipulation of LOBs. If it
+is critical for performance or memory reasons, this constructor can be
+used for passing the address of a user defined buffer into the <a href="otl3_stream_class.htm">otl_stream</a>
+operations with LOBs.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="unicode_set_len"></a>void set_len(const int len=0);</pre>
+      </td>
+      <td style="vertical-align: top;">This function sets the dynamic
+length of the LOB in Unicode
+characters
+(2 bytes per each). The function needs to called before <a href="otl3_stream_class.htm#long_string_write">writing</a>
+the LOB into the otl_stream</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="unicode_len"></a>int len(void);</pre>
+      </td>
+      <td style="vertical-align: top;">This function returns the
+dynimac length of the LOB in Unicode
+characters
+(2 bytes per character). The function needs to be called after <a href="otl3_stream_class.htm#long_string_read">reading</a>
+the LOB from the otl_stream</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>unsigned short&amp; operator[](int ndx);<br><br>const unsigned short&amp; operator[](int ndx) const;<br></pre>
+      </td>
+      <td style="vertical-align: top;">These operators allow the user to
+access individual Unicode
+characters
+of
+the LOB.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="assignment_operator"></a>otl_long_unicode_string&amp; operator=<br>(const otl_long_unicode_string&amp;);</pre>
+      </td>
+      <td style="vertical-align: top;">Assignment operator<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre><a name="copy_constructor"></a>otl_long_unicode_string<br>(const otl_long_unicode_string&amp;);</pre>
+      </td>
+      <td style="vertical-align: top;">Copy constructor<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<pre><font size="+2">}; // end of otl_long_unicode_string</font></pre>
+<hr width="100%">
+<center>
+<p><a href="otl3_exception_class.htm">Prev</a> <a href="otl3_const_sql.htm">Next</a><a href="otl3.htm">Contents</a><a href="home.htm">Go
+Home</a></p>
+</center>
+<p>Copyright © 1996-2022, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript"><!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+</p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+
+
+</body></html>

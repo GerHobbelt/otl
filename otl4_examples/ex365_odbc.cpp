@@ -1,7 +1,21 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 // One of the following two #define's enables ODBC / DB2 CLI 
 // Unicode SQLxxxW functions
+
+#if defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 306)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreserved-id-macro"
+#endif
+
 #define UNICODE
 #define _UNICODE
+
+#if defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 306)
+#pragma clang diagnostic pop
+#endif
 
 #include <iostream>
 using namespace std;
@@ -29,9 +43,9 @@ int main()
  otl_connect::otl_initialize(); // initialize the database API environment
  try{
 // Special Unicode rlogon function
-   db.rlogon((const SQLWCHAR*)L"scott",
-            (const SQLWCHAR*)L"tiger",
-             (const SQLWCHAR*)L"mssqlxxx"
+   db.rlogon(reinterpret_cast<const SQLWCHAR*>(L"scott"),
+             reinterpret_cast<const SQLWCHAR*>(L"tiger"),
+             reinterpret_cast<const SQLWCHAR*>(L"mssqlxxx")
            ); // connect to the database
 
  }
@@ -46,7 +60,7 @@ int main()
   cerr<<endl;
   c=p.sqlstate;
   while(*c){
-    cerr<<(char)*c;
+    cerr<<static_cast<char>(*c);
     ++c;
   }
   cerr<<endl;

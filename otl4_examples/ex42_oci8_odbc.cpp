@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -45,7 +49,7 @@ void insert2()
  otl_long_string f2(long_text_max); // define long string variable
  db2.set_max_long_size(long_text_max); // set maximum long string size for connect object
  
- int f1;
+ int f1=0;
 
 // INSERT statement for inserting rows into OCI table
  oracle::otl_stream 
@@ -84,7 +88,7 @@ void select2()
    ); 
    // create select stream
  
- float f1;
+ float f1=0;
 
  i<<8; // assigning :f = 8
    // SELECT automatically executes when all input variables are
@@ -112,8 +116,8 @@ int main()
  odbc::otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db1.rlogon("UID=scott;PWD=tiger;DSN=my_db"); // connect to ODBC
-  db2.rlogon("scott/tiger"); // connect to OCI
+  db1.rlogon("UID=system;PWD=oracle;DSN=my_db"); // connect to ODBC
+  db2.rlogon("system/oracle@myora_tns"); // connect to OCI
 
   odbc::otl_cursor::direct_exec
    (

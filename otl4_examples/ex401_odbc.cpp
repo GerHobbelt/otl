@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -78,7 +82,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("scott/tigger@sybsql"); // connect to ODBC
+  db.rlogon("sa/tigger@sybsql"); // connect to ODBC
 
   otl_cursor::direct_exec
    (

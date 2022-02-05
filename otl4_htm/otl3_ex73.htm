@@ -1,55 +1,53 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-   <TITLE>OTL 4.0, Example 73 (STL std::strings, ANSI C++, Oracle 8)</TITLE>
-   <META NAME="Author" CONTENT="Sergei Kuchin">
-   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
-   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-</HEAD>
-<BODY>
-
-<H1 ALIGN=CENTER>OTL 4.0, Example 73 (STL std::strings, ANSI C++ typecasts,
-Oracle 8)</H1>
-
-<H1>Example 73 (STL std::strings, ANSI C++ typecasts, Oracle 8)</H1>
-
-<P>This example demonstrates OTL streams and std::strings. Also, the example
-shows how to turn on the ANSI C++ typecasts in OTL.</P>
-
-<H2>Source Code</H2>
-
-<PRE>#include &lt;iostream&gt;
-#include &lt;string&gt;</PRE>
-
-<PRE>#define OTL_ORA8 // Compile OTL 4.0/OCI8
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <title>OTL 4.0, Example 73 (STL std::strings, ANSI C++, Oracle 8)</title>
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+  </head>
+  <body>
+    <h1 align="CENTER">OTL 4.0, Example 73 (STL std::strings, ANSI C++
+      typecasts, Oracle 8)</h1>
+    <h1>Example 73 (STL std::strings, ANSI C++ typecasts, Oracle 8)</h1>
+    <p>This example demonstrates OTL streams and std::strings. Also, the
+      example shows how to turn on the ANSI C++ typecasts in OTL.</p>
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;
+#include &lt;string&gt;</pre>
+    <pre>#define OTL_ORA8 // Compile OTL 4.0/OCI8
 #define OTL_STL // Turn on STL features
-#define OTL_ANSI_CPP // Turn on ANSI C++ typecasts
+#define OTL_ANSI_CPP // Turn on ANSI C++ typecasts<br><br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; \<br>    (defined(OTL_CPP_14_ON) || defined(OTL_CPP_17_ON))<br>#include &lt;experimental/string_view&gt;<br>#define <a href="otl3_compile.htm#OTL_STD_STRING_VIEW_CLASS">OTL_STD_STRING_VIEW_CLASS</a> std::experimental::string_view<br>#elif defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br>#include &lt;string_view&gt;<br>#define OTL_STD_STRING_VIEW_CLASS std::string_view<br>#endif<br>
 #include &lt;otlv4.h&gt; // include the OTL 4.0 header file
 
 using namespace std;
 
-<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
 
 void insert()
 // insert rows into table
 { 
- <A HREF="otl3_stream_class.htm">otl_stream</A> o(50, // buffer size
-              &quot;insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)&quot;, 
+ <a href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size
+              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", 
                  // SQL statement
               db // connect object
              );
  string f2;
 
  for(int i=1;i&lt;=100;++i){
-  f2=&quot;NameXXX&quot;;
-  o&lt;&lt;i&lt;&lt;f2;
+  f2="NameXXX";
+#if defined(<a href="otl3_compile.htm#OTL_STD_STRING_VIEW_CLASS">OTL_STD_STRING_VIEW_CLASS</a>)<br>  OTL_STD_STRING_VIEW_CLASS f2_sv(f2.c_str(),f2.length());<br>  o&lt;&lt;i<a href="otl3_stream_class.htm#OTL_STD_STRING_VIEW_CLASS">&lt;&lt;</a>f2_sv;<br>#else<br>  o&lt;&lt;i&lt;&lt;f2;<br>#endif<br>
  }
 }
 
 void select()
 { 
- <A HREF="otl3_stream_class.htm">otl_stream</A> i(50, // buffer size
-              &quot;select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2&quot;,
+ <a href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size
+              "select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2",
                  // SELECT statement
               db // connect object
              ); 
@@ -64,7 +62,7 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i&gt;&gt;f1&gt;&gt;f2;
-  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;endl;
+  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;
  }
 
  i&lt;&lt;4; // assigning :f = 4
@@ -73,29 +71,29 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i&gt;&gt;f1&gt;&gt;f2;
-  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;endl;
+  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;
  }
 
 }
 
 int main()
 {
- <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize OCI environment
+ <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment
  try{
 
-  db.rlogon(&quot;scott/tiger&quot;); // connect to Oracle
+  db.rlogon("scott/tiger"); // connect to Oracle
 
-  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
-</A>   (
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
     db,
-    &quot;drop table test_tab&quot;,
+    "drop table test_tab",
     otl_exception::disabled // disable OTL exceptions
    ); // drop table
 
-  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
-</A>   (
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
     db,
-    &quot;create table test_tab(f1 number, f2 varchar2(30))&quot;
+    "create table test_tab(f1 number, f2 varchar2(30))"
     );  // create table
 
   insert(); // insert records into table
@@ -103,7 +101,7 @@ int main()
 
  }
 
- catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+ catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
   cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
   cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
   cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
@@ -114,11 +112,11 @@ int main()
  return 0;
 
 }
-</PRE>
+</pre>
 
-<H2>Output</H2>
+<h2>Output</h2>
 
-<PRE>f1=8, f2=NameXXX
+<pre>f1=8, f2=NameXXX
 f1=9, f2=NameXXX
 f1=10, f2=NameXXX
 f1=11, f2=NameXXX
@@ -139,22 +137,22 @@ f1=8, f2=NameXXX
 
 
 
-<HR WIDTH="100%"></PRE>
+<hr width="100%"></pre>
 
-<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
-<A HREF="home.htm">Go Home</A> </P></CENTER>
+<center><p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+<a href="home.htm">Go Home</a> </p></center>
 
-<P>Copyright &copy; 1996-2012, Sergei Kuchin, email: <A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A>,
-<A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A>. <SCRIPT Language="JavaScript"><!-- hide from oldgmailsers
+<p>Copyright © 1996-2022, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>. <script language="JavaScript"><!-- hide from oldgmailsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
- </SCRIPT></P>
+ </script></p>
 
-<P><I>Permission to use, copy, modify and redistribute this document for
+<p><i>Permission to use, copy, modify and redistribute this document for
 any purpose is hereby granted without fee, provided that the above copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
 
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -164,5 +162,6 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</BODY>
-</HTML>
+
+
+</body></html>

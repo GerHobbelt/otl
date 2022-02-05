@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html;
-      charset=ISO-8859-1">
+      charset=windows-1252">
     <meta name="Author" content="Sergei Kuchin">
     <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
       [Netscape]">
@@ -95,7 +95,8 @@
             tables as parameters, Oracle 8)</a></b></li>
       <li><b><a href="otl3_ex88.htm">Example 88 (STL vector based PL/SQL
             table of DATEs as parameter, Oracle 8)</a></b></li>
-      <li><b><a href="otl3_ex98.htm">Example 98 (otl_value&lt;T&gt;,
+      <li><b><a href="otl3_ex98.htm">Example 98 (otl_value&lt;T&gt;/
+            otl_compact_value&lt;T,null&gt; / std::optional&lt;T&gt;,
             Oracle 8/8i)</a></b></li>
       <li><b><a href="otl3_ex102.htm">Example 102 (#define
             OTL_UNCAUGHT_EXCEPTION_ON, Oracle 8/8i)</a></b></li>
@@ -106,6 +107,14 @@
       <li><b><a href="otl3_ex116.htm">Example 116
             (otl_stream::set_flush(), Oracle 8/8i)</a></b></li>
       <li><b><a href="otl3_ex119.htm">Example 119 (<font size="-1">OTL_VALUE_TEMPLATE_ON,
+
+
+
+
+
+
+
+
 
 
               OTL_USER_DEFINED_STRING_CLASS_ON</font>, Oracle 8/8i)</a></b></li>
@@ -146,7 +155,7 @@
             OTL_ORA_TEXT_ON, Oracle 8/8i/9i)</a></b></li>
       <li><b><a href="otl4_ex204.htm">Example 204 (otl_datetime
             container with TIMESTAMP values down to microseconds in
-            Oracle 9i)</a></b></li>
+            Oracle 9i, and std::optional&lt;T&gt;)</a></b></li>
       <li><b><a href="otl4_ex205.htm">Example 205 (otl_exception,
             derived from a base class, Oracle)</a></b></li>
       <li><b><a href="otl4_ex208.htm">Example 208 (lob_stream and SELECT
@@ -244,6 +253,15 @@
             748 (VARCHAR column bound as RAW[XXX] for reading/writing
             std::strings that have null terminators ('\0') in the
             middle)</a></b></li>
+      <li style="font-weight: bold;"><b><a href="otl4_ex755.htm">Example
+            755 (otl_read_from_stream() / otl_write_to_stream() and STL
+            containers)</a></b></li>
+      <li style="font-weight: bold;"><b><a href="otl4_ex763.htm">Example
+            763 (otl_connect_pool)</a></b></li>
+      <li style="font-weight: bold;"><b><a href="otl4_ex772.htm">Example
+            772 (OTL stream, std::variant&lt;&gt;, std::tuple&lt;&gt;,
+            std::array&lt;char,...&gt;, and std::span&lt;&gt;)</a><br>
+        </b></li>
     </ol>
     <b></b>
     <center>
@@ -252,7 +270,7 @@
           href="otl3_compile.htm">Next</a><a href="otl3.htm">Contents</a><a
           href="home.htm">Go Home</a></p>
     </center>
-    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+    <p>Copyright © 1996-2022, Sergei Kuchin, email: <a
         href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
         href="mailto:skuchin@gmail.com">skuchin@gmail.com
         <script language="JavaScript"><!-- hide from old browsers

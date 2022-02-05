@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -57,7 +61,7 @@ void select(void)
               db // connect object
              ); 
  
- int f1;
+ int f1=0;
  otl_datetime f2,f3,f4;
 
  while(!i.eof()){ // while not end-of-data

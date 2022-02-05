@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -51,7 +55,7 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  char f2[31];
  otl_stream_read_iterator
    <otl_stream,
@@ -64,11 +68,21 @@ void select()
 
  rs.attach(i); // attach the iterator "rs" to the stream "i" 
                // after the PL/SQL block is executed.
+#if (defined(_MSC_VER) && _MSC_VER>=1600) || defined(OTL_CPP_11_ON)
+// C++11 (or higher) compiler
+ for(auto& it : rs){
+  it.get(1,f1);
+  it.get(2,f2);
+  cout<<"f1="<<f1<<", f2="<<f2<<endl;
+ }
+#else
+// C++98/03 compiler
  while(rs.next_row()){ // while not end-of-data
   rs.get(1,f1);
   rs.get(2,f2);
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
  }
+#endif
 
  rs.detach(); // detach the itertor from the stream
 
@@ -88,7 +102,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

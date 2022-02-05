@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -34,7 +38,7 @@ o.open(200, // buffer size
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  o<<(float)i<<tmp;
+  o<<static_cast<float>(i)<<tmp;
   if(i%55==0)
    throw "Throwing an exception";
  }
@@ -68,7 +72,7 @@ o.open(200, // buffer size
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  o<<(float)i<<tmp;
+  o<<static_cast<float>(i)<<tmp;
 //  if(i%55==0)
 //   throw "Throwing an exception";
  }
@@ -87,7 +91,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8

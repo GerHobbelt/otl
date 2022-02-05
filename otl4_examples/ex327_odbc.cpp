@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <vector>
 #include <iterator>
@@ -20,16 +24,14 @@ public:
  string f2;
 
 // default constructor
- row(){f1=0;}
+  row():f1(0),f2(){}
 
 // destructor
  ~row(){}
 
 // copy constructor
- row(const row& arow)
+  row(const row& arow):f1(arow.f1),f2(arow.f2)
  {
-  f1=arow.f1;
-  f2=arow.f2;
  }
  
 // assignment operator

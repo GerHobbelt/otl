@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <vector>
 #include <iterator>
@@ -23,16 +27,14 @@ public:
  string f2;
 
 // default constructor
- row(){f1=0;}
+  row():f1(0),f2(){}
 
 // destructor
  ~row(){}
 
 // copy constructor
- row(const row& arow)
+  row(const row& arow):f1(arow.f1),f2(arow.f2)
  {
-  f1=arow.f1;
-  f2=arow.f2;
  }
  
 // assignment operator
@@ -85,7 +87,7 @@ void insert()
   vo.push_back(r);
  }
 
- cout<<"vo.size="<<(int)vo.size()<<endl;
+ cout<<"vo.size="<<vo.size()<<endl;
 
 // insert vector into table
  copy(vo.begin(), 
@@ -118,7 +120,7 @@ void select()
       otl_input_iterator<row,ptrdiff_t>(),
       back_inserter(v));    
 
- cout<<"Size="<<(int)v.size()<<endl;
+ cout<<"Size="<<v.size()<<endl;
 
 // send the vector to cout
  copy(v.begin(), v.end(), ostream_iterator<row>(cout, "\n"));
@@ -135,7 +137,7 @@ void select()
       otl_input_iterator<row,ptrdiff_t>(),
       back_inserter(v));    
 
- cout<<"Size="<<(int)v.size()<<endl;
+ cout<<"Size="<<v.size()<<endl;
 
 // send the vector to cout
  copy(v.begin(), v.end(), ostream_iterator<row>(cout, "\n"));

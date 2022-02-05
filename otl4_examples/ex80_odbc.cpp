@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -40,9 +44,24 @@ void select(void)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  otl_datetime f2,f3;
 
+#if (defined(_MSC_VER) && _MSC_VER>=1600) || defined(OTL_CPP_11_ON)
+// C++11 (or higher) compiler
+ for(auto& it : i){
+  it>>f1>>f2>>f3;
+  cout<<"f1="<<f1;
+  cout<<", f2="<<f2.month<<"/"<<f2.day<<"/"
+      <<f2.year<<" "<<f2.hour<<":"<<f2.minute<<":"
+      <<f2.second;
+  cout<<", f3="<<f3.month<<"/"<<f3.day<<"/"
+      <<f3.year<<" "<<f3.hour<<":"<<f3.minute<<":"
+      <<f3.second;
+  cout<<endl;
+ }
+#else
+// C++98/03 compiler
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2>>f3;
   cout<<"f1="<<f1;
@@ -54,6 +73,7 @@ void select(void)
       <<f3.second;
   cout<<endl;
  }
+#endif
  
 }
 

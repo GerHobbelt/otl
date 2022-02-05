@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -10,7 +14,6 @@ unsigned int my_trace_level=
    0x10; // 5th level of tracing
 // each level of tracing is represented by its own bit, 
 // so levels of tracing can be combined in an arbitrary order.
-
 #define OTL_TRACE_LEVEL my_trace_level 
    // enables OTL tracing, and uses my_trace_level as a trace control variable.
 
@@ -60,7 +63,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<8<<8; // assigning :f = 8; :ff = 8
@@ -79,7 +82,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to the database
+  db.rlogon("system/oracle@myora_tns"); // connect to the database
 
   otl_cursor::direct_exec
    (

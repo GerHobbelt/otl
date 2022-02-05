@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <title>Example 768 (PostgreSQL 9.5 UPSERT, otl_read_row() and
+      otl_write_row())</title>
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+  </head>
+  <body>
+    <h1 align="center">OTL4, Example 768 (PostgreSQL 9.5 UPSERT,&nbsp;
+      otl_read_row() and otl_write_row())</h1>
+    <p>This example demonstrates how to use PostgreSQL 9.5's <a
+href="https://wiki.postgresql.org/wiki/What%27s_new_in_PostgreSQL_9.5#INSERT_..._ON_CONFLICT_DO_NOTHING.2FUPDATE_.28.22UPSERT.22.29">UPSERT</a>,
+      and OTL template <a href="otl4_read_row.htm">otl_read_row() /
+        otl_write_row() functions</a>.<br>
+    </p>
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;<br>#include &lt;thread&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
+    <pre>// #define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used<br>#define <a href="otl3_compile.htm#OTL_ODBC_ALTERNATE_RPC">OTL_ODBC_ALTERNATE_RPC</a><br>#if !defined(_WIN32) &amp;&amp; !defined(_WIN64)<br>#define <a href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a><br>#else <br>#define <a href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a> // required with PG ODBC on Windows<br>#endif<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert(void)<br>// insert rows into table<br>{ <br> <a href="otl3_stream_class.htm">otl_stream</a> o(10, // stream buffer size in logical rows.<br>              "insert into test_tab "<br>              "values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)",<br>                 // INSERT statement<br>              db // connect object<br>             );<br>  // Write rows into the stream. At the end of each row, check for<br>  // "end-of-row" condition.<br>  <a href="otl4_read_row.htm">otl_write_row</a>(o,1,"Line1");<br>  <a href="otl4_read_row.htm">otl_write_row</a>(o,2,"Line21");<br><br>  // the old way (operators &gt;&gt;() / &lt;&lt;()) is available as always:<br>  // o&lt;&lt;1&lt;&lt;"Line1";<br>  // o&lt;&lt;2&lt;&lt;"Line21";<br><br>  o.flush();<br>}<br><br>void upsert(void)<br>// "upsert" rows into table<br>{ <br> otl_stream o(10, // stream buffer size in logical rows.<br>              "insert into test_tab (f1,f2) "<br>              "values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;) "<br>              "on conflict (f1) "<br>              "do update set f2=:f22&lt;char[31]&gt;||'--'||excluded.f1 ",<br>                 // "UPSERT" statement<br>              db // connect object<br>             );<br> // Write rows into the stream. At the end of each row, check for<br> // "end-of-row" condition.<br> otl_write_row(o,2,"Line22","Line22");<br> otl_write_row(o,3,"Line3","Line3");<br><br> // the old way (operators &gt;&gt;() / &lt;&lt;()) is available as always:<br> // o&lt;&lt;1&lt;&lt;"Line1";<br> // o&lt;&lt;2&lt;&lt;"Line21";<br><br> o.flush();<br>}<br><br><br>void select(void)<br>{ <br> otl_stream i(5, // stream buffer size in logical rows<br>              "select * from test_tab ",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>// SELECT output columns<br> int f1=0;<br> char f2[31];<br><br> while(!i.eof()){ // while not end-of-data<br>   // Read a row from the stream. Check for the "end-of-row" condition<br>   // at the end each row.<br>   <a href="otl4_read_row.htm">otl_read_row</a>(i,f1,f2);<br>   <br>   // The old way (operators &gt;&gt;() / &lt;&lt;()) is available as always:<br>   // i&gt;&gt;f1&gt;&gt;f2;<br>   <br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br> }<br> <br>}<br><br><br>int main()<br>{<br> otl_connect::otl_initialize(); // initialize database API environment<br> try{<br><br>  db.rlogon("scott/tiger@postgresql"); // connect to the database<br><br>  otl_cursor::direct_exec<br>   (<br>    db,<br>    "drop table test_tab",<br>    otl_exception::disabled // disable OTL exceptions<br>   ); // drop table<br><br>  otl_cursor::direct_exec<br>   (<br>    db,<br>    "create table test_tab (f1 int, f2 varchar(30))"<br>    );  // create table<br><br>  db&lt;&lt;"create unique index ind001 on test_tab(f1)";<br>     // create unique index<br><br>  insert(); // insert records into table<br>  upsert(); // merge records into table<br>  select(); // select records from table<br><br> }<br><br> catch(otl_exception&amp; p){ // intercept OTL exceptions<br>  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>  cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br> }<br><br> db.logoff(); // disconnect from the database<br><br> return 0;<br><br>}<br></pre>
+    <h2>Output</h2>
+    <pre>f1=1, f2=Line1<br>f1=2, f2=Line22--2<br>f1=3, f2=Line3<br><hr width="100%"></pre>
+    <center>
+      <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+        <a href="home.htm">Go Home</a> </p>
+    </center>
+    <p>Copyright © 1996-2022, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>
+      <script language="JavaScript"><!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script>.</p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
+    <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+    <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+  
+
+</body></html>

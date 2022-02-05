@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -25,7 +29,7 @@ void stored_proc(void)
 
  o<<1<<"Test String1"; // assigning :1 = 1, :3 = "Test String1"
 
- int a;
+ int a=0;
  char b[31];
 
  o>>a>>b;
@@ -37,7 +41,8 @@ int main()
 {
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
-  db.rlogon("uid=scott;pwd=tiger;dsn=mssql2008"); // connect to ODBC
+   db.rlogon("scott","tiger","mssql2008");
+//  db.rlogon("uid=scott;pwd=tiger;dsn=mssql2008"); // connect to ODBC
   otl_cursor::direct_exec(db,"drop procedure my_proc",0);
   otl_cursor::direct_exec
    (db,

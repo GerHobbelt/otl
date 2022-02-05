@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -63,7 +67,7 @@ void select(const int af1, const int buf_size)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  char f2[31];
 
  i<<af1<<af1; // :f11 = af1, :f12 = af1
@@ -84,11 +88,11 @@ int main()
 {
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
-
+#if 0
 // ===================== Sybase via ODBC ======================================
 
   db.set_connection_mode(OTL_DEFAULT_ODBC_CONNECT);
-  db.rlogon("scott/tigger@sybsql");
+  db.rlogon("sa/tigger@sybsql");
 
   otl_cursor::direct_exec
    (
@@ -112,11 +116,11 @@ int main()
   cout<<"===================================================="<<endl;
 
   db.logoff(); // disconnect from ODBC
-
+#endif
 // ===================== TimesTen via ODBC ======================================
 
   db.set_connection_mode(OTL_TIMESTEN_ODBC_CONNECT);
-  db.rlogon("scott/tiger@TT_tt1121_32");
+  db.rlogon("scott/tiger@TT_tt1122_32");
 
   otl_cursor::direct_exec
    (
@@ -200,6 +204,7 @@ int main()
 
   db.logoff(); // disconnect from ODBC
 
+#if 0
 // ===================== EntipriseDB via ODBC ==============================
 
   db.set_connection_mode(OTL_ENTERPRISE_DB_ODBC_CONNECT);
@@ -227,7 +232,7 @@ int main()
   cout<<"===================================================="<<endl;
 
   db.logoff(); // disconnect from ODBC
-
+#endif
 // ===================== MySQL via ODBC ==============================
 
   db.set_connection_mode(OTL_MYODBC35_ODBC_CONNECT);

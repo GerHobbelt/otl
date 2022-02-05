@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -35,7 +39,7 @@ void insert()
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  o<<(float)i<<tmp;
+  o<<static_cast<float>(i)<<tmp;
  }
  o.set_flush();
  // At this point, rows are posted but not yet committed to the database
@@ -50,7 +54,7 @@ void select_nolock(otl_connect& db)
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<4<<4; // assigning :f = 4, :ff = 4
@@ -73,7 +77,7 @@ void select_committed(otl_connect& db)
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<4<<4; // assigning :f = 4, :ff = 4

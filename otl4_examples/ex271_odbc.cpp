@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -6,6 +10,10 @@ using namespace std;
 #define OTL_ODBC_MSSQL_2008 // Compile OTL 4/ODBC, MS SQL 2008
 //#define OTL_ODBC // Compile OTL 4/ODBC. Uncomment this when used with MS SQL 7.0/ 2000
 #define OTL_UNICODE // Enable Unicode OTL for ODBC
+#define OTL_STREAM_WITH_STD_UNICODE_CHAR_ARRAY_ON
+#if !defined(OTL_CPP_14_ON)
+#define OTL_CPP_14_ON
+#endif
 #include <otlv4.h> // include the OTL 4.0 header file
 
 otl_connect db; // connect object
@@ -21,7 +29,7 @@ void insert()
               db // connect object
              );
 
- unsigned short tmp[32]; // Null terminated Unicode character array.
+ std::array<char16_t,32> tmp; // Null terminated Unicode character array.
 
  for(int i=1;i<=100;++i){
   o<<i;
@@ -30,11 +38,7 @@ void insert()
   tmp[2]=3333; // Unicode chracater (decimal code of 3333)
   tmp[3]=4444; // Unicode chracater (decimal code of 4444)
   tmp[4]=0; // Unicode null terminator 
-  o<<reinterpret_cast<unsigned char*>(tmp); 
-   // overloaded operator<<(const unsigned char*) in the case of Unicode
-   // OTL accepts a pointer to a Unicode character array.
-   // operator<<(const unsigned short*) wasn't overloaded
-   // in order to avoid ambiguity in C++ type casting.
+  o<<tmp; 
  }
 
 }
@@ -50,8 +54,8 @@ void select()
              ); 
    // create select stream
  
- int f1;
- unsigned short f2[32];
+ int f1=0;
+ std::array<char16_t,32> f2;
 
  i<<8<<8; // assigning :f11 = 8, f12 = 8
    // SELECT automatically executes when all input variables are
@@ -59,14 +63,10 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i>>f1;
-  i>>reinterpret_cast<unsigned char*>(f2);
-    // overloaded operator>>(unsigned char*) in the case of Unicode
-    // OTL accepts a pointer to a Unicode chracter array.
-    // operator>>(unsigned short*) wasn't overloaded 
-    // in order to avoid ambiguity in C++ type casting.
+  i>>f2;
   cout<<"f1="<<f1<<", f2=";
-   for(int j=0;f2[j]!=0;++j)
-     cout<<" "<<f2[j];
+   for(size_t j=0;f2[j]!=0;++j)
+     cout<<" "<<static_cast<unsigned int>(f2[j]);
    cout<<endl;
  }
 
@@ -75,10 +75,10 @@ void select()
    // assigned. First portion of output rows is fetched to the buffer
 
  while(!i.eof()){ // while not end-of-data
-   i>>f1>>reinterpret_cast<unsigned char*>(f2);
+   i>>f1>>f2;
   cout<<"f1="<<f1<<", f2=";
-   for(int j=0;f2[j]!=0;++j)
-     cout<<" "<<f2[j];
+   for(size_t j=0;f2[j]!=0;++j)
+     cout<<" "<<static_cast<unsigned int>(f2[j]);
    cout<<endl;
  }
 

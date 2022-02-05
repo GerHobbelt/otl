@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -29,7 +33,7 @@ void insert(void)
   tm.minute=12;
   tm.second=12;
   tm.fraction=0;
-  o<<(float)i<<tm;
+  o<<static_cast<float>(i)<<tm;
  }
 }
 
@@ -42,7 +46,7 @@ void select(void)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  TIMESTAMP_STRUCT tm,f2;
 
  tm.year=1998;

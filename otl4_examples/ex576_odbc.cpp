@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -49,7 +53,7 @@ void select()
  
  char f1[20];
  char f2[31];
- short int f3;
+ short int f3=0;
 
  i<<4<<4; // assigning :f11 = 8, :f12 = 8
    // SELECT automatically executes when all input variables are
@@ -64,10 +68,10 @@ void select()
 
 int main()
 {
- otl_connect::otl_initialize(); // initialize the databse API environment
+ otl_connect::otl_initialize(); // initialize the databse API sa try{
  try{
 
-  db.rlogon("scott/tigger@freetds_sybsql"); // connect to the database
+  db.rlogon("sa/tigger@freetds_sybsql"); // connect to the database
   db.auto_commit_off();
 
   otl_cursor::direct_exec

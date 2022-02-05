@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -24,7 +28,7 @@ void insert()
              );
  o.set_commit(0); // set stream auto-commit to OFF
  char f2_in[32];
- int f1;
+ int f1=0;
  char f2[32];
 
  for(int i=1;i<=10;++i){

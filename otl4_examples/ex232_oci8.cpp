@@ -1,8 +1,12 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
 
-//#define OTL_ORA8I // Compile OTL 4.0/OCI8
+//#define OTL_ORA8 // Compile OTL 4.0/OCI8
 #define OTL_ORA8I // Compile OTL 4.0/OCI8i
 // #define OTL_ORA9I // Compile OTL 4.0/OCI9i
 #include <otlv4.h> // include the OTL 4.0 header file
@@ -12,7 +16,7 @@ otl_connect db; // connect object
 void insert()
 // insert rows into table
 { 
- otl_stream o(10, // make the buffer size larger than the actual 
+ otl_stream o(20, // make the buffer size larger than the actual 
                   // row set to inserted, so that the stream will not
                   // flush the buffer automatically
               "insert into test_tab values(:f1<int>,:f2<char[31]>)", 
@@ -21,10 +25,7 @@ void insert()
              );
 
  o.set_commit(0); // set stream's auto-commit to OFF.
-
- long total_rpc=0; // total "rows processed count"
- long rpc=0; // rows successfully processed in one flush() call
- int iters=0; // number of rows to be bypassed
+ o.set_batch_error_mode(true); // set stream's batch error mode to ON.
 
  try{
   o<<1<<"Line1"; // Enter one row into the stream
@@ -33,35 +34,23 @@ void insert()
   o<<2<<"Line2"; // Enter one row into the stream
   o<<3<<"Line3"; // Enter one row into the stream
   o<<4<<"Line4"; // Enter one row into the stream
-  o<<4<<"Line4"; // Enter the same data into the stream
-                 // and cause a "duplicate key" error.
+  o<<2000<<"Line2000"; // Enter an out-of-range f1 into the stream
+  o<<otl_null()<<"LineNull"; // Enter a NULL f1 into the stream
   o.flush();
  }catch(otl_exception& p){
-  if(p.code==1){
-   // ORA-0001: ...duplicate key...
-    ++iters;
-    rpc=o.get_rpc();
-    total_rpc=rpc;
-    do{
-      try{
-        cout<<"TOTAL_RPC="<<total_rpc<<", RPC="<<rpc<<endl;
-        o.flush(total_rpc+iters, // bypass the duplicate row and start
-                                 // with the rows after that
-                true // force buffer flushing regardless
-               );
-        rpc=0;
-      }catch(otl_exception& p2){
-        if(p2.code==1){
-          // ORA-0001: ... duplicate key ...
-          ++iters;
-          rpc=o.get_rpc();
-          total_rpc+=rpc;
-        }else
-          throw;
-      }
-    }while(rpc>0);
-  }else
-   throw; // re-throw the exception to the outer catch block.
+   if(p.code==24381){
+     // ORA-24831, error(s) in array DML
+     otl_exception error;
+     int total_errors=o.get_number_of_errors_in_batch();
+     cout<<"TOTAL_ERRORS="<<total_errors<<endl;
+     int dml_row_offset;
+     for(int i=0;i<total_errors;++i){
+       o.get_error(i,dml_row_offset,error);
+       cout<<"I="<<i<<", ROW_OFFSET="<<dml_row_offset
+           <<", CODE="<<error.code<<", MSG="<<error.msg
+           <<endl;
+     }
+   }
  }
 
  db.commit(); // commit transaction
@@ -77,7 +66,7 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  char f2[31];
 
  while(!i.eof()){ // while not end-of-data
@@ -92,7 +81,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (
@@ -104,7 +93,8 @@ int main()
   otl_cursor::direct_exec
    (
     db,
-    "create table test_tab(f1 number, f2 varchar2(30))"
+    "create table test_tab(f1 number not null, f2 varchar2(30), "
+    "constraint check1 check(f1 between 1 and 1000))"
     );  // create table
 
   otl_cursor::direct_exec

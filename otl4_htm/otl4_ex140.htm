@@ -1,81 +1,77 @@
-<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=ISO-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library, MySQL, MyODBC">
-  <title>OTL 4.0, Example 140 (Simple Insert/Select/Update)</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, Example 140 (Simple Insert/Select/Update)</h1>
-</center>
-<h1>
-Example 140 (Simple Insert/Select/Update)</h1>
-This example demonstrates simple INSERT, SELECT, UPDATE and constant
-SQL
-statements. This example works with PostgreSQL 7.x via its ODBC driver.
-Pay attention to the restrictions [imposed by the ODBC driver] on the
-use
-of the OTL classes.
-<h2>Source Code</h2>
-<pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;<br>#include &lt;string.h&gt;<br>#include &lt;stdlib.h&gt;<br><br>// #define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used<br>#define <a
- href="otl3_compile.htm#OTL_ODBC_ALTERNATE_RPC">OTL_ODBC_ALTERNATE_RPC</a><br>#if !defined(_WIN32) &amp;&amp; !defined(_WIN64)<br>#define <a
- href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a><br>#else <br>#define <a
- href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a> // required with PG ODBC on Windows<br>#endif<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
- href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
- href="otl3_stream_class.htm">otl_stream</a> o(50, // PostgreSQL 8.1 and higher, the buffer can be &gt; 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;char tmp[32];<br><br>&nbsp;for(int i=1;i&lt;=100;++i){<br>&nbsp; sprintf(tmp,"Name%d",i);<br>&nbsp; o&lt;&lt;i&lt;&lt;tmp;<br>&nbsp;}<br>}</pre>
-<pre>void update(const int af1)<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
- href="otl3_stream_class.htm">otl_stream</a> o(1, // PostgreSQL 8.1 and higher, buffer size can be &gt;1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "UPDATE test_tab "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp; SET f2=:f2&lt;char[31]&gt; "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " WHERE f1=:f1&lt;int&gt;",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // UPDATE statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</pre>
-<pre> o&lt;&lt;"Name changed"&lt;&lt;af1;<br>&nbsp;o&lt;&lt;<a
- href="otl3_stream_class.htm#otl_null">otl_null</a>()&lt;&lt;af1+1; // set f2 to NULL<br><br>}</pre>
-<pre>void select(const int af1)<br>{&nbsp;<br>&nbsp;<a
- href="otl3_stream_class.htm">otl_stream</a> i(50, // On SELECT, the buffer size can be &gt; 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab where f1&gt;=:f11&lt;int&gt; and f1&lt;=:f12&lt;int&gt;*2",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;int f1;<br>&nbsp;char f2[31];<br><br>&nbsp;i&lt;&lt;af1&lt;&lt;af1; // Writing input values into the stream<br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2=";<br>&nbsp; i&gt;&gt;f2;<br>&nbsp; if(i.is_null())<br>&nbsp;&nbsp; cout&lt;&lt;"NULL";<br>&nbsp; else<br>&nbsp;&nbsp; cout&lt;&lt;f2;<br>&nbsp; cout&lt;&lt;endl;<br>&nbsp;}<br><br>}<br><br>int main()<br>{<br>&nbsp;<a
- href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tiger@postgresql");<br><br>&nbsp; <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>   db.commit();<br><br>&nbsp; <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 varchar(30))"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>  db.commit();<br><br>&nbsp; insert(); // insert records into the table<br>&nbsp; update(10); // update records in the table<br>&nbsp; select(8); // select records from the table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
- href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from ODBC<br><br>&nbsp;return 0;<br><br>}</pre>
-<h2>
-Output</h2>
-<pre>f1=8, f2=Name8<br>f1=9, f2=Name9<br>f1=10, f2=Name changed<br>f1=11, f2=NULL<br>f1=12, f2=Name12<br>f1=13, f2=Name13<br>f1=14, f2=Name14<br>f1=15, f2=Name15<br>f1=16, f2=Name16<br><br><hr
- width="100%"></pre>
-<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
- href="home.htm">Go
-Home</a></center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
-<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
-<script language="JavaScript"><!-- hide from old browsers
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library, MySQL, MyODBC">
+    <title>OTL 4.0, Example 140 (Simple Insert/Select/Update)</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, Example 140 (Simple Insert/Select/Update)</h1>
+    </center>
+    <h1>
+      Example 140 (Simple Insert/Select/Update)</h1>
+    This example demonstrates simple INSERT, SELECT, UPDATE and constant
+    SQL
+    statements. This example works with PostgreSQL 7.x via its ODBC
+    driver.
+    Pay attention to the restrictions [imposed by the ODBC driver] on
+    the
+    use
+    of the OTL classes.
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;<br>#include &lt;string.h&gt;<br>#include &lt;stdlib.h&gt;<br><br>// #define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used<br>#define <a href="otl3_compile.htm#OTL_ODBC_ALTERNATE_RPC">OTL_ODBC_ALTERNATE_RPC</a><br>#if !defined(_WIN32) &amp;&amp; !defined(_WIN64)<br>#define <a href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a><br>#else <br>#define <a href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a> // required with PG ODBC on Windows<br>#endif<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a href="otl3_stream_class.htm">otl_stream</a> o(50, // PostgreSQL 8.1 and higher, the buffer can be &gt; 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;char tmp[32];<br><br>&nbsp;for(int i=1;i&lt;=100;++i){<br>&nbsp; sprintf(tmp,"Name%d",i);<br>&nbsp; o&lt;&lt;i&lt;&lt;tmp;<br>&nbsp;}<br>}</pre>
+    <pre>void update(const int af1)<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a href="otl3_stream_class.htm">otl_stream</a> o(1, // PostgreSQL 8.1 and higher, buffer size can be &gt;1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "UPDATE test_tab "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp; SET f2=:f2&lt;char[31]&gt; "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; " WHERE f1=:f1&lt;int&gt;",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // UPDATE statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );</pre>
+    <pre> o&lt;&lt;"Name changed"&lt;&lt;af1;<br>&nbsp;o&lt;&lt;<a href="otl3_stream_class.htm#otl_null">otl_null</a>()&lt;&lt;af1+1; // set f2 to NULL<br><br>}</pre>
+    <pre>void select(const int af1)<br>{&nbsp;<br>&nbsp;<a href="otl3_stream_class.htm">otl_stream</a> i(50, // On SELECT, the buffer size can be &gt; 1<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab where f1&gt;=:f11&lt;int&gt; and f1&lt;=:f12&lt;int&gt;*2",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;int f1;<br>&nbsp;char f2[31];<br><br>#if (defined(_MSC_VER) &amp;&amp; _MSC_VER&gt;=1600) || defined(OTL_CPP_11_ON)<br>// C++11 (or higher) compiler<br>#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)<br> otl_write_row(i,af1,af1); // Writing input values into the stream<br>#else<br>  // when variadic template functions are not supported by the C++<br>  // compiler, OTL provides nonvariadic versions of the same template<br>  // functions in the range of [1..15] parameters<br> otl_write_row(i,af1,af1); // Writing input values into the stream<br>  // the old way (operators &gt;&gt;() / &lt;&lt;()) is available as always:<br>  // i&lt;&lt;af1&lt;&lt;af1; // Writing input values into the stream<br>#endif<br> for(auto&amp; it : i){<br>  it&gt;&gt;f1;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2=";<br>  it&gt;&gt;f2;<br>  if(it.is_null())<br>   cout&lt;&lt;"NULL";<br>  else<br>   cout&lt;&lt;f2;<br>  cout&lt;&lt;endl;<br> }<br>#else<br>// C++98/03 compiler<br> i&lt;&lt;af1&lt;&lt;af1; // Writing input values into the stream<br> while(!i.eof()){ // while not end-of-data<br>   i&gt;&gt;f1;<br>   cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2=";<br>   i&gt;&gt;f2;<br>   if(i.is_null())<br>     cout&lt;&lt;"NULL";<br>   else<br>     cout&lt;&lt;f2;<br>   cout&lt;&lt;endl;<br> }<br>#endif<br><br>}<br><br>int main()<br>{<br>&nbsp;<a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tiger@postgresql");<br><br>&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>   db.commit();<br><br>&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 varchar(30))"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>  db.commit();<br><br>&nbsp; insert(); // insert records into the table<br>&nbsp; update(10); // update records in the table<br>&nbsp; select(8); // select records from the table<br><br>&nbsp;}<br><br>&nbsp;catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from ODBC<br><br>&nbsp;return 0;<br><br>}</pre>
+    <h2>
+      Output</h2>
+    <pre>f1=8, f2=Name8<br>f1=9, f2=Name9<br>f1=10, f2=Name changed<br>f1=11, f2=NULL<br>f1=12, f2=Name12<br>f1=13, f2=Name13<br>f1=14, f2=Name14<br>f1=15, f2=Name15<br>f1=16, f2=Name16<br><br><hr width="100%"></pre>
+    <center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
+        href="home.htm">Go
+        Home</a></center>
+    <p>Copyright © 1996-2022, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+      <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+        <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
  </script></a>.
-</p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for
-any purpose is hereby granted without fee, provided that the above
-copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
-AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
-ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
-SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.</i>
-</p>
-<script type="text/javascript">
+    </p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for
+        any purpose is hereby granted without fee, provided that the
+        above
+        copyright
+        notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
+        AND THE
+        AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
+        INCLUDING
+        ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+        EVENT
+        SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+        CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+        LOSS OF
+        USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+        NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR
+        PERFORMANCE OF THIS SOFTWARE.</i>
+    </p>
+    <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
+  </body>
 </html>

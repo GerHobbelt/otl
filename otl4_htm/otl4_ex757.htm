@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html><head>
+    <meta http-equiv="content-type" content="text/html; charset=windows-1252">
+    <title>OTL 4.0, Example 757 (otl_read_from_stream() / otl_write_to_stream() and STL containers</title>
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+  </head>
+  <body>
+    <h1 align="CENTER">OTL 4.0, Example 757 (otl_read_from_stream() / otl_write_to_stream() and STL containers).<br>
+</h1>
+    <p>This example demonstrates how <a href="otl4_read_from_stream.htm">otl_read_from_stream() / otl_write_to_stream() template functions</a> can be used with STL containers (vectors, sets, maps, etc.).<br>
+    </p>
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;<br>#include &lt;vector&gt;<br>#include &lt;set&gt;<br>#include &lt;map&gt;<br>#include &lt;iterator&gt;<br>#include &lt;string&gt;<br><br>#define <a href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a> // Compile OTL 4/DB2 CLI<br>#define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> // Turn on STL features<br>#ifndef <a href="otl3_compile.htm#OTL_ANSI_CPP">OTL_ANSI_CPP</a><br>#define OTL_ANSI_CPP // Turn on ANSI C++ typecasts<br>#endif<br>#include &lt;otlv4.h&gt; // include the OTL 4 header file<br><br>using namespace std;<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
+<br>// my row class<br>class my_row_class{<br>public:<br> int f1;<br> string f2;<br><br>// default constructor<br>  my_row_class():f1(0),f2(){}<br><br>  // general purpose constructor<br>  my_row_class(const int af1, const string&amp; af2):f1(af1),f2(af2){}<br><br>// destructor<br> ~my_row_class(){}<br><br>// copy constructor<br>  my_row_class(const my_row_class&amp; row):f1(row.f1),f2(row.f2){}<br><br>// copy assignment operator<br> my_row_class&amp; operator=(const my_row_class&amp; row)<br> {<br>   f1=row.f1;<br>   f2=row.f2;<br>   return *this;<br> }<br><br>#if defined(<a href="otl3_compile.htm#OTL_CPP_11_ON">OTL_CPP_11_ON</a>) || defined(_MSC_VER) &amp;&amp; (_MSC_VER &gt;= 1600)<br>// when move constructors / assignment operators are supported<br><br>  my_row_class(my_row_class&amp;&amp; r):f1(r.f1),f2(move(r.f2)){}<br><br>  my_row_class&amp; operator=(my_row_class&amp;&amp; r)<br>  {<br>    f1=r.f1;<br>    f2=move(r.f2);<br>    return *this;<br>  }<br><br>#endif<br><br>};<br><br>// "less-than" functor for "my set"<br>class my_set_less_than{<br>public:<br><br>  bool operator()(const my_row_class&amp; row1, const my_row_class&amp; row2) const<br>  {<br>    if(row1.f1&lt;row2.f1)<br>      return true;<br>    else<br>      return false;<br>  }<br>};<br><br>// various STL containers<br>typedef vector&lt;my_row_class&gt; my_vector_type;<br>typedef map&lt;int,string,less&lt;int&gt; &gt; my_map_type;<br>typedef set&lt;my_row_class,my_set_less_than&gt; my_set_type;<br><br>// redefined operator&gt;&gt; for reading my_row_class&amp; from otl_stream<br>otl_stream&amp; operator&gt;&gt;(otl_stream&amp; s, my_row_class&amp; row)<br>{<br> s&gt;&gt;row.f1&gt;&gt;row.f2;<br> return s;<br>}<br><br>// redefined operator&lt;&lt; for writing const my_row_class&amp; into<br>// otl_stream<br>otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const my_row_class&amp; row)<br>{<br> s&lt;&lt;row.f1&lt;&lt;row.f2;<br> return s;<br>}<br><br>// redefined operator&gt;&gt; for reading my_map_type::value_type&amp; from<br>// otl_stream<br>otl_stream&amp; operator&gt;&gt;(otl_stream&amp; s, my_map_type::value_type&amp; row)<br>{<br>  // std::map's key is const, which needs to be cast away<br>  s&gt;&gt;const_cast&lt;int&amp;&gt;(row.first);<br>  s&gt;&gt;row.second;<br> return s;<br>}<br><br>// redefined operator&lt;&lt; for writing const my_map_type::value_type&amp;<br>// into otl_stream<br>otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const my_map_type::value_type&amp; row)<br>{<br> s&lt;&lt;row.first&lt;&lt;row.second;<br> return s;<br>}<br>
+void insert()
+// insert rows into table
+{ 
+ <a href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br><br> my_vector_type vo; // vector of rows<br> my_set_type so; // set of rows<br> my_map_type mo; // map of pairs&lt;int,string&gt;<br><br>// populate the vector<br> for(int i=1;i&lt;=3;++i)<br>  vo.push_back(my_row_class(i,"NameXXX"));<br><br>// insert the vector into the table<br> <a href="otl4_read_from_stream.htm">otl_write_to_stream</a>(vo.begin(),vo.end(),o);<br><br>// populate the set<br> for(int i=4;i&lt;=6;++i)<br>  so.insert(my_row_class(i,"NameXXX"));<br><br>// insert the set into the table<br> <a href="otl4_read_from_stream.htm">otl_write_to_stream</a>(so.begin(),so.end(),o);<br><br>// populate the set<br> for(int i=7;i&lt;=10;++i)<br>  mo[i]="NameXXX";<br><br>// insert the map into the table<br> <a href="otl4_read_from_stream.htm">otl_write_to_stream</a>(mo.begin(),mo.end(),o);<br>
+}
+
+void select()
+{ 
+ <a href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size<br>              "select * from test_tab where f1&gt;=:f1&lt;int&gt; and f1&lt;=:f11&lt;int&gt;*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> my_vector_type v; // vector of rows<br> my_set_type s; // set of rows<br> my_map_type m;<br><br>// assigning :f1 = 4, :f11 = 4, and triggering an execution of the<br>// SELECT statement<br> i&lt;&lt;4&lt;&lt;4;<br><br>// read all rows to be fetched into the vector<br> <a href="otl4_read_from_stream.htm">otl_read_from_stream</a>(i,back_inserter(v));    <br><br> // print out the content of the vector<br> for(my_vector_type::const_iterator x=v.begin(); x!=v.end(); ++x)<br>   cout&lt;&lt;"F1="&lt;&lt;(*x).f1&lt;&lt;", F2="&lt;&lt;(*x).f2&lt;&lt;endl;<br> cout&lt;&lt;"==========================="&lt;&lt;endl;<br><br>// assigning :f1 = 4, :f11 = 4, and triggering an execution of the<br>// SELECT statement<br> i&lt;&lt;4&lt;&lt;4;<br><br>// read all rows to be fetched into the set<br> <a href="otl4_read_from_stream.htm">otl_read_from_stream</a>(i,inserter(s,s.end()));    <br><br> // print out the content of the set<br> for(my_set_type::const_iterator x=s.begin(); x!=s.end(); ++x)<br>   cout&lt;&lt;"F1="&lt;&lt;(*x).f1&lt;&lt;", F2="&lt;&lt;(*x).f2&lt;&lt;endl;<br> cout&lt;&lt;"==========================="&lt;&lt;endl;<br><br>// assigning :f1 = 4, :f11 = 4, and triggering an execution of the<br>// SELECT statement<br> i&lt;&lt;4&lt;&lt;4;<br><br>// read all rows to be fetched into the set<br> <a href="otl4_read_from_stream.htm">otl_read_from_stream</a>(i,inserter(m,m.end()));    <br><br> // print out the content of the set<br> for(my_map_type::const_iterator x=m.begin(); x!=m.end(); ++x)<br>   cout&lt;&lt;"FIRST="&lt;&lt;(*x).first&lt;&lt;", SECOND="&lt;&lt;(*x).second&lt;&lt;endl;<br> cout&lt;&lt;"==========================="&lt;&lt;endl;<br>
+}
+
+int main()
+{
+ <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize the database API environment
+ try{
+
+  db.rlogon("scott/tiger@db2sql"); // connect to the database
+
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
+    db,
+    "drop table test_tab",
+    otl_exception::disabled // disable OTL exceptions
+   ); // drop table
+
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
+    db,
+    "create table test_tab(f1 int, f2 varchar(30))"
+    );  // create table
+
+  insert(); // insert records into table
+  select(); // select records from table
+
+ }
+
+ catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
+  cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+  cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+  cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+ }
+
+ db.logoff(); // disconnect from the database
+
+ return 0;
+
+}
+</pre>
+    <h2>Output</h2>
+    <pre>F1=4, F2=NameXXX<br>F1=5, F2=NameXXX<br>F1=6, F2=NameXXX<br>F1=7, F2=NameXXX<br>F1=8, F2=NameXXX<br>===========================<br>F1=4, F2=NameXXX<br>F1=5, F2=NameXXX<br>F1=6, F2=NameXXX<br>F1=7, F2=NameXXX<br>F1=8, F2=NameXXX<br>===========================<br>FIRST=4, SECOND=NameXXX<br>FIRST=5, SECOND=NameXXX<br>FIRST=6, SECOND=NameXXX<br>FIRST=7, SECOND=NameXXX<br>FIRST=8, SECOND=NameXXX<br>===========================<br>
+<hr width="100%"></pre>
+    <center>
+      <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+        <a href="home.htm">Go Home</a> </p>
+    </center>
+    <p>Copyright © 1996-2022, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><a href="mailto:skuchin@gmail.com">. </a></p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
+    <a href="mailto:skuchin@gmail.com">
+      <script type="text/javascript">var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+      <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script></a>
+  
+
+</body></html>

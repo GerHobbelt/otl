@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -40,7 +44,7 @@ void select(void)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  TIMESTAMP_STRUCT tm,f2;
 
  tm.year=1998;
@@ -50,6 +54,14 @@ void select(void)
  tm.minute=12;
  tm.second=12;
  tm.fraction=0;
+
+ f2.year=1998;
+ f2.month=10;
+ f2.day=19;
+ f2.hour=23;
+ f2.minute=12;
+ f2.second=12;
+ f2.fraction=0;
 
  i<<tm; // assigning :f1 = tm
    // SELECT automatically executes when all input variables are

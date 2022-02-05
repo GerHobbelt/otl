@@ -1,408 +1,379 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
-<html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, OTL subscriber interface</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, OTL subscriber interface<br>
-</h1>
-</center>
-This class is Oracle 10gR2 (or higher) specific, and optional. It can
-be
-enabled by defining #define <a
- href="otl3_compile.htm#OTL_ORA_SUBSCRIBE">OTL_ORA_SUBSCRIBE</a>.
-otl_subscriber uses the <a
- href="http://www.oracle.com/technology/oramag/oracle/06-mar/o26odpnet.html">Oracle
-Database Change Notification Interface,</a> which
-allows the user to get Change Notifications on database tables of
-interest. The class implements basic functions like subscribe /
-unsubscribe, plus pure virtual functions that need to be overridden in
-a
-derived class. The pure virtual functions are actually a callback
-mechanism for delivering change notifications back to the user. See
-also example <a href="otl4_ex585.htm">585</a> for more detail.<br>
-<br>
-<p>Potentially, the otl_subscriber class may throw the following <a
- href="otl3_exc_list.htm#32032">OTL
-defined exception</a>.
-</p>
-<pre><font size="+2">class otl_subscriber {<br>public:<br></font></pre>
-<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
- cellspacing="2">
-  <tbody>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Function</span><br>
-      </td>
-      <td style="vertical-align: top;">Description<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>otl_subscriber(<a href="otl3_connect_class.htm">otl_connect</a>* adb);</pre>
-      </td>
-      <td style="vertical-align: top;"> <a name="CONSTRUCTOR"></a>General
-constructor. It accepts a
-pointer to an otl_connect object. When the constructor is called, the
-otl_connect object doesn't necessarily have to be connected to the
-database. It needs to be connected by the time of the first <a
- href="otl4_subscriber.htm#SUBSCRIBE">subscribe</a>() call.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;">virtual
-~otl_subscriber();</span></td>
-      <td style="vertical-align: top;"><a name="DESTRUCTOR"></a>Destructor.
-Closes all active
-subscriptions automatically.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;">void subscribe(...);<br>
-      </span>
-      <table style="text-align: left; width: 100%;" border="1"
- cellpadding="2" cellspacing="2">
-        <tbody>
-          <tr>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Parameter</span><br>
-            </td>
-            <td style="vertical-align: top;"><span
- style="font-style: italic;">Description</span><br>
-            </td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">const char *name=0</td>
-            <td style="vertical-align: top;">optional
-subscription name</td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">int port=0</td>
-            <td style="vertical-align: top;">Application listening TCP
-port number to receive subscription
-notifications (optional). When it's left as default, the OCI layer gets
-the next available port.</td>
-          </tr>
-          <tr>
-            <td style="vertical-align: top;">int timeout=1800</td>
-            <td style="vertical-align: top;">Subscription expiration
-time, seconds (optional,&nbsp; default value is 1800
-sec, 0 means "never expires"). When subscription expires, <a
- href="otl4_subscriber.htm#OnDeRegistration">OnDeRegistration</a>()
-is called.</td>
-          </tr>
-        </tbody>
-      </table>
-      <span style="font-family: monospace;"><br>
-      </span></td>
-      <td style="vertical-align: top;"><a name="SUBSCRIBE"></a>Subscribes
-to Change Notifications /
-activate Change Notification Interface</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void unsubscribe();</pre>
-      </td>
-      <td style="vertical-align: top;"> <a name="UNSUBSCRIBE"></a>Unsubscribes
-/ deactivates Change
-Notification Interface</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void associate_table<br>(const char *table_name);</pre>
-      </td>
-      <td style="vertical-align: top;"> <a name="ASSOCIATE_TABLE"></a>Associates
-a table / view of
-interest with the current subscription. In other words, add a table /
-view name to the list of tables / views which we want to get change
-notifications on. There may be more than one table / view in the list</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;">void associate_query(const char
-*query_stmt);</span></td>
-      <td style="vertical-align: top;"> <a name="ASSOCIATE_QUERY"></a>Associates
-a query of
-interest with the current subscription. In other words, adds a query to
-the list of queries which we want to get change
-notifications on. There may be more than one query in the list. This
-function is a more generic version of the <a
- href="otl4_subscriber.htm#ASSOCIATE_TABLE">associate_table</a>()
-function.
-When the query gets executed, all the underlying objects of the query
-get identified. The query format should be as follows:<br>
-      <br>
-      <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">SELECT
-:arg&lt;int&gt; FROM...the rest of the query...<br>
-      <br>
-      </span><span style="font-family: monospace;">:arg&lt;int&gt;</span>
-is needed in order to postpone the execution of
-the query, when the query gets opened in an otl_stream inside the
-function:<br>
-      <br>
-&nbsp;&nbsp; &nbsp;&nbsp; <span style="font-family: monospace;">otl_stream
-s(1,stmt,*db);</span><br>
-&nbsp;&nbsp; &nbsp;&nbsp; ...<br>
-      <span style="font-family: monospace;">&nbsp;&nbsp; s&lt;&lt;0;</span><br>
-&nbsp; &nbsp; &nbsp; ...<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;">bool
-is_online(void); </span></td>
-      <td style="vertical-align: top;"><a name="IS_ONLINE"></a>Checks
-if
-the current subscription is
-active (online). This function is convenient to call from <a
- href="otl4_subscriber.htm#OnDeRegistration">OnDeRegistration</a>()
-in order to identify
-whether the subscription was expired by the client or by the server
-timeout.<br>
-      <span style="font-family: monospace;"></span></td>
-    </tr>
-  </tbody>
-</table>
-<span style="font-family: monospace;"></span><br>
-<pre><font size="+2">protected:</font><br></pre>
-// Pure virtual functions //
-callbacks to be implemented in a derived class:<br>
-<br>
-<span style="font-family: monospace;"></span>
-<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
- cellspacing="2">
-  <tbody>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Function</span><br>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnException"></a>virtual void
-OnException<br>
-(OTL_CONST_EXCEPTION <a href="otl3_exception_class.htm">otl_exception</a>&amp;
-e) = 0;</span></td>
-      <td style="vertical-align: top;">"On otl_exception" callback.
-When OTL
-throws otl_exception, this function is called. OTL_CONST_EXCEPTION is
-defined as "const" under #define <a
- href="otl3_compile.htm#OTL_ANSI_CPP">OTL_ANSI_CPP</a>. Otherwise, it
-is empty ("").<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnDeRegistration"></a>virtual
-void
-OnDeRegistration<br>
-(void) = 0;</span></td>
-      <td style="vertical-align: top;">"On deregistration" callback.
-This function gets called&nbsp; when the current subscription
-expires. Inside this function, repeated calls to <a
- href="otl4_subscriber.htm#SUBSCRIBE">subscribe</a>(), <a
- href="otl4_subscriber.htm#ASSOCIATE_TABLE">associate_table</a>(), <a
- href="otl4_subscriber.htm#ASSOCIATE_QUERY">associate_query</a>()&nbsp;
-are allowed.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnStartup"></a>virtual void
-OnStartup(void) = 0;</span></td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">DB-wide
-event.</span> "On Oracle
-Instance startup" callback. This function gets called on the Oracle
-Instance startup</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnInstanceShutdown"></a>virtual
-void
-OnInstanceShutdown<br>
-(void) = 0;</span></td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">DB-wide
-event.</span> <span style="font-family: monospace;"></span>"On Oracle
-Instance shutdown"
-callback. This function gets called&nbsp; when the Oracle Instance
-which the
-client program is connected to shuts down. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnAnyInstanceShutdown"></a>virtual
-void
-OnAnyInstanceShutdown<br>
-(void) = 0;</span> </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">DB-wide
-event.</span> <span style="font-family: monospace;">"</span>On Any
-Oracle Instance shutdown" callback. This
-function gets
-called&nbsp; when Any Oracle Instance in the RAC
-which the client&nbsp; program is connected to shuts down. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnTableInvalidate"></a>virtual
-void
-OnTableInvalidate<br>
-(text *table_name) = 0;</span> </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Table-wide
-event.</span>&nbsp; "On table invalidate" callback.
-This function gets called when the table gets invalidated. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnTableAlter"></a>virtual
-void OnTableAlter(text
-*table_name, bool all_rows=false) = 0;</span> </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Table-wide
-event.</span> "On table alter" callback. This function gets called when
-the table gets ALTERed. If all_rows is true then the
-whole table has been affected&nbsp; </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnTableDrop"></a>virtual
-void OnTableDrop<br>
-(text *table_name, <br>
-&nbsp;</span><span style="font-family: monospace;">bool all_rows=false</span><span
- style="font-family: monospace;">) = 0;</span> </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Table-wide
-event.</span> "On table drop" callback. This function gets called when
-the table gets
-DROPped. If all_rows is true then the whole table has been
-affected&nbsp; </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"> <a name="OnTableChange"></a>virtual
-void OnTableChange<br>
-(text *table_name, <br>
-&nbsp;</span><span style="font-family: monospace;">bool all_rows=false</span><span
- style="font-family: monospace;">) = 0;</span> </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Table-wide
-event.</span> "On table change" callback. This function gets called
-when the table gets changed:
-INSERT, UPDATE, DELETE. This callback only informs of the
-fact that the table got changed, but it doesn't specify
-which row(s) got changed. In order to get the info on
-individual rows, see "Row events". If all_rows is true then the whole
-table has been affected. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnRowInsert"></a>virtual void
-OnRowInsert<br>
-(text
-*table_name, <br>
-&nbsp;text *row_id ) = 0;</span> </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Row
-event.</span> "On row insert" callback. This
-function gets called when a row is inserted into the table. If
-a query was&nbsp; associated with the current
-subscription that involves more than one table, this callback will be
-invoked for each table of the query. "row_id" is the ROWID of the
-inserted row. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"><a name="OnRowUpdate"></a>virtual void
-OnRowUpdate<br>
-(text
-*table_name, <br>
-&nbsp;text *row_id ) = 0;</span> </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Row
-event.</span> "On row update" callback. This function gets called when
-a table row is updated. If a query was&nbsp; associated with the
-current
-subscription that involves more than one table, this callback will be
-invoked for each table of the query. "row_id" is the ROWID of the
-updated row. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;"></span><span
- style="font-family: monospace;"><a name="OnRowDelete"></a>virtual
-void OnRowDelete<br>
-(text *table_name, <br>
-&nbsp;text *row_id ) = 0;</span> </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Row
-event.</span> "On row delete" callback. This function gets called when
-a table row is updated. If a query was associated with the current
-subscription that involves more than one table, this callback will be
-invoked for each table of the query. "row_id" is the ROWID of the
-updated row.&nbsp;&nbsp;&nbsp; <br>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<span style="font-family: monospace;"></span><span
- style="font-family: monospace;"></span><span
- style="font-family: monospace;"></span><span
- style="font-family: monospace;"></span><span
- style="font-family: monospace;"></span><span
- style="font-family: monospace;"></span><br>
-<pre><font size="+2">}; // end of otl_subscriber</font></pre>
-Oracle user id that is used to connect to the database and get&nbsp;
-Change Notifications needs to have the CHANGE NOTIFICATION privilege
-given by the DBA, for example:<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
- style="font-family: monospace;">grant change notification to scott;</span><br>
-<br>
-Active subscriptions can be viewed via the
-USER_CHANGE_NOTIFICATION_REGS system view by the current Oracle user:
-<pre>    select * from USER_CHANGE_NOTIFICATION_REGS<br></pre>
-When a subscription gets registered, the OCI layer opens a specified
-TCP/IP port, and spawns a new listener thread. Firewalls need to take
-the TCP/IP port into account.<br>
-<span style="text-decoration: underline;"></span>
-<p></p>
-<hr width="100%">
-<center>
-<p><a href="otl3_pl_tab.htm">Prev</a> <a href="otl3_iterators.htm">Next</a><a
- href="otl3.htm">Contents</a><a href="home.htm">Go
-Home</a></p>
-</center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
-<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
-<script language="JavaScript"><!-- hide from oldgmailsers
- var modDate = new Date(document.lastModified)
- document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
- //-->
- </script></a>.
-</p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for
-any purpose is hereby granted without fee, provided that the above
-copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
-AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
-ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
-SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.</i>
-</p>
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-5456201-1");
-pageTracker._trackPageview();
-</script>
-</body>
-</html>
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, OTL subscriber interface</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, OTL subscriber interface<br>
+      </h1>
+    </center>
+    This class is Oracle 10gR2 (or higher) specific, and optional. It
+    can
+    be
+    enabled by defining #define <a
+      href="otl3_compile.htm#OTL_ORA_SUBSCRIBE">OTL_ORA_SUBSCRIBE</a>.
+    otl_subscriber uses the <a
+href="http://www.oracle.com/technology/oramag/oracle/06-mar/o26odpnet.html">Oracle
+Database
+      Change Notification Interface,</a> which
+    allows the user to get Change Notifications on database tables of
+    interest. The class implements basic functions like subscribe /
+    unsubscribe, plus pure virtual functions that need to be overridden
+    in
+    a
+    derived class. The pure virtual functions are actually a callback
+    mechanism for delivering change notifications back to the user. See
+    also example <a href="otl4_ex585.htm">585</a> for more detail.<br>
+    <br>
+    <p>Potentially, the otl_subscriber class may throw the following <a
+        href="otl3_exc_list.htm#32032">OTL
+        defined exception</a>.
+    </p>
+    <pre><font size="+2">class otl_subscriber {<br>public:<br></font></pre>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Function</span><br>
+      </td>
+      <td style="vertical-align: top;">Description<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>otl_subscriber(<a href="otl3_connect_class.htm">otl_connect</a>* adb);</pre>
+      </td>
+      <td style="vertical-align: top;"> <a name="CONSTRUCTOR"></a>General
+constructor. It accepts a
+pointer to an otl_connect object. When the constructor is called, the
+otl_connect object doesn't necessarily have to be connected to the
+database. It needs to be connected by the time of the first <a href="otl4_subscriber.htm#SUBSCRIBE">subscribe</a>() call.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;">virtual
+~otl_subscriber();</span></td>
+      <td style="vertical-align: top;"><a name="DESTRUCTOR"></a>Destructor.
+Closes all active
+subscriptions automatically.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;">void subscribe(...);<br>
+      </span>
+      <table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+        <tbody>
+          <tr>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Parameter</span><br>
+            </td>
+            <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">const char *name=0</td>
+            <td style="vertical-align: top;">optional
+subscription name</td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">int port=0</td>
+            <td style="vertical-align: top;">Application listening TCP
+port number to receive subscription
+notifications (optional). When it's left as default, the OCI layer gets
+the next available port.</td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top;">int timeout=1800</td>
+            <td style="vertical-align: top;">Subscription expiration
+time, seconds (optional,&nbsp; default value is 1800
+sec, 0 means "never expires"). When subscription expires, <a href="otl4_subscriber.htm#OnDeRegistration">OnDeRegistration</a>()
+is called.</td>
+          </tr><tr>
+  <td valign="top">const char* ipaddr=0<br>
+  </td>
+  <td valign="top">Optional IP address. This parameter is only available under #define <a href="otl3_compile.htm#OTL_ORA11G_R2">OTL_ORA11G_R2</a>, and <a href="otl3_compile.htm#OTL_ORA12C">OTL_ORA12C</a>.<br><br>Note: This parameter seems to be mandatory at least for Oracle 11.2.x . A bug was reported against OCI 11.2.0.4 that when the IP address is not specified, the feature does not work.<br>
+  </td>
+</tr>
+
+        </tbody>
+      </table>
+      <span style="font-family: monospace;"><br>
+      </span></td>
+      <td style="vertical-align: top;"><a name="SUBSCRIBE"></a>Subscribes
+to Change Notifications /
+activate Change Notification Interface</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>void unsubscribe();</pre>
+      </td>
+      <td style="vertical-align: top;"> <a name="UNSUBSCRIBE"></a>Unsubscribes
+/ deactivates Change
+Notification Interface</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>void associate_table<br>(const char *table_name);</pre>
+      </td>
+      <td style="vertical-align: top;"> <a name="ASSOCIATE_TABLE"></a>Associates
+a table / view of
+interest with the current subscription. In other words, add a table /
+view name to the list of tables / views which we want to get change
+notifications on. There may be more than one table / view in the list</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;">void associate_query(const char
+*query_stmt);</span></td>
+      <td style="vertical-align: top;"> <a name="ASSOCIATE_QUERY"></a>Associates
+a query of
+interest with the current subscription. In other words, adds a query to
+the list of queries which we want to get change
+notifications on. There may be more than one query in the list. This
+function is a more generic version of the <a href="otl4_subscriber.htm#ASSOCIATE_TABLE">associate_table</a>()
+function.
+When the query gets executed, all the underlying objects of the query
+get identified. The query format should be as follows:<br>
+      <br>
+      <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">SELECT
+:arg&lt;int&gt; FROM...the rest of the query...<br>
+      <br>
+      </span><span style="font-family: monospace;">:arg&lt;int&gt;</span>
+is needed in order to postpone the execution of
+the query, when the query gets opened in an otl_stream inside the
+function:<br>
+      <br>
+&nbsp;&nbsp; &nbsp;&nbsp; <span style="font-family: monospace;">otl_stream
+s(1,stmt,*db);</span><br>
+&nbsp;&nbsp; &nbsp;&nbsp; ...<br>
+      <span style="font-family: monospace;">&nbsp;&nbsp; s&lt;&lt;0;</span><br>
+&nbsp; &nbsp; &nbsp; ...<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;">bool
+is_online(void); </span></td>
+      <td style="vertical-align: top;"><a name="IS_ONLINE"></a>Checks
+if
+the current subscription is
+active (online). This function is convenient to call from <a href="otl4_subscriber.htm#OnDeRegistration">OnDeRegistration</a>()
+in order to identify
+whether the subscription was expired by the client or by the server
+timeout.<br>
+      <span style="font-family: monospace;"></span></td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-family: monospace;"></span><br>
+<pre><font size="+2">protected:</font><br></pre>
+// Pure virtual functions //
+callbacks to be implemented in a derived class:<br>
+<br>
+<span style="font-family: monospace;"></span>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Function</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnException"></a>virtual void
+OnException<br>
+(OTL_CONST_EXCEPTION <a href="otl3_exception_class.htm">otl_exception</a>&amp;
+e) = 0;</span></td>
+      <td style="vertical-align: top;">"On otl_exception" callback.
+When OTL
+throws otl_exception, this function is called. OTL_CONST_EXCEPTION is
+defined as "const" under #define <a href="otl3_compile.htm#OTL_ANSI_CPP">OTL_ANSI_CPP</a>. Otherwise, it
+is empty ("").<br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnDeRegistration"></a>virtual
+void
+OnDeRegistration<br>
+(void) = 0;</span></td>
+      <td style="vertical-align: top;">"On deregistration" callback.
+This function gets called&nbsp; when the current subscription
+expires. Inside this function, repeated calls to <a href="otl4_subscriber.htm#SUBSCRIBE">subscribe</a>(), <a href="otl4_subscriber.htm#ASSOCIATE_TABLE">associate_table</a>(), <a href="otl4_subscriber.htm#ASSOCIATE_QUERY">associate_query</a>()&nbsp;
+are allowed.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnStartup"></a>virtual void
+OnStartup(void) = 0;</span></td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">DB-wide
+event.</span> "On Oracle
+Instance startup" callback. This function gets called on the Oracle
+Instance startup</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnInstanceShutdown"></a>virtual
+void
+OnInstanceShutdown<br>
+(void) = 0;</span></td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">DB-wide
+event.</span> <span style="font-family: monospace;"></span>"On Oracle
+Instance shutdown"
+callback. This function gets called&nbsp; when the Oracle Instance
+which the
+client program is connected to shuts down. </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnAnyInstanceShutdown"></a>virtual
+void
+OnAnyInstanceShutdown<br>
+(void) = 0;</span> </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">DB-wide
+event.</span> <span style="font-family: monospace;">"</span>On Any
+Oracle Instance shutdown" callback. This
+function gets
+called&nbsp; when Any Oracle Instance in the RAC
+which the client&nbsp; program is connected to shuts down. </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnTableInvalidate"></a>virtual
+void
+OnTableInvalidate<br>
+(text *table_name) = 0;</span> </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Table-wide
+event.</span>&nbsp; "On table invalidate" callback.
+This function gets called when the table gets invalidated. </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnTableAlter"></a>virtual
+void OnTableAlter(text
+*table_name, bool all_rows=false) = 0;</span> </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Table-wide
+event.</span> "On table alter" callback. This function gets called when
+the table gets ALTERed. If all_rows is true then the
+whole table has been affected&nbsp; </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnTableDrop"></a>virtual
+void OnTableDrop<br>
+(text *table_name, <br>
+&nbsp;</span><span style="font-family: monospace;">bool all_rows=false</span><span style="font-family: monospace;">) = 0;</span> </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Table-wide
+event.</span> "On table drop" callback. This function gets called when
+the table gets
+DROPped. If all_rows is true then the whole table has been
+affected&nbsp; </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"> <a name="OnTableChange"></a>virtual
+void OnTableChange<br>
+(text *table_name, <br>
+&nbsp;</span><span style="font-family: monospace;">bool all_rows=false</span><span style="font-family: monospace;">) = 0;</span> </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Table-wide
+event.</span> "On table change" callback. This function gets called
+when the table gets changed:
+INSERT, UPDATE, DELETE. This callback only informs of the
+fact that the table got changed, but it doesn't specify
+which row(s) got changed. In order to get the info on
+individual rows, see "Row events". If all_rows is true then the whole
+table has been affected. </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnRowInsert"></a>virtual void
+OnRowInsert<br>
+(text
+*table_name, <br>
+&nbsp;text *row_id ) = 0;</span> </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Row
+event.</span> "On row insert" callback. This
+function gets called when a row is inserted into the table. If
+a query was&nbsp; associated with the current
+subscription that involves more than one table, this callback will be
+invoked for each table of the query. "row_id" is the ROWID of the
+inserted row. </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"><a name="OnRowUpdate"></a>virtual void
+OnRowUpdate<br>
+(text
+*table_name, <br>
+&nbsp;text *row_id ) = 0;</span> </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Row
+event.</span> "On row update" callback. This function gets called when
+a table row is updated. If a query was&nbsp; associated with the
+current
+subscription that involves more than one table, this callback will be
+invoked for each table of the query. "row_id" is the ROWID of the
+updated row. </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><span style="font-family: monospace;"></span><span style="font-family: monospace;"><a name="OnRowDelete"></a>virtual
+void OnRowDelete<br>
+(text *table_name, <br>
+&nbsp;text *row_id ) = 0;</span> </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Row
+event.</span> "On row delete" callback. This function gets called when
+a table row is updated. If a query was associated with the current
+subscription that involves more than one table, this callback will be
+invoked for each table of the query. "row_id" is the ROWID of the
+updated row.&nbsp;&nbsp;&nbsp; <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><span style="font-family: monospace;"></span><br>
+<pre><font size="+2">}; // end of otl_subscriber</font></pre>
+Oracle user id that is used to connect to the database and get&nbsp;
+Change Notifications needs to have the CHANGE NOTIFICATION privilege
+given by the DBA, for example:<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">grant change notification to scott;</span><br>
+<br>
+Active subscriptions can be viewed via the
+USER_CHANGE_NOTIFICATION_REGS system view by the current Oracle user:
+<pre>    select * from USER_CHANGE_NOTIFICATION_REGS<br></pre>
+When a subscription gets registered, the OCI layer opens a specified
+TCP/IP port, and spawns a new listener thread. Firewalls need to take
+the TCP/IP port into account.<br>
+<span style="text-decoration: underline;"></span>
+<p></p>
+<hr width="100%">
+<center>
+<p><a href="otl3_pl_tab.htm">Prev</a> <a href="otl3_iterators.htm">Next</a><a href="otl3.htm">Contents</a><a href="home.htm">Go
+Home</a></p>
+</center>
+<p>Copyright © 1996-2022, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+<script language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></a>.
+</p>
+<p><i>Permission to use, copy, modify and redistribute this document
+for
+any purpose is hereby granted without fee, provided that the above
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
+SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.</i>
+</p>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+
+
+
+</body></html>

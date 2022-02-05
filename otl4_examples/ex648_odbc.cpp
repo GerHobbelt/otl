@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -54,7 +58,7 @@ public:
                                                 \
   virtual const char* getErrorMessage(void) const\
   {                                             \
-    return (const char*)this->msg;              \
+    return reinterpret_cast<const char*>(this->msg);    \
   }
 
 #include <otlv4.h> // include the OTL 4.0 header file
@@ -65,7 +69,7 @@ void insert()
 // insert rows into table
 { 
  otl_stream o(50, // buffer size
-              "insert into test_tab values(:f1<float>,:f2<char[31]>)", 
+              "insert into test_tab values(:f1<int>,:f2<char[31]>)", 
                  // SQL statement
               db // connect object
              );
@@ -81,7 +85,7 @@ void insert()
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  o<<(float)i<<tmp;
+  o<<i<<tmp;
  }
 }
 
@@ -94,7 +98,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8 

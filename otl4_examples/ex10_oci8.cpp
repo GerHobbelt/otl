@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -11,7 +15,7 @@ void insert()
 // insert rows into table
 { 
  otl_stream o(50, // buffer size
-              "insert into test_tab values(:f1<float>,:f2<char[31]>)", 
+              "insert into test_tab values(:f1<int>,:f2<char[31]>)", 
                  // SQL statement
               db // connect object
              );
@@ -27,7 +31,16 @@ void insert()
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  o<<static_cast<float>(i)<<tmp;
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+  otl_write_row(o,i,tmp);
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+  otl_write_row(o,i,tmp);
+  // the old way (operators >>() / <<()) is available as always:
+  //  o<<i<<tmp;
+#endif
  }
 }
 
@@ -40,17 +53,49 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
- i<<8; // assigning :f = 8
+
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+  otl_write_row(i,8);
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+  otl_write_row(i,8);
+
+  // the old way (operators >>() / <<()) is available as always:
+  // i<<8; // assigning :f = 8
+#endif
+
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
+
+#if (defined(_MSC_VER) && _MSC_VER>=1600) || defined(OTL_CPP_11_ON)
+// C++11 (or higher) compiler
+ for(auto& it : i){
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+  otl_read_row(it,f1,f2);
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+  otl_read_row(it,f1,f2);
+
+  // the old way (operators >>() / <<()) is available as always:
+  // it>>f1>>f2;
+#endif
+  cout<<"f1="<<f1<<", f2="<<f2<<endl;
+ }
+#else
+// C++98/03 compiler
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
  }
+#endif
 
  i<<4; // assigning :f = 4
    // SELECT automatically executes when all input variables are
@@ -68,7 +113,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

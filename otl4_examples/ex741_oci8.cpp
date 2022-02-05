@@ -1,5 +1,16 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 // Suppress VC++ warnings about insecure sprintf / sscanf calls.
+#if defined(_MSC_VER)
 #define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#if defined(_MSC_VER) && (_MSC_VER==1700)
+#pragma warning (disable:6031)
+#endif
+
 #include <iostream>
 using namespace std;
 
@@ -16,7 +27,7 @@ using namespace std;
 #define OTL_NUMERIC_TYPE_1 unsigned long 
 #define OTL_STR_TO_NUMERIC_TYPE_1(str,n)        \
 {                                               \
-  sscanf(str,"%lu",&n);                         \
+  (void)sscanf(str,"%lu",&n);                   \
 }
 
 #define OTL_NUMERIC_TYPE_1_TO_STR(n,str)        \
@@ -26,23 +37,39 @@ using namespace std;
 
 #define OTL_NUMERIC_TYPE_2_ID "UULONG"
 #define OTL_NUMERIC_TYPE_2_STR_SIZE 40
-#define OTL_NUMERIC_TYPE_2 unsigned long long
+#if defined(_MSC_VER) && (_MSC_VER==1200)
+#define OTL_NUMERIC_TYPE_2 __int64
+
 #define OTL_STR_TO_NUMERIC_TYPE_2(str,n)        \
 {                                               \
-  sscanf(str,"%llu",&n);                        \
+  n=_atoi64(str);                               \
+}
+
+#define OTL_NUMERIC_TYPE_2_TO_STR(n,str)        \
+{                                               \
+  _i64toa(n,str,10);                            \
+}
+
+#else
+#define OTL_NUMERIC_TYPE_2 unsigned long long
+
+#define OTL_STR_TO_NUMERIC_TYPE_2(str,n)        \
+{                                               \
+  (void)sscanf(str,"%llu",&n);                  \
 }
 
 #define OTL_NUMERIC_TYPE_2_TO_STR(n,str)        \
 {                                               \
   sprintf(str,"%llu",n);                        \
 }
+#endif
 
 #define OTL_NUMERIC_TYPE_3_ID "LDOUBLE"
 #define OTL_NUMERIC_TYPE_3_STR_SIZE 60
 #define OTL_NUMERIC_TYPE_3 long double
 #define OTL_STR_TO_NUMERIC_TYPE_3(str,n)        \
 {                                               \
-  sscanf(str,"%Lf",&n);                         \
+  (void)sscanf(str,"%Lf",&n);                   \
 }
 
 #define OTL_NUMERIC_TYPE_3_TO_STR(n,str)        \
@@ -87,7 +114,7 @@ void select()
              ); 
    // create select stream
  
- OTL_NUMERIC_TYPE_1 f1;
+ OTL_NUMERIC_TYPE_1 f1=0;
  char f2[31];
 
  i<<VAL1+8
@@ -111,7 +138,7 @@ void select2()
              ); 
    // create select stream
  
- OTL_NUMERIC_TYPE_3 f1;
+ OTL_NUMERIC_TYPE_3 f1=0;
  char f2[31];
 
  i<<VAL3+8
@@ -129,7 +156,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

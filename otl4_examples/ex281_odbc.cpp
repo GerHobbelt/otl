@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <vector>
 #include <iterator>
@@ -6,11 +10,6 @@
 #include <cstdlib>
 
 #define OTL_ODBC // Compile OTL 4.0/ODBC
-#define ODBCVER 0x0250 // ODBC Version # needs to be downgraded
-                       // to 2.5 because the SQLite ODBC driver seems
-                       // to run slower when ODBC 3.x functions
-                       // used (performance is not as good as with
-                       // ODBC 2.5 function calls)
 // #define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used
 #define OTL_STL // Turn on STL features
 #include <otlv4.h> // include the OTL 4.0 header file
@@ -26,16 +25,14 @@ public:
  string f2;
 
 // default constructor
- row(){f1=0;}
+  row():f1(0),f2(){}
 
 // destructor
  ~row(){}
 
 // copy constructor
- row(const row& arow)
+  row(const row& arow):f1(arow.f1),f2(arow.f2)
  {
-  f1=arow.f1;
-  f2=arow.f2;
  }
  
 // assignment operator
@@ -89,7 +86,7 @@ void insert()
   vo.push_back(r);
  }
 
- cout<<"vo.size="<<(int)vo.size()<<endl;
+ cout<<"vo.size="<<vo.size()<<endl;
 // insert vector into table
  copy(vo.begin(), 
       vo.end(), 
@@ -116,7 +113,7 @@ void select(const int af1)
       otl_input_iterator<row,ptrdiff_t>(),
       back_inserter(v));    
 
- cout<<"Size="<<(int)v.size()<<endl;
+ cout<<"Size="<<v.size()<<endl;
 
 // send the vector to cout
  copy(v.begin(), v.end(), ostream_iterator<row>(cout, "\n"));
