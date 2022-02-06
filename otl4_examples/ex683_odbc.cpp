@@ -1,7 +1,16 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
 #include <stdio.h>
+
+#if defined(_MSC_VER) && (_MSC_VER==1700)
+#pragma warning (disable:6031)
+#pragma warning (disable:6340)
+#endif
 
 #define OTL_ODBC_MSSQL_2008 // Compile OTL 4/ODBC, MS SQL 2008
 #define OTL_ODBC_TIME_ZONE // enable otl_datime's tz components for ODBC
@@ -13,17 +22,19 @@ using namespace std;
 #if (_MSC_VER >= 1400) // VC++ 8.0 or higher
 #define OTL_ODBC_STRING_TO_TIMESTAMP(str,tm)              \
 {                                                         \
+  long temp;                                              \
   sscanf_s(str,                                           \
-           "%04d-%02d-%02d %02d:%02d:%02d.%07ld %hd:%hd", \
+           "%04d-%02d-%02d %02d:%02d:%02d.%07ld %hd:%hd",\
            &tm.year,                                      \
            &tm.month,                                     \
            &tm.day,                                       \
            &tm.hour,                                      \
            &tm.minute,                                    \
            &tm.second,                                    \
-           &tm.fraction,                                  \
+           &temp,                                         \
            &tm.tz_hour,                                   \
            &tm.tz_minute);                                \
+  tm.fraction=static_cast<unsigned long>(temp);           \
 }
 
 #define OTL_ODBC_TIMESTAMP_TO_STRING(tm,str)                    \
@@ -36,7 +47,7 @@ using namespace std;
             tm.hour,                                            \
             tm.minute,                                          \
             tm.second,                                          \
-            tm.fraction,                                        \
+            static_cast<long>(tm.fraction),                     \
             tm.tz_hour,                                         \
             tm.tz_minute);                                      \
 }
@@ -149,7 +160,7 @@ void select(void)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  otl_datetime tm,f2;
 
  tm.year=2008;

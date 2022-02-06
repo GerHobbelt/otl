@@ -1,9 +1,18 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #define _CRT_NON_CONFORMING_SWPRINTFS
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 using namespace std;
 
 #include <stdio.h>
+
+#if defined(_MSC_VER) && (_MSC_VER==1700)
+#pragma warning (disable:6031)
+#pragma warning (disable:6340)
+#endif
 
 #define OTL_UNICODE // enable Unicode (UTF-16)
 
@@ -20,7 +29,8 @@ using namespace std;
 #define OTL_ODBC_TIME_ZONE
 #define OTL_ODBC_STRING_TO_TIMESTAMP(str,tm)            \
 {                                                       \
-  swscanf(str,                                          \
+  long temp;                                            \
+  (void)swscanf(str,                                    \
          L"%04d-%02d-%02d %02d:%02d:%02d.%06ld%hd",     \
          &tm.year,                                      \
          &tm.month,                                     \
@@ -28,8 +38,9 @@ using namespace std;
          &tm.hour,                                      \
          &tm.minute,                                    \
          &tm.second,                                    \
-         &tm.fraction,                                  \
+         &temp,                                         \
          &tm.tz_hour);                                  \
+  tm.fraction=static_cast<unsigned long>(temp);         \
 }
 
 #define OTL_ODBC_TIMESTAMP_TO_STRING(tm,str)            \
@@ -42,7 +53,7 @@ using namespace std;
           tm.hour,                                      \
           tm.minute,                                    \
           tm.second,                                    \
-          tm.fraction,                                  \
+          static_cast<long>(tm.fraction),               \
           tm.tz_hour);                                  \
 }
 
@@ -88,7 +99,7 @@ void select(void)
               db // connect object
              ); 
 
- int f1;
+ int f1=0;
  otl_datetime f2, f3;
 
  // Second's precision needs to be specified BEFORE the stucture can be

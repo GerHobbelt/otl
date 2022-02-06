@@ -1,14 +1,13 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
 #include <stdio.h>
 
 #define OTL_ODBC // Compile OTL 4.0/ODBC
-#define ODBCVER 0x0250 // ODBC Version # needs to be downgraded
-                       // to 2.5 because the SQLite ODBC driver seems
-                       // to run slower when ODBC 3.x functions
-                       // used (performance is not as good as with
-                       // ODBC 2.5 function calls)
 #include <otlv4.h> // include the OTL 4.0 header file
 
 otl_connect db; // connect object
@@ -47,7 +46,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8
    // SELECT automatically executes when all input variables are

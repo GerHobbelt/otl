@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -23,7 +27,7 @@ void insert(void)
  otl_datetime tm;
 
  for(int i=1;i<=10;++i){
-  tm.year=1998;
+  tm.year=2015;
   tm.month=10;
   tm.day=19;
   tm.hour=23;
@@ -41,7 +45,7 @@ void select(void)
               db // connect object
              ); 
  
- int f1;
+ int f1=0;
  otl_datetime f2,f3,f4;
 
  while(!i.eof()){ // while not end-of-data
@@ -66,8 +70,8 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("UID=scott;PWD=tiger;DSN=firebird"); // connect to ODBC
-//  db.rlogon("scott/tiger@firebird"); // connect to ODBC, alternative format
+  db.rlogon("UID=scott;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
+//  db.rlogon("scott/tiger@firebirdsql"); // connect to ODBC, alternative format
                                     // of connect string
 
   otl_cursor::direct_exec

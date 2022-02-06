@@ -1,675 +1,755 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
-<html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.75 [en] (Win98; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, OTL stream read iterator</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, OTL stream read iterator<br>
-</h1>
-</center>
-<h1>
-OTL stream read iterator<br>
-</h1>
-This template class extends the OTL stream interface with more
-JDBC-like, conventional <span style="font-style: italic;">getter</span>
-functions. This template class doesn't support Unicode yet. This
-template class can be used with the <a href="otl3_stream_class.htm">otl_stream</a>
-class as well as with <a href="otl4_refcur_stream.htm">otl_refcur_stream</a>
-class (Oracle 8 and higher).<br>
-<pre><font size="+2">template&lt;typename OTLStream, <br>         typename OTLException<br></font>#if !defined(<a
- href="otl3_compile.htm#OTL_ORA7">OTL_ORA7</a>) <br>  // when any flavor of OTL but OTL_ORA7 is defined:<br>  // OTL_ORA8, OTL_ORA8I, OTL_ORA9I, OTL_ORA10G,<br>  // OTL_ORA10G_R2, OTL_ODBC, OTL_DB2_CLI<br><font
- size="+2">         ,typename OTLLobStream<br></font>#endif<br><font
- size="+2">        &gt;<br>class otl_stream_read_iterator{<br>public:<br></font></pre>
-<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
- cellspacing="2">
-  <tbody>
-    <tr>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Function</span><br>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>otl_stream_read_iterator();</pre>
-      </td>
-      <td style="vertical-align: top;">Default constructor<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>~otl_stream_read_iterator();</pre>
-      </td>
-      <td style="vertical-align: top;">Destructor <br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>otl_stream_read_iterator(OTLStream&amp; s);</pre>
-      </td>
-      <td style="vertical-align: top;">general-purpose constructor,
-attaches to an otl_stream, or an otl_refcur_stream. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="attach"></a>void attach(OTLStream&amp; s);<br></pre>
-      </td>
-      <td style="vertical-align: top;">Attaches to an otl_stream, or an
-otl_refcur_stream. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="reattach"></a>void reattach();</pre>
-      </td>
-      <td style="vertical-align: top;">Reattaches to the same stream.
-It's recommended to call this function when the stream&nbsp; read
-iterator is used with an <a href="otl4_refcur_stream.htm">otl_refcur_stream</a>,
-and when the otl_refcur_stream gets closed and reopened with the same
-reference cursor. See examples for more detail.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="detach"></a>void detach();</pre>
-      </td>
-      <td style="vertical-align: top;">Detaches from the
-otl_stream/otl_refcur_stream.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="next_row"></a>bool next_row(); </pre>
-      </td>
-      <td style="vertical-align: top;">Reads the next row, returns true
-if the row was successfully fetched false on the end-of-fetch-sequence.
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="describe"></a>const <a
- href="otl3_stream_class.htm#otl_var_desc">otl_var_desc</a>* describe<br>(int&amp; var_desc_len); </pre>
-      </td>
-      <td style="vertical-align: top;">Describes the output structure
-of the attached <a href="otl3_stream_class.htm">otl_</a><a
- href="otl3_stream_class.htm">stream</a>.
-var_desc_len is the total number of elements in the output structure of
-the attached otl_stream. The same information can be obtained via
-otl_stream::<a href="otl3_stream_class.htm#describe_out_vars">describe_out_vars</a>(),
-which this object is attached to. </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, char&amp; c);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads a signed one-byte character.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, unsigned char&amp; c);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads an unsigned one-byte character.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, char* s);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads a string of signed on-byte characters.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, unsigned char* s);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads a string of unsigned one-byte characters.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, int&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads a signed 32-byte integer.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, unsigned int&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads an unsigned 32-bit integer.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, short int&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads a signed 16-bit (short) integer.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, long int&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads a signed long integer (32,
-or 64-bit, depending on whether it's a 32-bit, LLP64 or LP64 platform).<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, float&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads a 4-byte floating point numeric value.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, double&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads an 8-byte floating point numeric value.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Reads a signed 64-bit integer.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, OTL_STRING_CONTAINER&amp; s); </pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Gets an std::string if #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a>
-is enabled. Gets an std::string if #define <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> is enabled. Gets
-an ACE_TString if #define <a href="otl3_compile.htm#OTL_ACE">OTL_ACE</a>
-is enabled. VARCHAR, CHAR, LONG, TEXT, VARCHAR(MAX), and CLOB values
-can be read by this function.<br>
-      <br>
-Gets a <a href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_ON">USER_DEFINED_STRING_CLASS</a>
-instance if #define <a
- href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_ON">OTL_USER_DEFINED_STRING_CLASS_ON</a>
-is enabled.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, <a href="otl3_long_string.htm">otl_long_string</a>&amp; s);</pre>
-      </td>
-      <td style="vertical-align: top;">
-      <p><span style="font-style: italic;">JDBC-like getter function</span>.&nbsp;
-pos is 1,2,... as in JDBC getXXX functions.</p>
-      <p><br>
-Gets an otl_long_string.</p>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, <a href="otl3_long_string.htm">otl_long_string</a>*&amp; s); </pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <br>
-Gets a pointer to otl_long_string. This is more optimal than the
-previous function, especially in the case of a large string.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="get_lob_stream_ptr"></a>void get(const int pos, <a
- href="otl3_lob_stream.htm">otl_lob_stream</a>*&amp; s);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <p>When !defined(<a href="otl3_compile.htm#OTL_ORA7">OTL_ORA7</a>):&nbsp;
-when any flavor of OTL but OTL_ORA7 is defined: OTL_ORA8, OTL_ORA8I,
-OTL_ORA9I, OTL_ORA10G, OTL_ORA10G_R2, OTL_ORA11G, OTL_ODBC,
-OTL_DB2_CLI, etc.<br>
-      </p>
-      <p> </p>
-Gets a pointer to otl_lob_stream. This function can be used if the
-otl_stream that the read iterator is attached to is in the <a
- href="otl3_stream_class.htm#set_lob_stream_mode">LOB stream mode</a>.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const int pos, <a
- href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&amp; s);</pre>
-      </td>
-      <td style="vertical-align: top;"><span style="font-style: italic;">JDBC-like
-getter function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
-functions.<br>
-      <p><br>
-Gets an otl_datetime.<br>
-      </p>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="is_null"></a>bool is_null(const int pos); </pre>
-      </td>
-      <td style="vertical-align: top;">Returns true if the value at
-position "pos" is NULL. Otherwise, returns false.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, char&amp; c);</pre>
-      </td>
-      <td style="vertical-align: top;"><a name="get_by_name"></a>Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <a name="get_by_name_functions"></a><span
- style="font-style: italic;">JDBC-like getter (by name) function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads a signed character.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, unsigned char&amp; c);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads an unsigned character.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, char* s);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads a string of signed one-byte characters.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, unsigned char* s);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads a string of unsigned characters.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, int&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads a signed 32-bit integer.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, unsigned int&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads an unsigned 32-bit integer.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, short int&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads a signed 16-bit (short) integer.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, long int&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads a signed long integer (32,
-or 64-bit, depending on whether it's a 32-bit, LLP64 or LP64 platform).<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, float&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads a 4-byte floating point numeric value.<br>
-      </td>
-      <td style="vertical-align: top;"><br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, double&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads an 8-byte floating point numeric value.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, <a
- href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>&amp; n);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads a signed 64-bit integer.<br>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, OTL_STRING_CONTAINER&amp; s); </pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads an std::string if #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a>
-is enabled. VARCHAR, CHAR, LONG, TEXT, and CLOB values can be read by
-this function.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, <a href="otl3_long_string.htm">otl_long_string</a>&amp; s);</pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads an otl_long_string</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, <a href="otl3_long_string.htm">otl_long_string</a>*&amp; s); </pre>
-      </td>
-      <td style="vertical-align: top;">Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-Reads a pointer to otl_long_string. This is more optimal than the
-previous function, especially in the case of a large string.</td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, <a href="otl3_lob_stream.htm">otl_lob_stream</a>*&amp; s); </pre>
-      </td>
-      <td style="vertical-align: top;">
-      <p>Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      <br>
-      </p>
-      <p>When !defined(<a href="otl3_compile.htm#OTL_ORA7">OTL_ORA7</a>):&nbsp;
-when any flavor of OTL but OTL_ORA7 is defined: OTL_ORA8, OTL_ORA8I,
-OTL_ORA9I, OTL_ORA10G, OTL_ORA10G_R2, OTL_ORA11G, OTL_ODBC,
-OTL_DB2_CLI, etc.<br>
-      </p>
-      <p><br>
-Reads a pointer to otl_lob_stream. This function can be used if the
-otl_stream that the read iterator is attached to is in the <a
- href="otl3_stream_class.htm#set_lob_stream_mode">LOB stream mode</a>.<br>
-      </p>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre>void get(const char* var_name, <a
- href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&amp; s);</pre>
-      </td>
-      <td style="vertical-align: top;">
-      <p>Only
-when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
- href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
- href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
-      <br>
-      <span style="font-style: italic;">JDBC-like getter (by name)
-function.</span>
-var_name is a variable / column name from the list that can be
-retrieved by a call to the <a
- href="otl4_stream_read_iterator.htm#describe">describe</a>() function
-of this class. All variable names are case insensitive.<br>
-      </p>
-      <p><br>
-Reads an otl_datetime</p>
-      </td>
-    </tr>
-    <tr>
-      <td style="vertical-align: top;">
-      <pre><a name="is_null_by_name"></a>bool is_null(const char* var_name); </pre>
-      </td>
-      <td style="vertical-align: top;">Returns true if the value of the
-"var_name" variable is NULL. Otherwise, returns false.</td>
-    </tr>
-  </tbody>
-</table>
-<pre><font size="+2">}; // end of otl_stream_read_iterator</font></pre>
-<hr width="100%">
-<center>
-<p><a href="otl3_iterators.htm">Prev</a> <a href="otl3_const_sql.htm">Next</a><a
- href="otl3.htm">Contents</a><a href="home.htm">Go
-Home</a></p>
-</center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
-<a href="mailto:skuchin@gmail.com">skuchin@gmail.com
-<script language="JavaScript"><!-- hide from old browsers
- var modDate = new Date(document.lastModified)
- document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
- //-->
- </script></a>.
-</p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for
-any purpose is hereby granted without fee, provided that the above
-copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
-</p>
-<script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-<script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-5456201-1");
-pageTracker._trackPageview();
-</script>
-</body>
-</html>
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.75 [en] (Win98; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, OTL stream read iterator</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, OTL stream read iterator<br>
+      </h1>
+    </center>
+    <h1> OTL stream read iterator<br>
+    </h1>
+    This template class extends the OTL stream interface with more
+    JDBC-like, conventional <span style="font-style: italic;">getter</span>
+    functions. This template class doesn't support Unicode yet. This
+    template class can be used with the <a href="otl3_stream_class.htm">otl_stream</a>
+    class as well as with <a href="otl4_refcur_stream.htm">otl_refcur_stream</a>
+    class (Oracle 8 and higher).<br>
+    <pre><font size="+2">template&lt;typename OTLStream, <br>         typename OTLException,<br></font><font size="+2">         typename OTLLobStream&gt;</font><font size="+2"><br>class otl_stream_read_iterator{<br>public:<br></font></pre>
+    <table style="text-align: left; width: 100%;" cellspacing="2"
+      cellpadding="2" border="1">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">Function</span><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">Description</span><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>otl_stream_read_iterator();</pre>
+          </td>
+          <td style="vertical-align: top;">Default constructor<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>~otl_stream_read_iterator();</pre>
+          </td>
+          <td style="vertical-align: top;">Destructor <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>otl_stream_read_iterator(OTLStream&amp; s);</pre>
+          </td>
+          <td style="vertical-align: top;">general-purpose constructor,
+            attaches to an otl_stream, or an otl_refcur_stream. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="attach"></a>void attach(OTLStream&amp; s);<br></pre>
+          </td>
+          <td style="vertical-align: top;">Attaches to an otl_stream, or
+            an otl_refcur_stream. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="reattach"></a>void reattach();</pre>
+          </td>
+          <td style="vertical-align: top;">Reattaches to the same
+            stream. It's recommended to call this function when the
+            stream&nbsp; read iterator is used with an <a
+              href="otl4_refcur_stream.htm">otl_refcur_stream</a>, and
+            when the otl_refcur_stream gets closed and reopened with the
+            same reference cursor. See examples for more detail.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="detach"></a>void detach();</pre>
+          </td>
+          <td style="vertical-align: top;">Detaches from the
+            otl_stream/otl_refcur_stream.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="next_row"></a>bool next_row(); </pre>
+          </td>
+          <td style="vertical-align: top;">Reads the next row, returns
+            true if the row was successfully fetched false on the
+            end-of-fetch-sequence. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="describe"></a>const <a href="otl3_stream_class.htm#otl_var_desc">otl_var_desc</a>* describe<br>(int&amp; var_desc_len); </pre>
+          </td>
+          <td style="vertical-align: top;">Describes the output
+            structure of the attached <a href="otl3_stream_class.htm">otl_</a><a
+              href="otl3_stream_class.htm">stream</a>. var_desc_len is
+            the total number of elements in the output structure of the
+            attached otl_stream. The same information can be obtained
+            via otl_stream::<a
+              href="otl3_stream_class.htm#describe_out_vars">describe_out_vars</a>(),
+which
+
+
+            this object is attached to. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, char&amp; c);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads a signed one-byte character.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, unsigned char&amp; c);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads an unsigned one-byte character.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, char* s);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads a string of signed on-byte characters.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, unsigned char* s);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads a string of unsigned one-byte characters.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, int&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads a signed 32-byte integer.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, unsigned int&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads an unsigned 32-bit integer.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, short int&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads a signed 16-bit (short) integer.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, long int&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads a signed long integer (32, or 64-bit, depending on
+            whether it's a 32-bit, LLP64 or LP64 platform).<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, float&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads a 4-byte floating point numeric value.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, double&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads an 8-byte floating point numeric value.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Reads a signed 64-bit integer.<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <pre><a name="OTL_UBIGINT_get_1"></a>void get(const int pos, <a href="otl3_compile.htm#OTL_UBIGINT">OTL_UBIGINT</a>&amp; n);</pre>
+          </td>
+          <td valign="top"><span style="font-style: italic;">JDBC-like
+              getter function</span>.&nbsp; pos is 1,2,... as in JDBC
+            getXXX functions.<br>
+            <br>
+            Reads an unsigned 64-bit integer.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, OTL_STRING_CONTAINER&amp; s); </pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Gets an std::string if #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> is enabled.
+            Gets an std::string if #define <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> is
+            enabled. Gets an ACE_TString if #define <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.
+            VARCHAR, CHAR, LONG, TEXT, VARCHAR(MAX), and CLOB values can
+            be read by this function.<br>
+            <br>
+            Gets a <a
+              href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_ON">USER_DEFINED_STRING_CLASS</a>
+            instance if #define <a
+              href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_ON">OTL_USER_DEFINED_STRING_CLASS_ON</a>
+            is enabled.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, <a href="otl3_long_string.htm">otl_long_string</a>&amp; s);</pre>
+          </td>
+          <td style="vertical-align: top;">
+            <p><span style="font-style: italic;">JDBC-like getter
+                function</span>.&nbsp; pos is 1,2,... as in JDBC getXXX
+              functions.</p>
+            <p><br>
+              Gets an otl_long_string.</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, <a href="otl3_long_string.htm">otl_long_string</a>*&amp; s); </pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Gets a pointer to otl_long_string. This is more optimal than
+            the previous function, especially in the case of a large
+            string.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="get_lob_stream_ptr"></a>void get(const int pos, <a href="otl3_lob_stream.htm">otl_lob_stream</a>*&amp; s);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <br>
+            Gets a pointer to otl_lob_stream. This function can be used
+            if the otl_stream that the read iterator is attached to is
+            in the <a href="otl3_stream_class.htm#set_lob_stream_mode">LOB
+
+
+              stream mode</a>.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const int pos, <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&amp; s);</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">JDBC-like getter function</span>.&nbsp; pos is
+            1,2,... as in JDBC getXXX functions.<br>
+            <p><br>
+              Gets an otl_datetime.<br>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="is_null"></a>bool is_null(const int pos); </pre>
+          </td>
+          <td style="vertical-align: top;">Returns true if the value at
+            position "pos" is NULL. Otherwise, returns false.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, char&amp; c);</pre>
+          </td>
+          <td style="vertical-align: top;"><a name="get_by_name"></a>Only
+when
+
+
+            #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <a name="get_by_name_functions"></a><span style="font-style:
+              italic;">JDBC-like getter (by name) function.</span>
+            var_name is a variable / column name from the list that can
+            be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads a signed character.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, unsigned char&amp; c);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads an unsigned character.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, char* s);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads a string of signed one-byte characters.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, unsigned char* s);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads a string of unsigned characters.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, int&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads a signed 32-bit integer.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, unsigned int&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads an unsigned 32-bit integer.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, short int&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads a signed 16-bit (short) integer.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, long int&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads a signed long integer (32, or 64-bit, depending on
+            whether it's a 32-bit, LLP64 or LP64 platform).<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, float&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads a 4-byte floating point numeric value.<br>
+          </td>
+          <td style="vertical-align: top;"><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, double&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads an 8-byte floating point numeric value.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, <a href="otl3_compile.htm#OTL_BIGINT">OTL_BIGINT</a>&amp; n);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads a signed 64-bit integer.<br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <pre><a name="OTL_UBIGINT_get_2"></a>void get(const char* var_name, <a href="otl3_compile.htm#OTL_UBIGINT">OTL_UBIGINT</a>&amp; n);</pre>
+          </td>
+          <td valign="top">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads an unsigned 64-bit integer.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, OTL_STRING_CONTAINER&amp; s); </pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads an std::string if #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> is enabled.
+            VARCHAR, CHAR, LONG, TEXT, and CLOB values can be read by
+            this function.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, <a href="otl3_long_string.htm">otl_long_string</a>&amp; s);</pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads an otl_long_string</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, <a href="otl3_long_string.htm">otl_long_string</a>*&amp; s); </pre>
+          </td>
+          <td style="vertical-align: top;">Only when #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> or <a
+              href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a> or <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is enabled.<br>
+            <br>
+            <span style="font-style: italic;">JDBC-like getter (by name)
+              function.</span> var_name is a variable / column name from
+            the list that can be retrieved by a call to the <a
+              href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+            function of this class. All variable names are case
+            insensitive.<br>
+            <br>
+            Reads a pointer to otl_long_string. This is more optimal
+            than the previous function, especially in the case of a
+            large string.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, <a href="otl3_lob_stream.htm">otl_lob_stream</a>*&amp; s); </pre>
+          </td>
+          <td style="vertical-align: top;">
+            <p>Only when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a>
+              or <a href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a>
+              or <a href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is
+              enabled.<br>
+              <br>
+              <span style="font-style: italic;">JDBC-like getter (by
+                name) function.</span> var_name is a variable / column
+              name from the list that can be retrieved by a call to the
+              <a href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+              function of this class. All variable names are case
+              insensitive.<br>
+              <br>
+            </p>
+            <p>Reads a pointer to otl_lob_stream. This function can be
+              used if the otl_stream that the read iterator is attached
+              to is in the <a
+                href="otl3_stream_class.htm#set_lob_stream_mode">LOB
+                stream mode</a>.<br>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void get(const char* var_name, <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&amp; s);</pre>
+          </td>
+          <td style="vertical-align: top;">
+            <p>Only when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a>
+              or <a href="otl3_compile.htm#OTL_STLPORT">OTL_STLPORT</a>
+              or <a href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> is
+              enabled.<br>
+              <br>
+              <span style="font-style: italic;">JDBC-like getter (by
+                name) function.</span> var_name is a variable / column
+              name from the list that can be retrieved by a call to the
+              <a href="otl4_stream_read_iterator.htm#describe">describe</a>()
+
+
+              function of this class. All variable names are case
+              insensitive.<br>
+            </p>
+            <p><br>
+              Reads an otl_datetime</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="is_null_by_name"></a>bool is_null(const char* var_name); </pre>
+          </td>
+          <td style="vertical-align: top;">Returns true if the value of
+            the "var_name" variable is NULL. Otherwise, returns false.</td>
+        </tr>
+      </tbody>
+    </table>
+    <pre><font size="+2">}; // end of otl_stream_read_iterator</font></pre>
+    <hr width="100%">
+    <center>
+      <p><a href="otl3_iterators.htm">Prev</a> <a
+          href="otl3_const_sql.htm">Next</a><a href="otl3.htm">Contents</a><a
+          href="home.htm">Go Home</a></p>
+    </center>
+    <p>Copyright © 1996-2022, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com
+        <script language="JavaScript"><!-- hide from old browsers
+
+ var modDate = new Date(document.lastModified)
+
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+
+ //-->
+
+ </script></a>. </p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
+    <script type="text/javascript">
+
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+</script>
+    <script type="text/javascript">
+
+var pageTracker = _gat._getTracker("UA-5456201-1");
+
+pageTracker._trackPageview();
+
+</script>
+  </body>
+</html>

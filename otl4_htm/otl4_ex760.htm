@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, Example 760 (VARCHAR2 as JSON table column)</title>
+  </head>
+  <body>
+    <center>
+      <h1> OTL 4.0, Example 760 (VARCHAR2 as JSON table column)</h1>
+    </center>
+    <h1> Example 760 (VARCHAR2 as JSON table)</h1>
+    <p><br>
+      This code example shows how to use OTL with a VARCHAR2 table
+      column that has "IS JSON" constraint. It's not really that
+      different from any other VARCHAR2 column. See the Oracle manual
+      for more detail on how JSON columns can be selected from the
+      underlying table.<br>
+    </p>
+    <h2> Source Code</h2>
+    <pre>#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;</pre>
+    <pre>#define OTL_ORA12C // Compile OTL 4.0/OCI12
+#define OTL_STL // Enable STL compatibility mode
+#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
+<br>const char* json_sample=<br>"{ \"PONumber\"             : 1600,"<br>"  \"Reference\"            : \"ABULL-20140421\","<br>"  \"Requestor\"            : \"Alexis Bull\","<br>"  \"User\"                 : \"ABULL\","<br>"  \"CostCenter\"           : \"A50\","<br>"  \"ShippingInstructions\" : { \"name\"   : \"Alexis Bull\","<br>"                             \"Address\": { \"street\"  : \"200 Sporting Green\","<br>"                                          \"city\"    : \"South San Francisco\","<br>"                                          \"state\"   : \"CA\","<br>"                                          \"zipCode\" : 99236,"<br>"                                          \"country\" : \"United States of America\" },"<br>"                             \"Phone\" : [ { \"type\" : \"Office\", \"number\" : \"909-555-7307\" },"<br>"                                         { \"type\" : \"Mobile\", \"number\" : \"415-555-1234\" } ] },"<br>"  \"Special Instructions\" : null,"<br>"  \"AllowPartialShipment\" : false,"<br>"  \"LineItems\"            : [ { \"ItemNumber\" : 1,"<br>"                               \"Part\"       : { \"Description\" : \"One Magic Christmas\","<br>"                                                \"UnitPrice\"   : 19.95,"<br>"                                                \"UPCCode\"     : 13131092899 },"<br>"                               \"Quantity\"   : 9.0 },"<br>"                             { \"ItemNumber\" : 2,"<br>"                               \"Part\"       : { \"Description\" : \"Lethal Weapon\","<br>"                                                \"UnitPrice\"   : 19.95,"<br>"                                                \"UPCCode\"     : 85391628927 },"<br>"                               \"Quantity\"   : 5.0 } ] }";<br>
+void insert()
+// insert rows into table
+{</pre>
+    <pre> string f2; <br> otl_stream o(3, <br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[4001]&gt;)",<br>                 // SQL statement<br>              db // connect object<br>             );<br><br> string json_str(json_sample);<br><br> o&lt;&lt;1&lt;&lt;json_str;<br> o&lt;&lt;2&lt;&lt;json_str;<br>
+}
+
+void select()
+{&nbsp;
+ string f2;<br><br> otl_stream i(3,<br>              "select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> int f1;<br><br> i&lt;&lt;1; // assigning :f = 1<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br>  cout&lt;&lt;"======================================================"&lt;&lt;endl;<br> }<br>&nbsp;
+}
+
+int main()
+{
+&nbsp;<a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment
+&nbsp;try{
+
+&nbsp; db.rlogon("scott/tiger"); // connect to Oracle
+
+&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>&nbsp;&nbsp; (
+&nbsp;&nbsp;&nbsp; db,
+&nbsp;&nbsp;&nbsp; "drop table test_tab",
+&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions
+&nbsp;&nbsp; ); // drop table
+
+&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>&nbsp;&nbsp; (
+&nbsp;&nbsp;&nbsp; db,
+&nbsp;&nbsp;&nbsp; "create table test_tab(f1 number, f2 varchar2(4000), check(f2 is json))"
+&nbsp;&nbsp;&nbsp; );&nbsp; // create table
+
+&nbsp; insert(); // insert records into table
+&nbsp; select(); // select records from table
+
+&nbsp;}
+
+&nbsp;catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
+&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
+&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
+&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
+&nbsp;}
+
+&nbsp;db.logoff(); // disconnect from Oracle
+
+&nbsp;return 0;
+
+}</pre>
+    <h2> Output</h2>
+    <pre>f1=1, f2={ "PONumber"             : 1600,  "Reference"            : "ABULL-20140421",  "Requestor"            : "Alexis Bull",  "User"                 : "ABULL",  "CostCenter"           : "A50",  "ShippingInstructions" : { "name"   : "Alexis Bull",                             "Address": { "street"  : "200 Sporting Green",                                          "city"    : "South San Francisco",                                          "state"   : "CA",                                          "zipCode" : 99236,                                          "country" : "United States of America" },                             "Phone" : [ { "type" : "Office", "number" : "909-555-7307" },                                         { "type" : "Mobile", "number" : "415-555-1234" } ] },  "Special Instructions" : null,  "AllowPartialShipment" : false,  "LineItems"            : [ { "ItemNumber" : 1,                               "Part"       : { "Description" : "One Magic Christmas",                                                "UnitPrice"   : 19.95,                                                "UPCCode"     : 13131092899 },                               "Quantity"   : 9.0 },                             { "ItemNumber" : 2,                               "Part"       : { "Description" : "Lethal Weapon",                                                "UnitPrice"   : 19.95,                                                "UPCCode"     : 85391628927 },                               "Quantity"   : 5.0 } ] }<br>======================================================<br>f1=2, f2={ "PONumber"             : 1600,  "Reference"            : "ABULL-20140421",  "Requestor"            : "Alexis Bull",  "User"                 : "ABULL",  "CostCenter"           : "A50",  "ShippingInstructions" : { "name"   : "Alexis Bull",                             "Address": { "street"  : "200 Sporting Green",                                          "city"    : "South San Francisco",                                          "state"   : "CA",                                          "zipCode" : 99236,                                          "country" : "United States of America" },                             "Phone" : [ { "type" : "Office", "number" : "909-555-7307" },                                         { "type" : "Mobile", "number" : "415-555-1234" } ] },  "Special Instructions" : null,  "AllowPartialShipment" : false,  "LineItems"            : [ { "ItemNumber" : 1,                               "Part"       : { "Description" : "One Magic Christmas",                                                "UnitPrice"   : 19.95,                                                "UPCCode"     : 13131092899 },                               "Quantity"   : 9.0 },                             { "ItemNumber" : 2,                               "Part"       : { "Description" : "Lethal Weapon",                                                "UnitPrice"   : 19.95,                                                "UPCCode"     : 85391628927 },                               "Quantity"   : 5.0 } ] }<br>======================================================
+
+<hr width="100%"></pre>
+    <center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
+        href="home.htm">Go Home</a></center>
+    <p>Copyright © 1996-2022
+, Sergei Kuchin, emai9: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>.
+      <script language="Javgmailpt">
+<!-- hide from old browsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script> </p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+      <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+      <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script></p>
+  </body>
+</html>

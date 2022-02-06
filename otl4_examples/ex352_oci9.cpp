@@ -1,3 +1,8 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#define _HAS_STREAM_INSERTION_OPERATORS_DELETED_IN_CXX20 1
+#endif
 #include <iostream>
 using namespace std;
 
@@ -55,8 +60,8 @@ void select()
              ); 
    // create select stream
  
- int f1;
- OTL_UNICODE_CHAR_TYPE f2[5];
+ int f1=0;
+ OTL_UNICODE_CHAR_TYPE f2[5]={0};
 
  i<<8<<8; // assigning :f11 = 8, f12 = 8
    // SELECT automatically executes when all input variables are
@@ -90,7 +95,7 @@ int main()
  otl_connect::otl_initialize(); // initialize the database API environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to the database
+  db.rlogon("system/oracle@myora_tns"); // connect to the database
 
   otl_cursor::direct_exec
    (

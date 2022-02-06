@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <string>
 using namespace std;
@@ -27,7 +31,7 @@ void insert()
 
  for(int i=1;i<=20;++i){
   f2.assign(5001,' '); 
-  for(int j=0;j<5000;++j)
+  for(size_t j=0;j<5000;++j)
    f2[j]='*';
   f2[5000]='?';
   o<<i<<f2;
@@ -47,7 +51,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
 
  i<<8<<8;
    // SELECT automatically executes when all input variables are
@@ -76,7 +80,7 @@ int main()
  otl_connect::otl_initialize(); // initialize the database environment
  try{
 
-  db.rlogon("scott/tigger@freetds_sybsql"); // connect to the database
+  db.rlogon("sa/tigger@freetds_sybsql"); // connect to the database
   db.auto_commit_off();
 
   otl_cursor::direct_exec

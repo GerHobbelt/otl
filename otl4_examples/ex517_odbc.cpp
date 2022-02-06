@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -32,7 +36,7 @@ void insert()
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  o<<(float)i<<tmp;
+  o<<static_cast<float>(i)<<tmp;
  }
 }
 
@@ -45,7 +49,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<8<<8; // assigning :f = 8; :ff = 8

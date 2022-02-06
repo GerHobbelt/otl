@@ -1,4 +1,8 @@
-// User "scott" should have a CHANGE NOTIFICATION privilege.
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
+// User "system" should have a CHANGE NOTIFICATION privilege.
 //
 // The required "change notification" privilege
 // can be set by "grant change notification to scott" by the DBA.
@@ -146,7 +150,7 @@ private:
       // if the TSubscriber class is used from multiple threads
       select_str_<<row_id;
       while(!select_str_.eof()){
-        double x;
+        double x=0;
         select_str_>>x;
         Log( "Event", "Row inserted, f1=", static_cast<int>(x) );
       }    
@@ -162,7 +166,7 @@ private:
       // if the TSubscriber class is used from multiple threads
       select_str_<<row_id;
       while(!select_str_.eof()){
-        double x;
+        double x=0;
         select_str_>>x;
         Log( "Event", "Row updated, f1=", static_cast<int>(x) );
       }    
@@ -184,7 +188,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
   db.direct_exec
     ("drop table test_tab", 
      otl_exception::disabled 

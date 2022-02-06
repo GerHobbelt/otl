@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 
 
 #include <iostream>
@@ -12,6 +16,25 @@
 #ifndef OTL_ANSI_CPP
 #define OTL_ANSI_CPP // Turn on ANSI C++ typecasts
 #endif
+
+#if (defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 900)) && \
+     (defined(OTL_CPP_14_ON))
+#include <experimental/string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::experimental::string_view
+#elif (defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 900)) && \
+     defined(OTL_CPP_17_ON)
+#include <string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::string_view
+#elif (defined(__clang__) && (__clang_major__*100+__clang_minor__ < 900) || defined(__GNUC__)) && \
+     (defined(OTL_CPP_14_ON) || defined(OTL_CPP_17_ON))
+#include <experimental/string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::experimental::string_view
+#elif defined(_MSC_VER) && (_MSC_VER>=1910) && defined(OTL_CPP_17_ON)
+// VC++ 2017 or higher when /std=c++latest is used
+#include <string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::string_view
+#endif
+
 #include <otlv4.h> // include the OTL 4 header file
 
 using namespace std;
@@ -61,7 +84,12 @@ otl_stream& operator>>(otl_stream& s, row& r)
 // redefined operator<< for writing row& into otl_stream
 otl_stream& operator<<(otl_stream& s, const row& r)
 {
- s<<r.f1<<r.f2;
+#if defined(OTL_STD_STRING_VIEW_CLASS)
+  OTL_STD_STRING_VIEW_CLASS f2_sv(r.f2.c_str(),r.f2.length());
+  s<<r.f1<<f2_sv;
+#else
+  s<<r.f1<<r.f2;
+#endif
  return s;
 }
 

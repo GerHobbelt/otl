@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -32,7 +36,7 @@ void insert()
 { 
  otl_stream o(50, // buffer size
               "insert into test_tab "
-              "values(:f1<float>,:f2<char[31]>,NULL,:f4<timestamp>)",  
+              "values(:f1<int>,:f2<char[31]>,NULL,:f4<timestamp>)",  
                  // SQL statement
               db // connect object
              );
@@ -50,9 +54,9 @@ void insert()
   sprintf(tmp,"Name%d",i);
 #endif
   if(i==10)
-   o<<(float)i<<otl_null()<<otl_null();
+   o<<i<<otl_null()<<otl_null();
   else
-   o<<(float)i<<tmp<<f4;
+   o<<i<<tmp<<f4;
  }
 
 }
@@ -68,10 +72,10 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
- char f22;
- int f3;
+ char f22=0;
+ int f3=0;
  otl_datetime f4;
 
 

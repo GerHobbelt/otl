@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -37,8 +41,8 @@ void insert()
           // into otl_stream.
 
   for(j=0;j<5000;++j)
-   f2[j]=(unsigned short) '*'; // ASCII to Unicode.
-  f2[5000]= (unsigned short) '?'; // ASCII to Unicode
+    f2[j]=static_cast<unsigned short>('*'); // ASCII to Unicode.
+  f2[5000]= static_cast<unsigned short>('?'); // ASCII to Unicode
   f2.set_len(5001);
 
   lob.set_len(5001+2123); // setting the total  size of
@@ -46,7 +50,7 @@ void insert()
   
   lob<<f2; // writing first chunk of the CLOB into lob
 
-  f2[2122]= (unsigned short) '?';
+  f2[2122]= static_cast<unsigned short>('?');
   f2.set_len(2123); // setting the size of the second chunk
 
   lob<<f2; // writing the second chunk of the CLOB into lob
@@ -72,7 +76,7 @@ void select()
    // create select stream
  
  
- int f1;
+ int f1=0;
  otl_lob_stream lob; // Stream for reading CLOB
 
  i<<4<<4; // assigning :f11 = 4, :f12 = 4
@@ -90,8 +94,8 @@ void select()
    lob>>f2; // reading a chunk of CLOB
    cout<<"   chunk #"<<n;
    cout<<", f2="
-       <<(char)f2[0] // Unicode to ASCII
-       <<(char)f2[f2.len()-1]<<", len="<<f2.len()<<endl;
+       <<static_cast<char>(f2[0]) // Unicode to ASCII
+       <<static_cast<char>(f2[f2.len()-1])<<", len="<<f2.len()<<endl;
   }
   lob.close(); // closing the otl_lob_stream. This step may be skipped.  
  }

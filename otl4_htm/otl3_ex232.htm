@@ -1,53 +1,29 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
-<html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
+<html><head>
+  <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
   <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, Example 232 (otl_stream::flush() and duplicate rows,
-Oracle 8,8i,9i)</title>
+  <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
+  <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
+  <title>OTL 4.0, Example 232 (otl_stream::flush() and batch error mode, Oracle 8, 8i, 9i, 10g, 11g, 12c)</title>
 </head>
 <body>
 <center>
-<h1>OTL 4.0, Example 232 (otl_stream::flush() and duplicate rows,
-Oracle 8,8i,9i)</h1>
+<h1>OTL 4.0, Example 232 (otl_stream::flush() and batch error mode,
+Oracle 8, 8i, 9i, 10g, 11g, 12c)</h1>
 </center>
 <h1>
-Example 232 (otl_stream::flush() and duplicate rows, Oracle 8,8i,9i)</h1>
-This example demonstrates a simple INSERT, SELECT and the use of the <a
- href="otl3_stream_class.htm#flush">otl_stream::flush</a>()
-function with two parameters for Oracle 8/8i/9i.
+Example 232 (otl_stream::flush() and batch error mode, Oracle 8, 8i, 9i, 10g, 11g, 12c)</h1>
+This example demonstrates a simple INSERT, SELECT and the use of the <a href="otl3_stream_class.htm#flush">otl_stream::flush</a>()
+function with for Oracle 8/8i/9i/10g/11g/12c.
 <h2>Source Code</h2>
 <pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
-<pre>//#define OTL_ORA8I // Compile OTL 4.0/OCI8<br>#define OTL_ORA8I // Compile OTL 4.0/OCI8i<br>// #define OTL_ORA9I // Compile OTL 4.0/OCI9i<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
- href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
- href="otl3_stream_class.htm">otl_stream</a> o(10, // make the buffer size larger than the actual&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // row set to inserted, so that the stream will not<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // flush the buffer automatically<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br><br>&nbsp;o.<a
- href="otl3_stream_class.htm#set_commit">set_commit</a>(0); // set stream's auto-commit to OFF.<br><br>&nbsp;long total_rpc=0; // total "rows processed count"<br>&nbsp;long rpc=0; // rows successfully processed in one flush() call<br>&nbsp;int iters=0; // number of rows to be bypassed<br><br>&nbsp;try{<br>&nbsp; o&lt;&lt;1&lt;&lt;"Line1"; // Enter one row into the stream<br>&nbsp; o&lt;&lt;1&lt;&lt;"Line1"; // Enter the same data into the stream<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // and cause a "duplicate key" error.<br>&nbsp; o&lt;&lt;2&lt;&lt;"Line2"; // Enter one row into the stream<br>&nbsp; o&lt;&lt;3&lt;&lt;"Line3"; // Enter one row into the stream<br>&nbsp; o&lt;&lt;4&lt;&lt;"Line4"; // Enter one row into the stream<br>&nbsp; o&lt;&lt;4&lt;&lt;"Line4"; // Enter the same data into the stream<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // and cause a "duplicate key" error.<br>&nbsp; o.<a
- href="otl3_stream_class.htm#flush">flush</a>();<br>&nbsp;}catch(<a
- href="otl3_exception_class.htm">otl_exception</a>&amp; p){<br>&nbsp; if(p.code==1){<br>&nbsp;&nbsp; // ORA-0001: ...duplicate key...<br>&nbsp;&nbsp;&nbsp; ++iters;<br>&nbsp;&nbsp;&nbsp; rpc=o.<a
- href="otl3_stream_class.htm#get_rpc">get_rpc</a>();<br>&nbsp;&nbsp;&nbsp; total_rpc=rpc;<br>&nbsp;&nbsp;&nbsp; do{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; try{<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout&lt;&lt;"TOTAL_RPC="&lt;&lt;total_rpc&lt;&lt;", RPC="&lt;&lt;rpc&lt;&lt;endl;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; o.<a
- href="otl3_stream_class.htm#flush">flush</a>(total_rpc+iters, // bypass the duplicate row and start<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // with the rows after that<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; true // force buffer flushing regardless<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rpc=0;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }catch(otl_exception&amp; p2){<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(p2.code==1){<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // ORA-0001: ... duplicate key ...<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ++iters;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rpc=o.<a
- href="otl3_stream_class.htm#get_rpc">get_rpc</a>();<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; total_rpc+=rpc;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }else<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; }while(rpc&gt;0);<br>&nbsp; }else<br>&nbsp;&nbsp; throw; // re-throw the exception to the outer catch block.<br>&nbsp;}<br><br>&nbsp;db.<a
- href="otl3_connect_class.htm#commit">commit</a>(); // commit transaction<br><br>}<br><br>void select()<br>{&nbsp;<br>&nbsp;<a
- href="otl3_stream_class.htm">otl_stream</a> i(10, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;int f1;<br>&nbsp;char f2[31];<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br>&nbsp;}<br><br>}<br><br>int main()<br>{<br>&nbsp;<a
- href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tiger"); // connect to Oracle<br><br>&nbsp; <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 number, f2 varchar2(30))"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create unique index ind001 on test_tab(f1)"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create unique index&nbsp;<br><br>&nbsp; insert(); // insert records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
- href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from Oracle<br><br>&nbsp;return 0;<br><br>}</pre>
+<pre>#define OTL_ORA8 // Compile OTL 4.0/OCI8<br>//#define OTL_ORA8I // Compile OTL 4.0/OCI8i<br>// #define OTL_ORA9I // Compile OTL 4.0/OCI9i/OCI9iR2<br>// #define OTL_ORA10G // Compile OTL 4.0/OCI10G<br>// #define OTL_ORA10G_R2 // Compile OTL 4.0/OCI10G Release 2<br>// #define OTL_ORA11G // Compile OTL 4.0/OCI11G<br>// #define OTL_ORA11G_R2 // Compile OTL 4.0/OCI11G Release 2<br>// #define OTL_ORA12C // Compile OTL 4.0/OCI12C<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a href="otl3_stream_class.htm">otl_stream</a> o(20, // make the buffer size larger than the actual&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // row set to inserted, so that the stream will not<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // flush the buffer automatically<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SQL statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br><br>&nbsp;o.<a href="otl3_stream_class.htm#set_commit">set_commit</a>(0); // set stream's auto-commit to OFF.<br>&nbsp;o.<a href="otl3_stream_class.htm#set_batch_error_mode">set_batch_error_mode</a>(true); // set stream's batch error mode to ON.<br><br>&nbsp;try{<br>  o&lt;&lt;1&lt;&lt;"Line1"; // Enter one row into the stream<br>  o&lt;&lt;1&lt;&lt;"Line1"; // Enter the same data into the stream<br>                 // and cause a "duplicate key" error.<br>  o&lt;&lt;2&lt;&lt;"Line2"; // Enter one row into the stream<br>  o&lt;&lt;3&lt;&lt;"Line3"; // Enter one row into the stream<br>  o&lt;&lt;4&lt;&lt;"Line4"; // Enter one row into the stream<br>  o&lt;&lt;2000&lt;&lt;"Line2000"; // Enter an out-of-range f1 into the stream<br>  o&lt;&lt;otl_null()&lt;&lt;"LineNull"; // Enter a NULL f1 into the stream<br>&nbsp; o.<a href="otl3_stream_class.htm#flush">flush</a>();<br>&nbsp;}catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){<br>   if(p.code==24381){<br>     // ORA-24831, error(s) in array DML<br>     <a href="otl3_exception_class.htm">otl_exception</a> error;<br>     int total_errors=o.<a href="otl3_stream_class.htm#get_number_of_errors_in_batch">get_number_of_errors_in_batch</a>();<br>     cout&lt;&lt;"TOTAL_ERRORS="&lt;&lt;total_errors&lt;&lt;endl;<br>     int dml_row_offset;<br>     for(int i=0;i&lt;total_errors;++i){<br>       o.<a href="otl3_stream_class.htm#get_error">get_error</a>(i,dml_row_offset,error);<br>       cout&lt;&lt;"I="&lt;&lt;i&lt;&lt;", ROW_OFFSET="&lt;&lt;dml_row_offset<br>           &lt;&lt;", CODE="&lt;&lt;error.code&lt;&lt;", MSG="&lt;&lt;error.msg<br>           &lt;&lt;endl;<br>     }<br>   }<br>&nbsp;}<br><br>&nbsp;db.<a href="otl3_connect_class.htm#commit">commit</a>(); // commit transaction<br><br>}<br><br>void select()<br>{&nbsp;<br>&nbsp;<a href="otl3_stream_class.htm">otl_stream</a> i(10, // buffer size<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;&nbsp; // create select stream<br>&nbsp;<br>&nbsp;int f1;<br>&nbsp;char f2[31];<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br>&nbsp;}<br><br>}<br><br>int main()<br>{<br>&nbsp;<a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("scott/tiger"); // connect to Oracle<br><br>&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>  otl_cursor::direct_exec<br>   (<br>    db,<br>    "create table test_tab(f1 number not null, f2 varchar2(30), "<br>    "constraint check1 check(f1 between 1 and 1000))"<br>    );  // create table<br><br>  otl_cursor::direct_exec<br>   (<br>    db,<br>    "create unique index ind001 on test_tab(f1)"<br>    );  // create unique index <br><br><br>&nbsp; insert(); // insert records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from Oracle<br><br>&nbsp;return 0;<br><br>}</pre>
 <h2>
 Output</h2>
-<pre>TOTAL_RPC=1, RPC=1<br>TOTAL_RPC=4, RPC=3<br>f1=1, f2=Line1<br>f1=2, f2=Line2<br>f1=3, f2=Line3<br>f1=4, f2=Line4<br><br><br><hr
- width="100%"></pre>
-<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
- href="home.htm">Go
+<pre>TOTAL_ERRORS=3<br>I=0, ROW_OFFSET=5, CODE=2290, MSG=ORA-02290: check constraint (SYSTEM.CHECK1) violated<br><br>I=1, ROW_OFFSET=6, CODE=1400, MSG=ORA-01400: cannot insert NULL into ("SYSTEM"."TEST_TAB"."F1")<br><br>I=2, ROW_OFFSET=1, CODE=1, MSG=ORA-00001: unique constraint (SYSTEM.IND001) violated<br><br>f1=1, f2=Line1<br>f1=2, f2=Line2<br>f1=3, f2=Line3<br>f1=4, f2=Line4<br><br><hr width="100%"></pre>
+<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a href="home.htm">Go
 Home</a></center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<p>Copyright © 1996-2022, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>
 <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
@@ -59,7 +35,14 @@ Home</a></center>
 for
 any purpose is hereby granted without fee, provided that the above
 copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE 
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING 
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL
+ THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR 
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF 
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR 
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR 
+PERFORMANCE OF THIS SOFTWARE.</i>
 </p>
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -69,5 +52,6 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
-</html>
+
+
+</body></html>

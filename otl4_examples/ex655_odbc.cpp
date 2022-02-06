@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -49,7 +53,7 @@ void insert()
  char tmp[32];
 
  for(OTL_BIGINT i=BIGINT_VAL1;i<=BIGINT_VAL1+100;++i){
-  int ndx=(int)(i-BIGINT_VAL1);
+  int ndx=static_cast<int>(i-BIGINT_VAL1);
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1400) // VC++ 8.0 or higher
   sprintf_s(tmp,sizeof(tmp),"Name%d",ndx);
@@ -77,7 +81,7 @@ void select()
              ); 
    // create select stream
  
- OTL_BIGINT f1;
+ OTL_BIGINT f1=0;
  char f2[31];
 
  i<<BIGINT_VAL1+8

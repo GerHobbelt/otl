@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -22,7 +26,7 @@ void insert1()
  o.set_flush(false); // set the auto-flush flag to OFF.
 
 o.open(200, // buffer size
-       "insert into test_tab values(:f1<float>,:f2<char[31]>)", 
+       "insert into test_tab values(:f1<int>,:f2<char[31]>)", 
            // SQL statement
        db // connect object
       );
@@ -38,7 +42,7 @@ o.open(200, // buffer size
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  o<<(float)i<<tmp;
+  o<<i<<tmp;
   if(i%55==0)
    throw "Throwing an exception";
  }
@@ -56,7 +60,7 @@ void insert2()
  o.set_flush(false); // set the auto-flush flag to OFF.
 
 o.open(200, // buffer size
-       "insert into test_tab values(:f1<float>,:f2<char[31]>)", 
+       "insert into test_tab values(:f1<int>,:f2<char[31]>)", 
            // SQL statement
        db // connect object
       );
@@ -72,7 +76,7 @@ o.open(200, // buffer size
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  o<<(float)i<<tmp;
+  o<<i<<tmp;
 //  if(i%55==0)
 //   throw "Throwing an exception";
  }
@@ -91,7 +95,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
  char f2[31];
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8

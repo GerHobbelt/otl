@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #define OTL_ORA8I // Compile OTL 4/OCI8
 #define OTL_STL // Turn on STL
 #include <otlv4.h> // include the OTL 4 header file
@@ -46,14 +50,14 @@ void plsql(void)
   if(t1.is_null(i))
    cout<<"T1["<<i<<"]=NULL"<<endl;
   else
-   cout<<"T1["<<i<<"]="<<t1.v[i]<<endl;
+    cout<<"T1["<<i<<"]="<<t1.v[static_cast<size_t>(i)]<<endl;
 
  cout<<endl<<endl<<"T2_Len="<<t2.len()<<endl;
  for(int j=0;j<t2.len();++j)
   if(t2.is_null(j))
    cout<<"T2["<<j<<"]=NULL"<<endl;
   else
-   cout<<"T2["<<j<<"]="<<t2.v[j]<<endl;
+    cout<<"T2["<<j<<"]="<<t2.v[static_cast<size_t>(j)]<<endl;
 
 }
 
@@ -63,7 +67,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (db,

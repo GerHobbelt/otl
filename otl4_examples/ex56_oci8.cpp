@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -108,7 +112,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ int f1=0;
  otl_lob_stream lob; // Stream for reading CLOB
 
  i<<4; // assigning :f = 4
@@ -120,6 +124,8 @@ void select()
   cout<<"f1="<<f1<<endl;
   i>>lob; // initializing CLOB stream by reading the CLOB reference 
           // into the otl_lob_stream from the otl_stream.
+  if(f1==4 || f1==8)
+    lob.setInitialReadOffset(30000);
   int n=0;
   while(!lob.eof()){ // read while not "end-of-file" -- end of CLOB
    ++n;
@@ -138,7 +144,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (
