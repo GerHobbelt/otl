@@ -1,6 +1,6 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.468,
-// Copyright (C) 1996-2022, Sergei Kuchin (skuchin@gmail.com)
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.469,
+// Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
 // and/or distribute this software for any purpose with or without fee
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401D4L)
+#define OTL_VERSION_NUMBER (0x0401D5L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -5131,7 +5131,14 @@ public:
       OTL_STRNCPY_S(OTL_RCAST(char *, stm_text), sizeof(stm_text), sqlstm,
                     sizeof(stm_text) - 1);
 #else
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
       strncpy(OTL_RCAST(char *, stm_text), sqlstm, sizeof(stm_text));
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic pop
+#endif
+
       stm_text[sizeof(stm_text) - 1] = 0;
 #endif
 #else
