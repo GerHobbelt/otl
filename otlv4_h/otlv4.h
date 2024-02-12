@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.469,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.471,
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401D5L)
+#define OTL_VERSION_NUMBER (0x0401D7L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -5142,7 +5142,13 @@ public:
       stm_text[sizeof(stm_text) - 1] = 0;
 #endif
 #else
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
       strncpy(OTL_RCAST(char *, stm_text), sqlstm, sizeof(stm_text));
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic pop
+#endif
       stm_text[sizeof(stm_text) - 1] = 0;
 #endif
     }
@@ -15371,7 +15377,7 @@ OTL_THROWS_OTL_EXCEPTION:
       sc.init(sc.get_max_size());
 #endif
 #if defined(OTL_FREETDS_ODBC_WORKAROUNDS)
-    if (!auto_commit_)
+    if (!auto_commit_ && connected)
       rollback();
 #endif
 #if defined(OTL_ROLLS_BACK_BEFORE_LOGOFF)
