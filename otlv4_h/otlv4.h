@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.473,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.474,
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401D9L)
+#define OTL_VERSION_NUMBER (0x0401DAL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -352,7 +352,7 @@
 #define OTL_SPRINTF_S sprintf_s
 #else
 #ifndef OTL_STRCAT_S
-#define OTL_STRCAT_S(dest, dest_sz, src)  (dest[static_cast<std::size_t>(dest_sz-1)]=0, strncat(dest, src, static_cast<std::size_t>(dest_sz-1)))
+#define OTL_STRCAT_S(dest, dest_sz, src) (strncat(dest, src, static_cast<std::size_t>(dest_sz-1)))
 #endif // OTL_STRCAT_S
 #ifndef OTL_STRCPY_S
 #define OTL_STRCPY_S(dest, dest_sz, src) (dest[static_cast<std::size_t>(dest_sz-1)]=0, strncpy(dest, src, static_cast<std::size_t>(dest_sz-1)))
@@ -369,16 +369,18 @@
 
 #if defined(__GNUC__)
 #define OTL_SPRINTF_S_ATTRIBUTE __attribute__ ((format (printf, 3, 4)))
+#elif defined(__clang__)
+#define OTL_SPRINTF_S_ATTRIBUTE __attribute__ ((__format__ (__printf__, 3, 4)))
 #else
 #define OTL_SPRINTF_S_ATTRIBUTE
 #endif
 
-int otl_sprintf_s(char* dest, size_t /* dest_sz */, const char* fmt, ...) OTL_SPRINTF_S_ATTRIBUTE;
+int otl_sprintf_s(char* dest, size_t dest_sz, const char* fmt, ...) OTL_SPRINTF_S_ATTRIBUTE;
 
-inline int otl_sprintf_s(char* dest, size_t /* dest_sz */, const char* fmt, ...){
+inline int otl_sprintf_s(char* dest, size_t dest_sz, const char* fmt, ...){
   va_list vl;
   va_start(vl, fmt);
-  int res = vsprintf(dest, fmt, vl);
+  int res = vsnprintf(dest, dest_sz, fmt, vl);
   va_end(vl);
   return res;
 }
