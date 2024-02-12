@@ -1,6 +1,6 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.475,
-// Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.476,
+// Copyright (C) 1996-2023, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
 // and/or distribute this software for any purpose with or without fee
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401DBL)
+#define OTL_VERSION_NUMBER (0x0401DCL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -66,10 +66,12 @@
 #endif
 
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__<=407) && (__GNUC__*100+__GNUC_MINOR__>=404)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>=701)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #endif
 
@@ -5128,6 +5130,7 @@ public:
                     sizeof(stm_text) - 1);
 #else
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-truncation"
 #endif
       strncpy(OTL_RCAST(char *, stm_text), sqlstm, sizeof(stm_text));
@@ -5139,6 +5142,7 @@ public:
 #endif
 #else
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstringop-truncation"
 #endif
       strncpy(OTL_RCAST(char *, stm_text), sqlstm, sizeof(stm_text));
@@ -11680,6 +11684,7 @@ public:
   };
 
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__==408)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 
@@ -11745,6 +11750,7 @@ public:
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>=705)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
       SQLPOINTER temp = OTL_SCAST(SQLPOINTER,SQL_AUTOCOMMIT_OFF);
@@ -11811,6 +11817,7 @@ inline void otl_special_convert_char_to_SQLWCHAR
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>=407)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
   OTL_NODISCARD int rlogon(const char*username, const char *passwd,
