@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.471,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.472,
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401D7L)
+#define OTL_VERSION_NUMBER (0x0401D8L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -28076,11 +28076,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
           OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                         desc.get_ptr()[0].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
           otl_strcat(sql_stm, "BEGIN ");
           otl_strcat(sql_stm, full_name);
@@ -28126,11 +28137,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
           OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                         desc.get_ptr()[0].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
           otl_strcat(sql_stm, "BEGIN ");
           otl_strcat(sql_stm, temp_buf2);
@@ -28240,11 +28262,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
             OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                           desc.get_ptr()[i].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
           otl_strcat(sql_stm, temp_buf2);
         }
@@ -28299,11 +28332,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
             OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                           desc.get_ptr()[i].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
           otl_strcat(sql_stm, temp_buf2);
         }
@@ -28346,11 +28390,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
         OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                       desc.get_ptr()[i].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
         otl_strcat(sql_stm, temp_buf2);
       }
@@ -28381,11 +28436,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
         OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                       desc.get_ptr()[i].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
         otl_strcat(sql_stm, temp_buf2);
       }
