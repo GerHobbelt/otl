@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.474,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.475,
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401DAL)
+#define OTL_VERSION_NUMBER (0x0401DBL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -355,11 +355,11 @@
 #define OTL_STRCAT_S(dest, dest_sz, src) (strncat(dest, src, static_cast<std::size_t>(dest_sz-1)))
 #endif // OTL_STRCAT_S
 #ifndef OTL_STRCPY_S
-#define OTL_STRCPY_S(dest, dest_sz, src) (dest[static_cast<std::size_t>(dest_sz-1)]=0, strncpy(dest, src, static_cast<std::size_t>(dest_sz-1)))
+#define OTL_STRCPY_S(dest, dest_sz, src) (strncpy(dest, src, static_cast<std::size_t>(dest_sz-1)),dest[static_cast<std::size_t>(dest_sz-1)]=0)
 #endif // OTL_STRCPY_S
 #ifndef OTL_STRNCPY_S
 #define OTL_STRNCPY_S(dest, dest_sz, src, count)                               \
-  ((void)(dest_sz),strncpy(dest, src, count))
+  ((void)(dest_sz),strncpy(dest, src, count),dest[static_cast<std::size_t>(count)]=0)
 #endif // OTL_STRNCPY_S
 
 #ifndef OTL_SPRINTF_S
