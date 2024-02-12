@@ -17,7 +17,7 @@
             Library Programmer's Guide</font></i></h1>
     </center>
     <center>
-      <h1>&nbsp;<i>OTL 4.0.468 (updated (16)) is now released, see&nbsp;<br>
+      <h1>&nbsp;<i>OTL 4.0.476 (updated (24)) is now released, see&nbsp;<br>
           "<a href="otl3_whatn.htm">what's new</a>"&nbsp; and the <a
             href="otl3_down.htm">download</a> instructions.</i></h1>
     </center>
@@ -29,6 +29,73 @@
           <tr>
             <td>
               <h1> <font size="+2"><a href="otl3_intro.htm">Introduction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -464,6 +531,73 @@
               <h1> <font size="+2"><a href="mailto:skuchin@gmail.com">Send
 me
 an
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1313,6 +1447,73 @@ an
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                           Discussion Board<br>
                         </big> (state your name in the <br>
                         posting, please)<br>
@@ -1326,7 +1527,7 @@ an
     </center>
     <p> </p>
     <hr width="100%">
-    <p>Copyright © 1996-2022, Sergei Kuchin, email: <a
+    <p>Copyright © 1996-2023, Sergei Kuchin, email: <a
         href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
         href="mailto:skuchin@gmail.com">skuchin@gmail.com
         <script language="JavaScript"><!-- hide from old browsers
