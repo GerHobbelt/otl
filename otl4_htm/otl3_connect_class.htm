@@ -1,40 +1,40 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=ISO-8859-1">
-    <meta name="Author" content="Sergei Kuchin">
-    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
-      [Netscape]">
-    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
-      API, C++, Template Library">
-    <title>OTL 4.0 connect class</title>
-  </head>
-  <body>
-    <center>
-      <h1>OTL 4.0, OTL connect class</h1>
-    </center>
-    <h1> <a name="otl_connect_class"></a>OTL connect class</h1>
-    This class encapsulates <i>connect </i>functions: connect,
-    disconnect, commit, roll back, etc. In other words, the otl_connect
-    class is the class for creating and handling <i>connect</i> objects
-    together with transaction management.
-    <pre><font size="+2">class otl_connect{&nbsp;<br>public:<br></font></pre>
-    <table style="text-align: left; width: 100%;" border="1"
-      cellpadding="2" cellspacing="2">
-      <tbody>
-        <tr>
-          <td style="vertical-align: top;"><span style="font-style:
-              italic;">Function / Data member</span><br>
-          </td>
-          <td style="vertical-align: top;"><span style="font-style:
-              italic;">Description</span><br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top; font-family: monospace;">
-            <pre>int connected;</pre>
-          </td>
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0 connect class</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, OTL connect class</h1>
+    </center>
+    <h1> <a name="otl_connect_class"></a>OTL connect class</h1>
+    This class encapsulates <i>connect </i>functions: connect,
+    disconnect, commit, roll back, etc. In other words, the otl_connect
+    class is the class for creating and handling <i>connect</i> objects
+    together with transaction management.
+    <pre><font size="+2">class otl_connect{&nbsp;<br>public:<br></font></pre>
+    <table style="text-align: left; width: 100%;" cellspacing="2"
+      cellpadding="2" border="1">
+      <tbody>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">Function / Data member</span><br>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">Description</span><br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">
+            <pre>int connected;</pre>
+          </td>
           <td style="vertical-align: top;"> <i><a name="connected"></a>Connection
 
 
@@ -48,24 +48,35 @@
 
 
 
-            </i>flag which shows whether the object is connected to the
-            database or not. The flag only shows that the otl_connect
-            object was successfully connected to the database. If the
-            database connection under the otl_connect object is closed,
-            the flag would still be set to 1. In order to check out
-            whether the database connection is still open or not, a
-            "heartbeat" database round-trip needs to be made, say, a
-            "SELECT &lt;current time&gt; FROM &lt;dual table&gt;", or an
-            actual, application related SQL statement. In other words,
-            in order to detect a database connection loss, a database
-            "heartbeat" round trip needs to be coded up in the source
-            code.<br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top; font-family: monospace;">
-            <pre>static int otl_initialize <br>(const int&nbsp; threaded_mode=0);</pre>
-          </td>
+
+
+
+
+
+
+
+
+
+
+
+            </i>flag which shows whether the object is connected to the
+            database or not. The flag only shows that the otl_connect
+            object was successfully connected to the database. If the
+            database connection under the otl_connect object is closed,
+            the flag would still be set to 1. In order to check out
+            whether the database connection is still open or not, a
+            "heartbeat" database round-trip needs to be made, say, a
+            "SELECT &lt;current time&gt; FROM &lt;dual table&gt;", or an
+            actual, application related SQL statement. In other words,
+            in order to detect a database connection loss, a database
+            "heartbeat" round trip needs to be coded up in the source
+            code.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">
+            <pre>static int otl_initialize <br>(const int&nbsp; threaded_mode=0);</pre>
+          </td>
           <td style="vertical-align: top;"> <a name="otl_initialize"></a>Static
 (in
 class)
@@ -81,19 +92,30 @@ OTL
 
 
 
-            environment. It needs to be called only once at the
-            beginning of the program before making the very first
-            connection to the database. The <i>threaded_mode </i>is a
-            parameter for specifying if the program is running in the
-            multi-threaded mode but it does not automatically guarantee
-            thread safety, because OTL does not set any mutex locks or
-            critical sections. Threaded_mode = 1 means the
-            multi-threaded mode, 0 -- the single threaded mode.</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top; font-family: monospace;">
-            <pre>static int otl_terminate(void);</pre>
-          </td>
+
+
+
+
+
+
+
+
+
+
+
+            environment. It needs to be called only once at the
+            beginning of the program before making the very first
+            connection to the database. The <i>threaded_mode </i>is a
+            parameter for specifying if the program is running in the
+            multi-threaded mode but it does not automatically guarantee
+            thread safety, because OTL does not set any mutex locks or
+            critical sections. Threaded_mode = 1 means the
+            multi-threaded mode, 0 -- the single threaded mode.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">
+            <pre>static int otl_terminate(void);</pre>
+          </td>
           <td style="vertical-align: top;"> <a name="otl_terminate"></a>Static
 (in
 class)
@@ -110,19 +132,30 @@ Oracle
 
 
 
-            OCI environment. It needs to be called only once at the end
-            of the program after closing the very last database
-            connection. This function is just a wrapper around the
-            OCITerminate() call. Usually, in multi-threaded programs, in
-            order to be able to terminate/end the main thread of
-            control, otl_terminate needs to be called, because it
-            detaches the process from the OCI client side shared memory,
-            and does something else, that is not well documented.</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top; font-family: monospace;">
-            <pre>void cancel(void);</pre>
-          </td>
+
+
+
+
+
+
+
+
+
+
+
+            OCI environment. It needs to be called only once at the end
+            of the program after closing the very last database
+            connection. This function is just a wrapper around the
+            OCITerminate() call. Usually, in multi-threaded programs, in
+            order to be able to terminate/end the main thread of
+            control, otl_terminate needs to be called, because it
+            detaches the process from the OCI client side shared memory,
+            and does something else, that is not well documented.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">
+            <pre>void cancel(void);</pre>
+          </td>
           <td style="vertical-align: top;"><a name="cancel"></a><i>OTL/OCI8/9/10/11
 
 
@@ -131,52 +164,63 @@ Oracle
 
 
 
-              only<b>. </b></i>Cancel any operation / database call,
-            executing / active in the connect object / database session.
-            Say, the database session is in the <i>active </i>state,
-            or, in other words, has a running SQL statement in a thread.
-            This function can be called from another thread, to cancel
-            the execution of the SQL statement asynchronously. Right
-            after the cancel() call returns, the first thread will raise
-            an otl_exception with the following message: <i>user
-              requested cancel of current operation.</i> </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>void change_password(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Parameter</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char* user_name
-                  </td>
-                  <td style="vertical-align: top;">user name<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;"> const char*
-                    old_password,</td>
-                  <td style="vertical-align: top;">old password<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;"> const char*
-                    new_password</td>
-                  <td style="vertical-align: top;">new password<br>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <br>
-          </td>
+
+
+
+
+
+
+
+
+
+
+
+              only<b>. </b></i>Cancel any operation / database call,
+            executing / active in the connect object / database session.
+            Say, the database session is in the <i>active </i>state,
+            or, in other words, has a running SQL statement in a thread.
+            This function can be called from another thread, to cancel
+            the execution of the SQL statement asynchronously. Right
+            after the cancel() call returns, the first thread will raise
+            an otl_exception with the following message: <i>user
+              requested cancel of current operation.</i> </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void change_password(...);<br></pre>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char* user_name
+                  </td>
+                  <td style="vertical-align: top;">user name<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> const char*
+                    old_password,</td>
+                  <td style="vertical-align: top;">old password<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> const char*
+                    new_password</td>
+                  <td style="vertical-align: top;">new password<br>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+          </td>
           <td style="vertical-align: top;"><a name="change_password"></a><i>OTL/OCI8/9/10/11
 
 
@@ -185,23 +229,34 @@ Oracle
 
 
 
-              only</i>. This function changes Oracle user's passwords.
-            The program needs to attach to an Oracle server, and only
-            then this function can be called</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>void set_transaction_isolation_level<br>(const long int level);</pre>
-          </td>
-          <td style="vertical-align: top;"><a
-              name="set_transaction_isolation_level"></a>Sets
-            transaction isolation level. <i>OTL/DB2-CLI, OTL/ODBC only</i>.
-            The function allows the user to set the following levels:
-            READ COMMITTED, READ UNCOMMITTED, REPEATABLE READ,
-            SERIALIZABLE. For more detail on the transaction isolation
-            levels, see the regular database manuals.<br>
-            <br>
-            OTL/ODBC and OTL/DB2-CLI define the following global
+
+
+
+
+
+
+
+
+
+
+
+              only</i>. This function changes Oracle user's passwords.
+            The program needs to attach to an Oracle server, and only
+            then this function can be called</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void set_transaction_isolation_level<br>(const long int level);</pre>
+          </td>
+          <td style="vertical-align: top;"><a
+              name="set_transaction_isolation_level"></a>Sets
+            transaction isolation level. <i>OTL/DB2-CLI, OTL/ODBC only</i>.
+            The function allows the user to set the following levels:
+            READ COMMITTED, READ UNCOMMITTED, REPEATABLE READ,
+            SERIALIZABLE. For more detail on the transaction isolation
+            levels, see the regular database manuals.<br>
+            <br>
+            OTL/ODBC and OTL/DB2-CLI define the following global
             constants, which can be used as substitutes for the <i>level
 
 
@@ -209,20 +264,31 @@ Oracle
 
 
 
-            </i>parameter of the function:<br>
-            <br>
-            <ul>
-              <li> <b>otl_tran_read_uncommitted - </b>READ UNCOMITTED</li>
-              <li> <b>otl_tran_read_committed - </b>READ COMITTED</li>
-              <li> <b>otl_tran_repetable_read -</b>REPEATABLE READ</li>
-              <li><b>otl_tran_serializable - </b>SERIALIZABLE</li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre><span style="font-family: monospace;">void set_max_long_size<br>(const int amax_size);</span></pre>
-          </td>
+
+
+
+
+
+
+
+
+
+
+
+            </i>parameter of the function:<br>
+            <br>
+            <ul>
+              <li> <b>otl_tran_read_uncommitted - </b>READ UNCOMITTED</li>
+              <li> <b>otl_tran_read_committed - </b>READ COMITTED</li>
+              <li> <b>otl_tran_repetable_read -</b>REPEATABLE READ</li>
+              <li><b>otl_tran_serializable - </b>SERIALIZABLE</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><span style="font-family: monospace;">void set_max_long_size<br>(const int amax_size);</span></pre>
+          </td>
           <td style="vertical-align: top;"><a name="set_max_long_size"></a>Set
 the
 maximum
@@ -238,66 +304,77 @@ with
 
 
 
-            Large Objects: <a
-              href="otl3_bind_variables.htm#varchar_long">varchar_long</a>,
-            <a href="otl3_bind_variables.htm#raw_long">raw_long</a>, <a
-              href="otl3_bind_variables.htm#clob">clob</a> and <a
-              href="otl3_bind_variables.htm#blob">blob</a>. This
-            function needs to be called in order to increase the buffer
-            size (default size is 32767).</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top; font-family: monospace;">
-            <pre>int get_max_long_size(void);</pre>
-          </td>
-          <td style="vertical-align: top;">Get the maximum buffer size
-            for operations with Large Objects: <a
-              href="otl3_bind_variables.htm#varchar_long">varchar_long</a>,
-            <a href="otl3_bind_variables.htm#varchar_long">raw_long</a>,
-            <a href="otl3_bind_variables.htm#clob">clob</a> and <a
-              href="otl3_bind_variables.htm#blob">blob</a>.</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top; font-family: monospace;">
-            <pre>void set_cursor_type<br>(const int acursor_type=0);</pre>
-          </td>
-          <td style="vertical-align: top;">This function works in <span
-              style="font-style: italic;">OTL 4.0/ODBC and OTL
-              4.0/DB2-CLI only</span>, and it has not effect in OTL
-            4.0/OCIx. Sets the cursor type. Once the cursor type is set,
-            the setting will be propagated to all SELECT statements
-            opened via the <a href="otl3_stream_class.htm">otl_stream</a>
-            class in the current connect object.<br>
-            <br>
-            <font size="-1">The following cursor types are available
-              (for more detail, see the ODBC Programmer's Guide, or the
-              DB2 CLI Programmer's Guide):</font><br>
-            <ul>
-              <li> <font size="-1">SQL_CURSOR_FORWARD_ONLY (default
-                  setting)</font></li>
-              <li> <font size="-1">SQL_CURSOR_STATIC</font></li>
-              <li> <font size="-1">SQL_CURSOR_KEYSET_DRIVEN</font></li>
-              <li> <font size="-1">SQL_CURSOR_DYNAMIC</font></li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top; font-family: monospace;">
-            <pre><a name="set_timeout"></a>void set_timeout<br>(const int atimeout=0);</pre>
-          </td>
-          <td style="vertical-align: top;">This function works in <span
-              style="font-style: italic;">OTL 4.0/ODBC only</span>, and
-            has no effect in OTL 4.0/OCIx, or OTL 4.0/DB2-CLI. It sets
-            the timeout for the current connect object. Once the timeout
-            is set, the setting will be effective for all SQL statements
-            opened in the current connect object. The time unit for the
-            function is 1 second, e.g. setting 60 means the timeout of 1
-            minute.<br>
-            <br>
-            In OCIx, a different technique is used to simulate timeouts:
-            create a worker thread that will execute your SQL statement,
-            and a control thread with a timer. If the timer goes off and
-            the SQL statement is still executing, the control thread can
+
+
+
+
+
+
+
+
+
+
+
+            Large Objects: <a
+              href="otl3_bind_variables.htm#varchar_long">varchar_long</a>,
+            <a href="otl3_bind_variables.htm#raw_long">raw_long</a>, <a
+              href="otl3_bind_variables.htm#clob">clob</a> and <a
+              href="otl3_bind_variables.htm#blob">blob</a>. This
+            function needs to be called in order to increase the buffer
+            size (default size is 32767).</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">
+            <pre>int get_max_long_size(void);</pre>
+          </td>
+          <td style="vertical-align: top;">Get the maximum buffer size
+            for operations with Large Objects: <a
+              href="otl3_bind_variables.htm#varchar_long">varchar_long</a>,
+            <a href="otl3_bind_variables.htm#varchar_long">raw_long</a>,
+            <a href="otl3_bind_variables.htm#clob">clob</a> and <a
+              href="otl3_bind_variables.htm#blob">blob</a>.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">
+            <pre>void set_cursor_type<br>(const int acursor_type=0);</pre>
+          </td>
+          <td style="vertical-align: top;">This function works in <span
+              style="font-style: italic;">OTL 4.0/ODBC and OTL
+              4.0/DB2-CLI only</span>, and it has not effect in OTL
+            4.0/OCIx. Sets the cursor type. Once the cursor type is set,
+            the setting will be propagated to all SELECT statements
+            opened via the <a href="otl3_stream_class.htm">otl_stream</a>
+            class in the current connect object.<br>
+            <br>
+            <font size="-1">The following cursor types are available
+              (for more detail, see the ODBC Programmer's Guide, or the
+              DB2 CLI Programmer's Guide):</font><br>
+            <ul>
+              <li> <font size="-1">SQL_CURSOR_FORWARD_ONLY (default
+                  setting)</font></li>
+              <li> <font size="-1">SQL_CURSOR_STATIC</font></li>
+              <li> <font size="-1">SQL_CURSOR_KEYSET_DRIVEN</font></li>
+              <li> <font size="-1">SQL_CURSOR_DYNAMIC</font></li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top; font-family: monospace;">
+            <pre><a name="set_timeout"></a>void set_timeout<br>(const int atimeout=0);</pre>
+          </td>
+          <td style="vertical-align: top;">This function works in <span
+              style="font-style: italic;">OTL 4.0/ODBC only</span>, and
+            has no effect in OTL 4.0/OCIx, or OTL 4.0/DB2-CLI. It sets
+            the timeout for the current connect object. Once the timeout
+            is set, the setting will be effective for all SQL statements
+            opened in the current connect object. The time unit for the
+            function is 1 second, e.g. setting 60 means the timeout of 1
+            minute.<br>
+            <br>
+            In OCIx, a different technique is used to simulate timeouts:
+            create a worker thread that will execute your SQL statement,
+            and a control thread with a timer. If the timer goes off and
+            the SQL statement is still executing, the control thread can
             call otl_connect::<a href="otl3_connect_class.htm#cancel">cancel</a>()
 on
 
@@ -307,23 +384,51 @@ on
 
 
 
-            the same connect object that is being used to execute the
-            SQL statement. <br>
-            <br>
-            With OTL 4.0/DB2 CLI, the same worker thread technique can
-            be used, only otl_stream::<a
-              href="otl3_stream_class.htm#cancel">cancel</a>() should be
-            called on the otl_stream object.<br>
-            <br>
-            In the future, if the OCI or the DB2 CLI provides similar
-            functionality, this function may be implemented. <br>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>otl_connect<br>(const char* connect_str,<br>const int auto_commit=0);</pre>
-          </td>
+
+
+
+
+
+
+
+
+
+
+
+            the same connect object that is being used to execute the
+            SQL statement. <br>
+            <br>
+            With OTL 4.0/DB2 CLI, the same worker thread technique can
+            be used, only otl_stream::<a
+              href="otl3_stream_class.htm#cancel">cancel</a>() should be
+            called on the otl_stream object.<br>
+            <br>
+            In the future, if the OCI or the DB2 CLI provides similar
+            functionality, this function may be implemented. <br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><a name="set_lob_prefetch_size"></a><tt>void
+              set_lob_prefetch_size</tt><tt><br>
+              (const int prefetch_size=0);</tt><br>
+          </td>
+          <td valign="top"><i>OTL/</i><i><a
+                href="otl3_compile.htm#OTL_ORA11G_R2">OCI11GR2</a></i><i>/</i><i><a
+                href="otl3_compile.htm#OTL_ORA12C">OCI12C</a></i> only.
+            Sets the <code>OCI_ATTR_DEFAULT_LOBPREFETCH_SIZE</code>
+            attribute for the session. The value of this attribute will
+            indicate the default prefetch data size for a LOB locator.
+            This enables you to enable prefetching for all the LOB
+            locators fetched in the session. Default value for this
+            attribute is zero (no prefetch of LOB data).<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>otl_connect<br>(const char* connect_str,<br>const int auto_commit=0);</pre>
+          </td>
           <td style="vertical-align: top;"> <a name="constructor"></a>General
 constructor.
 It
@@ -339,74 +444,85 @@ and
 
 
 
-            then calls the <a href="otl3_connect_class.htm#rlogon">rlogon()</a>
-            function. </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>void rlogon(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Parameter</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char*
-                    connect_str</td>
-                  <td style="vertical-align: top;">connect string<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;"> const int
-                    auto_commit=0</td>
-                  <td style="vertical-align: top;">auto commit flag<br>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-          <td style="vertical-align: top;"> <a name="rlogon"></a>Logs
-            on / connects to the database.<br>
-            <br>
-            <big><font size="-1"><big>OTL 4.0/OCIx, OTL 4.0/ODBC, and
-                  OTL 4.0/DB2-CLI have different styles of <i>connect
-                    strings:<br>
-                  </i></big></font></big>
-            <ul>
-              <big> </big>
-              <li><big><font size="-1"><big>OTL 4.0/OCIx style<br>
-                      <br>
-                    </big></font></big></li>
-              <big> </big>
-              <ul>
-                <big> </big>
-                <li><big><font size="-1"><big>"USER/PASSWORD" (for local
-                        Oracle connections)</big></font></big></li>
-                <big> </big>
-                <li><big><font size="-1"><big>"USER/PASSWORD@TNS_ALIAS"
-                        (for remote Oracle connections via SQL*Net)<br>
-                        <br>
-                      </big></font></big></li>
-                <big> </big>
-              </ul>
-              <big> </big>
-              <li><big><font size="-1"><big>OTL 4.0/ODBC and OTL
-                      4.0/DB2-CLI style<br>
-                      <br>
-                    </big></font></big></li>
-              <big> </big>
-              <ul>
-                <big> </big>
-                <li><big> <font size="-1"><big>"USER/PASSWORD/@DSN"
-                        (Oracle-like style for ODBC or DB2-CLI
-                        connections)</big></font></big></li>
-                <big> </big>
+
+
+
+
+
+
+
+
+
+
+
+            then calls the <a href="otl3_connect_class.htm#rlogon">rlogon()</a>
+            function. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void rlogon(...);<br></pre>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char*
+                    connect_str</td>
+                  <td style="vertical-align: top;">connect string<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> const int
+                    auto_commit=0</td>
+                  <td style="vertical-align: top;">auto commit flag<br>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td style="vertical-align: top;"> <a name="rlogon"></a>Logs
+            on / connects to the database.<br>
+            <br>
+            <big><font size="-1"><big>OTL 4.0/OCIx, OTL 4.0/ODBC, and
+                  OTL 4.0/DB2-CLI have different styles of <i>connect
+                    strings:<br>
+                  </i></big></font></big>
+            <ul>
+              <big> </big>
+              <li><big><font size="-1"><big>OTL 4.0/OCIx style<br>
+                      <br>
+                    </big></font></big></li>
+              <big> </big>
+              <ul>
+                <big> </big>
+                <li><big><font size="-1"><big>"USER/PASSWORD" (for local
+                        Oracle connections)</big></font></big></li>
+                <big> </big>
+                <li><big><font size="-1"><big>"USER/PASSWORD@TNS_ALIAS"
+                        (for remote Oracle connections via SQL*Net)<br>
+                        <br>
+                      </big></font></big></li>
+                <big> </big>
+              </ul>
+              <big> </big>
+              <li><big><font size="-1"><big>OTL 4.0/ODBC and OTL
+                      4.0/DB2-CLI style<br>
+                      <br>
+                    </big></font></big></li>
+              <big> </big>
+              <ul>
+                <big> </big>
+                <li><big> <font size="-1"><big>"USER/PASSWORD@DSN"
+                        (Oracle-like style for ODBC or DB2-CLI
+                        connections)</big></font></big></li>
+                <big> </big>
                 <li><big> <font size="-1"><big>"DSN=value;UID=value;PWD=value"
 
 
@@ -415,94 +531,109 @@ and
 
 
 
-                        (ODBC-like style for ODBC or DB2-CLI connection)</big></font></big></li>
-                <big> </big>
-              </ul>
-              <big> </big>
-            </ul>
-            <font size="-1"><big><a name="AT_IN_CONNECT_STR"></a>In
-                OTL/ODBC/OCI8/OCI8i/OCI9i/OCI10g/OCI11g, it is possible
-                for a&nbsp; password value to have a "@" (commercial at
-                character) in it. In order to specify a "@" in a
-                password, the character has to be prefixed&nbsp; with a
-                "<span style="font-weight: bold;">\</span>", for
-                example: "userid/pass\\@word@DSN", or
-                "UID=scott;PWD=ti\\@ger;DSN=mssql" (in these examples,
-                "\\" was used because the examples show C++ string
-                literals).</big><br>
-              <br>
-            </font><a name="auto_commit"></a>The auto_commit parameter
-            in this function is used for setting the connection
-            "auto-commit" mode. This means that every single SQL
-            statement, executed in the connection, will be automatically
-            committed. This auto-commit mode has nothing to do with the
-            <a href="otl3_stream_class.htm#set_commit">otl_stream
-              auto-commit</a> mode. In order to set the mode to
-            "auto-commit", the auto_commit parameter needs to be set to
-            1. By default, it is 0, meaning that "auto-commit" is off.<br>
-            <br>
-            In Oracle 7, ODBC and DB2-CLI, this mode is called
-            "auto-commit". In Oracle 8/8i/9i, it is called
-            "commit-on-success." It is not quite clear why in Oracle 8
-            the term was changed to "commit-on-success" and pushed from
-            the level of the connection down to the level of the SQL
-            statement execution.<br>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><tt>void rlogon(Lda_Def*
-              lda);</tt> </td>
-          <td style="vertical-align: top;"> <a name="attach7"></a>Logs
-            on / connect to / attach to the primary database connection,
-            which was made in Pro*C/C++ or any other third-party
-            library. This function works for <b><i>OTL/OCI7</i></b>
-            only, and it helps to make transition from the legacy
-            environment to the OTL environment smoother. See also
-            example <a href="otl3_ex58.htm">58</a>.<br>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><tt>void rlogon(...);<br>
-            </tt>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Parameter</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">HENV henv</td>
-                  <td style="vertical-align: top;">
-                    <p>environment handle<tt><br>
-                      </tt></p>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">HDBC hdbc</td>
-                  <td style="vertical-align: top;">database connect
-                    handle </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const int
-                    auto_commit=0</td>
-                  <td style="vertical-align: top;">connect auto-commit
-                    mode </td>
-                </tr>
-              </tbody>
-            </table>
-            <tt><br>
-            </tt> </td>
+
+
+
+
+
+
+
+
+
+
+
+                        (ODBC-like style for ODBC or DB2-CLI connection)</big></font></big></li>
+                <big> </big>
+              </ul>
+              <big> </big>
+            </ul>
+            <font size="-1"><big><a name="AT_IN_CONNECT_STR"></a>In
+                OTL/ODBC/OCI8/OCI8i/OCI9i/OCI10g/OCI11g, it is possible
+                for a&nbsp; password value to have a "@" (commercial at
+                character) in it. In order to specify a "@" in a
+                password<font size="-1">, or in a<font size="-1"> <font
+                      size="-1">UID</font></font></font>, the character
+                has to be prefixed&nbsp; with a "<span
+                  style="font-weight: bold;">\</span>", for example:
+                "userid/pass\\@word@DSN", or
+                "UID=scott;PWD=ti\\@ger;DSN=mssql", <font size="-1">or&nbsp;</font></big></font><font
+              size="-1"><big><font size="-1"><font size="-1"><big>
+                      "UID=scott\\@servername;PWD=ti\\@ger;DSN=mssql"</big></font>.
+                  <font size="-1">I</font></font>n these examples, "\\"
+                was used because the examples show C++ string literals.</big><br>
+              <br>
+            </font><a name="auto_commit"></a>The auto_commit parameter
+            in this function is used for setting the connection
+            "auto-commit" mode. This means that every single SQL
+            statement, executed in the connection, will be automatically
+            committed. This auto-commit mode has nothing to do with the
+            <a href="otl3_stream_class.htm#set_commit">otl_stream
+              auto-commit</a> mode. In order to set the mode to
+            "auto-commit", the auto_commit parameter needs to be set to
+            1. By default, it is 0, meaning that "auto-commit" is off.<br>
+            <br>
+            In Oracle 7, ODBC and DB2-CLI, this mode is called
+            "auto-commit". In Oracle 8/8i/9i, it is called
+            "commit-on-success." It is not quite clear why in Oracle 8
+            the term was changed to "commit-on-success" and pushed from
+            the level of the connection down to the level of the SQL
+            statement execution.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><tt>void rlogon(Lda_Def*
+              lda);</tt> </td>
+          <td style="vertical-align: top;"> <a name="attach7"></a>Logs
+            on / connects to / attaches to the primary database
+            connection, which was made in Pro*C/C++ or any other
+            third-party library. This function works for <b><i>OTL/OCI7</i></b>
+            only, and it helps to make transition from the legacy
+            environment to the OTL environment smoother. See also
+            example <a href="otl3_ex58.htm">58</a>.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><tt>void rlogon(...);<br>
+            </tt>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">HENV henv</td>
+                  <td style="vertical-align: top;">
+                    <p>environment handle<tt><br>
+                      </tt></p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">HDBC hdbc</td>
+                  <td style="vertical-align: top;">database connect
+                    handle </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const int
+                    auto_commit=0</td>
+                  <td style="vertical-align: top;">connect auto-commit
+                    mode </td>
+                </tr>
+              </tbody>
+            </table>
+            <tt><br>
+            </tt> </td>
           <td style="vertical-align: top;"><a name="ext_logon_odbc"></a>Logs
 on
 /
-connect
+connects
 to
 /
 
@@ -512,57 +643,6 @@ to
 
 
 
-            attach to the primary database connection, which was made in
-            straight ODBC, DB2-CLI, or any other third-party (ODBC, or
-            DB2-CLI based) library. This function works for <span
-              style="font-style: italic;">OTL/ODBC, DB2-CLI</span> <span
-              style="font-style: italic;">only</span>, and it helps make
-            transition from the legacy environment to the OTL
-            environment smoother.<br>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><span style="font-family:
-              monospace;"><a name="rlogon3"></a>void rlogon(...);</span><br>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Function</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const <a
-                      href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a>*
-                    username</td>
-                  <td style="vertical-align: top;">user name</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const
-                    OTL_UNICODE_CHAR_TYPE* passwd</td>
-                  <td style="vertical-align: top;">password</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const
-                    OTL_UNICODE_CHAR_TYPE* dsn</td>
-                  <td style="vertical-align: top;">data source name</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const int
-                    auto_commit=0 </td>
-                  <td style="vertical-align: top;">connect auto-commit
-                    mode</td>
-                </tr>
-              </tbody>
-            </table>
-            <br>
-          </td>
-          <td style="vertical-align: top;"><a name="logon_odbc_unicode"></a><i>OTL/ODBC,
 
 
 
@@ -570,64 +650,191 @@ to
 
 
 
-              DB2-CLI</i> <span style="font-style: italic;">only. </span>Under
-#define
+
+
+
+
+            attaches to the primary database connection, which was made
+            in straight ODBC, DB2-CLI, or any other third-party (ODBC,
+            or DB2-CLI based) library. This function works for <span
+              style="font-style: italic;">OTL/ODBC, DB2-CLI</span> <span
+              style="font-style: italic;">only</span>, and it helps make
+            transition from the legacy environment to the OTL
+            environment smoother.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family:
+              monospace;"><a name="rlogon3"></a>void rlogon(...);</span><br>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Function</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const <a
+                      href="otl3_compile.htm#OTL_UNICODE_CHAR_TYPE">OTL_UNICODE_CHAR_TYPE</a>*
+                    username</td>
+                  <td style="vertical-align: top;">user name</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const
+                    OTL_UNICODE_CHAR_TYPE* passwd</td>
+                  <td style="vertical-align: top;">password</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const
+                    OTL_UNICODE_CHAR_TYPE* dsn</td>
+                  <td style="vertical-align: top;">data source name</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const int
+                    auto_commit=0 </td>
+                  <td style="vertical-align: top;">connect auto-commit
+                    mode</td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+            <br>
+          </td>
+          <td style="vertical-align: top;"><i><a
+                name="logon_odbc_unicode"></a>OTL/ODBC, DB2-CLI</i> <span
+              style="font-style: italic;">only. </span>Under #define <a
+              href="otl3_compile.htm#OTL_UNICODE_EXCEPTION_AND_RLOGON">OTL_UNICODE_EXCEPTION_AND_RLOGON</a>.<br>
+            <br>
+            Logs on / connects to the database (DSN / database alias).
+            This function works <span style="font-style: italic;"></span>
+            when Unicode ODBC driver functions are enabled (via the C++
+            standard<span style="font-family: monospace;"> #define
+              UNICODE, #define _UNICODE). </span>The function allows
+            Unicode user names, passwords, and DSNs to be passed into
+            the ODBC layer.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top">
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-family: monospace;"><a name="rlogon4"></a>void
 
 
 
 
 
-
-
-            <a href="otl3_compile.htm#OTL_UNICODE_EXCEPTION_AND_RLOGON">OTL_UNICODE_EXCEPTION_AND_RLOGON</a>.<br>
-            <br>
-            Logs on / connect to the database (DSN / database alias).
-            This function works <span style="font-style: italic;"></span>
-            when Unicode ODBC driver functions are enabled (via the C++
-            standard<span style="font-family: monospace;"> #define
-              UNICODE, #define _UNICODE). </span>The function allows
-            Unicode user names, passwords, and DSNs to be passed into
-            the ODBC layer.<br>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>otl_connect(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Parameter</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">HENV henv</td>
-                  <td style="vertical-align: top;">environment handle</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">HDBC hdbc</td>
-                  <td style="vertical-align: top;">database connect
-                    handle</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const int
-                    auto_commit=0</td>
-                  <td style="vertical-align: top;">connect auto-commit
-                    mode</td>
-                </tr>
-              </tbody>
-            </table>
-            <pre><br></pre>
-          </td>
-          <td style="vertical-align: top;"><a
-              name="ext_otl_connect_odbc"></a>General constructor:
-            attaches to the primary database connection, which was made
-            in straight ODBC, DB2-CLI, or any other third-party (ODBC,
+
+                      rlogon(...);</span><br>
+                    <table style="text-align: left; width: 100%;"
+                      cellspacing="2" cellpadding="2" border="1">
+                      <tbody>
+                        <tr>
+                          <td style="vertical-align: top;"><span
+                              style="font-style: italic;">Function</span><br>
+                          </td>
+                          <td style="vertical-align: top;"><span
+                              style="font-style: italic;">Description</span><br>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">const char*
+                            username</td>
+                          <td style="vertical-align: top;">user name</td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">const char*
+                            passwd</td>
+                          <td style="vertical-align: top;">password</td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">const char*
+                            dsn</td>
+                          <td style="vertical-align: top;">data source
+                            name</td>
+                        </tr>
+                        <tr>
+                          <td style="vertical-align: top;">const int
+                            auto_commit=0 </td>
+                          <td style="vertical-align: top;">connect
+                            auto-commit mode</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <br>
+                    <br>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td valign="top"><i>OTL/ODBC, DB2-CLI</i> <span
+              style="font-style: italic;">only. <br>
+              <br>
+            </span>When !defined(<a
+              href="otl3_compile.htm#OTL_UNICODE_EXCEPTION_AND_RLOGON">OTL_UNICODE_EXCEPTION_AND_RLOGON</a>)
+            &amp;&amp; <br>
+            (ODBCVER&gt;=0x300 || defined(<a
+              href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a>)).<br>
+            <br>
+            Logs on / connect to the database (DSN / database alias).
+            This function is available when #define
+            OTL_UNICODE_EXCEPTION_AND_LOGON is not enabled, for ODBC/
+            DB2 CLI drivers that support ODBC/DB2 CLI versions &gt;= 300
+            (not older than 25-27 years old in 2018)<span
+              style="font-family: monospace;">.</span> The function
+            allows one-byte character string user names, passwords, and
+            DSNs to be passed into the ODBC/DB2 CLI layer. The function
+            should be used when passwords have special characters.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>otl_connect(...);<br></pre>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">HENV henv</td>
+                  <td style="vertical-align: top;">environment handle</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">HDBC hdbc</td>
+                  <td style="vertical-align: top;">database connect
+                    handle</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const int
+                    auto_commit=0</td>
+                  <td style="vertical-align: top;">connect auto-commit
+                    mode</td>
+                </tr>
+              </tbody>
+            </table>
+            <pre><br></pre>
+          </td>
+          <td style="vertical-align: top;"><a
+              name="ext_otl_connect_odbc"></a>General constructor:
+            attaches to the primary database connection, which was made
+            in straight ODBC, DB2-CLI, or any other third-party (ODBC,
             or DB2-CLI based) library. This function works for <b><i>OTL/ODBC,
 
 
@@ -635,166 +842,177 @@ to
 
 
 
-                DB2-CLI</i></b> only, and it helps make transition from
-            the legacy environment to the OTL environment smoother. </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>void rlogon(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Parameter</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">OCIEnv* envhp</td>
-                  <td style="vertical-align: top;">pointer to the
-                    OCI8/8i/9i/10g/11g environment handle, which needs
-                    to be obtained by calling the <i>SQLEnvGet</i>
-                    function. </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;"> OCISvcCtx* svchp</td>
-                  <td style="vertical-align: top;">pointer to the
-                    OCI8/8i/9i/10g/11g service context handle, which
-                    needs to be obtained by calling the <i>SQLSvcCtxGet</i>
-                    function.</td>
-                </tr>
-              </tbody>
-            </table>
-            <br>
-          </td>
-          <td style="vertical-align: top;"><a name="attach8"></a><i
-              style="font-style: italic;">OCI8 / 8i / 9i / 10g / 11g</i><span
-              style="font-style: italic;"> only</span>. Logs on /
-            connect to / attach to the primary database connection,
-            which was made in Pro*C/C++ or any other third-party
-            library. It helps make integration of
-            OTL/OCI8/8i/9i/10/g/11g and the Pro*C/C++ environment smooth
-            and easy. In order to use this function in the Pro*C/C++
-            environment, #define OTL_ORA8_PROC needs to be set at the
-            beginning of the program. For more detail, see example <a
-              href="otl3_ex59.htm">59</a><br>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>void rlogon(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Parameter</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char*
-                    connect_str</td>
-                  <td style="vertical-align: top;">connect string<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const int
-                    aauto_commit=0</td>
-                  <td style="vertical-align: top;">auto commit flag<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char*
-                    xa_server_external_name=0</td>
-                  <td style="vertical-align: top;">XA server external
-                    name<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char*
-                    xa_server_internal_name=0,</td>
-                  <td style="vertical-align: top;">XA server internal
-                    name<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">bool
-                    threaded_mode=false</td>
-                  <td style="vertical-align: top;">under #define <a
-                      href="otl3_compile.htm#OTL_ORA_OCI_ENV_CREATE">OTL_ORA_OCI_ENV_CREATE</a></td>
-                </tr>
-              </tbody>
-            </table>
-            <br>
-          </td>
-          <td style="vertical-align: top;"><a name="rlogon_xa"></a><span
-              style="font-style: italic;">OTL/OCI8/8i/9i/10g/11g</span><b><i>
-              </i></b><span style="font-style: italic;">only</span><b><i>.
-              </i></b>Connects to the database and set the following
-            connection attributes that are required by the Oracle XA
-            Library: server external name, server internal name.<br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>void logoff();</pre>
-          </td>
-          <td style="vertical-align: top;"><a name="logoff"></a>Logs off
-            / disconnects from the database. In case if the primary
-            connection was done in Pro*C/C++ (OTL/OCIx), this function
-            just detaches from that connection without actually
-            disconnecting from the database. </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre><a name="server_attach"></a>void server_attach(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Parameter</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char* tnsname=0</td>
-                  <td style="vertical-align: top;">TNS name<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char*
-                    xa_server_external_name=0</td>
-                  <td style="vertical-align: top;">XA server external
-                    name<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;"> const char*
-                    xa_server_internal_name=0</td>
-                  <td style="vertical-align: top;">XA server internal
-                    name<br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;"> bool
-                    threaded_mode=false</td>
-                  <td style="vertical-align: top;">Under #define <a
-                      href="otl3_compile.htm#OTL_ORA_OCI_ENV_CREATE">OTL_ORA_OCI_ENV_CREATE</a></td>
-                </tr>
-              </tbody>
-            </table>
-            <pre><br><br></pre>
-          </td>
+
+
+
+
+
+
+
+
+
+
+
+                DB2-CLI</i></b> only, and it helps make transition from
+            the legacy environment to the OTL environment smoother. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void rlogon(...);<br></pre>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">OCIEnv* envhp</td>
+                  <td style="vertical-align: top;">pointer to the
+                    OCI8/8i/9i/10g/11g environment handle, which needs
+                    to be obtained by calling the <i>SQLEnvGet</i>
+                    function. </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> OCISvcCtx* svchp</td>
+                  <td style="vertical-align: top;">pointer to the
+                    OCI8/8i/9i/10g/11g service context handle, which
+                    needs to be obtained by calling the <i>SQLSvcCtxGet</i>
+                    function.</td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+          </td>
+          <td style="vertical-align: top;"><a name="attach8"></a><i
+              style="font-style: italic;">OCI8 / 8i / 9i / 10g / 11g</i><span
+              style="font-style: italic;"> only</span>. Logs on /
+            connect to / attach to the primary database connection,
+            which was made in Pro*C/C++ or any other third-party
+            library. It helps make integration of
+            OTL/OCI8/8i/9i/10/g/11g and the Pro*C/C++ environment smooth
+            and easy. In order to use this function in the Pro*C/C++
+            environment, #define OTL_ORA8_PROC needs to be set at the
+            beginning of the program. For more detail, see example <a
+              href="otl3_ex59.htm">59</a><br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void rlogon(...);<br></pre>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char*
+                    connect_str</td>
+                  <td style="vertical-align: top;">connect string<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const int
+                    aauto_commit=0</td>
+                  <td style="vertical-align: top;">auto commit flag<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char*
+                    xa_server_external_name=0</td>
+                  <td style="vertical-align: top;">XA server external
+                    name<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char*
+                    xa_server_internal_name=0,</td>
+                  <td style="vertical-align: top;">XA server internal
+                    name<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">bool
+                    threaded_mode=false</td>
+                  <td style="vertical-align: top;">under #define <a
+                      href="otl3_compile.htm#OTL_ORA_OCI_ENV_CREATE">OTL_ORA_OCI_ENV_CREATE</a></td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+          </td>
+          <td style="vertical-align: top;"><a name="rlogon_xa"></a><span
+              style="font-style: italic;">OTL/OCI8/8i/9i/10g/11g</span><b><i>
+              </i></b><span style="font-style: italic;">only</span><b><i>.
+              </i></b>Connects to the database and set the following
+            connection attributes that are required by the Oracle XA
+            Library: server external name, server internal name.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void logoff();</pre>
+          </td>
+          <td style="vertical-align: top;"><a name="logoff"></a>Logs off
+            / disconnects from the database. In case if the primary
+            connection was done in Pro*C/C++ (OTL/OCIx), this function
+            just detaches from that connection without actually
+            disconnecting from the database. </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="server_attach"></a>void server_attach(...);<br></pre>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char* tnsname=0</td>
+                  <td style="vertical-align: top;">TNS name<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char*
+                    xa_server_external_name=0</td>
+                  <td style="vertical-align: top;">XA server external
+                    name<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> const char*
+                    xa_server_internal_name=0</td>
+                  <td style="vertical-align: top;">XA server internal
+                    name<br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;"> bool
+                    threaded_mode=false</td>
+                  <td style="vertical-align: top;">Under #define <a
+                      href="otl3_compile.htm#OTL_ORA_OCI_ENV_CREATE">OTL_ORA_OCI_ENV_CREATE</a></td>
+                </tr>
+              </tbody>
+            </table>
+            <pre><br><br></pre>
+          </td>
           <td style="vertical-align: top;"> <a name="attach_detach"></a>Attaches
 
 
@@ -803,93 +1021,112 @@ to
 
 
 
-            to Oracle (<span style="font-style: italic;">OTL/OCI8/8i/9i/10g/11g</span><span
-              style="font-style: italic;"> only</span>). This function
-            is a wrapper around the ServerAttach function of the
-            OCI8/9/10/11. The main reason to have separate functions to
-            attach to the server and then begin a session is
-            performance. For more detail, see Oracle's regular manuals.
-            These functions, along with the <a
-              href="otl3_connect_class.htm#session_begin">session_begin</a>
-            and <a href="otl3_connect_class.htm#session_end">session_end</a>
-            functions, could be used for implementing a connection
-            management mechanism that is more efficient than the
-            traditional connection pooling. See also example <a
-              href="otl3_ex60.htm">60</a>.<br>
-            <br>
-            tnsname (TNS alias from TNSNAMES.ORA file) can be specified.
-            In order to connect to a remote Oracle server. For local
-            connections, tnsname defaults to 0. The function attaches to
-            the database server (local or remote). The following "server
-            attachment" attributes that are required by the Oracle XA
-            Library can be also specified.<br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre><a name="server_detach"></a>void server_detach();</pre>
-          </td>
-          <td style="vertical-align: top;"><span style="font-style:
-              italic;">OTL/OCI8/8i/9i/10g/11g</span><span
-              style="font-style: italic;"> only. </span>Detaches from
-            Oracle </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre><a name="session_begin"></a>void session_begin(...);<br></pre>
-            <table style="text-align: left; width: 431px; height:
-              206px;" border="1" cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Function</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char* username</td>
-                  <td style="vertical-align: top;">user name, e.g.
-                    "scott"</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char* password</td>
-                  <td style="vertical-align: top;">password, e.g.
-                    "tiger"</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const int
-                    auto_commit=0,</td>
-                  <td style="vertical-align: top;">session <a
-                      href="otl3_connect_class.htm#auto_commit">auto-commit</a>
-                    mode</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const int
-                    session_mode=OCI_DEFAULT</td>
-                  <td style="vertical-align: top;">OCI_SYSDBA -- in this
-                    mode, the user is authenticated for SYSDBA
-                    access.&nbsp; OCI_SYSOPER -- in this mode, the user
-                    is authenticated for SYSOPER access.<br>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <br>
-          </td>
-          <td style="vertical-align: top;">Begin / end Oracle 8 session
-            (<i style="font-style: italic;">OTL/OCI8/8i/9i/10g/11g</i><span
-              style="font-style: italic;"> only</span>). These functions
-            complement the server <a
-              href="otl3_connect_class.htm#attach_detach">attach/detach</a>
-            suite of functions, and are used to begin / end an Oracle 8
-            session. The main reason to have separate server
-            attach/detach and session begin/end groups of function is
-            performance. session_begin() is approximately 50-100 times
-            faster than the normal <a
-              href="otl3_connect_class.htm#rlogon">rlogon</a>(). These
-            functions, along with the <a
+
+
+
+
+
+
+
+
+
+
+
+            to Oracle (<span style="font-style: italic;">OTL/OCI8/8i/9i/10g/11g</span><span
+              style="font-style: italic;"> only</span>). This function
+            is a wrapper around the ServerAttach function of the
+            OCI8/9/10/11. The main reason to have separate functions to
+            attach to the server and then begin a session is
+            performance. For more detail, see Oracle's regular manuals.
+            These functions, along with the <a
+              href="otl3_connect_class.htm#session_begin">session_begin</a>
+            and <a href="otl3_connect_class.htm#session_end">session_end</a>
+            functions, could be used for implementing a connection
+            management mechanism that is more efficient than the
+            traditional connection pooling. See also example <a
+              href="otl3_ex60.htm">60</a>.<br>
+            <br>
+            tnsname (TNS alias from TNSNAMES.ORA file) can be specified.
+            In order to connect to a remote Oracle server. For local
+            connections, tnsname defaults to 0. The function attaches to
+            the database server (local or remote). The following "server
+            attachment" attributes that are required by the Oracle XA
+            Library can be also specified.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="server_detach"></a>void server_detach();</pre>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">OTL/OCI8/8i/9i/10g/11g</span><span
+              style="font-style: italic;"> only. </span>Detaches from
+            Oracle </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="session_begin"></a>void session_begin(...);<br></pre>
+            <table style="text-align: left; width: 431px; height:
+              206px;" cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Function</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char* username</td>
+                  <td style="vertical-align: top;">user name, e.g.
+                    "scott"</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char* password</td>
+                  <td style="vertical-align: top;">password, e.g.
+                    "tiger"</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const int
+                    auto_commit=0,</td>
+                  <td style="vertical-align: top;">session <a
+                      href="otl3_connect_class.htm#auto_commit">auto-commit</a>
+                    mode</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const int
+                    session_mode=OCI_DEFAULT</td>
+                  <td style="vertical-align: top;">OCI_SYSDBA -- in this
+                    mode, the user is authenticated for SYSDBA
+                    access.&nbsp; OCI_SYSOPER -- in this mode, the user
+                    is authenticated for SYSOPER access.<br>
+                    OCI_MIGRATE -- in this mode, the new user session
+                    context may be set in a service handle with a
+                    different server handle. </td>
+                </tr>
+                <tr>
+                  <td valign="top">OCISession* authp=nullptr<br>
+                  </td>
+                  <td valign="top">OCI session handle<br>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br>
+          </td>
+          <td style="vertical-align: top;">Begin / end Oracle 8 session
+            (<i style="font-style: italic;">OTL/OCI8/8i/9i/10g/11g</i><span
+              style="font-style: italic;"> only</span>). These functions
+            complement the server <a
+              href="otl3_connect_class.htm#attach_detach">attach/detach</a>
+            suite of functions, and are used to begin / end an Oracle 8
+            session. The main reason to have separate server
+            attach/detach and session begin/end groups of function is
+            performance. session_begin() is approximately 50-100 times
+            faster than the normal <a
+              href="otl3_connect_class.htm#rlogon">rlogon</a>(). These
+            functions, along with the <a
               href="otl3_connect_class.htm#attach_detach">server_attach</a>()
 and
 
@@ -901,6 +1138,17 @@ and
 
 
 
+
+
+
+
+
+
+
+
+
+
+
             <a href="otl3_connect_class.htm#server_detach">server_detach</a>()
 functions,
 could
@@ -913,48 +1161,65 @@ used
 
 
 
-            for implementing a connection management mechanism that is
-            several times more efficient [thus, more scalable] than the
-            traditional connection pooling.</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre><a name="session_end"></a>void session_end();</pre>
-          </td>
-          <td style="vertical-align: top;"><i style="font-style:
-              italic;">OTL/OCI8/8i/9i/10g/11g</i><span
-              style="font-style: italic;"> only. </span>Ends Oracle
-            session.<br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre><a name="session_reopen"></a>void session_reopen(...);<br></pre>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Parameter</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const int
-                    aauto_commit=0</td>
-                  <td style="vertical-align: top;">session <a
-                      href="otl3_connect_class.htm#auto_commit">auto-commit</a>
-                    mode</td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-          <td style="vertical-align: top;"><span style="font-style:
-              italic;">OTL/OCI8/8i/9i/10g/11g</span><span
-              style="font-style: italic;"> only</span>. Reopens session.
-            If a session was started via <a
+
+
+
+
+
+
+
+
+
+
+
+            for implementing a connection management mechanism that is
+            several times more efficient [thus, more scalable] than the
+            traditional connection pooling.<br>
+            <br>
+            For more detail on OCISession* and OCI_MIGRATE, see the <a
+href="https://docs.oracle.com/cd/B10501_01/appdev.920/a96584/oci15r13.htm">OCI
+
+              Relational Functions/OCISessionBegin</a>.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="session_end"></a>void session_end();</pre>
+          </td>
+          <td style="vertical-align: top;"><i style="font-style:
+              italic;">OTL/OCI8/8i/9i/10g/11g</i><span
+              style="font-style: italic;"> only. </span>Ends Oracle
+            session.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="session_reopen"></a>void session_reopen(...);<br></pre>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const int
+                    aauto_commit=0</td>
+                  <td style="vertical-align: top;">session <a
+                      href="otl3_connect_class.htm#auto_commit">auto-commit</a>
+                    mode</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+          <td style="vertical-align: top;"><span style="font-style:
+              italic;">OTL/OCI8/8i/9i/10g/11g</span><span
+              style="font-style: italic;"> only</span>. Reopens session.
+            If a session was started via <a
               href="otl3_connect_class.htm#session_begin">session_begin</a>()
 for
 
@@ -964,7 +1229,18 @@ for
 
 
 
-            a given <i>username/password</i> and then closed via <a
+
+
+
+
+
+
+
+
+
+
+
+            a given <i>username/password</i> and then closed via <a
               href="otl3_connect_class.htm#session_end">session_end</a>(),
 another
 session
@@ -980,145 +1256,225 @@ faster
 
 
 
-            for the same username/password via session_reopen(). This
-            function takes advantage of the fact that the username and
-            password attributes of the OCI8/9/10/11 internal connect
-            structure have been already set by the previous
-            session_begin() function call. If a session has been started
-            via session_reopen(), it can be closed by calling
-            session_end(). <br>
-            <br>
-            Also, see example <a href="otl3_ex61.htm">61</a><br>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre><a name="commit"></a>void commit();</pre>
-          </td>
-          <td style="vertical-align: top;">Commits transaction. In the
-            otl_connect object, Oracle, ODBC and DB2-CLI connections, by
-            default, are set to <i>auto-commit off. </i>This means
-            that all transactions need to be committed by explicitly
-            calling the commit() function. It is not recommended to use
-            connections that are set to <i>auto-commit on.<br>
-              <br>
-            </i>This function does not automatically flush any buffered
-            data (a.k.a. otl_stream <span style="font-style: italic;">dirty</span>
-            buffers)<span style="font-style: italic;"></span>, so you
+
+
+
+
+
+
+
+
+
+
+
+            for the same username/password via session_reopen(). This
+            function takes advantage of the fact that the username and
+            password attributes of the OCI8/9/10/11 internal connect
+            structure have been already set by the previous
+            session_begin() function call. If a session has been started
+            via session_reopen(), it can be closed by calling
+            session_end(). <br>
+            <br>
+            Also, see example <a href="otl3_ex61.htm">61</a><br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="commit"></a>void commit();</pre>
+          </td>
+          <td style="vertical-align: top;">Commits transaction. In the
+            otl_connect object, Oracle, ODBC and DB2-CLI connections, by
+            default, are set to <i>auto-commit off. </i>This means
+            that all transactions need to be committed by explicitly
+            calling the commit() function. It is not recommended to use
+            connections that are set to <i>auto-commit on.<br>
+              <br>
+            </i>This function does not automatically flush any buffered
+            data (a.k.a. otl_stream <span style="font-style: italic;">dirty</span>
+            buffers)<span style="font-style: italic;"></span>, so you
             must call <a href="otl3_stream_class.htm#flush">otl_stream::flush</a>()
 
 
-            on any open INSERT / UPDATE / DELETE / stored procedure call
-            (that modifies the database) first, otherwise the buffered
-            data may not be written to the database in time for the
-            commit.&nbsp; Note that there is an implicit call to flush()
-            in the otl_stream destructor, unless <a
+
+
+
+
+
+
+
+
+
+
+
+            on any open INSERT / UPDATE / DELETE / stored procedure call
+            (that modifies the database) first, otherwise the buffered
+            data may not be written to the database in time for the
+            commit.&nbsp; Note that there is an implicit call to flush()
+            in the otl_stream destructor, unless <a
               href="otl3_stream_class.htm#set_flush">otl_stream::set_flush</a>(false)
 
 
-            was called before the corresponding otl_stream was opened.<br>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><a style="font-family:
-              monospace;" name="commit_nowait"></a><span
-              style="font-family: monospace;">void commit_nowait();</span></td>
-          <td style="vertical-align: top;">Under #define <a
-              href="otl3_compile.htm#OTL_ORA10G_R2">OTL_ORA10G_R2</a><br>
-            Under #define<a href="otl3_compile.htm#OTL_ORA11G">
-              OTL_ORA11G</a><br>
-            <br>
-            Commits transaction asynchronously, same as commit and
-            forget / commit with no wait. Available only for Oracle 10g
-            Release 2 (Oracle 10.2) and higher. As soon as the rest of
-            the database vendors release a similar feature, it will be
-            implemented in OTL.</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>void rollback();</pre>
-          </td>
-          <td style="vertical-align: top;"><a name="rollback"></a>Rolls
-            back transaction.<br>
-            <br>
-            This function does not discard any buffered data (a.k.a.
-            otl_stream <span style="font-style: italic;">dirty</span>
-            buffers), so you must call <a
-              href="otl3_stream_class.htm#flush">otl_stream::flush</a>()
-            on any open INSERT / UPDATE / DELETE / stored procedure call
-            (that modifies the database) first, otherwise the buffered
-            data may still be written to the database despite the
-            rollback.&nbsp; Note that there is an implicit call to
-            flush() in the otl_stream destructor, unless <a
+
+
+
+
+
+
+
+
+
+
+
+            was called before the corresponding otl_stream was opened.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><a style="font-family:
+              monospace;" name="commit_nowait"></a><span
+              style="font-family: monospace;">void commit_nowait();</span></td>
+          <td style="vertical-align: top;">Under #define <a
+              href="otl3_compile.htm#OTL_ORA10G_R2">OTL_ORA10G_R2</a><br>
+            Under #define<a href="otl3_compile.htm#OTL_ORA11G">
+              OTL_ORA11G</a><br>
+            <br>
+            Commits transaction asynchronously, same as commit and
+            forget / commit with no wait. Available only for Oracle 10g
+            Release 2 (Oracle 10.2) and higher. As soon as the rest of
+            the database vendors release a similar feature, it will be
+            implemented in OTL.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void rollback();</pre>
+          </td>
+          <td style="vertical-align: top;"><a name="rollback"></a>Rolls
+            back transaction.<br>
+            <br>
+            This function does not discard any buffered data (a.k.a.
+            otl_stream <span style="font-style: italic;">dirty</span>
+            buffers), so you must call <a
+              href="otl3_stream_class.htm#flush">otl_stream::flush</a>()
+            on any open INSERT / UPDATE / DELETE / stored procedure call
+            (that modifies the database) first, otherwise the buffered
+            data may still be written to the database despite the
+            rollback.&nbsp; Note that there is an implicit call to
+            flush() in the otl_stream destructor, unless <a
               href="otl3_stream_class.htm#set_flush">otl_stream::set_flush</a>(false)
 
 
-            was called before the corresponding otl_stream was opened.</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre><a name="auto_commit_off"></a>void auto_commit_off();<br><a name="auto_commit_on"></a>void auto_commit_on();</pre>
-          </td>
-          <td style="vertical-align: top;">Sets otl_connect's <a
-              href="otl3_connect_class.htm#auto_commit">auto-commit</a>
-            OFF and ON, within one open session/connect. These two
-            functions are for partial backward compatibility only.</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>void set_stream_pool_size<br>(const int max_size=otl_max_default_pool_size);</pre>
-          </td>
-          <td style="vertical-align: top;"><a
-              name="set_stream_pool_size"></a>Sets the <a
-              href="otl3_stream_pooling.htm">otl_stream pool</a> size.
-            This function can be activated with #define <a
-              href="otl3_compile.htm#OTL_STREAM_POOLING_ON">OTL_STREAM_POOLING_ON,</a>
-            used together with #define <a
-              href="otl3_compile.htm#OTL_STL">OTL_STL</a> (or #define <a
-              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a>). If
-            OTL_STREAM_POOLING_ON is defined in the program, the
-            function body gets included into the target code. Also, a
-            default stream pool gets allocated as part the otl_connect
-            object, even if the function doesn't get called. Therefore,
-            a call to the function will reallocate all the resources,
-            allocated by the default stream pool, or by previous calls
-            to set_stream_pool_size().</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><span style="font-family:
-              monospace;">void stream_pool_enable();</span><br
-              style="font-family: monospace;">
-            <span style="font-family: monospace;">void
-              stream_pool_disable();</span><br style="font-family:
-              monospace;">
-            <span style="font-family: monospace;">bool
-              get_stream_pool_enabled_flag() const;</span><br>
-          </td>
+
+
+
+
+
+
+
+
+
+
+
+            was called before the corresponding otl_stream was opened.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre><a name="auto_commit_off"></a>void auto_commit_off();<br><a name="auto_commit_on"></a>void auto_commit_on();</pre>
+          </td>
+          <td style="vertical-align: top;">Sets otl_connect's <a
+              href="otl3_connect_class.htm#auto_commit">auto-commit</a>
+            OFF and ON, within one open session/connect. These two
+            functions are for partial backward compatibility only.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void set_stream_pool_size<br>(const int max_size=otl_max_default_pool_size);</pre>
+          </td>
+          <td style="vertical-align: top;"><a
+              name="set_stream_pool_size"></a>Sets the <a
+              href="otl3_stream_pooling.htm">otl_stream pool</a> size.
+            This function can be activated with #define <a
+              href="otl3_compile.htm#OTL_STREAM_POOLING_ON">OTL_STREAM_POOLING_ON,</a>
+            used together with #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> (or #define <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a>, or #define <a
+              href="otl3_compile.htm#OTL_UNICODE_STRING_TYPE">OTL_UNICODE_STRING_TYPE</a>).
+
+
+
+
+
+
+
+
+
+            If OTL_STREAM_POOLING_ON is defined in the program, the
+            function body gets included into the target code. Also, a
+            default stream pool gets allocated as part the otl_connect
+            object, even if the function doesn't get called. Therefore,
+            a call to the function will reallocate all the resources,
+            allocated by the default stream pool, or by previous calls
+            to set_stream_pool_size().<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top"><tt>void set_fetch_scroll_mode(bool
+              use_fetch_scroll=true);</tt><br>
+          </td>
+          <td valign="top"><a name="set_fetch_scroll_mode"></a>Sets the
+            "SQLFetchScroll" mode, meaning that otl_stream instances
+            opened under a given otl_connect will use SQLFetchScroll()
+            instead of SQLExtendedFetch(). This function can be
+            activated with #define <a
+href="otl3_compile.htm#OTL_ODBC_USES_SQL_FETCH_SCROLL_WHEN_SPECIFIED_IN_OTL_CONNECT">OTL_ODBC_USES_SQL_FETCH_SCROLL_WHEN_SPECIFIED_IN_OTL_CONNECT</a>.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family:
+              monospace;">void stream_pool_enable();</span><br
+              style="font-family: monospace;">
+            <span style="font-family: monospace;">void
+              stream_pool_disable();</span><br style="font-family:
+              monospace;">
+            <span style="font-family: monospace;">bool
+              get_stream_pool_enabled_flag() const;</span><br>
+          </td>
           <td style="vertical-align: top;"><a name="stream_pool_enable"></a>These
 
 
 
 
 
-            functions allow to enable / disable the stream pool at
-            runtime, as well as to get the "stream pool enabled" flag
-            (a.k.a. an ON/OFF switch). The functions can be activated
-            with #define <a
-              href="otl3_compile.htm#OTL_STREAM_POOLING_ON">OTL_STREAM_POOLING_ON,</a>
-            used together with #define <a
-              href="otl3_compile.htm#OTL_STL">OTL_STL</a> (or #define <a
-              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a>). If
-            OTL_STREAM_POOLING_ON is defined in the program, the
-            function bodies get included into the target code. <br>
-            <br>
-            "OTL stream pool enabled" flag is set to true by default.<br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><tt>void set_character_set<br>
-              (const int char_set=SQLCS_IMPLICIT);</tt></td>
+
+
+
+
+
+
+
+
+
+
+
+            functions allow to enable / disable the stream pool at
+            runtime, as well as to get the "stream pool enabled" flag
+            (a.k.a. an ON/OFF switch). The functions can be activated
+            with #define <a
+              href="otl3_compile.htm#OTL_STREAM_POOLING_ON">OTL_STREAM_POOLING_ON,</a>
+            used together with #define <a
+              href="otl3_compile.htm#OTL_STL">OTL_STL</a> (or #define <a
+              href="otl3_compile.htm#OTL_ACE">OTL_ACE</a>). If
+            OTL_STREAM_POOLING_ON is defined in the program, the
+            function bodies get included into the target code. <br>
+            <br>
+            "OTL stream pool enabled" flag is set to true by default.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><tt>void set_character_set<br>
+              (const int char_set=SQLCS_IMPLICIT);</tt></td>
           <td style="vertical-align: top;"><a name="set_character_set"></a>This
 
 
@@ -1127,72 +1483,83 @@ faster
 
 
 
-            function is available for OTL/<b><i>OCI8i/9i</i><span
-                style="font-style: italic;">/10g/11g</span></b> under
-            #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>
-            only. In Unicode OTL, the Oracle database default or
-            national character set is allowed to be set:<br>
-            <br>
-            <ul>
-              <li> SQLCS_IMPLICIT -- database default (implicit)
-                character set</li>
-              <li>SQLCS_NCHAR -- database national (second) character
-                set. <br>
-              </li>
-            </ul>
-            The default character set (SQLCS_IMPLICIT) needs to be set
-            when Unicode containers are used with the VARCHAR2, CHAR,
-            LONG, and CLOB column types. In the case if Unicode
-            containers are used with NVARCHAR2, NCAHR, and NCLOB
-            datatypes, the national character set (SQLCS_NCHAR) needs to
-            be set.<br>
-            <br>
-            SQLCS_IMPLICIT, and SQLCS_NCHAR are defined by the OCI
-            header files.<br>
-            <br>
-            Since this function is part of the otl_connect class, all
-            otl_streams, that gets opened via a concrete connect object,
-            will use the character set, that was set by the function.<br>
-            <br>
-            The semantic of :var&lt;<a
-              href="otl3_bind_variables.htm#char">char</a>[...]...&gt;
-            declaration of string bind variables was extended to
-            accomodate the Unicode strings. For example, char[20] means
-            a string of 19 double-byte Unicode characters, plus 19
-            double-byte possible surrogate characters, plus one
-            double-byte null terminator. It sounds a little complicated,
-            but that is just a reflection of a plethora of Unicode
-            standards, coding techniques. It is strongly recommended to
-            read the Unicode standards themselves, then the Oracle
-            implementations the Unicode. By the way, Oracle 8i and 9i
-            differ in that regard substantially.<br>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;">
-            <pre>void set_throw_on_sql_success_with_info<br>(const bool throw_flag=false);</pre>
-          </td>
-          <td style="vertical-align: top;"><a
-              name="set_throw_on_sql_success_with_info"></a><span
-              style="font-style: italic;">OTL/ODBC, OTL/DB2-CLI only</span>.
-            <br>
-            Under #define <a
-              href="otl3_compile.htm#OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO">OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO</a><br>
-            <br>
-            Sets the "OTL throws on SQL_SUCCESS_WITH_INFO"" flag. When
-            the flag is set, and SQLExecDirect() / SQLExecute() function
-            returns SQL_SUCCESS_WITH_INFO, OTL throws an otl_exception.
-            This is useful for communicating more information from the
-            SQL call, especially if the call is a call to a stored
-            procedure, or a Transact-SQL batch that may return more
-            diagnostic information than usual. The function is enabled
-            only when #define OTL_THROWS_ON_SQL_SUCCES_WITH_INFO is
-            defined.</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"> <tt>otl_connect&amp;
-              operator&lt;&lt;(const char* str);</tt></td>
+
+
+
+
+
+
+
+
+
+
+
+            function is available for OTL/<b><i>OCI8i/9i</i><span
+                style="font-style: italic;">/10g/11g</span></b> under
+            #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>
+            only. In Unicode OTL, the Oracle database default or
+            national character set is allowed to be set:<br>
+            <br>
+            <ul>
+              <li> SQLCS_IMPLICIT -- database default (implicit)
+                character set</li>
+              <li>SQLCS_NCHAR -- database national (second) character
+                set. <br>
+              </li>
+            </ul>
+            The default character set (SQLCS_IMPLICIT) needs to be set
+            when Unicode containers are used with the VARCHAR2, CHAR,
+            LONG, and CLOB column types. In the case if Unicode
+            containers are used with NVARCHAR2, NCAHR, and NCLOB
+            datatypes, the national character set (SQLCS_NCHAR) needs to
+            be set.<br>
+            <br>
+            SQLCS_IMPLICIT, and SQLCS_NCHAR are defined by the OCI
+            header files.<br>
+            <br>
+            Since this function is part of the otl_connect class, all
+            otl_streams, that gets opened via a concrete connect object,
+            will use the character set, that was set by the function.<br>
+            <br>
+            The semantic of :var&lt;<a
+              href="otl3_bind_variables.htm#char">char</a>[...]...&gt;
+            declaration of string bind variables was extended to
+            accomodate the Unicode strings. For example, char[20] means
+            a string of 19 double-byte Unicode characters, plus 19
+            double-byte possible surrogate characters, plus one
+            double-byte null terminator. It sounds a little complicated,
+            but that is just a reflection of a plethora of Unicode
+            standards, coding techniques. It is strongly recommended to
+            read the Unicode standards themselves, then the Oracle
+            implementations the Unicode. By the way, Oracle 8i and 9i
+            differ in that regard substantially.<br>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;">
+            <pre>void set_throw_on_sql_success_with_info<br>(const bool throw_flag=false);</pre>
+          </td>
+          <td style="vertical-align: top;"><a
+              name="set_throw_on_sql_success_with_info"></a><span
+              style="font-style: italic;">OTL/ODBC, OTL/DB2-CLI only</span>.
+            <br>
+            Under #define <a
+              href="otl3_compile.htm#OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO">OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO</a><br>
+            <br>
+            Sets the "OTL throws on SQL_SUCCESS_WITH_INFO"" flag. When
+            the flag is set, and SQLExecDirect() / SQLExecute() function
+            returns SQL_SUCCESS_WITH_INFO, OTL throws an otl_exception.
+            This is useful for communicating more information from the
+            SQL call, especially if the call is a call to a stored
+            procedure, or a Transact-SQL batch that may return more
+            diagnostic information than usual. The function is enabled
+            only when #define OTL_THROWS_ON_SQL_SUCCES_WITH_INFO is
+            defined.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <tt>otl_connect&amp;
+              operator&lt;&lt;(const char* str);</tt></td>
           <td style="vertical-align: top;"><a name="operator_ll"></a>Sends
 a
 string
@@ -1203,17 +1570,28 @@ string
 
 
 
-            to the otl_connect object. If the object is not connected to
-            a database then the string is a connection string in the
-            "userid/passwd@db" format and it makes the object connect to
-            the database. If the object is already connected, the string
-            is a static SQL statement that the connect object executes
-            immediately.<br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"> <tt>otl_connect&amp;
-              operator&lt;&lt;=(const char* str);</tt></td>
+
+
+
+
+
+
+
+
+
+
+
+            to the otl_connect object. If the object is not connected to
+            a database then the string is a connection string in the
+            "userid/passwd@db" format and it makes the object connect to
+            the database. If the object is already connected, the string
+            is a static SQL statement that the connect object executes
+            immediately.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <tt>otl_connect&amp;
+              operator&lt;&lt;=(const char* str);</tt></td>
           <td style="vertical-align: top;"><a name="operator_lle"></a>Sends
 a
 
@@ -1223,17 +1601,28 @@ a
 
 
 
-            string to the otl_connect object. The connect object saves
-            the string for further use with operator <a
-              href="otl3_connect_class.htm#operator_gg">&gt;&gt;</a>().
-            The string is an SQL statement with placeholders that could
-            be sent to an otl_stream object. In other words, this
-            operator is a deferred SQL statement.<br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><tt>otl_connect&amp;
-              operator&gt;&gt;(otl_stream&amp; s);</tt></td>
+
+
+
+
+
+
+
+
+
+
+
+            string to the otl_connect object. The connect object saves
+            the string for further use with operator <a
+              href="otl3_connect_class.htm#operator_gg">&gt;&gt;</a>().
+            The string is an SQL statement with placeholders that could
+            be sent to an otl_stream object. In other words, this
+            operator is a deferred SQL statement.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><tt>otl_connect&amp;
+              operator&gt;&gt;(otl_stream&amp; s);</tt></td>
           <td style="vertical-align: top;"><a name="operator_gg"></a>Sends
 the
 
@@ -1243,45 +1632,56 @@ the
 
 
 
-            SQL statement that was saved with operator <a
-              href="#operator_lle">&lt;&lt;=</a> to an otl_stream
-            object. It makes the otl_stream object open the SQL
-            statement. If there was no SQL statement previously saved by
-            the connect object, the connect object sends the following
-            string to the otl_stream: <span style="font-family:
-              monospace;">"*** INVALID COMMAND ***"</span>., which
-            causes an SQL parse error in the otl_stream, which ends up
-            in an otl_exception.</td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><tt>long direct_exec(...);<br>
-            </tt>
-            <table style="text-align: left; width: 100%;" border="1"
-              cellpadding="2" cellspacing="2">
-              <tbody>
-                <tr>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Parameter</span><br>
-                  </td>
-                  <td style="vertical-align: top;"><span
-                      style="font-style: italic;">Description</span><br>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">const char *sqlstm<br>
-                  </td>
-                  <td style="vertical-align: top;">SQL Statement</td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: top;">int ignore_error = <a
-                      href="otl3_exception_class.htm#enum">otl_exception::enabled</a><br>
-                  </td>
-                  <td style="vertical-align: top;">"ignore error" flag</td>
-                </tr>
-              </tbody>
-            </table>
-            <tt><br>
-            </tt></td>
+
+
+
+
+
+
+
+
+
+
+
+            SQL statement that was saved with operator <a
+              href="#operator_lle">&lt;&lt;=</a> to an otl_stream
+            object. It makes the otl_stream object open the SQL
+            statement. If there was no SQL statement previously saved by
+            the connect object, the connect object sends the following
+            string to the otl_stream: <span style="font-family:
+              monospace;">"*** INVALID COMMAND ***"</span>., which
+            causes an SQL parse error in the otl_stream, which ends up
+            in an otl_exception.</td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><tt>long direct_exec(...);<br>
+            </tt>
+            <table style="text-align: left; width: 100%;"
+              cellspacing="2" cellpadding="2" border="1">
+              <tbody>
+                <tr>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Parameter</span><br>
+                  </td>
+                  <td style="vertical-align: top;"><span
+                      style="font-style: italic;">Description</span><br>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">const char *sqlstm<br>
+                  </td>
+                  <td style="vertical-align: top;">SQL Statement</td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: top;">int ignore_error = <a
+                      href="otl3_exception_class.htm#enum">otl_exception::enabled</a><br>
+                  </td>
+                  <td style="vertical-align: top;">"ignore error" flag</td>
+                </tr>
+              </tbody>
+            </table>
+            <tt><br>
+            </tt></td>
           <td style="vertical-align: top;"><a name="direct_exec"></a>Directly
 executes
 a
@@ -1293,28 +1693,39 @@ static
 
 
 
-            SQL statement. The function returns the Rows Processed Count
-            (RPC).<br>
-            <br>
-            <p>The direct_exec() function may return the following
-              values of the <i>long int </i>datatype: </p>
-            <ul>
-              <li><b>-1</b>, if otl_exceptions are disabled (the second
-                parameter is set to otl_exception::disabled) and the
-                underlying API returns an error.</li>
-              <li><b>&gt;=0</b>, if the SQL command to be executed is
-                finished succesfully. Actually, the function returns the
-                <i>ROWS PROCESSED COUNT&nbsp; </i>(RPC) in case of
-                INSERT, UPDATE or DELETE statements</li>
-            </ul>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"> <tt>void syntax_check<br>
-              (const char *sqlstm // SQL Statement</tt><tt><br>
-              );</tt><br>
-            <br>
-          </td>
+
+
+
+
+
+
+
+
+
+
+
+            SQL statement. The function returns the Rows Processed Count
+            (RPC).<br>
+            <br>
+            <p>The direct_exec() function may return the following
+              values of the <i>long int </i>datatype: </p>
+            <ul>
+              <li><b>-1</b>, if otl_exceptions are disabled (the second
+                parameter is set to otl_exception::disabled) and the
+                underlying API returns an error.</li>
+              <li><b>&gt;=0</b>, if the SQL command to be executed is
+                finished succesfully. Actually, the function returns the
+                <i>ROWS PROCESSED COUNT&nbsp; </i>(RPC) in case of
+                INSERT, UPDATE or DELETE statements</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"> <tt>void syntax_check<br>
+              (const char *sqlstm // SQL Statement</tt><tt><br>
+              );</tt><br>
+            <br>
+          </td>
           <td style="vertical-align: top;"> <a name="syntax_check"></a>Parses
 a
 static
@@ -1329,13 +1740,24 @@ an
 
 
 
-            <a href="otl3_exception_class.htm">otl_exception</a> if
-            there is an SQL error.<br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><tt>void
-              set_connection_mode(const int connection_mode);</tt></td>
+
+
+
+
+
+
+
+
+
+
+
+            <a href="otl3_exception_class.htm">otl_exception</a> if
+            there is an SQL error.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><tt>void
+              set_connection_mode(const int connection_mode);</tt></td>
           <td style="vertical-align: top;"><a name="set_connection_mode"></a>When
 #define
 
@@ -1349,14 +1771,25 @@ an
 
 
 
-            <a href="otl3_compile.htm#OTL_ODBC_MULTI_MODE">OTL_ODBC_MULTI_MODE</a>
-            is enabled, OTL allows ODBC connections to more than one
-            database type to be made from the same program at the same
-            time without enabling any dababase specific #define's, which
-            would be in conflict.<br>
-            <br>
-            Sets connection mode before otl_connect::rlogon() is called.
-            See the <a
+
+
+
+
+
+
+
+
+
+
+
+            <a href="otl3_compile.htm#OTL_ODBC_MULTI_MODE">OTL_ODBC_MULTI_MODE</a>
+            is enabled, OTL allows ODBC connections to more than one
+            database type to be made from the same program at the same
+            time without enabling any dababase specific #define's, which
+            would be in conflict.<br>
+            <br>
+            Sets connection mode before otl_connect::rlogon() is called.
+            See the <a
               href="otl3_connect_class.htm#connection_mode_list">connection
 
 
@@ -1365,61 +1798,72 @@ an
 
 
 
-              mode list</a> for mode detail.<br>
-            <br>
-            <a name="connection_mode_list"></a>The following is the list
-            of available ODBC connection mode integer constants that can
-            be used in calls to set_connection_mode() (ODBC driver
-            specific restrictions like the stream buffer size /
-            unsupported bulk interface still apply, see example <a
-              href="otl4_ex675.htm">675</a> for more detail):<br>
-            <br>
-            <ul>
-              <li>OTL_DEFAULT_ODBC_CONNECT (equivalent of #define <a
-                  href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>). The
-                following database types can be used with the OTL
-                default ODBC multi-mode when the corresponding ODBC
-                driver is used:<br>
-                <br>
-              </li>
-              <ul>
-                <li>DB2</li>
-                <li>FireBird</li>
-                <li>Informix</li>
-                <li>MS ACCESS</li>
-                <li>Oracle</li>
-                <li>SAP/MAX DB<br>
-                </li>
-                <li>SQLite<br>
-                </li>
-                <li>Sybase</li>
-                <li>Any other compatible ODBC source<br>
-                  <br>
-                </li>
-              </ul>
-              <li>OTL_TIMESTEN_ODBC_CONNECT (equivalent of #define <a
-                  href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a> + ODBC
-                connection to TimesTen on the backend)<br>
-                <br>
-              </li>
-              <li>OTL_MSSQL_2005_ODBC_CONNECT (equivalent of #define <a
-                  href="otl3_compile.htm#OTL_ODBC_MSSQL_2005">OTL_ODBC_MSSQL_2005</a>)<br>
-                <br>
-              </li>
-              <li>OTL_POSTGRESQL_ODBC_CONNECT (equivalent of #define <a
-                  href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a>)<br>
-                <br>
-              </li>
-              <li>OTL_ENTERPRISE_DB_ODBC_CONNECT (equivalent of #define
-                <a href="otl3_compile.htm#OTL_ODBC_ENTERPRISEDB">OTL_ODBC_ENTERPRISEDB</a>)<br>
-                <br>
-              </li>
-              <li>OTL_MYODBC35_ODBC_CONNECT (equivalent of #define <a
-                  href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a> +
-                #define <a
-                  href="otl3_compile.htm#OTL_ODBC_SELECT_STM_EXECUTE_BEFORE_DESCRIBE">OTL_ODBC_SELECT_STM_EXECUTE_BEFORE_DESCRIBE</a>)<br>
-                <br>
-              </li>
+
+
+
+
+
+
+
+
+
+
+
+              mode list</a> for mode detail.<br>
+            <br>
+            <a name="connection_mode_list"></a>The following is the list
+            of available ODBC connection mode integer constants that can
+            be used in calls to set_connection_mode() (ODBC driver
+            specific restrictions like the stream buffer size /
+            unsupported bulk interface still apply, see example <a
+              href="otl4_ex675.htm">675</a> for more detail):<br>
+            <br>
+            <ul>
+              <li>OTL_DEFAULT_ODBC_CONNECT (equivalent of #define <a
+                  href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a>). The
+                following database types can be used with the OTL
+                default ODBC multi-mode when the corresponding ODBC
+                driver is used:<br>
+                <br>
+              </li>
+              <ul>
+                <li>DB2</li>
+                <li>FireBird</li>
+                <li>Informix</li>
+                <li>MS ACCESS</li>
+                <li>Oracle</li>
+                <li>SAP/MAX DB<br>
+                </li>
+                <li>SQLite<br>
+                </li>
+                <li>Sybase</li>
+                <li>Any other compatible ODBC source<br>
+                  <br>
+                </li>
+              </ul>
+              <li>OTL_TIMESTEN_ODBC_CONNECT (equivalent of #define <a
+                  href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a> + ODBC
+                connection to TimesTen on the backend)<br>
+                <br>
+              </li>
+              <li>OTL_MSSQL_2005_ODBC_CONNECT (equivalent of #define <a
+                  href="otl3_compile.htm#OTL_ODBC_MSSQL_2005">OTL_ODBC_MSSQL_2005</a>)<br>
+                <br>
+              </li>
+              <li>OTL_POSTGRESQL_ODBC_CONNECT (equivalent of #define <a
+                  href="otl3_compile.htm#OTL_ODBC_POSTGRESQL">OTL_ODBC_POSTGRESQL</a>)<br>
+                <br>
+              </li>
+              <li>OTL_ENTERPRISE_DB_ODBC_CONNECT (equivalent of #define
+                <a href="otl3_compile.htm#OTL_ODBC_ENTERPRISEDB">OTL_ODBC_ENTERPRISEDB</a>)<br>
+                <br>
+              </li>
+              <li>OTL_MYODBC35_ODBC_CONNECT (equivalent of #define <a
+                  href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a> +
+                #define <a
+                  href="otl3_compile.htm#OTL_ODBC_SELECT_STM_EXECUTE_BEFORE_DESCRIBE">OTL_ODBC_SELECT_STM_EXECUTE_BEFORE_DESCRIBE</a>)<br>
+                <br>
+              </li>
               <li><a name="OTL_MSSQL_2008_ODBC_CONNECT"></a>OTL_MSSQL_2008_ODBC_CONNECT
 (equivalent
 of
@@ -1433,98 +1877,154 @@ of
 
 
 
-                <a href="otl3_compile.htm#OTL_ODBC_MSSQL_2008">OTL_ODBC_MSSQL_2008</a>)</li>
-            </ul>
-            <br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><tt>int
-              get_connection_mode();</tt><span style="font-family:
-              monospace;"></span></td>
-          <td style="vertical-align: top;">Under #define <a
-              href="otl3_compile.htm#OTL_ODBC_MULTI_MODE">OTL_ODBC_MULTI_MODE</a>.<br>
-            <br>
-            Gets connection mode for the otl_connect object.<br>
-          </td>
-        </tr>
-        <tr>
-          <td style="vertical-align: top;"><span style="font-family:
-              monospace;"><a name="set_prog_name"></a>void
-              set_prog_name(const char* prog_name);</span><br>
-          </td>
-          <td style="vertical-align: top;">Under #define <a
-              href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a>. <br>
-            <br>
-            Sets the program name that shows up as the "Application
-            Name" column in the output of the "list applications"
-            command in DB2 command line processsor. The function should
-            be called before the connection to the database is made
-            (before rlogon() is called), for example:<br>
-            <br style="font-family: monospace;">
-            <span style="font-family: monospace;">&nbsp;&nbsp;
-              otl_connect db;</span><br style="font-family: monospace;">
-            <span style="font-family: monospace;">&nbsp;&nbsp; ...</span><br
-              style="font-family: monospace;">
-            <span style="font-family: monospace;">&nbsp;&nbsp;
-              db.set_prog_name("MYAPP");</span><br style="font-family:
-              monospace;">
-            <span style="font-family: monospace;">&nbsp;&nbsp; ...</span><br
-              style="font-family: monospace;">
-            <span style="font-family: monospace;">&nbsp;&nbsp;
-              db.rlogon("scott/tiger@db2sql");</span><br>
-            <span style="font-family: monospace;">&nbsp;&nbsp; ...</span><br>
-            <br>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <ul>
-      <ul>
-      </ul>
-    </ul>
-    <pre><font size="+2">}; // end of otl_connect</font></pre>
-    <center>
-      <hr width="100%">
-      <p><a href="otl3_bind_variables.htm">Prev</a> <a
-          href="otl3_exception_class.htm">Next</a><a href="otl3.htm">Contents</a><a
-          href="home.htm">Go Home</a> <br>
-      </p>
-      <div style="text-align: left;">Copyright &copy; 1996-2012, Sergei
-        Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
-        <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
-          <script language="JavaScript"><!-- hide from old browsers
- var modDate = new Date(document.lastModified)
- document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100);
- //-->
-</script> </a>.<br>
-      </div>
-    </center>
-    <script language="JavaScript"><!-- hide from old browsers
- var modDate = new Date(document.lastModified)
- document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
- //-->
- </script>
-    <p></p>
-    <p><i>Permission to use, copy, modify and redistribute this document
-        for any purpose is hereby granted without fee, provided that the
-        above copyright notice appear in all copies. THE SOFTWARE IS
-        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
-        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
-        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
-        USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
-    <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-    <script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-5456201-1");
-pageTracker._trackPageview();</script>com
-  </body>
-</html>
+
+
+
+
+
+
+
+
+
+
+
+                <a href="otl3_compile.htm#OTL_ODBC_MSSQL_2008">OTL_ODBC_MSSQL_2008</a>)</li>
+            </ul>
+            <br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><tt>int
+              get_connection_mode();</tt><span style="font-family:
+              monospace;"></span></td>
+          <td style="vertical-align: top;">Under #define <a
+              href="otl3_compile.htm#OTL_ODBC_MULTI_MODE">OTL_ODBC_MULTI_MODE</a>.<br>
+            <br>
+            Gets connection mode for the otl_connect object.<br>
+          </td>
+        </tr>
+        <tr>
+          <td style="vertical-align: top;"><span style="font-family:
+              monospace;"><a name="set_prog_name"></a>void
+              set_prog_name(const char* prog_name);</span><br>
+          </td>
+          <td style="vertical-align: top;">Under #define <a
+              href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a>. <br>
+            <br>
+            Sets the program name that shows up as the "Application
+            Name" column in the output of the "list applications"
+            command in DB2 command line processsor. The function should
+            be called before the connection to the database is made
+            (before rlogon() is called), for example:<br>
+            <br style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;
+              otl_connect db;</span><br style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp; ...</span><br
+              style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;
+              db.set_prog_name("MYAPP");</span><br style="font-family:
+              monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp; ...</span><br
+              style="font-family: monospace;">
+            <span style="font-family: monospace;">&nbsp;&nbsp;
+              db.rlogon("scott/tiger@db2sql");</span><br>
+            <span style="font-family: monospace;">&nbsp;&nbsp; ...</span><br>
+            <br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ul>
+      <ul>
+      </ul>
+    </ul>
+    <pre><font size="+2">}; // end of otl_connect</font></pre>
+    <center>
+      <hr width="100%">
+      <p><a href="otl3_bind_variables.htm">Prev</a> <a
+          href="otl3_exception_class.htm">Next</a><a href="otl3.htm">Contents</a><a
+          href="home.htm">Go Home</a> <br>
+      </p>
+      <div style="text-align: left;">Copyright © 1996-2023, Sergei
+        Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+        <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
+          <script language="JavaScript"><!-- hide from old browsers
+
+
+
+ var modDate = new Date(document.lastModified)
+
+
+
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+
+
+
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100);
+
+
+
+ //-->
+
+
+
+</script> </a>.<br>
+      </div>
+    </center>
+    <script language="JavaScript"><!-- hide from old browsers
+
+
+
+ var modDate = new Date(document.lastModified)
+
+
+
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+
+
+
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+
+
+
+ //-->
+
+
+
+ </script>
+    <p></p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
+    <script type="text/javascript">
+
+
+
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+
+
+
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+
+
+</script>
+    <script type="text/javascript">
+
+
+
+var pageTracker = _gat._getTracker("UA-5456201-1");
+
+
+
+pageTracker._trackPageview();</script>com
+  </body>
+</html>

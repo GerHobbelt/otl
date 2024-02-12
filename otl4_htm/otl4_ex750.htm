@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html;
-      charset=ISO-8859-1">
+      charset=windows-1252">
     <title>OTL 4.0, Example 750 (VARCHAR column bound as RAW[XXX]
       reading/writing std::strings that have null terminators ('\0') in
       the middle)</title>
@@ -22,7 +22,7 @@
     <h2>Source Code</h2>
     <pre>#include &lt;iostream&gt;<br>using namespace std;
 
-#include &lt;stdio.h&gt;<br><br>#define OTL_STL<br>#define OTL_ODBC_MSSQL_2008 // Compile OTL 4.0/MSSQL SNAC
+#include &lt;stdio.h&gt;<br><br>#define OTL_STL<br>#define OTL_ODBC_MSSQL_2008 // Compile OTL 4.0/MSSQL SNAC<br><br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; \<br>    (defined(OTL_CPP_14_ON) || defined(OTL_CPP_17_ON))<br>#include &lt;experimental/string_view&gt;<br>#define <a href="otl3_compile.htm#OTL_STD_STRING_VIEW_CLASS">OTL_STD_STRING_VIEW_CLASS</a> std::experimental::string_view<br>#elif defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br>#include &lt;string_view&gt;<br>#define OTL_STD_STRING_VIEW_CLASS std::string_view<br>#endif<br>
 #include &lt;otlv4.h&gt; // include the OTL 4.0 header file
 <br>string str_val("123456" "\0" "7890", 11); // std::string with a null terminator in the middle.
 <a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
@@ -37,7 +37,7 @@ void insert()
              );
 
  for(int i=1;i&lt;=4;++i){
-  o&lt;&lt;i&lt;&lt;str_val;
+#if defined(<a href="otl3_compile.htm#OTL_STD_STRING_VIEW_CLASS">OTL_STD_STRING_VIEW_CLASS</a>)<br>  OTL_STD_STRING_VIEW_CLASS str_val_sv(str_val.c_str(),str_val.length());<br>  o&lt;&lt;i<a href="otl3_stream_class.htm#OTL_STD_STRING_VIEW_CLASS">&lt;&lt;</a>str_val_sv;<br>#else<br>  o&lt;&lt;i&lt;&lt;str_val;<br>#endif<br>
  }
 }
 
@@ -109,9 +109,7 @@ int main()
       <p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
         <a href="home.htm">Go Home</a> </p>
     </center>
-    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
-        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><a
-        href="mailto:skuchin@gmail.com">. </a></p>
+    <p>Copyright © 1996-2023, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><a href="mailto:skuchin@gmail.com">. </a></p>
     <p><i>Permission to use, copy, modify and redistribute this document
         for any purpose is hereby granted without fee, provided that the
         above copyright notice appear in all copies. THE SOFTWARE IS
@@ -131,5 +129,6 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script></a>
-  </body>
-</html>
+  
+
+</body></html>

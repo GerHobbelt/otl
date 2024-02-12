@@ -1,107 +1,103 @@
 <!DOCTYPE doctype PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta content="text/html; charset=ISO-8859-1"
- http-equiv="Content-Type">
-  <meta content="Sergei Kuchin" name="Author">
-  <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
- name="GENERATOR">
-  <meta
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library"
- name="KeyWords">
-  <title>OTL 4.0, Examples for DB2, Unicode</title>
-</head>
-<body>
-<center>
-<h1> OTL 4.0, Examples for DB2, Unicode <br>
-</h1>
-<div style="text-align: left;">The examples below show how to use OTL
-with DB2 and Unicode based
-strings. At the database level,, the string format may vary (UTF-8,
-double byte character set (UCS-2), etc). At
-least at the C++ level all string data gets converted&nbsp; into 2-byte
-Unicode characters.&nbsp; In order to
-enable OTL/DB2-CLI and Unicode, the following
-#defines need to be defined: #define <a
- href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a>, #define <a
- href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>. Before trying any
-of the following examples, make sure that your DB2 database supports
-Unicode.<br>
-</div>
-</center>
-<ol>
-  <li><b><a href="otl4_ex265.htm">Example 265&nbsp; (Simple
-Unicode Insert/Select and VARCHAR strings)</a></b></li>
-  <li><b><a href="otl4_ex266.htm">Example 266 (Simple Unicode
-Insert/Select and VARGRAPHIC strings)</a></b></li>
-  <li><b><a href="otl4_ex267.htm">Example 267 (Simple Unicode
-Insert/Select with CLOB)</a></b></li>
-  <li><b><a href="otl4_ex268.htm">Example 268 (Simple Unicode
-Insert/Select with DBCLOB)</a></b></li>
-  <li><b><a href="otl4_ex269.htm">Example 269 (Simple Unicode
-Insert/Select with CLOB, and LOB streams)</a></b></li>
-  <li><b><a href="otl4_ex270.htm">Example 270 (Simple Unicode
-Insert/Select with DBCLOB, and LOB streams)</a></b></li>
-  <li><b><a href="otl4_ex355.htm">Example
-355 (Simple Unicode
-Insert/Select and #define OTL_UNICODE_CHAR_TYPE)</a></b></li>
-  <li><b><a href="otl4_ex356.htm">Example
-356 (Unicode
-VARGRAPHIC Insert/Select and #define OTL_UNICODE_CHAR_TYPE)</a></b></li>
-  <li><b><a href="otl4_ex357.htm">Example
-357 (Simple Unicode
-Insert/Select and #define OTL_UNICODE_STRING_TYPE)</a></b></li>
-  <li><b><a href="otl4_ex358.htm">Example
-358 (Unicode
-VARGRAPHIC Insert/Select and #define OTL_UNICODE_STRING_TYPE)</a></b></li>
-  <li><b><a href="otl4_ex367.htm">Example
-367 (Unicode CLOB Insert/Select and #define OTL_UNICODE_STRING_TYPE)</a></b></li>
-  <li><b><a href="otl4_ex673.htm">Example 673 (XML as
-varchar_long/otl_long_unicode_string on SELECT, and
-varchar_unicode_long/otl_long_string on
-INSERT)</a></b></li>
-  <li><b><a href="otl4_ex674.htm">Example 674 (XML as
-varchar_long/wstring&nbsp; on SELECT and varchar_long/wstring
-on INSERT)</a></b></li>
-  <li><b><a href="otl4_ex733.htm">Example 733 (Large numbers (larger
-than singed 64-bit int) when using OTL_UNICODE)</a></b></li>
-</ol>
-<b></b>
-<hr style="width: 100%; height: 2px;">
-<ul>
-  <ul>
-  </ul>
-</ul>
-<center>
-<p><a href="otl3_compile.htm"></a><a href="otl3.htm">Contents&nbsp; </a><a
- href="home.htm">Go Home</a></p>
-</center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com
-<script language="JavaScript"><!-- hide from old browsers
+  <head>
+    <meta content="text/html; charset=windows-1252"
+      http-equiv="Content-Type">
+    <meta content="Sergei Kuchin" name="Author">
+    <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
+      name="GENERATOR">
+    <meta content="OTL, Oracle, ODBC, DB2, CLI, database API, C++,
+      Template Library" name="KeyWords">
+    <title>OTL 4.0, Examples for DB2, Unicode</title>
+  </head>
+  <body>
+    <center>
+      <h1> OTL 4.0, Examples for DB2, Unicode <br>
+      </h1>
+      <div style="text-align: left;">The examples below show how to use
+        OTL with DB2 and Unicode based strings. At the database level,,
+        the string format may vary (UTF-8, double byte character set
+        (UCS-2), etc). At least at the C++ level all string data gets
+        converted&nbsp; into 2-byte Unicode characters.&nbsp; In order
+        to enable OTL/DB2-CLI and Unicode, the following #defines need
+        to be defined: #define <a href="otl3_compile.htm#OTL_DB2_CLI">OTL_DB2_CLI</a>,
+        #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>.
+        Before trying any of the following examples, make sure that your
+        DB2 database supports Unicode.<br>
+      </div>
+    </center>
+    <ol>
+      <li><b><a href="otl4_ex265.htm">Example 265&nbsp; (Unicode
+            Insert/Select and VARCHAR strings with std::array&lt;char16_t,...&gt;)</a></b></li>
+      <li><b><a href="otl4_ex266.htm">Example 266 (Simple Unicode
+            Insert/Select and VARGRAPHIC strings)</a></b></li>
+      <li><b><a href="otl4_ex267.htm">Example 267 (Simple Unicode
+            Insert/Select with CLOB)</a></b></li>
+      <li><b><a href="otl4_ex268.htm">Example 268 (Simple Unicode
+            Insert/Select with DBCLOB)</a></b></li>
+      <li><b><a href="otl4_ex269.htm">Example 269 (Simple Unicode
+            Insert/Select with CLOB, and LOB streams)</a></b></li>
+      <li><b><a href="otl4_ex270.htm">Example 270 (Simple Unicode
+            Insert/Select with DBCLOB, and LOB streams)</a></b></li>
+      <li><b><a href="otl4_ex355.htm">Example 355 (Simple Unicode
+            Insert/Select and #define OTL_UNICODE_CHAR_TYPE)</a></b></li>
+      <li><b><a href="otl4_ex356.htm">Example 356 (Unicode VARGRAPHIC
+            Insert/Select and #define OTL_UNICODE_CHAR_TYPE)</a></b></li>
+      <li><b><a href="otl4_ex357.htm">Example 357 (Simple Unicode
+            Insert/Select and #define OTL_UNICODE_STRING_TYPE)</a></b></li>
+      <li><b><a href="otl4_ex358.htm">Example 358 (Unicode VARGRAPHIC
+            Insert/Select and #define OTL_UNICODE_STRING_TYPE)</a></b></li>
+      <li><b><a href="otl4_ex367.htm">Example 367 (Unicode CLOB
+            Insert/Select and #define OTL_UNICODE_STRING_TYPE)</a></b></li>
+      <li><b><a href="otl4_ex673.htm">Example 673 (XML as
+            varchar_long/otl_long_unicode_string on SELECT, and
+            varchar_unicode_long/otl_long_string on INSERT)</a></b></li>
+      <li><b><a href="otl4_ex674.htm">Example 674 (XML as
+            varchar_long/wstring&nbsp; on SELECT and
+            varchar_long/wstring on INSERT)</a></b></li>
+      <li><b><a href="otl4_ex733.htm">Example 733 (Large numbers (larger
+            than singed 64-bit int) when using OTL_UNICODE)</a></b></li>
+      <li><b><a href="otl4_ex753.htm">Example 753 (OTL stream pooling
+            and #define OTL_UNICODE_STRING_TYPE)</a></b></li>
+    </ol>
+    <b></b>
+    <hr style="width: 100%; height: 2px;">
+    <ul>
+      <ul>
+      </ul>
+    </ul>
+    <center>
+      <p><a href="otl3_compile.htm"></a><a href="otl3.htm">Contents&nbsp;
+
+        </a><a href="home.htm">Go Home</a></p>
+    </center>
+    <p>Copyright © 1996-2023, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com
+        <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
  </script></a>.</p>
-<p><i>Permission to use, copy, modify and redistribute this document
-for any purpose is hereby granted without fee, provided that the above
-copyright notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
-AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
-EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.</i> </p>
-<script type="text/javascript">
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE.</i> </p>
+    <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
+  </body>
 </html>

@@ -1,52 +1,57 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.75 [en] (Win98; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, Template otl_value&lt;T&gt;</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, Template otl_value&lt;T&gt;</h1>
-</center>
-<h1>
-<a name="otl_value"></a>Template otl_value&lt;T&gt;</h1>
-This is an OTL template class which allows the user to create a
-derivative
-data container based upon the following scalar data types: int,
-unsigned,
-long, short, float, double, <a
- href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>
-(OTL date&amp;time container), std::string (STL string class).
-<p>The derivative container has built-in NULL indicator functionality,
-that is, the containter has a NULL indicator field in it and can carry
-over the NULL value from one operation to another.
-</p>
-<p>For example, a value gets read from a SELECT statement into a
-otl_value&lt;int&gt;
-container, and, it is a NULL. Then, the same value gets written into an
-INSERT statement. The otl_value&lt;int&gt; container retains the NULL
-in its
-NULL indicator field, and the NULL gets carried over from the SELECT
-into
-the INSERT.
-</p>
-<p>The otl_value&lt;T&gt; class can be activated with #define <a
- href="otl3_compile.htm#OTL_STL">OTL_STL</a>,
-or #define <a href="otl3_compile.htm#OTL_VALUE_TEMPLATE_ON">OTL_VALUE_TEMPLATE_ON</a>.
-<br>
-&nbsp;
-<br>
-&nbsp;
-</p>
-<pre><font size="+2">template&lt;class TData&gt;&nbsp;<br>class otl_value{<br>public:<br></font></pre>
-<table style="text-align: left; width: 100%;" border="1" cellpadding="2"
- cellspacing="2">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.75 [en] (Win98; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, Template otl_value&lt;T&gt; /
+      otl_compact_value&lt;T,null&gt; / std::optional&lt;T&gt;</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, Templates otl_value&lt;T&gt; /
+        otl_compact_value&lt;T,null&gt; / std::optional&lt;T&gt;<br>
+      </h1>
+    </center>
+    <h1> <a name="otl_value"></a>Templates otl_value&lt;T&gt; /
+      otl_compact_value&lt;T,null&gt; / std::optional&lt;T&gt;</h1>
+    <h1> </h1>
+    These are OTL template classes which allow the user to create
+    derivative data containers based upon the following scalar data
+    types: int, unsigned, long, short. Also, otl_value&lt;T&gt; allows
+    the user to create data containers for float, double, <a
+      href="otl3_stream_class.htm#otl_datetime">otl_datetime</a> (OTL
+    date&amp;time container), and std::string (STL string class, ,
+    requires #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a>).
+    <p>Derivative containers based on otl_value&lt;T&gt; have built-in
+      NULL indicator functionality, that is, which can carry over the
+      NULL value from one operation to another. <br>
+      <br>
+      Derivative data containers based on
+      otl_compact_value&lt;T,null&gt; have NULL value encoded via the
+      second template parameter, and carry over the NULL value from one
+      operation to another.<br>
+    </p>
+    <p>For example, a value gets read from a SELECT statement into a
+      otl_value&lt;int&gt; / otl_compact_value&lt;int,-1&gt; container,
+      and, it is a NULL. Then, the same value gets written into an
+      INSERT statement. The otl_value&lt;int&gt; /
+      otl_compact_value&lt;int,-1&gt; container retains the NULL, and
+      the NULL gets carried over from the SELECT into the INSERT.-1
+      represents NULL value is this example.<br>
+    </p>
+    <p>The otl_value&lt;T&gt; / otl_compact_value&lt;T,null&gt; classes
+      can be activated with #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a>,
+      or #define <a href="otl3_compile.htm#OTL_VALUE_TEMPLATE_ON">OTL_VALUE_TEMPLATE_ON</a>.
+      <br>
+      &nbsp; <br>
+    </p>
+    <pre><font size="+2">template&lt;class TData&gt;&nbsp;<br>class otl_value{<br>public:<br></font></pre>
+<table style="text-align: left; width: 100%;" cellspacing="2" cellpadding="2" border="1">
   <tbody>
     <tr>
       <td style="vertical-align: top;"><span style="font-style: italic;">Function
@@ -72,98 +77,114 @@ the TData type.</td>
       <td style="vertical-align: top;">
       <pre>otl_value();</pre>
       </td>
-      <td style="vertical-align: top;">default constructor</td>
+      <td style="vertical-align: top;">Default constructor.</td>
     </tr>
     <tr>
-      <td style="vertical-align: top;"><span
- style="font-family: monospace;">otl_value(const
+      <td style="vertical-align: top;"><span style="font-family: monospace;">otl_value(const
 otl_value&lt;TData&gt;&amp; var); </span></td>
-      <td style="vertical-align: top;">copy constructor</td>
+      <td style="vertical-align: top;">Copy constructor.</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
       <pre>otl_value(const TData&amp; var); </pre>
       </td>
-      <td style="vertical-align: top;">copy constructor</td>
+      <td style="vertical-align: top;">Copy constructor.</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>otl_value(const otl_null&amp; var); </pre>
+      <pre>otl_value(const otl_null var); </pre>
       </td>
-      <td style="vertical-align: top;">copy constructor</td>
+      <td style="vertical-align: top;">Copy constructor.</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
       <pre>otl_value&lt;TData&gt;&amp; operator=<br>(const otl_value&lt;TData&gt;&amp; var); </pre>
       </td>
-      <td style="vertical-align: top;">assignment operator</td>
+      <td style="vertical-align: top;">Assignment operator.</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
       <pre>otl_value&lt;TData&gt;&amp; operator=<br>(const TData&amp; var); </pre>
       </td>
-      <td style="vertical-align: top;">assignment operator</td>
+      <td style="vertical-align: top;">Assignment operator.</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
-      <pre>otl_value&lt;TData&gt;&amp; operator=<br>(const otl_null&amp; var); </pre>
+      <pre>otl_value&lt;TData&gt;&amp; operator=<br>(const otl_null var); </pre>
       </td>
-      <td style="vertical-align: top;">assignment operator</td>
+      <td style="vertical-align: top;">Assignment operator.</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
       <pre>bool is_null(void) const; </pre>
       </td>
-      <td style="vertical-align: top;">returns true if the otl_value is
-NULL</td>
+      <td style="vertical-align: top;">Returns true if the otl_value is
+NULL.</td>
     </tr>
     <tr>
       <td style="vertical-align: top;">
       <pre>void set_null(void); </pre>
       </td>
-      <td style="vertical-align: top;">sets the otl_value to NULL. This
-function duplicates the assignment&nbsp; operator=(const
-otl_null&amp;), and used only&nbsp; when <b>.v</b> and/or <b>.ind </b>fields
-are used directly</td>
+      <td style="vertical-align: top;">Sets the otl_value to NULL. <br></td>
     </tr>
-    <tr>
+    <tr><td valign="top"><pre>void set_null(const bool null);</pre></td><td valign="top">Sets the otl_value to NULL if the null parameter is true, otherwise sets the otl_value as to having a non-NULL value.<br></td></tr><tr>
       <td style="vertical-align: top;">
       <pre>void set_non_null(void); </pre>
       </td>
-      <td style="vertical-align: top;">sets the otl_value to
-"non-NULL", and should be used only when <b>.v</b> and/or <b>.ind </b>fields
-are used directly.</td>
+      <td style="vertical-align: top;">sets the otl_value to non-NULL.</td>
     </tr>
   </tbody>
 </table>
 <br>
 <pre></pre>
 <pre><font size="+2">}; // end of otl_value</font>
+<br>
+<font size="+2">template&lt;class TData, const TData null_value&gt;&nbsp;<br>class otl_compact_value{<br>public:</font>    <br>// null_value is a constant of the TData type that encodes NULL value for each instantiation of the template.<br></pre><table style="text-align: left; width: 100%;" cellspacing="2" cellpadding="2" border="1"><tbody><tr>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Function
+/ Data member</span><br>
+      </td>
+      <td style="vertical-align: top;"><span style="font-style: italic;">Description</span><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;">
+      <pre>TData v;</pre>
+      </td>
+      <td style="vertical-align: top;">Container for scalar value of the TData type.<br></td></tr><tr><td valign="top"><pre>otl_compact_value();</pre></td><td valign="top">Default constructor.<br></td></tr><tr><td valign="top"><span style="font-family: monospace;">otl_compact_value(const
+otl_compact_value&lt;TData,null_value&gt;&amp; var);</span></td><td valign="top">Copy constructor.<br></td></tr><tr><td valign="top"><pre>otl_compact_value(const TData&amp; var);</pre></td><td valign="top">Copy constructor.<br></td></tr><tr><td valign="top"><pre>otl_compact_value(const otl_null var);</pre></td><td valign="top">Copy constructor.<br></td></tr><tr><td valign="top"><pre>otl_compact_value&lt;TData,null_value&gt;&amp; operator=<br>(const otl_compact_value&lt;TData,null_value&gt;&amp; var);</pre></td><td valign="top">Assignment operator.<br></td></tr><tr><td valign="top"><pre>otl_compact_value&lt;TData,null_value&gt;&amp; operator=<br>(const TData&amp; var);</pre></td><td valign="top">Assignment operator.<br></td></tr><tr><td valign="top"><pre>otl_compact_value&lt;TData,null_value&gt;&amp; operator=<br>(const otl_null var); </pre></td><td valign="top">Assignment operator.<br></td></tr><tr><td valign="top"><pre>bool is_null(void) const;</pre></td><td valign="top">Returns true if the otl_compact_value contains a value that is equal to null_value (the second template parameter).<br></td></tr><tr><td valign="top"><pre>void set_null(const bool null);</pre>
+</td><td valign="top">Sets the otl_compact_value to NULL if "null" parameter is true. Otherwise does nothing.<br></td></tr></tbody></table><pre><font size="+2">}; // end of otl_compact_value</font>
 
 </pre>
-Also, two global global template stream operators were overloaded for
+Also, four global template stream operators were overloaded for
 otl_value&lt;T&gt;
-and otl_stream's:
-<pre><a name="otl_value_rr"></a>template &lt;class TData&gt;<br>otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const otl_value&lt;TData&gt;&amp; var);<br><br><a
- name="otl_value_ll"></a>template &lt;class TData&gt;<br>otl_stream&amp; operator&gt;&gt;(otl_stream&amp; s, otl_value&lt;TData&gt;&amp; var);</pre>
-These two template overloaded operators can be used in a combination
+/ otl_compact_value&lt;T,null&gt; and otl_stream's:
+<pre><a name="otl_value_rr"></a>template &lt;class TData&gt;<br>otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const otl_value&lt;TData&gt;&amp; var);<br><br><a name="otl_value_ll"></a>template &lt;class TData&gt;<br>otl_stream&amp; operator&gt;&gt;(otl_stream&amp; s, otl_value&lt;TData&gt;&amp; var);<br><br><a name="otl_compact_value_rr"></a>template &lt;class TData, const TData null_value&gt;<br>otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const otl_compact_value&lt;TData,null_value&gt;&amp; var);<br><br><a name="otl_compact_value_ll"></a>template &lt;class TData, const TData null_value&gt;<br>otl_stream&amp; operator&gt;&gt;(otl_stream&amp; s, otl_compact_value&lt;TData,null_value&gt;&amp; var);<br></pre>
+These template overloaded operators can be used in a combination
 with
-the otl_value&lt;T&gt; container. The operators carry over NULL values,
+the otl_value&lt;T&gt; / otl_compact_value&lt;T,null&gt; containers. The operators carry over NULL values,
 if
 there are any.
-<p>Here's one more overloaded operator&lt;&lt; for writing
-otl_value&lt;T&gt;'s
+<p>Here's two more overloaded operator&lt;&lt; for writing
+otl_value&lt;T&gt; / otl_compact_value&lt;T,null&gt;'s
 to std::ostream:
 </p>
-<pre><a name="otl_value_ostream"></a>template &lt;class TData&gt; std::ostream&amp;<br>operator&lt;&lt;(std::ostream&amp; s, const otl_value&lt;TData&gt;&amp; var);<br><br></pre>
+<pre><a name="otl_value_ostream"></a>template &lt;class TData&gt; std::ostream&amp;<br>operator&lt;&lt;(std::ostream&amp; s, const otl_value&lt;TData&gt;&amp; var);<br><br><a name="otl_compact_value_ostream"></a>template &lt;class TData, const TData null_value&gt; std::ostream&amp;<br>operator&lt;&lt;(std::ostream&amp; s, const otl_compact_value&lt;TData,null_value&gt;&amp; var);<br><br></pre><p>As the name suggests, otl_compact_value&lt;T,null&gt; is more memory efficient compared with otl_value&lt;T&gt; (sizeof(otl_compact_value&lt;T&gt;) == sizeof(T), sizeof(otl_value&lt;T&gt;) == sizeof(T) + sizeof(bool) + padding). otl_compact_value&lt;T,null&gt; should be used when there is a <i>magic value</i> for type T that can represent NULL value in a given context. There may be many instantiations of otl_compact_value with the same <i>T</i> but with different <i>null_values</i>. otl_compact_value&lt;T,null&gt; can be used with non-integral types, C++11 compilers and higher, when otl_compact_value's second template non-type parameter has external linkage and operator==() defined for type T (first template parameter).<br></p><p>For more detail on otl_compact_value&lt;T,null&gt;, see code examples <a href="otl3_ex98.htm">98</a>, <a href="otl3_ex99.htm">99</a>, and <a href="otl3_ex100.htm">100</a>. If you can't find a code example for your database type, it's easy to migrate the otl_compact_value based code from examples for other database types.<br></p><p>OTL can also be used with <a href="http://en.cppreference.com/w/cpp/experimental/optional">std::experimental::optional&lt;T&gt;</a> / <a href="http://en.cppreference.com/w/cpp/utility/optional">
+std::optional&lt;T&gt;</a> and the following 
+data types: int, unsigned, long, short,&nbsp;
+    float, double, <a href="file:///C:/oscl/vc/doc/otl4/otl3_stream_class.htm#otl_datetime">otl_datetime</a> (OTL
+    date&amp;time container), and std::string (STL string class, requires #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a>). , OTL defines operators&gt;&gt;/&lt;&lt; that work with the optional&lt;T&gt; templates as template member functions of the  <a href="otl3_stream_class.htm#otl_std_optional">otl_stream</a> class, when #define <a href="otl3_compile.htm#OTL_CPP_14_ON">OTL_CPP_14_ON</a> or #define <a href="otl3_compile.htm#OTL_CPP_17_ON">OTL_CPP_17_ON</a> is&nbsp; <a href="otl3_whatn.htm#CPP_AUTOMATIC_DETECTION">auto</a> or explicitly enabled, and when #define <a href="otl3_compile.htm#OTL_STREAM_WITH_STD_OPTIONAL_ON">OTL_STREAM_WITH_STD_OPTIONAL_ON</a> is enabled:</p><tt>class otl_stream{</tt><br><p><tt>...</tt><br></p><p><tt>#if defined(</tt><tt><a href="otl3_compile.htm#OTL_STREAM_WITH_STD_OPTIONAL_ON">OTL_STREAM_WITH_STD_OPTIONAL_ON</a></tt><tt>)<br></tt></p><p><tt><a name="otl_std_optional"></a>template&lt;typename TData, template &lt;typename&gt; class Optional&gt; otl_stream &amp;operator&lt;&lt;(const Optional&lt;TData&gt; &amp;var);</tt><tt><br></tt><tt>template&lt;typename TData, template &lt;typename&gt; class Optional&gt; otl_stream &amp;operator&gt;&gt;(Optional&lt;TData&gt; &amp;var);</tt><tt><br><br>#endif<br><br>...<br>};<br></tt></p><p>When frac_precision of otl_datetime is different from its default value of 0, and when std::optional&lt;otl_datetime&gt; is used to read values from an otl_stream, such variables should be initialized, for example:<br></p><p><tt>&nbsp; std::optional&lt;otl_datetime&gt; f(otl_datetime(2016,10,27,13,21,15,6,123456));</tt><tt><br></tt></p><p>The reason is that OTL uses the frac_precision of an otl_datetime container that OTL writes into (a.k.a output variable) to format the output otl_datetime::fraction correctly.<br></p><p>OTL utilizes the buffer of a std::optional&lt;T&gt; variable (a.k.a. direct use, no temporaries, more efficient), if the variable has a value (!= std::nullopt). In the case of an empty (==std::nullopt) std::optional&lt;T&gt; variable, OTL uses std::move() when a move constructor is available for type T.<br></p><p><a name="OPTIONAL_NULL"></a>When OTL writes (operator &lt;&lt;) an optional&lt;&gt; variable and 
+it has no value, OTL treats the absence of value as NULL and writes the NULL into the database. And when OTL 
+reads (operator&gt;&gt;) NULL from the database, OTL sets the output optional&lt;&gt; 
+variable to "no value", which can be checked with optional&lt;T&gt;::operator bool() or has_value() function.<br></p><p>For more detail on std::optional&lt;T&gt;, see code examples <a href="otl3_ex98.htm">98</a>, <a href="otl3_ex99.htm">99</a>, <a href="otl3_ex100.htm">100,</a> and&nbsp;
+<a href="otl4_ex204.htm"> 204</a>. If you can't find a code example for your database type, it's easy to 
+migrate the otl_compact_value based code from examples for other 
+database types.</p><p><br></p>
 <hr width="100%">
 <center>
-<p><a href="otl3_iterators.htm">Prev</a> <a href="otl3_const_sql.htm">Next</a><a
- href="otl3.htm">Contents</a><a href="home.htm">Go
+<p><a href="otl3_iterators.htm">Prev</a> <a href="otl3_const_sql.htm">Next</a><a href="otl3.htm">Contents</a><a href="home.htm">Go
 Home</a></p>
 </center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<p>Copyright © 1996-2023, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from oldgmailsers
  var modDate = new Date(document.lastModified)
@@ -185,5 +206,7 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script></p>
-</body>
-</html>
+
+
+
+</body></html>

@@ -1,57 +1,47 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta http-equiv="Content-Type"
- content="text/html; charset=iso-8859-1">
-  <meta name="Author" content="Sergei Kuchin">
-  <meta name="GENERATOR"
- content="Mozilla/4.77 [en] (Win95; U) [Netscape]">
-  <meta name="KeyWords"
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-  <title>OTL 4.0, Example 135 (otl_datetime container and
-DATE/TIME/TIMESTAMP table containers)</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, Example 135 (otl_datetime container and
-DATE/TIME/TIMESTAMP table
-columns)</h1>
-</center>
-<h1>
-Example 135 (otl_datetime container and DATE/TIME/TIMESTAMP table
-columns)</h1>
-This example demonstrates simple INSERT/SELECT with
-DATEs/TIMEs/TIMESTAMPs
-and <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>. In
-the
-case of a DATE field, time componets of the otl_datetime are 0s. In the
-case of a TIME field, the date componets of the otl_datetime are
-1/1/1900,
-because the default constructor of the otl_datetime default the date
-components&nbsp;
-to the date of 1/1/1900.
-<h2>Source Code</h2>
-<pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
-<pre>#define OTL_ODBC // Compile OTL 4.0/ FireBird Database ODBC<br>// #define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><br><a
- href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert(void)<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
- href="otl3_stream_class.htm">otl_stream</a> o(1, // stream buffer size should be == to 1 on INSERT<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "values(:f1&lt;int&gt;,:f2&lt;<a
- href="otl3_bind_variables.htm#timestamp">timestamp</a>&gt;, "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :f3&lt;<a
- href="otl3_bind_variables.htm#timestamp">timestamp</a>&gt;,:f4&lt;<a
- href="otl3_bind_variables.htm#timestamp">timestamp</a>&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // INSERT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br><br>&nbsp;<a
- href="otl3_stream_class.htm#otl_datetime">otl_datetime</a> tm;<br><br>&nbsp;for(int i=1;i&lt;=10;++i){<br>&nbsp; tm.year=1998;<br>&nbsp; tm.month=10;<br>&nbsp; tm.day=19;<br>&nbsp; tm.hour=23;<br>&nbsp; tm.minute=12;<br>&nbsp; tm.second=12;<br>&nbsp; o&lt;&lt;i&lt;&lt;tm&lt;&lt;tm&lt;&lt;tm;<br>&nbsp;}<br>}<br><br>void select(void)<br>{&nbsp;<br>&nbsp;otl_stream i(5, // stream buffer size can be &gt; great 1 on SELECT.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;<br>&nbsp;int f1;<br>&nbsp;otl_datetime f2,f3,f4;<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2&gt;&gt;f3&gt;&gt;f4;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1;<br>&nbsp; cout&lt;&lt;", f2="&lt;&lt;f2.month&lt;&lt;"/"&lt;&lt;f2.day&lt;&lt;"/"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f2.year&lt;&lt;" "&lt;&lt;f2.hour&lt;&lt;":"&lt;&lt;f2.minute&lt;&lt;":"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f2.second;<br>&nbsp; cout&lt;&lt;", f3="&lt;&lt;f3.month&lt;&lt;"/"&lt;&lt;f3.day&lt;&lt;"/"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f3.year&lt;&lt;" "&lt;&lt;f3.hour&lt;&lt;":"&lt;&lt;f3.minute&lt;&lt;":"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f3.second;<br>&nbsp; cout&lt;&lt;", f4="&lt;&lt;f4.month&lt;&lt;"/"&lt;&lt;f4.day&lt;&lt;"/"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f4.year&lt;&lt;" "&lt;&lt;f4.hour&lt;&lt;":"&lt;&lt;f4.minute&lt;&lt;":"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f4.second;<br>&nbsp; cout&lt;&lt;endl;<br>&nbsp;}<br>&nbsp;<br>}</pre>
-<pre>int main()<br>{<br>&nbsp;<a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("UID=scott;PWD=tiger;DSN=ib6sql"); // connect to ODBC<br>//&nbsp; db.rlogon("scott/tiger@ib6sql"); // connect to ODBC, alternative format<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of connect string<br><br>&nbsp; <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 date, f3 time, f4 timestamp)"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; db.commit(); // committing the create table statement to to the database<br><br>&nbsp; insert(); // insert records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a
- href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from ODBC<br><br>&nbsp;return 0;<br><br>}</pre>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>OTL 4.0, Example 135 (otl_datetime container and
+      DATE/TIME/TIMESTAMP table containers)</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, Example 135 (otl_datetime container and
+        DATE/TIME/TIMESTAMP table
+        columns)</h1>
+    </center>
+    <h1>
+      Example 135 (otl_datetime container and DATE/TIME/TIMESTAMP table
+      columns)</h1>
+    This example demonstrates simple INSERT/SELECT with
+    DATEs/TIMEs/TIMESTAMPs
+    and <a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>.
+    In
+    the
+    case of a DATE field, time componets of the otl_datetime are 0s. In
+    the
+    case of a TIME field, the date componets of the otl_datetime are
+    1/1/1900,
+    because the default constructor of the otl_datetime default the date
+    components&nbsp;
+    to the date of 1/1/1900.
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;<br>using namespace std;<br><br>#include &lt;stdio.h&gt;</pre>
+<pre>#define OTL_ODBC // Compile OTL 4.0/ FireBird Database ODBC<br>// #define OTL_ODBC_UNIX // uncomment this line if UnixODBC is used<br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert(void)<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a href="otl3_stream_class.htm">otl_stream</a> o(1, // stream buffer size should be == to 1 on INSERT<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "insert into test_tab "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "values(:f1&lt;int&gt;,:f2&lt;<a href="otl3_bind_variables.htm#timestamp">timestamp</a>&gt;, "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; :f3&lt;<a href="otl3_bind_variables.htm#timestamp">timestamp</a>&gt;,:f4&lt;<a href="otl3_bind_variables.htm#timestamp">timestamp</a>&gt;)",&nbsp;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // INSERT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );<br><br>&nbsp;<a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a> tm;<br><br>&nbsp;for(int i=1;i&lt;=10;++i){<br>&nbsp; tm.year=2015;<br>&nbsp; tm.month=10;<br>&nbsp; tm.day=19;<br>&nbsp; tm.hour=23;<br>&nbsp; tm.minute=12;<br>&nbsp; tm.second=12;<br>&nbsp; o&lt;&lt;i&lt;&lt;tm&lt;&lt;tm&lt;&lt;tm;<br>&nbsp;}<br>}<br><br>void select(void)<br>{&nbsp;<br>&nbsp;otl_stream i(5, // stream buffer size can be &gt; great 1 on SELECT.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "select * from test_tab",<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // SELECT statement<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; db // connect object<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; );&nbsp;<br>&nbsp;<br>&nbsp;int f1;<br>&nbsp;otl_datetime f2,f3,f4;<br><br>&nbsp;while(!i.eof()){ // while not end-of-data<br>&nbsp; i&gt;&gt;f1&gt;&gt;f2&gt;&gt;f3&gt;&gt;f4;<br>&nbsp; cout&lt;&lt;"f1="&lt;&lt;f1;<br>&nbsp; cout&lt;&lt;", f2="&lt;&lt;f2.month&lt;&lt;"/"&lt;&lt;f2.day&lt;&lt;"/"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f2.year&lt;&lt;" "&lt;&lt;f2.hour&lt;&lt;":"&lt;&lt;f2.minute&lt;&lt;":"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f2.second;<br>&nbsp; cout&lt;&lt;", f3="&lt;&lt;f3.month&lt;&lt;"/"&lt;&lt;f3.day&lt;&lt;"/"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f3.year&lt;&lt;" "&lt;&lt;f3.hour&lt;&lt;":"&lt;&lt;f3.minute&lt;&lt;":"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f3.second;<br>&nbsp; cout&lt;&lt;", f4="&lt;&lt;f4.month&lt;&lt;"/"&lt;&lt;f4.day&lt;&lt;"/"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f4.year&lt;&lt;" "&lt;&lt;f4.hour&lt;&lt;":"&lt;&lt;f4.minute&lt;&lt;":"<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f4.second;<br>&nbsp; cout&lt;&lt;endl;<br>&nbsp;}<br>&nbsp;<br>}</pre>
+<pre>int main()<br>{<br>&nbsp;<a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize ODBC environment<br>&nbsp;try{<br><br>&nbsp; db.rlogon("UID=scott;PWD=tiger;DSN=firebirdsql"); // connect to ODBC<br>//&nbsp; db.rlogon("scott/tiger@firebirdsql"); // connect to ODBC, alternative format<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // of connect string<br><br>&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 date, f3 time, f4 timestamp)"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; db.commit(); // committing the create table statement to to the database<br><br>&nbsp; insert(); // insert records into table<br>&nbsp; select(); // select records from table<br><br>&nbsp;}<br><br>&nbsp;catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions<br>&nbsp; cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message<br>&nbsp; cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error<br>&nbsp; cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message<br>&nbsp; cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from ODBC<br><br>&nbsp;return 0;<br><br>}</pre>
 <h2>
 Output</h2>
-<pre>f1=1, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br>f1=2, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br>f1=3, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br>f1=4, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br>f1=5, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br>f1=6, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br>f1=7, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br>f1=8, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br>f1=9, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br>f1=10, f2=10/19/1998 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/1998 23:12:12<br><br><br><br><hr
- width="100%"></pre>
-<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
- href="home.htm">Go
+<pre>f1=1, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br>f1=2, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br>f1=3, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br>f1=4, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br>f1=5, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br>f1=6, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br>f1=7, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br>f1=8, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br>f1=9, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br>f1=10, f2=10/19/2015 0:0:0, f3=1/0/1900 23:12:12, f4=10/19/2015 23:12:12<br><br><br><br><hr width="100%"></pre>
+<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a href="home.htm">Go
 Home</a></center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<p>Copyright © 1996-2023, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
 <a href="mailto:skuchin@gmail.com">skuchin@gmail.com
 <script language="JavaScript"><!-- hide from old browsers
  var modDate = new Date(document.lastModified)
@@ -74,5 +64,6 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
-</html>
+
+
+</body></html>

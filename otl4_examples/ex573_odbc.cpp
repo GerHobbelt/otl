@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <stdio.h>
 using namespace std;
@@ -23,7 +27,7 @@ void select()
  db.auto_commit_on(); // setting database connect auto-commit to ON
 
  s.open(100, // buffer size
-         "$SQLColumns $1:'sybsql' $2:'scott' $3:'test_tab'",
+         "$SQLColumns $1:'sybsql' $2:'sa' $3:'test_tab'",
          //  get a list of all columns of table 
          // "test_tab" that belongs to schema "dbo", 
          // catalog "sybsql"
@@ -57,7 +61,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("scott/tigger@freetds_sybsql"); // connect to ODBC
+  db.rlogon("sa/tigger@freetds_sybsql"); // connect to ODBC
   db.auto_commit_off();
 
   select(); // query the system data dictionary via ODBC functions.

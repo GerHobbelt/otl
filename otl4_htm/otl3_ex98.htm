@@ -1,94 +1,81 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-   <TITLE>OTL 4.0, Example 98 (otl_value&lt;T&gt;, Oracle 8/8i)</TITLE>
-   <META NAME="Author" CONTENT="Sergei Kuchin">
-   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
-   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-</HEAD>
-<BODY>
-
-<H1 ALIGN=CENTER>OTL 4.0, Example 98 (otl_value&lt;T&gt;, Oracle 8/8i)</H1>
-
-<H1>Example 98 (otl_value&lt;T&gt;, Oracle 8/8i)</H1>
-
-<P>This example demonstrates OTL streams and <A HREF="otl3_value.htm">otl_value&lt;T&gt;</A>.
-</P>
-
-<H2>Source Code</H2>
-
-<PRE>#include &lt;iostream&gt;
-#include &lt;string&gt;</PRE>
-
-<PRE>#define OTL_ORA8 // Compile OTL 4.0/OCI8
-#define OTL_STL // Turn on STL features and otl_value&lt;T&gt;
-#define OTL_ANSI_CPP // Turn on ANSI C++ typecasts
-#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <title>OTL 4.0, Example 98 (otl_value&lt;T&gt; /
+      otl_compact_value&lt;T,null&gt; / std::optional&lt;T&gt;, Oracle
+      8/8i)</title>
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+  </head>
+  <body>
+    <h1 align="CENTER">OTL 4.0, Example 98 (otl_value&lt;T&gt; /
+      otl_compact_value&lt;T,null&gt; / std::optional&lt;T&gt;, Oracle
+      8/8i)</h1>
+    <p>This example demonstrates OTL streams and <a
+        href="otl3_value.htm">otl_value&lt;T&gt; /
+        otl_compact_value&lt;T,null&gt; / std::optional&lt;T&gt;</a>. </p>
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;
+#include &lt;string&gt;</pre>
+    <pre>#define OTL_ORA8 // Compile OTL 4.0/OCI8
+#define OTL_STL // Turn on STL features and otl_value&lt;T&gt;<br>#define OTL_ANSI_CPP // Turn on ANSI C++ typecasts<br><br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; defined(OTL_CPP_14_ON)<br>#endif<br><br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; defined(<a href="otl3_compile.htm#OTL_CPP_14_ON">OTL_CPP_14_ON</a>)<br>// enable OTL support for std::optional when clang or g++ is used and<br>// when -std=c++14 or higher switch is used<br>#define <a href="otl3_compile.htm#OTL_STREAM_WITH_STD_OPTIONAL_ON">OTL_STREAM_WITH_STD_OPTIONAL_ON</a><br>#endif<br><br>#if defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br>#define OTL_STREAM_WITH_STD_OPTIONAL_ON<br>#endif<br><br><br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; defined(<a href="otl3_compile.htm#OTL_CPP_14_ON">OTL_CPP_14_ON</a>) \<br>  &amp;&amp; defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)<br>// for clang or g++, when they use -std=c++14 or higher<br>#include &lt;experimental/optional&gt;<br>#endif<br><br>#if defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br>#include &lt;optional&gt;<br>#endif<br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file
 
 using namespace std;
 
-<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
 
 void insert()
 // insert rows into table
 { 
- <A HREF="otl3_stream_class.htm">otl_stream</A> o(50, // buffer size
-              &quot;insert into test_tab &quot;
-              &quot;values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;,:f3&lt;timestamp&gt;)&quot;, 
+ <a href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size
+              "insert into test_tab "
+              "values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;,:f3&lt;timestamp&gt;)", 
                  // SQL statement
               db // connect object
              );
-
- <A HREF="otl3_value.htm">otl_value</A>&lt;string&gt; f2; // otl_value container of STL string
- <A HREF="otl3_value.htm">otl_value</A>&lt;<A HREF="otl3_stream_class.htm#otl_datetime">otl_datetime</A>&gt; f3; // container of otl_datetime
-
+ <a href="otl3_value.htm">otl_compact_value</a>&lt;int,-1&gt; f1; // otl_compact_value container for int, and -1 as NULL value
+ <a href="otl3_value.htm">otl_value</a>&lt;string&gt; f2; // otl_value container of STL string<br><br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; defined(OTL_CPP_14_ON) \<br>  &amp;&amp; defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)<br>// for clang or g++, when they use -std=c++14 or higher<br> std::experimental::optional&lt;<a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&gt; f3; // container of otl_datetime<br>#elif defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br> std::optional&lt;otl_datetime&gt; f3; // container of otl_datetime<br>#else<br>&nbsp;<a href="otl3_value.htm">otl_value</a>&lt;<a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&gt; f3; // container of otl_datetime
+#endif<br>
 
  for(int i=1;i&lt;=100;++i){
-
+  f1=i;
   if(i%2==0)
-   f2=&quot;NameXXX&quot;;
+   f2="NameXXX";
   else
    f2=otl_null(); // Assign otl_null() to f2
 
-  if(i%3==0){
-   // Assign a value to f3 via the .v field directly
-   f3.v.year=2001;
-   f3.v.month=1;
-   f3.v.day=1;
-   f3.v.hour=13;
-   f3.v.minute=10;
-   f3.v.second=5;
-   f3.set_non_null(); // Set f3 as a &quot;non-NULL&quot;
-  }else
-   f3.set_null(); // Set f3 as null via .set_null() function
-
-  o&lt;&lt;i&lt;&lt;f2&lt;&lt;f3;
+  if(i%3==0){<br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; defined(OTL_CPP_14_ON) \<br>  &amp;&amp; defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)<br>// for clang or g++, when they use -std=c++14 or higher<br>    f3.emplace(otl_datetime(2001,1,1,13,10,5));<br>#elif defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br>    f3.emplace(otl_datetime(2001,1,1,13,10,5));<br>#else<br>   // Assign a value to f3 via the .v field directly<br>    f3.v.year=2001;<br>    f3.v.month=1;<br>    f3.v.day=1;<br>    f3.v.hour=13;<br>    f3.v.minute=10;<br>    f3.v.second=5;<br>    f3.set_non_null(); // Set f3 as a "non-NULL"<br>#endif<br>  }else<br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; defined(OTL_CPP_14_ON) \<br>  &amp;&amp; defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)<br>// for clang or g++, when they use -std=c++14 or higher<br>    f3=std::experimental::optional&lt;otl_datetime&gt;(); // set f3 to null<br>#elif defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br>    f3=std::optional&lt;otl_datetime&gt;(); // set f3 to null<br>#else<br>    f3.set_null(); // Set f3 as null via .set_null() function<br>#endif<br><br>#if defined(<a href="otl3_compile.htm#OTL_ANSI_CPP_11_VARIADIC_TEMPLATES">OTL_ANSI_CPP_11_VARIADIC_TEMPLATES</a>)<br>  <a href="otl4_read_row.htm">otl_write_row</a>(o,f1,f2,f3);<br>#else<br>  // when variadic template functions are not supported by the C++<br>  // compiler, OTL provides nonvariadic versions of the same template<br>  // functions in the range of [1..15] parameters<br>  <a href="otl4_read_row.htm">otl_write_row</a>(o,f1,f2,f3);<br><br>  // the old way (operators &gt;&gt;() / &lt;&lt;()) is available as always:<br>  // o&lt;&lt;f1&lt;&lt;f2&lt;&lt;f3;
+#endif<br>
 
  }
 }
 
 void select()
 { 
- <A HREF="otl3_stream_class.htm">otl_stream</A> i(50, // buffer size
-              &quot;select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2&quot;,
+ <a href="otl3_stream_class.htm">otl_stream</a> i(50, // buffer size
+              "select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2",
                  // SELECT statement
               db // connect object
              ); 
    // create select stream
 
- int f1; 
- <A HREF="otl3_value.htm">otl_value</A>&lt;string&gt; f2;
- <A HREF="otl3_value.htm">otl_value</A>&lt;<A HREF="otl3_stream_class.htm#otl_datetime">otl_datetime</A>&gt; f3;
+ <a href="otl3_value.htm">otl_compact_value</a>&lt;int,-1&gt; f1(0); 
+ <a href="otl3_value.htm">otl_value</a>&lt;string&gt; f2;
+#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; defined(OTL_CPP_14_ON) \<br>  &amp;&amp; defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)<br>// for clang or g++, when they use -std=c++14 or higher<br> std::experimental::optional&lt;otl_datetime&gt; f3;<br>#elif defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br> std::optional&lt;otl_datetime&gt; f3;<br>#else<br> <a href="otl3_value.htm">otl_value</a>&lt;<a href="otl3_stream_class.htm#otl_datetime">otl_datetime</a>&gt; f3;
+#endif<br>
 
-
- i&lt;&lt;8; // assigning :f = 8
-   // SELECT automatically executes when all input variables are
+#if defined(<a href="otl3_compile.htm#OTL_ANSI_CPP_11_VARIADIC_TEMPLATES">OTL_ANSI_CPP_11_VARIADIC_TEMPLATES</a>)<br>  <a href="otl4_read_row.htm">otl_write_row</a>(i,8);<br>#else<br>  // when variadic template functions are not supported by the C++<br>  // compiler, OTL provides nonvariadic versions of the same template<br>  // functions in the range of [1..15] parameters<br>  <a href="otl4_read_row.htm">otl_write_row</a>(i,8);<br><br>  // the old way (operators &gt;&gt;() / &lt;&lt;()) is available as always:<br>  // i&lt;&lt;8; // assigning :f = 8
+#endif<br>   // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
  while(!i.eof()){ // while not end-of-data
-  i&gt;&gt;f1&gt;&gt;f2&gt;&gt;f3;
-  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;&quot;, f3=&quot;&lt;&lt;f3&lt;&lt;endl;
- }
+#if defined(<a href="otl3_compile.htm#OTL_ANSI_CPP_11_VARIADIC_TEMPLATES">OTL_ANSI_CPP_11_VARIADIC_TEMPLATES</a>)<br>  <a href="otl4_read_row.htm">otl_read_row</a>(i,f1,f2,f3);<br>#else<br>  // when variadic template functions are not supported by the C++<br>  // compiler, OTL provides nonvariadic versions of the same template<br>  // functions in the range of [1..15] parameters<br>  <a href="otl4_read_row.htm">otl_read_row</a>(i,f1,f2,f3);<br><br>  // the old way (operators &gt;&gt;() / &lt;&lt;()) is available as always:<br>  // i&gt;&gt;f1&gt;&gt;f2&gt;&gt;f3;
+#endif<br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; defined(OTL_CPP_14_ON) \<br>  &amp;&amp; defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)<br>// for clang or g++, when they use -std=c++14 or higher<br>   if(f3)<br>     cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3="&lt;&lt;*f3&lt;&lt;endl;<br>   else<br>     cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3=NULL"&lt;&lt;endl;<br>#elif defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br>   if(f3)<br>     cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3="&lt;&lt;*f3&lt;&lt;endl;<br>   else<br>     cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3=NULL"&lt;&lt;endl;<br>#else<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3="&lt;&lt;f3&lt;&lt;endl;<br>#endif<br> }
 
  i&lt;&lt;4; // assigning :f = 4
    // SELECT automatically executes when all input variables are
@@ -96,29 +83,28 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i&gt;&gt;f1&gt;&gt;f2&gt;&gt;f3;
-  cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;&quot;, f3=&quot;&lt;&lt;f3&lt;&lt;endl;
- }
+#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; defined(OTL_CPP_14_ON) \<br>  &amp;&amp; defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)<br>// for clang or g++, when they use -std=c++14 or higher<br>   if(f3)<br>     cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3="&lt;&lt;*f3&lt;&lt;endl;<br>   else<br>     cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3=NULL"&lt;&lt;endl;<br>#elif defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br>   if(f3)<br>     cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3="&lt;&lt;*f3&lt;&lt;endl;<br>   else<br>     cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3=NULL"&lt;&lt;endl;<br>#else<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;", f3="&lt;&lt;f3&lt;&lt;endl;<br>#endif<br> }
 
 }
 
 int main()
 {
- <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize OCI environment
+ <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize OCI environment
  try{
 
-  db.rlogon(&quot;scott/tiger&quot;); // connect to Oracle
+  db.rlogon("scott/tiger"); // connect to Oracle
 
-  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
-</A>   (
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
     db,
-    &quot;drop table test_tab&quot;,
+    "drop table test_tab",
     otl_exception::disabled // disable OTL exceptions
    ); // drop table
 
-  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
-</A>   (
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
     db,
-    &quot;create table test_tab(f1 number, f2 varchar2(30), f3 date)&quot;
+    "create table test_tab(f1 number, f2 varchar2(30), f3 date)"
     );  // create table
 
   insert(); // insert records into table
@@ -126,7 +112,7 @@ int main()
 
  }
 
- catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+ catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
   cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
   cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
   cerr&lt;&lt;p.var_info&lt;&lt;endl; // print out the variable that caused the error
@@ -137,11 +123,11 @@ int main()
  return 0;
 
 }
-</PRE>
+</pre>
 
-<H2>Output</H2>
+<h2>Output</h2>
 
-<PRE>f1=8, f2=NameXXX, f3=NULL
+<pre>f1=8, f2=NameXXX, f3=NULL
 f1=9, f2=NULL, f3=1/1/2001 13:10:5
 f1=10, f2=NameXXX, f3=NULL
 f1=11, f2=NULL, f3=NULL
@@ -155,32 +141,30 @@ f1=5, f2=NULL, f3=NULL
 f1=6, f2=NameXXX, f3=1/1/2001 13:10:5
 f1=7, f2=NULL, f3=NULL
 f1=8, f2=NameXXX, f3=NULL
+<hr width="100%"></pre>
 
+<center><p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+<a href="home.htm">Go Home</a> </p></center>
 
-
-
-
-
-
-
-
-
-<HR WIDTH="100%"></PRE>
-
-<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
-<A HREF="home.htm">Go Home</A> </P></CENTER>
-
-<P>Copyright &copy; 1996-2012, Sergei Kuchin, email: <A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A>,
-<A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A>. <SCRIPT Language="JavaScript"><!-- hide from oldgmailsers
+<p>Copyright © 1996-2023, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>. <script language="JavaScript"><!-- hide from oldgmailsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
- </SCRIPT></P>
+ </script></p>
 
-<P><I>Permission to use, copy, modify and redistribute this document for
-any purpose is hereby granted without fee, provided that the above copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
+<p><i>Permission to use, copy, modify and redistribute this document for
+any purpose is hereby granted without fee, provided that the above 
+copyright
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE 
+AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING 
+ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL
+ THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR 
+CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF 
+USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR 
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR 
+PERFORMANCE OF THIS SOFTWARE. </i></p>
 
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -190,5 +174,8 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</BODY>
-</HTML>
+
+
+
+
+</body></html>

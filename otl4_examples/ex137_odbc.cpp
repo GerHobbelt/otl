@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <vector>
 #include <iterator>
@@ -24,16 +28,14 @@ public:
  string f2;
 
 // default constructor
- row(){f1=0;}
+  row():f1(0),f2(){}
 
 // destructor
  ~row(){}
 
 // copy constructor
- row(const row& arow)
+  row(const row& arow):f1(arow.f1),f2(arow.f2)
  {
-  this->f1=arow.f1;
-  this->f2=arow.f2;
  }
  
 // assignment operator
@@ -127,8 +129,8 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-   db.rlogon("UID=scott;PWD=tiger;DSN=firebird"); // connect to ODBC
-//  db.rlogon("scott/tiger@firebird"); // connect to ODBC, alternative format
+   db.rlogon("UID=scott;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
+//  db.rlogon("scott/tiger@firebirdsql"); // connect to ODBC, alternative format
                                     // of connect string 
 
   otl_cursor::direct_exec

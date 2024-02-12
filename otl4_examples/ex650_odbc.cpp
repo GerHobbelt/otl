@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <string>
 using namespace std;
@@ -29,7 +33,7 @@ void insert()
 
  for(int i=1;i<=20;++i){
   f2.assign(50001,' '); 
-  for(int j=0;j<50000;++j)
+  for(size_t j=0;j<50000;++j)
    f2[j]='*';
   f2[50000]='?';
   o<<i<<f2;
@@ -49,7 +53,7 @@ void select()
              ); 
    // create select stream
  
- float f1;
+ float f1=0;
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8
    // SELECT automatically executes when all input variables are
@@ -58,7 +62,7 @@ void select()
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[f2.length()-1]<<", len="
-      <<(int)f2.length()<<endl;
+      <<f2.length()<<endl;
  }
 
  i<<4<<4; // assigning :f11 = 4, :f12 = 4
@@ -68,7 +72,7 @@ void select()
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[f2.length()-1]<<", len="
-      <<(int)f2.length()<<endl;
+      <<f2.length()<<endl;
  }
 
 }

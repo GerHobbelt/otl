@@ -1,78 +1,74 @@
-<!DOCTYPE HTML PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
-<head>
-  <meta content="text/html; charset=ISO-8859-1"
- http-equiv="Content-Type">
-  <meta content="Sergei Kuchin" name="Author">
-  <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
- name="GENERATOR">
-  <meta
- content="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library"
- name="KeyWords">
-  <title>OTL 4.0, Example 206 (otl_exception, derived from a base class)</title>
-</head>
-<body>
-<center>
-<h1>OTL 4.0, Example 206</h1>
-</center>
-<center>
-<h1>(otl_exception, derived from a base class, MS SQL)</h1>
-</center>
-<h1>
-Example 206 (otl_exception, derived from a base class)</h1>
-This example demonstrates how to derive otl_exception from a base
-class,
-which may be part of already existing exception class hierarchy.
-<h2>Source Code</h2>
-<pre>#include &lt;iostream&gt;<br>using namespace std;<br>#include &lt;stdio.h&gt;<br><br>const int BASE_EXCEPTION=1; // "Base exception" class Id.<br>const int DB_BASE_EXCEPTION=2; // "DB Base exception" class Id.<br><br>// Let's assume that the following class is the base of&nbsp;<br>// the system exception class hierarchy<br>class my_base_exception{<br>public:<br><br>  my_base_exception()<br>  {<br>    large_string_copy[0]=0;<br>  }<br><br>&nbsp; virtual ~my_base_exception(){}<br><br>&nbsp; virtual int getType(void) const<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; return BASE_EXCEPTION;<br>&nbsp; }<br><br>&nbsp; virtual int getErrorCode(void) const<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; return 0;<br>&nbsp; }<br><br>&nbsp; virtual char* getErrorMessage(void) const<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; return "";<br>&nbsp; }<br><br>  virtual const char* getErrorSQLStm(void) const<br>  {<br>    return reinterpret_cast&lt;const char*&gt;("");<br>  }<br><br>  virtual const char* getErrorVarInfo(void) const<br>  {<br>    return reinterpret_cast&lt;const char*&gt;("");<br>  }<br><br>  virtual const char* getErrorLargeString(void) const<br>  {<br>    return large_string_copy;<br>  }<br><br>protected:<br><br>  char large_string_copy[100];<br><br><br>};<br><br>#define OTL_ODBC_MSSQL_2008 // Compile OTL 4/ODBC, MS SQL 2008<br>//#define OTL_ODBC // Compile OTL 4/ODBC. Uncomment this when used with MS SQL 7.0/ 2000<br><br>// This #define connects the otl_exception class to the exception<br>// class hierarchy.&nbsp;<br>#defe <a
- using="" namespace="" std=""
- href="otl3_compile.htm#OTL_EXCEPTION_DERIVED_FROM">OTL_EXCEPTION_DERIVED_FROM</a> my_base_exception<br><br>// This #define defines a set of new members in the <a
- href="otl3_exception_class.htm">otl_exception<br></a>// class<br>#define <a
- href="otl3_compile.htm#OTL_EXCEPTION_HAS_MEMBERS">OTL_EXCEPTION_HAS_MEMBERS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; virtual int getType(void) const&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp; return DB_BASE_EXCEPTION;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; virtual int getErrorCode(void) const&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp; return this-&gt;code;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; virtual char* getErrorMessage(void) const&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp; return (char*)this-&gt;msg;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; } \<br>                                                                \<br>  virtual const char* getErrorSQLStm(void) const                \<br>  {                                                             \<br>    return this-&gt;stm_text;                                      \<br>  }                                                             \<br>                                                                \<br>  virtual const char* getErrorVarInfo(void) const               \<br>  {                                                             \<br>    return this-&gt;var_info;                                      \<br>  }<br><br><br>#define <a
- href="otl3_compile.htm#OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW">OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW</a>(str,len)       \<br>{                                                                            \<br>  copy_str(this-&gt;large_string_copy,str,len,sizeof(this-&gt;large_string_copy)); \<br>}<br><br>void copy_str(char* dest,const void* src, int len, int buf_size)<br>{<br>  int temp_len=len;<br>  if(temp_len&gt;buf_size-1)<br>    temp_len=buf_size-1;<br>#if defined(_MSC_VER)<br>#if (_MSC_VER &gt;= 1400) // VC++ 8.0 or higher<br>  strncpy_s(dest,buf_size,reinterpret_cast&lt;const char*&gt;(src),temp_len);<br>  dest[temp_len+1]=0;<br>#else<br>  strncpy(dest,reinterpret_cast&lt;const char*&gt;(src),temp_len);<br>  dest[temp_len+1]=0;<br>#endif<br>#else<br>  strncpy(dest,reinterpret_cast&lt;const char*&gt;(src),temp_len);<br>  dest[temp_len+1]=0;<br>#endif<br> <br>}<br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a
- href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a
- href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br> char tmp[100];<br><br> for(int i=1;i&lt;=100;++i){<br>#if defined(_MSC_VER)<br>#if (_MSC_VER &gt;= 1400) // VC++ 8.0 or higher<br>  sprintf_s(tmp,sizeof(tmp),"12345678901234567890123456789012345_%d",i);<br>#else<br>  sprintf(tmp,"12345678901234567890123456789012345_%d",i);<br>#endif<br>#else<br>  sprintf(tmp,"12345678901234567890123456789012345_%d",i);<br>#endif<br>  o&lt;&lt;i&lt;&lt;tmp;<br> }<br>}<br><br>int main()<br>{<br>&nbsp;<a
- href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize the database environment<br>&nbsp;try{<br><br>  db.rlogon("scott/tiger@mssql2008"); // connect to MS SQL Server<br><br>&nbsp; <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a
- href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 varchar(30))"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; insert(); // insert records into table<br><br>&nbsp;}<br>&nbsp;catch(my_base_exception&amp; ex){ // intercept the base exception<br>   if(ex.getType()==DB_BASE_EXCEPTION){ <br>     // "database exception" is recognized<br>     // here, the otl_exception can be analyzed, or simply printed out<br>     cerr&lt;&lt;"Database exception:"&lt;&lt;endl;<br>     cerr&lt;&lt;"Code: "&lt;&lt;ex.getErrorCode()&lt;&lt;endl; // print out error code<br>     cerr&lt;&lt;"Message: "<br>         &lt;&lt;reinterpret_cast&lt;const char*&gt;(ex.getErrorMessage())<br>         &lt;&lt;endl; // print out the error message<br>     cerr&lt;&lt;"SQL Stm: "<br>         &lt;&lt;ex.getErrorSQLStm()<br>         &lt;&lt;endl; // print out the SQL Statement<br>     cerr&lt;&lt;"Var Info: "<br>         &lt;&lt;ex.getErrorVarInfo()<br>         &lt;&lt;endl; // print out the bind variable information<br>     if(ex.getErrorCode()==32005){<br>       // OTL defined exception<br>       cerr&lt;&lt;"Large Input String: "<br>           &lt;&lt;ex.getErrorLargeString()<br>           &lt;&lt;endl;<br>     }<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from the database<br><br>&nbsp;return 0;<br><br>}</pre>
-<h2>
-Output</h2>
-<pre>Database exception:<br>Code: 32005<br>Message: Input string value is too large to fit into the buffer<br>SQL Stm: insert into test_tab values(:f1     ,:f2          )<br>Var Info: Variable: :f2&lt;CHAR&gt;, datatype in operator &lt;&lt;/&gt;&gt;: CHAR<br>Large Input String: 1234567890123456789012345678901<br><br><hr
- width="100%"></pre>
-<center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
- href="home.htm">Go
-Home</a></center>
-<p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
- href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
-<a href="mailto:skuchin@gmail.com">skuchin@gmail.com.
-<script language="JavaScript">
+  <head>
+    <meta content="text/html; charset=windows-1252"
+      http-equiv="Content-Type">
+    <meta content="Sergei Kuchin" name="Author">
+    <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
+      name="GENERATOR">
+    <meta content="OTL, Oracle, ODBC, DB2, CLI, database API, C++,
+      Template Library" name="KeyWords">
+    <title>OTL 4.0, Example 206 (otl_exception, derived from a base
+      class)</title>
+  </head>
+  <body>
+    <center>
+      <h1>OTL 4.0, Example 206</h1>
+    </center>
+    <center>
+      <h1>(otl_exception, derived from a base class, MS SQL)</h1>
+    </center>
+    <h1>
+      Example 206 (otl_exception, derived from a base class)</h1>
+    This example demonstrates how to derive otl_exception from a base
+    class,
+    which may be part of already existing exception class hierarchy.
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;<br>using namespace std;<br>#include &lt;stdio.h&gt;<br><br>const int BASE_EXCEPTION=1; // "Base exception" class Id.<br>const int DB_BASE_EXCEPTION=2; // "DB Base exception" class Id.<br><br>// Let's assume that the following class is the base of&nbsp;<br>// the system exception class hierarchy<br>class my_base_exception{<br>public:<br><br>  my_base_exception()<br>  {<br>    large_string_copy[0]=0;<br>  }<br><br>&nbsp; virtual ~my_base_exception(){}<br><br>&nbsp; virtual int getType(void) const<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; return BASE_EXCEPTION;<br>&nbsp; }<br><br>&nbsp; virtual int getErrorCode(void) const<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; return 0;<br>&nbsp; }<br><br>&nbsp; virtual char* getErrorMessage(void) const<br>&nbsp; {<br>&nbsp;&nbsp;&nbsp; return "";<br>&nbsp; }<br><br>  virtual const char* getErrorSQLStm(void) const<br>  {<br>    return reinterpret_cast&lt;const char*&gt;("");<br>  }<br><br>  virtual const char* getErrorVarInfo(void) const<br>  {<br>    return reinterpret_cast&lt;const char*&gt;("");<br>  }<br><br>  virtual const char* getErrorLargeString(void) const<br>  {<br>    return large_string_copy;<br>  }<br><br>protected:<br><br>  char large_string_copy[100];<br><br><br>};<br><br>#define OTL_ODBC_MSSQL_2008 // Compile OTL 4/ODBC, MS SQL 2008<br>//#define OTL_ODBC // Compile OTL 4/ODBC. Uncomment this when used with MS SQL 7.0/ 2000<br><br>// This #define connects the otl_exception class to the exception<br>// class hierarchy.&nbsp;<br>#defe <a using="" namespace="" std="" href="otl3_compile.htm#OTL_EXCEPTION_DERIVED_FROM">OTL_EXCEPTION_DERIVED_FROM</a> my_base_exception<br><br>// This #define defines a set of new members in the <a href="otl3_exception_class.htm">otl_exception<br></a>// class<br>#define <a href="otl3_compile.htm#OTL_EXCEPTION_HAS_MEMBERS">OTL_EXCEPTION_HAS_MEMBERS</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; virtual int getType(void) const&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp; return DB_BASE_EXCEPTION;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; virtual int getErrorCode(void) const&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp; return this-&gt;code;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; }&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; virtual char* getErrorMessage(void) const&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; {&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp;&nbsp;&nbsp; return (char*)this-&gt;msg;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \<br>&nbsp; } \<br>                                                                \<br>  virtual const char* getErrorSQLStm(void) const                \<br>  {                                                             \<br>    return this-&gt;stm_text;                                      \<br>  }                                                             \<br>                                                                \<br>  virtual const char* getErrorVarInfo(void) const               \<br>  {                                                             \<br>    return this-&gt;var_info;                                      \<br>  }<br><br><br>#define <a href="otl3_compile.htm#OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW">OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW</a>(str,len)       \<br>{                                                                            \<br>  copy_str(this-&gt;large_string_copy,str,len,sizeof(this-&gt;large_string_copy)); \<br>}<br><br>void copy_str(char* dest,const void* src, int len, int buf_size)<br>{<br>  int temp_len=len;<br>  if(temp_len&gt;buf_size-1)<br>    temp_len=buf_size-1;<br>#if defined(_MSC_VER)<br>#if (_MSC_VER &gt;= 1400) // VC++ 8.0 or higher<br>  strncpy_s(dest,buf_size,reinterpret_cast&lt;const char*&gt;(src),temp_len);<br>  dest[temp_len]=0;<br>#else<br>  strncpy(dest,reinterpret_cast&lt;const char*&gt;(src),temp_len);<br>  dest[temp_len]=0;<br>#endif<br>#else<br>  strncpy(dest,reinterpret_cast&lt;const char*&gt;(src),temp_len);<br>  dest[temp_len]=0;<br>#endif<br> <br>}<br><br>#include &lt;otlv4.h&gt; // include the OTL 4.0 header file<br><br><a href="otl3_connect_class.htm">otl_connect</a> db; // connect object<br><br>void insert()<br>// insert rows into table<br>{&nbsp;<br>&nbsp;<a href="otl3_stream_class.htm">otl_stream</a> o(50, // buffer size<br>              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", <br>                 // SQL statement<br>              db // connect object<br>             );<br> char tmp[100];<br><br> for(int i=1;i&lt;=100;++i){<br>#if defined(_MSC_VER)<br>#if (_MSC_VER &gt;= 1400) // VC++ 8.0 or higher<br>  sprintf_s(tmp,sizeof(tmp),"12345678901234567890123456789012345_%d",i);<br>#else<br>  sprintf(tmp,"12345678901234567890123456789012345_%d",i);<br>#endif<br>#else<br>  sprintf(tmp,"12345678901234567890123456789012345_%d",i);<br>#endif<br>  o&lt;&lt;i&lt;&lt;tmp;<br> }<br>}<br><br>int main()<br>{<br>&nbsp;<a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize the database environment<br>&nbsp;try{<br><br>  db.rlogon("scott/tiger@mssql2008"); // connect to MS SQL Server<br><br>&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "drop table test_tab",<br>&nbsp;&nbsp;&nbsp; otl_exception::disabled // disable OTL exceptions<br>&nbsp;&nbsp; ); // drop table<br><br>&nbsp; <a href="otl3_const_sql.htm">otl_cursor::direct_exec<br></a>&nbsp;&nbsp; (<br>&nbsp;&nbsp;&nbsp; db,<br>&nbsp;&nbsp;&nbsp; "create table test_tab(f1 int, f2 varchar(30))"<br>&nbsp;&nbsp;&nbsp; );&nbsp; // create table<br><br>&nbsp; insert(); // insert records into table<br><br>&nbsp;}<br>&nbsp;catch(my_base_exception&amp; ex){ // intercept the base exception<br>   if(ex.getType()==DB_BASE_EXCEPTION){ <br>     // "database exception" is recognized<br>     // here, the otl_exception can be analyzed, or simply printed out<br>     cerr&lt;&lt;"Database exception:"&lt;&lt;endl;<br>     cerr&lt;&lt;"Code: "&lt;&lt;ex.getErrorCode()&lt;&lt;endl; // print out error code<br>     cerr&lt;&lt;"Message: "<br>         &lt;&lt;reinterpret_cast&lt;const char*&gt;(ex.getErrorMessage())<br>         &lt;&lt;endl; // print out the error message<br>     cerr&lt;&lt;"SQL Stm: "<br>         &lt;&lt;ex.getErrorSQLStm()<br>         &lt;&lt;endl; // print out the SQL Statement<br>     cerr&lt;&lt;"Var Info: "<br>         &lt;&lt;ex.getErrorVarInfo()<br>         &lt;&lt;endl; // print out the bind variable information<br>     if(ex.getErrorCode()==32005){<br>       // OTL defined exception<br>       cerr&lt;&lt;"Large Input String: "<br>           &lt;&lt;ex.getErrorLargeString()<br>           &lt;&lt;endl;<br>     }<br>&nbsp;}<br><br>&nbsp;db.logoff(); // disconnect from the database<br><br>&nbsp;return 0;<br><br>}</pre>
+    <h2>
+      Output</h2>
+    <pre>Database exception:<br>Code: 32005<br>Message: Input string value is too large to fit into the buffer<br>SQL Stm: insert into test_tab values(:f1     ,:f2          )<br>Var Info: Variable: :f2&lt;CHAR&gt;, datatype in operator &lt;&lt;/&gt;&gt;: CHAR<br>Large Input String: 1234567890123456789012345678901<br><br><hr width="100%"></pre>
+    <center><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a><a
+        href="home.htm">Go
+        Home</a></center>
+    <p>Copyright © 1996-2023, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+      <a href="mailto:skuchin@gmail.com">skuchin@gmail.com.
+        <script language="JavaScript">
 <!-- hide from old browsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
  </script></a></p>
-<p><i>Permission to use, copy,
-modify and redistribute this document
-for
-any purpose is hereby granted without fee, provided that the above
-copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE
-AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING
-ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT
-SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
-USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.</i>
-</p>
-<script type="text/javascript">
+    <p><i>Permission to use, copy,
+        modify and redistribute this document
+        for
+        any purpose is hereby granted without fee, provided that the
+        above
+        copyright
+        notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS"
+        AND THE
+        AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE
+        INCLUDING
+        ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+        EVENT
+        SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+        CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+        LOSS OF
+        USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT,
+        NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR
+        PERFORMANCE OF THIS SOFTWARE.</i>
+    </p>
+    <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
 document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
 </script>
-<script type="text/javascript">
+    <script type="text/javascript">
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</body>
+  </body>
 </html>

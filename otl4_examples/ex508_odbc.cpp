@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -64,7 +68,7 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  char f2[31];
 
  while(!i.eof()){ // while not end-of-data

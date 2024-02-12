@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -14,6 +18,11 @@ public:
   my_base_exception()
   {
     large_string_copy[0]=0;
+  }
+
+  my_base_exception(const my_base_exception& that)
+  {
+    memcpy(large_string_copy,that.large_string_copy,sizeof(large_string_copy));
   }
 
   virtual ~my_base_exception(){}
@@ -105,14 +114,16 @@ void copy_str(char* dest,const void* src, int len, int buf_size)
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1400) // VC++ 8.0 or higher
   strncpy_s(dest,buf_size,reinterpret_cast<const char*>(src),temp_len);
-  dest[temp_len+1]=0;
+  dest[temp_len]=0;
 #else
   strncpy(dest,reinterpret_cast<const char*>(src),temp_len);
-  dest[temp_len+1]=0;
+  dest[temp_len]=0;
 #endif
 #else
-  strncpy(dest,reinterpret_cast<const char*>(src),temp_len);
-  dest[temp_len+1]=0;
+  strncpy(dest,
+          reinterpret_cast<const char*>(src),
+          static_cast<size_t>(temp_len));
+  dest[temp_len]=0;
 #endif
  
 }
@@ -150,7 +161,7 @@ int main()
  otl_connect::otl_initialize(); // initialize the database environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to the database
+  db.rlogon("system/oracle@myora_tns"); // connect to the database
 
   otl_cursor::direct_exec
    (

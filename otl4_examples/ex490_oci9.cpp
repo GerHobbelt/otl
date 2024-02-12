@@ -1,7 +1,9 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
-
-#include <stdio.h>
 
 #define OTL_ORA9I // Compile OTL 4.0/OCI9i
 #define OTL_ORA_UTF8 // Enable UTF8 OTL for OCI9i
@@ -68,7 +70,7 @@ void select()
    // create select stream
  
  
- float f1;
+ float f1=0;
  otl_lob_stream lob; // Stream for reading CLOB
 
  i<<4; // assigning :f = 4
@@ -97,7 +99,10 @@ int main()
 {
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1400) // VC++ 8.0 or higher
-  _putenv(const_cast<char*>("NLS_LANG=.AL32UTF8")); 
+#if defined(_MSC_VER) && (_MSC_VER==1700)
+#pragma warning (disable:6031)
+#endif
+  (void)_putenv(const_cast<char*>("NLS_LANG=.AL32UTF8")); 
   // set your Oracle Client NLS_LANG 
   // if its default was set to something else
 #else
@@ -112,7 +117,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

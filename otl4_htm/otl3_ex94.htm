@@ -1,38 +1,37 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-   <TITLE>OTL 4.0, Example 94 (std::string, STL-compliant stream iterators)</TITLE>
-   <META NAME="Author" CONTENT="Sergei Kuchin">
-   <META NAME="GENERATOR" CONTENT="Mozilla/3.03Gold (Win95; I) [Netscape]">
-   <META NAME="KeyWords" CONTENT="OTL, Oracle, ODBC, DB2, CLI, database API, C++, Template Library">
-</HEAD>
-<BODY>
-
-<H1 ALIGN=CENTER>OTL 4.0, Example 94 (std::string, STL-compliant stream
-iterators)</H1>
-
-<H1>Example 94 (std::string, STL-compliant stream iterators)</H1>
-
-<P>This example demonstrates STL-compliant OTL/DB2-CLI stream itertors,
-std::strings, and ANSI C++ typecasts. </P>
-
-<H2>Source Code</H2>
-
-<PRE>#include &lt;iostream&gt;
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <title>OTL 4.0, Example 94 (std::string, STL-compliant stream
+      iterators)</title>
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+  </head>
+  <body>
+    <h1 align="CENTER">OTL 4.0, Example 94 (std::string, STL-compliant
+      stream iterators)</h1>
+    <h1>Example 94 (std::string, STL-compliant stream iterators)</h1>
+    <p>This example demonstrates STL-compliant OTL/DB2-CLI stream
+      itertors, std::strings, and ANSI C++ typecasts. </p>
+    <h2>Source Code</h2>
+    <pre>#include &lt;iostream&gt;
 #include &lt;vector&gt;
 #include &lt;iterator&gt;
 #include &lt;string&gt;
 #include &lt;cstring&gt;
-#include &lt;cstdlib&gt;</PRE>
-
-<PRE>#define OTL_DB2_CLI // Compile OTL 4.0/DB2-CLI
+#include &lt;cstdlib&gt;</pre>
+    <pre>#define OTL_DB2_CLI // Compile OTL 4.0/DB2-CLI
 #define OTL_STL // Turn on STL features
-#define OTL_ANSI_CPP // Turn on ANSI C++ typecasts
+#define OTL_ANSI_CPP // Turn on ANSI C++ typecasts<br><br>#if (defined(__clang__) || defined(__GNUC__)) &amp;&amp; \<br>    (defined(OTL_CPP_14_ON) || defined(OTL_CPP_17_ON))<br>#include &lt;experimental/string_view&gt;<br>#define <a href="otl3_compile.htm#OTL_STD_STRING_VIEW_CLASS">OTL_STD_STRING_VIEW_CLASS</a> std::experimental::string_view<br>#elif defined(_MSC_VER) &amp;&amp; (_MSC_VER&gt;=1910) &amp;&amp; defined(OTL_CPP_17_ON)<br>// VC++ 2017 or higher when /std=c++latest is used<br>#include &lt;string_view&gt;<br>#define OTL_STD_STRING_VIEW_CLASS std::string_view<br>#endif<br>
 #include &lt;otlv4.h&gt; // include the OTL 4.0 header file
 
 using namespace std;
 
-<A HREF="otl3_connect_class.htm">otl_connect</A> db; // connect object
+<a href="otl3_connect_class.htm">otl_connect</a> db; // connect object
 
 // row container class
 class row{
@@ -72,23 +71,21 @@ otl_stream&amp; operator&gt;&gt;(otl_stream&amp; s, row&amp; row)
 
 // redefined operator&lt;&lt; for writing row&amp; into otl_stream
 otl_stream&amp; operator&lt;&lt;(otl_stream&amp; s, const row&amp; row)
-{
- s&lt;&lt;row.f1&lt;&lt;row.f2;
- return s;
+{<br>#if defined(<a href="otl3_compile.htm#OTL_STD_STRING_VIEW_CLASS">OTL_STD_STRING_VIEW_CLASS</a>)<br>  OTL_STD_STRING_VIEW_CLASS f2_sv(row.f2.c_str(),row.f2.length());<br>  s&lt;&lt;row.f1<a href="file:///C:/oscl/vc/doc/otl4/otl3_stream_class.htm#OTL_STD_STRING_VIEW_CLASS">&lt;&lt;</a>f2_sv;<br>#else<br>&nbsp;s&lt;&lt;row.f1&lt;&lt;row.f2;<br>#endif<br> return s;
 }
 
 // redefined operator&lt;&lt; writing row&amp; into ostream
 ostream&amp; operator&lt;&lt;(ostream&amp; s, const row&amp; row)
 {
- s&lt;&lt;&quot;f1=&quot;&lt;&lt;row.f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;row.f2;
+ s&lt;&lt;"f1="&lt;&lt;row.f1&lt;&lt;", f2="&lt;&lt;row.f2;
  return s;
 }
 
 void insert()
 // insert rows into table
 { 
- <A HREF="otl3_stream_class.htm">otl_stream</A> o(5, // stream buffer size is logical rows
-              &quot;insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)&quot;, 
+ <a href="otl3_stream_class.htm">otl_stream</a> o(5, // stream buffer size is logical rows
+              "insert into test_tab values(:f1&lt;int&gt;,:f2&lt;char[31]&gt;)", 
                  // INSERT statement
               db // connect object
              );
@@ -99,66 +96,66 @@ void insert()
 // populate the vector
  for(int i=1;i&lt;=100;++i){
   r.f1=i;
-  r.f2=&quot;NameXXX&quot;;
+  r.f2="NameXXX";
   vo.push_back(r);
  }
 
- cout&lt;&lt;&quot;vo.size=&quot;&lt;&lt;vo.size()&lt;&lt;endl;
+ cout&lt;&lt;"vo.size="&lt;&lt;vo.size()&lt;&lt;endl;
 
 // insert vector into table
  copy(vo.begin(), 
       vo.end(), 
-      <A HREF="otl3_output_iterator.htm">otl_output_iterator</A>&lt;row&gt;(o)
+      <a href="otl3_output_iterator.htm">otl_output_iterator</a>&lt;row&gt;(o)
      );
 
 }
 
 void select()
 { 
- <A HREF="otl3_stream_class.htm">otl_stream</A> i(5, // stream buffer size in logical rows
-              &quot;select * from test_tab &quot;
-              &quot;where f1 between :f11&lt;int&gt; and :f12&lt;int&gt;*2&quot;,
+ <a href="otl3_stream_class.htm">otl_stream</a> i(5, // stream buffer size in logical rows
+              "select * from test_tab "
+              "where f1 between :f11&lt;int&gt; and :f12&lt;int&gt;*2",
                  // SELECT statement
               db // connect object
              ); 
    // create select stream
  
  vector&lt;row&gt; v; // vector of rows
-</PRE>
+</pre>
 
-<PRE> i&lt;&lt;8&lt;&lt;8; // enter :f11=8 and :f12=8 into the stream
+<pre> i&lt;&lt;8&lt;&lt;8; // enter :f11=8 and :f12=8 into the stream
 
 // copy all rows to be fetched into the vector
 
- copy(<A HREF="otl3_input_iterator.htm">otl_input_iterator</A>&lt;row,ptrdiff_t&gt;(i), 
-      <A HREF="otl3_input_iterator.htm">otl_input_iterator</A>&lt;row,ptrdiff_t&gt;(),
+ copy(<a href="otl3_input_iterator.htm">otl_input_iterator</a>&lt;row,ptrdiff_t&gt;(i), 
+      <a href="otl3_input_iterator.htm">otl_input_iterator</a>&lt;row,ptrdiff_t&gt;(),
       back_inserter(v));    
 
- cout&lt;&lt;&quot;Size=&quot;&lt;&lt;v.size()&lt;&lt;endl;
+ cout&lt;&lt;"Size="&lt;&lt;v.size()&lt;&lt;endl;
 
 // send the vector to cout
- copy(v.begin(), v.end(), ostream_iterator&lt;row&gt;(cout, &quot;\n&quot;));
+ copy(v.begin(), v.end(), ostream_iterator&lt;row&gt;(cout, "\n"));
 
 }
 
 int main()
 {
- <A HREF="otl3_connect_class.htm">otl_connect::otl_initialize</A>(); // initialize DB2 environment
+ <a href="otl3_connect_class.htm">otl_connect::otl_initialize</a>(); // initialize DB2 environment
  try{
 
-  db.rlogon(&quot;UID=scott;PWD=tiger;DSN=db2sql&quot;); // connect to DB2
+  db.rlogon("UID=scott;PWD=tiger;DSN=db2sql"); // connect to DB2
 
-  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
-</A>   (
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
     db,
-    &quot;drop table test_tab&quot;,
+    "drop table test_tab",
     otl_exception::disabled // disable OTL exceptions
    ); // drop table
 
-  <A HREF="otl3_const_sql.htm">otl_cursor::direct_exec
-</A>   (
+  <a href="otl3_const_sql.htm">otl_cursor::direct_exec
+</a>   (
     db,
-    &quot;create table test_tab(f1 int, f2 varchar(30))&quot;
+    "create table test_tab(f1 int, f2 varchar(30))"
     );  // create table
 
   insert(); // insert records into table
@@ -166,7 +163,7 @@ int main()
 
  }
 
- catch(<A HREF="otl3_exception_class.htm">otl_exception</A>&amp; p){ // intercept OTL exceptions
+ catch(<a href="otl3_exception_class.htm">otl_exception</a>&amp; p){ // intercept OTL exceptions
   cerr&lt;&lt;p.msg&lt;&lt;endl; // print out error message
   cerr&lt;&lt;p.stm_text&lt;&lt;endl; // print out SQL that caused the error
   cerr&lt;&lt;p.sqlstate&lt;&lt;endl; // print out SQLSTATE message
@@ -178,11 +175,11 @@ int main()
  return 0;
 
 }
-</PRE>
+</pre>
 
-<H2>Output</H2>
+<h2>Output</h2>
 
-<PRE>vo.size=100
+<pre>vo.size=100
 Size=9
 f1=8, f2=NameXXX
 f1=9, f2=NameXXX
@@ -195,22 +192,22 @@ f1=15, f2=NameXXX
 f1=16, f2=NameXXX
 
 
-<HR WIDTH="100%"></PRE>
+<hr width="100%"></pre>
 
-<CENTER><P><A HREF="otl3_examples.htm">Examples</A> <A HREF="otl3.htm">Contents</A>
-<A HREF="home.htm">Go Home</A> </P></CENTER>
+<center><p><a href="otl3_examples.htm">Examples</a> <a href="otl3.htm">Contents</a>
+<a href="home.htm">Go Home</a> </p></center>
 
-<P>Copyright &copy; 1996-2012, Sergei Kuchin, email: <A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A>,
-<A HREF="mailto:skuchin@gmail.com">skuchin@gmail.com</A>. <SCRIPT Language="JavaScript"><!-- hide from oldgmailsers
+<p>Copyright © 1996-2023, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>,
+<a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>. <script language="JavaScript"><!-- hide from oldgmailsers
  var modDate = new Date(document.lastModified)
  document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
                 modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
  //-->
- </SCRIPT></P>
+ </script></p>
 
-<P><I>Permission to use, copy, modify and redistribute this document for
+<p><i>Permission to use, copy, modify and redistribute this document for
 any purpose is hereby granted without fee, provided that the above copyright
-notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </I></P>
+notice appear in all copies. THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
 
 <script type="text/javascript">
 var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
@@ -220,5 +217,6 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 var pageTracker = _gat._getTracker("UA-5456201-1");
 pageTracker._trackPageview();
 </script>
-</BODY>
-</HTML>
+
+
+</body></html>

@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #define OTL_ORA8I // Compile OTL 4/OCI7
 #define OTL_STL // Turn on STL
 #include <otlv4.h> // include the OTL 4 header file
@@ -31,12 +35,12 @@ void plsql(void)
   if(t2.is_null(j))
    cout<<"T2["<<j<<"]=NULL"<<endl;
   else
-   cout<<"T2["<<j<<"]="<<t2.v[j].month
-       <<"/"<<t2.v[j].day
-       <<"/"<<t2.v[j].year
-       <<" "<<t2.v[j].hour
-       <<":"<<t2.v[j].minute
-       <<":"<<t2.v[j].second
+    cout<<"T2["<<j<<"]="<<t2.v[static_cast<size_t>(j)].month
+        <<"/"<<t2.v[static_cast<size_t>(j)].day
+        <<"/"<<t2.v[static_cast<size_t>(j)].year
+        <<" "<<t2.v[static_cast<size_t>(j)].hour
+        <<":"<<t2.v[static_cast<size_t>(j)].minute
+        <<":"<<t2.v[static_cast<size_t>(j)].second
        <<endl;
 
 }
@@ -47,7 +51,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (db,

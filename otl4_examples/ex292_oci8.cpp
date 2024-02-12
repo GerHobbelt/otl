@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -39,7 +43,7 @@ void insert()
 void fetch(otl_read_stream_interface& s)
 {
   cout<<"===================="<<endl;
-  int f1;
+  int f1=0;
   char f2[31];
   while(!s.eof()){ // while not end-of-data
     s>>f1>>f2;
@@ -94,7 +98,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

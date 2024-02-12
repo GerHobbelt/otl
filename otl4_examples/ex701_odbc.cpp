@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -25,8 +29,8 @@ void insert()
 
  for(int i=1;i<=20;++i){
   for(int j=0;j<50000;++j)
-   f2[j]=(unsigned short) '*'; // first 128 characters of Unicode are ASCII
-  f2[50000]=(unsigned short) '?'; // first 128 characters of Unicode are ASCII
+    f2[j]=static_cast<unsigned short>('*'); // first 128 characters of Unicode are ASCII
+  f2[50000]=static_cast<unsigned short>('?'); // first 128 characters of Unicode are ASCII
   f2.set_len(50001);
   o<<i<<f2;
  }
@@ -45,7 +49,7 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8
    // SELECT automatically executes when all input variables are
@@ -54,8 +58,8 @@ void select()
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
   cout<<"f1="<<f1<<", f2="
-      <<(char)f2[0] // first 128 characters of Unicode are ASCII
-      <<(char)f2[f2.len()-1]<<", len="<<f2.len()<<endl;
+      <<static_cast<char>(f2[0]) // first 128 characters of Unicode are ASCII
+      <<static_cast<char>(f2[f2.len()-1])<<", len="<<f2.len()<<endl;
  }
 
  i<<4<<4; // assigning :f11 = 4, :f12 = 4
@@ -64,8 +68,8 @@ void select()
 
  while(!i.eof()){ // while not end-of-data
   i>>f1>>f2;
-  cout<<"f1="<<f1<<", f2="<<(char)f2[0]
-      <<(char)f2[f2.len()-1]<<", len="<<f2.len()<<endl;
+  cout<<"f1="<<f1<<", f2="<<static_cast<char>(f2[0])
+      <<static_cast<char>(f2[f2.len()-1])<<", len="<<f2.len()<<endl;
  }
 
 }

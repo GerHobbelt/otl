@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -23,8 +27,19 @@ void insert()
   o<<1<<"Line1"; // Enter one row into the stream
   o.flush(); // flush the strem buffer, i.e. force
              // the stream to execute
-  o<<1<<"Line1"; // Enter the same data into the stream
-                 // and cause a "duplicate key" error.
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+  otl_write_row(o,1,"Line1"); // Enter the same data into the stream
+                              // and cause a "duplicate key" error.
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+  otl_write_row(o,1,"Line1"); // Enter the same data into the stream
+  // the old way (operators >>() / <<()) is available as always:
+  //  o<<1<<"Line1"; // Enter the same data into the stream
+                    // and cause a "duplicate key" error.
+#endif
+
   o.flush();
  }catch(otl_exception& p){
   if(p.code==2601){
@@ -63,13 +78,31 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  char f2[31];
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2;
+#if (defined(_MSC_VER) && _MSC_VER>=1600) || defined(OTL_CPP_11_ON)
+// C++11 (or higher) compiler
+ for(auto& it : i){
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+   otl_read_row(it,f1,f2);
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+   otl_read_row(it,f1,f2);
+  // the old way (operators >>() / <<()) is available as always:
+  //   it>>f1>>f2;
+#endif
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
  }
+#else
+// C++98/03 compiler
+ while(!i.eof()){ // while not end-of-data
+   i>>f1>>f2;
+   cout<<"f1="<<f1<<", f2="<<f2<<endl;
+ }
+#endif
 
 }
 

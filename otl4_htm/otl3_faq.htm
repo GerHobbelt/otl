@@ -1,43 +1,232 @@
-<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=ISO-8859-1">
-    <meta name="Author" content="Sergei Kuchin">
-    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
-      [Netscape]">
-    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
-      API, C++, Template Library">
-    <title>Oracle, Odbc and DB2-CLI Template Library, Version 4.0,
-      Frequently Asked Questions</title>
-  </head>
-  <body>
-    <ul>
-      <center>
-        <h1>Oracle, Odbc and DB2-CLI Template Library, Version 4.0</h1>
-      </center>
-      <center>
-        <h1>Frequently Asked Questions</h1>
-      </center>
-    </ul>
-    Please, send your questions and comments to <a
-      href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
-      href="mailto:skuchin@gmail.com">skuchin@gmail.com</a><br>
-    <i><font size="+1"><br>
-      </font></i><i><font size="+1"><a name="MULTI_RS_SUPPORT"></a>Q.
-        OTL: How does OTL handle stored procedures that return multiple
-        implicit result sets (when used with ODBC, MS SNAC, or DB2 CLI)?<br>
-        <br>
-      </font></i>As of the OTL version 4.0.264, the answer is No. OTL
-    can only handle a stored procedure that returns one <a
-      href="otl3_stream_class.htm#implicit_select">implicit</a> result
-    set. Essentially, in the case of a stored procedure that returns an
-    implicit result set, the <a href="otl3_stream_class.htm">otl_stream</a>
-    class handles the implicit result set as a SELECT statement. Such
-    stored procedures are limited to having only input parameters.<br>
-    <br>
-    <i><font size="+1">Q. OTL: how does OTL handle NULLs?</font></i>
-    <ul>
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/4.77 [en] (Win95; U)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+    <title>Oracle, Odbc and DB2-CLI Template Library, Version 4.0,
+      Frequently Asked Questions</title>
+  </head>
+  <body>
+    <ul>
+      <center>
+        <h1>Oracle, Odbc and DB2-CLI Template Library, Version 4.0</h1>
+      </center>
+      <center>
+        <h1>Frequently Asked Questions</h1>
+      </center>
+    </ul>
+    Please, send your questions and comments to <a
+      href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>.<br>
+    <br>
+    <i><font size="+1"><a name="MYSQL_ODBC_80"></a>Q. OTL: Why when
+        MySQL ODBC 8.0.x driver is used on a SELECT statement that
+        returns a BLOB in OTL LOB stream mode, the SELECT doesn't return
+        the BLOB's value?<br>
+        <br>
+        &nbsp; </font></i>It's a bug in the MySQL ODBC driver. Here's a
+    link to a <a
+      href="https://forums.mysql.com/read.php?37,672889,672942#msg-672942">workaround</a>.<br>
+    <br>
+    <br>
+    <i><font size="+1"><a name="SQLITE"></a>Q. OTL: Why does OTL return
+        incorrect integer values for 64-bit SQLite3?<br>
+        <br>
+        &nbsp; </font></i>A connection property needs to be specified
+    in order to let the SQLite ODBC driver know to map SQLite "int" to
+    ODBC SQL_BIGINT. See <a
+      href="http://ch-werner.de/sqliteodbc/html/index.html">this link</a>
+    for more detail.<br>
+    &nbsp; <br>
+    <a href="mailto:skuchin@gmail.com"><br>
+    </a><i><font size="+1"><a name="MSSQL_COLUMNSTORE_INDEXES"></a>Q.
+        OTL: <font size="+1">Does</font> OTL support SELECT statements
+        against tables that have clustered columnstore indexes?<br>
+        <br>
+        &nbsp; </font></i>What should you do when you get the following
+    error message:<br>
+    <br>
+    &nbsp;&nbsp; <tt>[Microsoft][ODBC SQL Server Driver][SQL Server]</tt><tt>Cursors
+
+
+
+
+
+      are not supported on a table which has a clustered columnstore
+      index.</tt><br>
+    <br>
+    The otl_stream needs to be opened with otl_implicit_select, for
+    example:<br>
+    <br>
+    <tt>&nbsp;&nbsp; otl_stream my_stream(100,</tt><tt><br>
+    </tt><tt>&nbsp; &nbsp;
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+      "SELECT ... FROM table_that_has_clustered_columnstore_index WHERE
+      ...",</tt><tt><br>
+    </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+      db,</tt><tt><br>
+    </tt><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+
+
+      otl_implicit_select);</tt><tt><br>
+    </tt><br>
+    Such SELECT statements are treated by the SQL Server ODBC driver as
+    a stored procedure that returns an implicit result set. For more
+    detail on columnstore indexes, see <a
+href="https://docs.microsoft.com/en-us/sql/t-sql/statements/create-columnstore-index-transact-sql">this
+
+
+
+
+
+      link</a>.<br>
+    <br>
+    <i><font size="+1"><a name="MYSQL_UTF8"></a>Q. OTL: <font size="+1">Does</font>
+        OTL work with UTF-8 and MySQL?<br>
+        <br>
+      </font></i>Yes, it does. The regular non-Unicode MyODBC driver
+    (a.k.a. ANSI ODBC driver) can handle UTF-8 strings correctly. Either
+    the corresponding property for the MyODBC driver needs to be set up
+    via ODBC Driver Manager in Windows, or in a text file (see more
+    detailed instructions for the unixodbc package) in Linux/Unix. An
+    alternative way to enable support for UTF-8 in MyODBC is to <span>append
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      ";CHARSET=utf8" to the string passed to otl_connect::rlogon</span>(),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    for example:<br>
+    <pre>&nbsp; db.rlogon("UID=scott;PWD=tiger;DSN=mysql51;CHARSET=utf8"); </pre>
+    <br>
+    Also, see code example <a href="otl4_ex759.htm">759</a> for more
+    detail.<br>
+    <br>
+    <i><font size="+1"><a name="SQL_SERVER_LINUX"></a>Q. OTL: <font
+          size="+1">Does</font> OTL work with MS SQ<font size="+1">L
+          Server<font size="+1"> and Linux</font></font>?<br>
+        <br>
+      </font></i>Yes, it does. The old way is to use the <a
+      href="http://www.freetds.org/">FreeTDS</a> ODBC driver. FreeTDS
+    lacks any support for the TDS protocol for MS SQL Server 2005 (and
+    higher). A few years back, Microsoft <a
+      href="http://www.microsoft.com/en-us/download/details.aspx?id=28160">released</a>
+    a 64-bit SNAC / ODBC driver for Linux. It's not Open Source, though.
+    You'll have to install an RPM package for RHEL 5.x, or 6.x, or a
+    binary for non-RHEL Linux distributions. In order to compile OTL in
+    Linux for use with MS SQL Server in Windows, the following #defines
+    should be used:<br>
+    <br>
+    <tt>#define OTL_ODBC_UNIX // Enables #include of ODBC header files,
+      but doesn't include Windows specific header files.</tt><tt><br>
+    </tt><tt> #define OTL_ODBC_MSSQL_2008 // Works with MS SQL 2008
+      (R2), 2012</tt><tt>, and 2014<br>
+    </tt><tt> #include &lt;otlv4.h&gt;</tt><tt><br>
+    </tt><tt> </tt><br>
+    And the object files need to be linked with the UnixODBC driver
+    manager library: -lodbc.<br>
+    <br>
+    Since this question &amp; answer was added to the F.A.Q., Microsoft
+    released <a
+      href="http://msdn.microsoft.com/en-us/library/hh568451.aspx">another
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      SNAC</a> (version 11 to be at the same level as SNAC for Windows,
+    I assume) for Linux, which is recommended over the <a
+      href="http://www.microsoft.com/en-us/download/details.aspx?id=28160">first
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      SNAC</a> for Linux.<br>
+    <br>
+    When #define <a href="otl3_compile.htm#OTL_ENABLE_MSSQL_MARS">OTL_ENABLE_MSSQL_MARS</a>
+    is enabled, it doesn't actually enable SNAC MARS.
+    "MultipleActiveResultSets=true" clause needs to be added to the
+    corresponding entry in odbc.ini.<br>
+    <i><font size="+1"><br>
+      </font></i><i><font size="+1"><a name="MULTI_RS_SUPPORT"></a>Q.
+        OTL: Does OTL handle stored procedures that return multiple
+        implicit result sets (when used with ODBC, MS SNAC, or DB2 CLI)?<br>
+        <br>
+      </font></i>As of the OTL version 4.0.264, the answer is No. OTL
+    can only handle a stored procedure that returns one <a
+      href="otl3_stream_class.htm#implicit_select">implicit</a> result
+    set. Essentially, in the case of a stored procedure that returns an
+    implicit result set, the <a href="otl3_stream_class.htm">otl_stream</a>
+    class handles the implicit result set as a SELECT statement. Such
+    stored procedures are limited to having only input parameters.<br>
+    <br>
+    <i><font size="+1">Q. OTL: how does OTL handle NULLs?</font></i>
+    <ul>
       <li>Call otl_stream::<a href="otl3_stream_class.htm#is_null">is_null</a>()
 to
 check
@@ -48,360 +237,818 @@ that
 
 
 
-        was just read from the stream is NULL or not.<br>
-      </li>
-      <br>
-      <li>Use template class <a href="otl3_value.htm">otl_value</a>&lt;T&gt;.<br>
-        <br>
-      </li>
-      <li>If there is a need to set the output variable to a value when
-        NULL is fetched (by default, OTL does not set the output buffer
-        to any value in the case of NULL), the following #defines could
-        be enabled:<br>
-        <br>
-      </li>
-      <ul>
-        <li> <a href="otl3_compile.htm#OTL_DEFAULT_NUMERIC_NULL_TO_VAL">OTL_DEFAULT_NUMERIC_NULL_TO_VAL</a></li>
-        <li> <a
-            href="otl3_compile.htm#OTL_DEFAULT_DATETIME_NULL_TO_VAL">OTL_DEFAULT_DATETIME_NULL_TO_VAL</a></li>
-        <li> <a href="otl3_compile.htm#OTL_DEFAULT_STRING_NULL_TO_VAL">OTL_DEFAULT_STRING_NULL_TO_VAL</a></li>
-        <li> <a href="otl3_compile.htm#OTL_DEFAULT_CHAR_NULL_TO_VAL">OTL_DEFAULT_CHAR_NULL_TO_VAL</a></li>
-        <li><a
-href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL">OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL</a></li>
-      </ul>
-    </ul>
-    <i><font size="+1"><br>
-        Q. OTL: Why don't my <a href="otl4_subscriber.htm">Oracle
-          otl_subscriber</a> receive notifications on INSERT or UPDATE
-        or DELETE statements</font></i><span style="font-style: italic;">?</span><br>
-    <br>
-    <span style="font-style: italic;">Issue category</span>: OTL with
-    Oracle 11g R2 Continuous Query Notification (aka Database Change
-    Notification).<br>
-    <br>
-    <span style="font-style: italic;">Problem description</span>: OTL
-    registered callback function does not get invoked when change
-    notification is sent by the database server.<br>
-    <br>
-    <span style="font-style: italic;">Symptoms</span>:<br>
-    <br>
-    1.&nbsp; The subscription entry is removed from
-    USER_CHANGE_NOTIFICATION_REGS table when the insert/update is done
-    on the registered table.<br>
-    <br>
-    2.&nbsp; The client&#8217;s callback function does not get invoked when
-    change notification is sent by the db server.&nbsp; Use network data
-    analyzer such as WireShark to ensure that client receives data from
-    the server.&nbsp; In the example <a href="otl4_ex585.htm">585</a>,
-    it uses port 5005.&nbsp; Capture the data traffic on the port using
-    tcpdump(Linux) or snoop(Solaris).&nbsp; <br>
-    <br>
-    <span style="font-style: italic;">Note</span>: If you see
-    ICMPmessage with destination unreachable, please check if the
-    firewall blocks the communication between the client and the server.<br>
-    <br>
-    <span style="font-style: italic;">Solutions</span>:<br>
-    <br>
-    To solve the issue above, please ensure that OTL client uses the
-    same Oracle version as its database server.&nbsp; Both client and
-    the database server are also running on the same OS platform.<br>
-    <br>
-    <span style="font-style: italic;">For example</span>:<br>
-    <br>
-    Example <a href="otl4_ex585.htm">585</a> was used as the OTL
-    client.&nbsp; The problem above was initially observed when OTL
-    client with 11.2.0.2 oracle instant client registered subscription
-    remotely to Oracle database server 11.2.0.1.The client was running
-    on Linux and the server was running on Solaris.<br>
-    <br>
-    Use the solution above, the OTL client with 11.2.0.1 Oracle instant
-    client on Linux can subscribe and receive notification successfully
-    when it talks to Oracle database server 11.2.0.1 on Linux.<br>
-    <br>
-    In summary, please check your client/server OS platform and its
-    Oracle version.<br>
-    <br>
-    <span style="font-style: italic;">Note</span>: I did not observe
-    this problem on 11g R1, the client and the server work regardless
-    their OS platform.&nbsp; However, I saw difference in the
-    registration between R1 and R2.&nbsp; The &#8220;CALLBACK&#8221; in the
-    USER_CHANGE_NOTIFICATION_REGS are different between R1 and R2.&nbsp;
-    The notification message from the server also looks different.<br>
-    <br>
-    <span style="font-family: monospace;"></span><br>
-    <i><font size="+1"><a name="SET_NOCOUNT_ON"></a>Q. OTL: Why my T-SQL
-        stored procedure that has INSERT or UPDATE or DELETE statements
-        doesn't work with OTL</font></i><span style="font-style:
-      italic;">?</span><br>
-    <br>
-    INSERT/UPDATE/DELETE stat&#1077;ments inside T-SQL stored procedures
-    generate row [processed] counts (RPC). The RPCs get returned back to
-    the caller, in this case to the OTL/C++ code, as separate result
-    sets via MS SQL Native Client (SNAC). OTL doesn't handle such RPC
-    result sets, so they need to be turned off with "SET NOCOUNT ON"
-    statement in the stored procedure, for example:<br>
-    <br>
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; CREATE
-      PROCEDURE my_proc</span><br style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ...</span><br
-      style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; AS</span><br
-      style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; SET NOCOUNT
-      ON</span><br style="font-family: monospace;">
-    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ...</span><br>
-    <br>
-    <i><font size="+1"><a name="Nested_Quesry"></a>Q. OTL: why nested
-        queries with bind variables do not work in MS SQL Server?</font></i>
-    <br>
-    <br>
-    Try to add otl_implicit_select right after the otl_connect
-    parameter, when you are opening the nested SELECT:<br>
-    <pre wrap=""> otl_stream s(1,<br>              "select dt from "<br>              "  (select  "<br>              "     dateadd(day, <span style="color: rgb(0, 153, 0);">:v&lt;int&gt;</span>, getdate() "<br>              "  )dt ) xt ",<br>              db, // connect object<br>              <span style="font-style: italic;">otl_implicit_select</span><br>             );<br><br></pre>
-    Problem is that SQLPrepare() doesn't return any SELECT output column
-    descriptors (OTL exception: Column: 0&lt;UNKNOWN&gt;), and it looks
-    like the nested SELECT gets converted into a temporary stored
-    procedure, which means you have to specify that it is a stored
-    procedure that returns an implicit result set. I don't know why the
-    database server does it, probably as an optimization technique.<br>
-    <br>
-    <br>
-    <i><font size="+1">Q. OTL: When I insert a new row into a table in
-        MySQL, I can</font></i><span style="font-style: italic;">'t
-      SELECT it, what's going on?</span><br>
-    <br>
-    If you're using a prepared SELECT statement in an otl_stream, and
-    keep executing / reusing the statement to get new rows, you need to
-    commit (call otl_connect::commit()) after the fetch sequence is
-    exhausted each time. The commit call will let your MySQL Server know
-    that your current read only transaction is finished, and the server
-    can start a new transaction, which will make newly inserted rows to
-    be visible to your SELECT statement. In other words, you need to
-    commit your SELECT statements in order to able to see new rows.<br>
-    <br>
-    <i><font size="+1"><a name="NO_DSN"></a>Q. OTL: How do I connect to
-        my database without creating an ODBC DSN?</font></i> <br>
-    <br>
-    Take a look this <a href="http://www.connectionstrings.com/">Web
-      site</a>.<br>
-    <br>
-    <i><font size="+1">Q. OTL: is it thread safe?</font></i>
-    <p></p>
-    <p>OTL does not set any mutex locks or critical sections. In case if
-      each thread has its own otl_connect object, there is no need for
-      mutex locks. In case of sharable connections, it is the
-      developer's responsibility to wrap up OTL calls with mutex locks.
-      In general, database APIs do not guarantee thread safety.
-      otl_connect::<a href="otl3_connect_class.htm#otl_initialize">otl_initialize</a>
-      passes a flag to the underlying database API only to let the API
-      know that the program is running in a multi-threaded mode. </p>
-    <p><i><font size="+1">Q. OTL: does it work with SQLite?</font></i> </p>
-    <p>Yes, it does. OTL/ODBC works with SQLite. See the following <a
-        href="otl4_sqlite_examples.htm">examples</a> for detail.<br>
-    </p>
-    <p><i><font size="+1">Q. OTL: does it support Oracle 10g or Oracle
-          11g?</font></i> </p>
-    <p>The answer is Yes. Use #define <a
-        href="otl3_compile.htm#OTL_ORA10G">OTL_ORA10G</a>, <a
-        href="otl3_compile.htm#OTL_ORA10G_R2">OTL_ORA10G_R2</a>, or <a
-        href="otl3_compile.htm#OTL_ORA11G">OTL_ORA11G</a>. </p>
-    <p> </p>
-    <p><i><font size="+1">Q. OTL: does it work with SAP DB?</font></i> </p>
-    <p>Yes, it does. OTL/ODBC works with SAP DB. Fore more detail, see
-      OTL <a href="otl4_sap_db_examples.htm">examples</a> for SAP DB. </p>
-    <p><i><font size="+1">Q. OTL: does it support CLOBs/BLOBs in PL/SQL?</font></i>
-    </p>
-    <p>The answer is: it depends. You need to keep in mind that
-      "CLOB/BLOB" as a PL/SQL data type is a <i>locator</i> of a large
-      object, not a value. That is, the object itself needs to be
-      created first, its locator needs to be retrieved from the database
-      into C++, and only then the locator can be passed into PL/SQL.
-      Also, see code example <a href="otl4_ex378.htm">378</a>.<br>
-    </p>
-    <p><i><font size="+1">Q. OTL: does it support Unicode?</font></i> </p>
-    <p>The answer is Yes. OTL supports UTF-16 string/CLOB/NCLOB bind
-      variables for ODBC, DB2-CLI, and Oracle. OTL also supports UTF-8
-      string/CLOB/NCLOB bind variables for Oracle. PostgreSQL ODBC
-      supports UTF-8 string values out of the box, which can be used
-      with OTL when the client character set is to UTF-8. OTL does not
-      support Unicode SQL statements. <br>
-    </p>
-    <p><i><font size="+1">Q. OTL: does it support Oracle 9i?</font></i>
-    </p>
-    <p>The answer is Yes. Starting with version 4.0.0, OTL introduces
-      #define <a href="otl3_compile.htm#OTLORA9I">OTL_ORA9I</a> that is
-      dedicated to Oracle 9i. In OTL 4.0.0 itself, it's not much more
-      than a synonym for OTL_ORA8I, but in subsequent releases, when OTL
-      starts using OCI9 specific features, only OTL_ORA9I should be
-      used. See "<a href="otl3_whatn.htm#NEW_OTL400">what's new in OTL 4</a>"
-      for more detail. </p>
-    <p><i><font size="+1">Q. OTL: can it work with Interbase 6.x?</font></i>
-    </p>
-    <p>The answer is Yes. Starting with version 4.0.0, OTL supports an
-      Open Source ODBC driver for Interbase. See "<a
-        href="otl3_whatn.htm#NEW_OTL400">what's new in OTL 4</a>" for
-      more detail. </p>
-    <p><i><font size="+1">Q. OTL: can it work with PostgreSQL 7.x / 8.x?</font></i>
-    </p>
-    <p>The answer is Yes. Starting with version 4.0.0, OTL supports
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        was just read from the stream is NULL or not.<br>
+      </li>
+      <br>
+      <li>Use template class <a href="otl3_value.htm">otl_value</a>&lt;T&gt;.<br>
+        <br>
+      </li>
+      <li>If there is a need to set the output variable to a value when
+        NULL is fetched (by default, OTL does not set the output buffer
+        to any value in the case of NULL), the following #defines could
+        be enabled:<br>
+        <br>
+      </li>
+      <ul>
+        <li> <a href="otl3_compile.htm#OTL_DEFAULT_NUMERIC_NULL_TO_VAL">OTL_DEFAULT_NUMERIC_NULL_TO_VAL</a></li>
+        <li> <a
+            href="otl3_compile.htm#OTL_DEFAULT_DATETIME_NULL_TO_VAL">OTL_DEFAULT_DATETIME_NULL_TO_VAL</a></li>
+        <li> <a href="otl3_compile.htm#OTL_DEFAULT_STRING_NULL_TO_VAL">OTL_DEFAULT_STRING_NULL_TO_VAL</a></li>
+        <li> <a href="otl3_compile.htm#OTL_DEFAULT_CHAR_NULL_TO_VAL">OTL_DEFAULT_CHAR_NULL_TO_VAL</a></li>
+        <li><a
+href="otl3_compile.htm#OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL">OTL_USER_DEFINED_STRING_CLASS_DEFAULT_NULL_TO_VAL</a></li>
+      </ul>
+    </ul>
+    <i><font size="+1"><br>
+        Q. OTL: Why don't my <a href="otl4_subscriber.htm">Oracle
+          otl_subscriber</a> receive notifications on INSERT or UPDATE
+        or DELETE statements</font></i><span style="font-style: italic;">?</span><br>
+    <br>
+    <span style="font-style: italic;">Issue category</span>: OTL with
+    Oracle 11g R2 Continuous Query Notification (aka Database Change
+    Notification).<br>
+    <br>
+    <span style="font-style: italic;">Problem description</span>: OTL
+    registered callback function does not get invoked when change
+    notification is sent by the database server.<br>
+    <br>
+    <span style="font-style: italic;">Symptoms</span>:<br>
+    <br>
+    1.&nbsp; The subscription entry is removed from
+    USER_CHANGE_NOTIFICATION_REGS table when the insert/update is done
+    on the registered table.<br>
+    <br>
+    2.&nbsp; The client’s callback function does not get invoked when
+    change notification is sent by the db server.&nbsp; Use network data
+    analyzer such as WireShark to ensure that client receives data from
+    the server.&nbsp; In the example <a href="otl4_ex585.htm">585</a>,
+    it uses port 5005.&nbsp; Capture the data traffic on the port using
+    tcpdump(Linux) or snoop(Solaris).&nbsp; <br>
+    <br>
+    <span style="font-style: italic;">Note</span>: If you see
+    ICMPmessage with destination unreachable, please check if the
+    firewall blocks the communication between the client and the server.<br>
+    <br>
+    <span style="font-style: italic;">Solutions</span>:<br>
+    <br>
+    To solve the issue above, please ensure that OTL client uses the
+    same Oracle version as its database server.&nbsp; Both client and
+    the database server are also running on the same OS platform.<br>
+    <br>
+    <span style="font-style: italic;">For example</span>:<br>
+    <br>
+    Example <a href="otl4_ex585.htm">585</a> was used as the OTL
+    client.&nbsp; The problem above was initially observed when OTL
+    client with 11.2.0.2 oracle instant client registered subscription
+    remotely to Oracle database server 11.2.0.1.The client was running
+    on Linux and the server was running on Solaris.<br>
+    <br>
+    Use the solution above, the OTL client with 11.2.0.1 Oracle instant
+    client on Linux can subscribe and receive notification successfully
+    when it talks to Oracle database server 11.2.0.1 on Linux.<br>
+    <br>
+    In summary, please check your client/server OS platform and its
+    Oracle version.<br>
+    <br>
+    <span style="font-style: italic;">Note</span>: I did not observe
+    this problem on 11g R1, the client and the server work regardless
+    their OS platform.&nbsp; However, I saw difference in the
+    registration between R1 and R2.&nbsp; The “CALLBACK” in the
+    USER_CHANGE_NOTIFICATION_REGS are different between R1 and R2.&nbsp;
+    The notification message from the server also looks different.<br>
+    <br>
+    <span style="font-family: monospace;"></span><br>
+    <i><font size="+1"><a name="SET_NOCOUNT_ON"></a>Q. OTL: Why my T-SQL
+        stored procedure that has INSERT or UPDATE or DELETE statements
+        doesn't work with OTL</font></i><span style="font-style:
+      italic;">?</span><br>
+    <br>
+    INSERT/UPDATE/DELETE stat&#1077;ments inside T-SQL stored procedures
+    generate row [processed] counts (RPC). The RPCs get returned back to
+    the caller, in this case to the OTL/C++ code, as separate result
+    sets via MS SQL Native Client (SNAC). OTL doesn't handle such RPC
+    result sets, so they need to be turned off with "SET NOCOUNT ON"
+    statement in the stored procedure, for example:<br>
+    <br>
+    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; CREATE
+      PROCEDURE my_proc</span><br style="font-family: monospace;">
+    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ...</span><br
+      style="font-family: monospace;">
+    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; AS</span><br
+      style="font-family: monospace;">
+    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; SET NOCOUNT
+      ON</span><br style="font-family: monospace;">
+    <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; ...</span><br>
+    <br>
+    <i><font size="+1"><a name="Nested_Quesry"></a>Q. OTL: why nested
+        queries with bind variables do not work in MS SQL Server?</font></i>
+    <br>
+    <br>
+    Try to add otl_implicit_select right after the otl_connect
+    parameter, when you are opening a nested SELECT, for example:<br>
+    <pre wrap=""> otl_stream s(1,<br>              "select dt from "<br>              "  (select  "<br>              "     dateadd(day, <span style="color: rgb(0, 153, 0);">:v&lt;int&gt;</span>, getdate() "<br>              "  )dt ) xt ",<br>              db, // connect object<br>              <span style="font-style: italic;">otl_implicit_select</span><br>             );<br><br></pre>
+    Problem is that SQLPrepare() doesn't return any SELECT output column
+    descriptors (OTL exception: Column: 0&lt;UNKNOWN&gt;), and it looks
+    like the nested SELECT gets converted into a temporary stored
+    procedure, which means you have to specify that it is a stored
+    procedure that returns an implicit result set. I don't know why the
+    database server does it, probably as an optimization technique.<br>
+    <br>
+    <br>
+    <i><font size="+1">Q. OTL: When I insert a new row into a table in
+        MySQL, I can</font></i><span style="font-style: italic;">'t
+      SELECT it, what's going on?</span><br>
+    <br>
+    If you're using a prepared SELECT statement in an otl_stream, and
+    keep executing / reusing the statement to get new rows, you need to
+    commit (call otl_connect::commit()) after the fetch sequence is
+    exhausted each time. The commit call will let your MySQL Server know
+    that your current read only transaction is finished, and the server
+    can start a new transaction, which will make newly inserted rows to
+    be visible to your SELECT statement. In other words, you need to
+    commit your SELECT statements in order to able to see new rows.<br>
+    <br>
+    <i><font size="+1"><a name="NO_DSN"></a>Q. OTL: How do I connect to
+        my database without creating an ODBC DSN?</font></i> <br>
+    <br>
+    Take a look this <a href="http://www.connectionstrings.com/">Web
+      site</a>.<br>
+    <br>
+    <i><font size="+1">Q. OTL: is it thread safe?</font></i>
+    <p></p>
+    <p>OTL does not set any mutex locks or critical sections. In case if
+      each thread has its own otl_connect object, there is no need for
+      mutex locks. In case of sharable connections, it is the
+      developer's responsibility to wrap up OTL calls with mutex locks.
+      In general, database APIs do not guarantee thread safety.
+      otl_connect::<a href="otl3_connect_class.htm#otl_initialize">otl_initialize</a>
+      passes a flag to the underlying database API only to let the API
+      know that the program is running in a multi-threaded mode. </p>
+    <p><i><font size="+1">Q. OTL: does it work with SQLite?</font></i> </p>
+    <p>Yes, it does. OTL/ODBC works with SQLite. See the following <a
+        href="otl4_sqlite_examples.htm">examples</a> for detail.<br>
+    </p>
+    <p><i><font size="+1">Q. OTL: does it support Oracle 10g or Oracle
+          11g?</font></i> </p>
+    <p>The answer is Yes. Use #define <a
+        href="otl3_compile.htm#OTL_ORA10G">OTL_ORA10G</a>, <a
+        href="otl3_compile.htm#OTL_ORA10G_R2">OTL_ORA10G_R2</a>, or <a
+        href="otl3_compile.htm#OTL_ORA11G">OTL_ORA11G</a>. </p>
+    <p> </p>
+    <p><i><font size="+1">Q. OTL: does it work with SAP DB?</font></i> </p>
+    <p>Yes, it does. OTL/ODBC works with SAP DB. Fore more detail, see
+      OTL <a href="otl4_sap_db_examples.htm">examples</a> for SAP DB. </p>
+    <p><i><font size="+1">Q. OTL: does it support CLOBs/BLOBs in PL/SQL?</font></i>
+    </p>
+    <p>The answer is: it depends. You need to keep in mind that
+      "CLOB/BLOB" as a PL/SQL data type is a <i>locator</i> of a large
+      object, not a value. That is, the object itself needs to be
+      created first, its locator needs to be retrieved from the database
+      into C++, and only then the locator can be passed into PL/SQL.
+      Also, see code example <a href="otl4_ex378.htm">378</a>.<br>
+    </p>
+    <p><i><font size="+1">Q. OTL: does it support Unicode?</font></i> </p>
+    <p>The answer is Yes. OTL supports UTF-16 string/CLOB/NCLOB bind
+      variables for ODBC, DB2-CLI, and Oracle. OTL also supports UTF-8
+      string/CLOB/NCLOB bind variables for Oracle. PostgreSQL ODBC
+      supports UTF-8 string values out of the box, which can be used
+      with OTL when the client character set is to UTF-8. OTL does not
+      support Unicode SQL statements. <br>
+    </p>
+    <p><i><font size="+1">Q. OTL: does it support Oracle 9i?</font></i>
+    </p>
+    <p>The answer is Yes. Starting with version 4.0.0, OTL introduces
+      #define <a href="otl3_compile.htm#OTLORA9I">OTL_ORA9I</a> that is
+      dedicated to Oracle 9i. In OTL 4.0.0 itself, it's not much more
+      than a synonym for OTL_ORA8I, but in subsequent releases, when OTL
+      starts using OCI9 specific features, only OTL_ORA9I should be
+      used. See "<a href="otl3_whatn.htm#NEW_OTL400">what's new in OTL 4</a>"
+      for more detail. </p>
+    <p><i><font size="+1">Q. OTL: can it work with Interbase 6.x?</font></i>
+    </p>
+    <p>The answer is Yes. Starting with version 4.0.0, OTL supports an
+      Open Source ODBC driver for Interbase. See "<a
+        href="otl3_whatn.htm#NEW_OTL400">what's new in OTL 4</a>" for
+      more detail. </p>
+    <p><i><font size="+1">Q. OTL: can it work with PostgreSQL 7.x / 8.x?</font></i>
+    </p>
+    <p>The answer is Yes. Starting with version 4.0.0, OTL supports
       PostgreSQL via ODBC. See "<a href="otl3_whatn.htm#NEW_OTL400">what's
 
 
-        new in OTL 4</a>" for more detail. <br>
-      &nbsp; </p>
-    <p><i><font size="+1">Q. OTL: can it work with DB2, Call Level
-          Interface (CLI)?</font></i> </p>
-    <p>The answer is Yes. Starting with version 3.2.7, there is a new
-      flavor of OTL: OTL/DB2-CLI. OTL/DB2-CLI uses DB2's native database
-      API: the <i>Call Level Interface.</i> DB2-CLI is 99.5% compatible
-      with the ODBC 3.x specification, plus extensions. The OTL header
-      file #includes CLI's native header files and can be used with
-      DB2-CLI's native object libraries in Windows or Unix (primarily
-      AIX) platforms. <br>
-      &nbsp; </p>
-    <p><i><font size="+1"><a name="MYSQL"></a>Q. OTL/ODBC: can it work
-          with MyODBC/MySQL?</font></i> </p>
-    <p>The answer is Yes. Starting with OTL 3.2.4, OTL/ODBC is
-      compatible with MyODBC. For more detail on MyODBC see&nbsp; <a
-        href="otl3_examples.htm#MYODBC">MyODBC for MySQL</a>. #define <a
-        href="otl3_compile.htm#OTL_ODBC_MYSQL">OTL_ODBC_MYSQL</a> should
-      be used with the default MySQL table type, because OTL turns off
-      transactional ODBC function calls in that case. When InnoDB type
-      tables are used with MyODBC 3.5, #define <a
-        href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a> should be used.<br>
-    </p>
-    <p><i><font size="+1">Q. OTL/OCI8 and XA-connectivity: can they work
-          together?</font></i> </p>
-    <p>The answer is Yes. When an XA type connection is established,
-      xaoEnv() and xaoSvcCtx() functions need to be invoked in order to
-      get OCI8 compatible environment and service context handles. After
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        new in OTL 4</a>" for more detail. <br>
+      &nbsp; </p>
+    <p><i><font size="+1">Q. OTL: can it work with DB2, Call Level
+          Interface (CLI)?</font></i> </p>
+    <p>The answer is Yes. Starting with version 3.2.7, there is a new
+      flavor of OTL: OTL/DB2-CLI. OTL/DB2-CLI uses DB2's native database
+      API: the <i>Call Level Interface.</i> DB2-CLI is 99.5% compatible
+      with the ODBC 3.x specification, plus extensions. The OTL header
+      file #includes CLI's native header files and can be used with
+      DB2-CLI's native object libraries in Windows or Unix (primarily
+      AIX) platforms. <br>
+      &nbsp; </p>
+    <p><i><font size="+1"><a name="MYSQL"></a>Q. OTL/ODBC: can it work
+          with MyODBC/MySQL?</font></i> </p>
+    <p>The answer is Yes. Starting with OTL 3.2.4, OTL/ODBC is
+      compatible with MyODBC. For more detail on MyODBC see&nbsp; <a
+        href="otl3_examples.htm#MYODBC">MyODBC for MySQL</a>. #define <a
+        href="otl3_compile.htm#OTL_ODBC_MYSQL">OTL_ODBC_MYSQL</a> should
+      be used with the default MySQL table type, because OTL turns off
+      transactional ODBC function calls in that case. When InnoDB type
+      tables are used with MyODBC 3.5, #define <a
+        href="otl3_compile.htm#OTL_ODBC">OTL_ODBC</a> should be used.<br>
+    </p>
+    <p><i><font size="+1">Q. OTL/OCI8 and XA-connectivity: can they work
+          together?</font></i> </p>
+    <p>The answer is Yes. When an XA type connection is established,
+      xaoEnv() and xaoSvcCtx() functions need to be invoked in order to
+      get OCI8 compatible environment and service context handles. After
       that, otl_connect::<a href="otl3_connect_class.htm#attach8">rlogon</a>()
 
 
 
-      can be called to create an OTL connection from the handles. It is
-      the same rlogon() that is used with Pro*C 8.x. How to use this
-      type of rlogon() function, see example <a href="otl3_ex59.htm">59</a>
-      for more detail. </p>
-    <p><i><font size="+1">Q. Are C++ strings (std::string) supported,
-          and how is OTL integrated with the Standard Template Library
-          (STL)?</font></i> </p>
-    <p>OTL 3.2.0 and higher support <i>std::strings</i> (see examples <a
-        href="otl3_ex72.htm">72</a>, <a href="otl3_ex73.htm">73</a>, <a
-        href="otl3_ex74.htm">74</a>). Also, OTL supports STL-compliant
-      stream iterators: <a href="otl3_input_iterator.htm">otl_input_iterator</a>,
-      <a href="otl3_output_iterator.htm">otl_output_iterator</a>. </p>
-    <p><i><font size="+1">Q. What major C++ compilers are supported,
-          anyway?</font></i> </p>
-    <ul>
-      <li>Sun C++ Workshop 6.x and higher<br>
-      </li>
-      <li>GNU C++ 3.3.x and higher<br>
-      </li>
-      <li>VC++ 6.0 and higher<br>
-      </li>
-      <li>HP ANSI C++ (aCC) 1.x</li>
-      <li>AIX, Visual Age C++ 6.x and higher</li>
-      <li>Borland C++ 5.x</li>
-      <li>Intel C++ 7.0, 8.0, 9.x (Windows, Linux)</li>
-    </ul>
-    In order to complete the list, you are welcome to send me an email
-    with the name of your C++ compiler, if it's not already in the list.
-    <br>
-    <p><i><font size="+1">Q. Is there a way to read / write large BLOBs
-          without having to allocate large buffers in memory?</font></i>
-    </p>
-    <p>OTL 3.1.4 supports <a href="otl3_lob_stream.htm">stream mode</a>
-      for Oracle 8 CLOBs/BLOBs. Fore more detail, see examples <a
-        href="otl3_ex56.htm">56</a>, <a href="otl3_ex57.htm">57.</a> </p>
-    <p><i><font size="+1">Q. Is there a way to call a stored procedure
-          which takes PL/SQL tables as arguments ?</font></i> </p>
-    <p>OTL 3.1 supports PL/SQL table via <a
-        href="otl3_bind_variables.htm#pl_tab">otl_streams</a> and <a
-        href="otl3_pl_tab.htm">special template data containers</a>.Fore
-      more detail, see examples <a href="otl3_ex49.htm">49</a>, <a
-        href="otl3_ex50.htm">50</a>, <a href="otl3_ex51.htm">51</a>, <a
-        href="otl3_ex52.htm">52</a>. </p>
-    <p><i><font size="+1">Q. Will you stick with email delivery of your
-          code, or do you intend to put it on your website later ?</font></i>
-    </p>
-    <p>From now on, the OTL header file is available for <a
-        href="otlv4_h.zip">download</a>. </p>
-    <p><i><font size="+1">Q. What is different in behavior of Large
-          Objects (LOBs) compared to other data types as far as NULLs
-          are concerned?</font></i> </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      can be called to create an OTL connection from the handles. It is
+      the same rlogon() that is used with Pro*C 8.x. How to use this
+      type of rlogon() function, see example <a href="otl3_ex59.htm">59</a>
+      for more detail. </p>
+    <p><i><font size="+1">Q. Are C++ strings (std::string) supported,
+          and how is OTL integrated with the Standard Template Library
+          (STL)?</font></i> </p>
+    <p>OTL 3.2.0 and higher support <i>std::strings</i> (see examples <a
+        href="otl3_ex72.htm">72</a>, <a href="otl3_ex73.htm">73</a>, <a
+        href="otl3_ex74.htm">74</a>). Also, OTL supports STL-compliant
+      stream iterators: <a href="otl3_input_iterator.htm">otl_input_iterator</a>,
+      <a href="otl3_output_iterator.htm">otl_output_iterator</a>. </p>
+    <p><i><font size="+1">Q. What major C++ compilers are supported,
+          anyway?</font></i> </p>
+    <ul>
+      <li>Sun C++ Workshop 6.x and higher<br>
+      </li>
+      <li>GNU C++ 3.3.x and higher<br>
+      </li>
+      <li>Visual C++ 8.0 (2005), 9.0 (2008), 10 (2010), 11 (2012)<br>
+      </li>
+      <li>HP ANSI C++ (aCC) 1.x and higher<br>
+      </li>
+      <li>AIX, Visual Age C++ 6.x and higher</li>
+      <li>Borland C++ 5.x and higher<br>
+      </li>
+      <li>Intel C++ 7.0, 8.0, 9.x, and higher (Windows, Linux)</li>
+      <li>CLANG 3.x and higher<br>
+      </li>
+    </ul>
+    In order to complete the list, you are welcome to send me an email
+    with the name and the version of your C++ compiler, if it's not
+    already in the list. Also, OTL uses C++11 features that C++
+    compilers (like Visual C++, or GNU C++) support. See #define <a
+      href="otl3_compile.htm#OTL_CPP_11_ON">OTL_CPP_11_ON</a> for more
+    detail.<br>
+    <p><i><font size="+1">Q. Is there a way to read / write large BLOBs
+          without having to allocate large buffers in memory?</font></i>
+    </p>
+    <p>OTL 3.1.4 supports <a href="otl3_lob_stream.htm">stream mode</a>
+      for Oracle 8 CLOBs/BLOBs. Fore more detail, see examples <a
+        href="otl3_ex56.htm">56</a>, <a href="otl3_ex57.htm">57.</a> </p>
+    <p><i><font size="+1">Q. Is there a way to call a stored procedure
+          which takes PL/SQL tables as arguments ?</font></i> </p>
+    <p>OTL 3.1 supports PL/SQL table via <a
+        href="otl3_bind_variables.htm#pl_tab">otl_streams</a> and <a
+        href="otl3_pl_tab.htm">special template data containers</a>.Fore
+      more detail, see examples <a href="otl3_ex49.htm">49</a>, <a
+        href="otl3_ex50.htm">50</a>, <a href="otl3_ex51.htm">51</a>, <a
+        href="otl3_ex52.htm">52</a>. </p>
+    <p><i><font size="+1">Q. Will you stick with email delivery of your
+          code, or do you intend to put it on your website later ?</font></i>
+    </p>
+    <p>From now on, the OTL header file is available for <a
+        href="otlv4_h.zip">download</a>. </p>
+    <p><i><font size="+1">Q. What is different in behavior of Large
+          Objects (LOBs) compared to other data types as far as NULLs
+          are concerned?</font></i> </p>
     <p>For more detail, see "<a href="otl3_long_string.htm#LOB_and_NULL">Large
 
 
 
-        Objects and NULLs</a>." </p>
-    <p><i><font size="+1">Q. How to read/write date&amp;time information
-          from/to the <a href="otl3_stream_class.htm">otl_stream</a>?</font></i>
-    </p>
-    <p>The answer is: use the <a
-        href="otl3_stream_class.htm#otl_datetime">otl_datetime</a> data
-      container, which was introduced in OTL 3.1.26. For more detail,
-      see examples <a href="otl3_ex38.htm">38</a>, <a
-        href="otl3_ex39.htm">39</a>, <a href="otl3_ex40.htm">40</a>. <br>
-      Bottom line: Oracle DATE, or, say, MS SQL Server DATETIME, can be
-      read/written with the use of otl_datetime variables. </p>
-    <p><i><font size="+1">Q. How to get the <b>rows processed count</b>
-          after the SQL statement is finished?</font></i> </p>
-    <p>The <a href="otl3_const_sql.htm">direct_exec</a>() function
-      returns a long int value, which, if it is &gt;= 0, it returns the
-      rows processed count of the constant SQL statement.Also,
-      otl_stream::<a href="otl3_stream_class.htm#get_rpc">get_rpc</a>()
-      returns a long int value, which is the rows processed count. The
-      rows processed count is defined for INSERT, UPDATE, and DELETE
-      statements. RPC for SELECT statements means <span
-        style="font-style: italic;">rows fetched count</span>. For any
-      other SQL statement, PL/SQL block, or a stored procedure call, the
-      count is always 0. <br>
-      &nbsp; <br>
-    </p>
-    <p><i><font size="+1"><a name="null_term"></a>Q. Can OTL handle
-          std::strings that have NULL characters ('\0') in the middle?</font></i>
-    </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Objects and NULLs</a>." </p>
+    <p><i><font size="+1">Q. How to read/write date&amp;time information
+          from/to the <a href="otl3_stream_class.htm">otl_stream</a>?</font></i>
+    </p>
+    <p>The answer is: use the <a
+        href="otl3_stream_class.htm#otl_datetime">otl_datetime</a> data
+      container, which was introduced in OTL 3.1.26. For more detail,
+      see examples <a href="otl3_ex38.htm">38</a>, <a
+        href="otl3_ex39.htm">39</a>, <a href="otl3_ex40.htm">40</a>. <br>
+      Bottom line: Oracle DATE, or, say, MS SQL Server DATETIME, can be
+      read/written with the use of otl_datetime variables. </p>
+    <p><i><font size="+1">Q. How to get the <b>rows processed count</b>
+          after the SQL statement is finished?</font></i> </p>
+    <p>The <a href="otl3_const_sql.htm">direct_exec</a>() function
+      returns a long int value, which, if it is &gt;= 0, it returns the
+      rows processed count of the constant SQL statement.Also,
+      otl_stream::<a href="otl3_stream_class.htm#get_rpc">get_rpc</a>()
+      returns a long int value, which is the rows processed count. The
+      rows processed count is defined for INSERT, UPDATE, and DELETE
+      statements. RPC for SELECT statements means <span
+        style="font-style: italic;">rows fetched count</span>. For any
+      other SQL statement, PL/SQL block, or a stored procedure call, the
+      count is always 0. <br>
+      &nbsp; <br>
+    </p>
+    <p><i><font size="+1"><a name="null_term"></a>Q. Can OTL handle
+          std::strings that have NULL characters ('\0') in the middle?</font></i>
+    </p>
     Yes, it can. Only instead of <a href="otl3_bind_variables.htm#char">char</a>[XXX]
 
 
-    binding, <a href="otl3_bind_variables.htm#raw">raw</a>[XXX] binding
-    needs to be used. Also, see code examples <a href="otl4_ex747.htm">747</a>
-    (Oracle, OCI7), <a href="otl4_ex748.htm">748</a> (Oracle, OCI8 and
-    higher), <a href="otl4_ex749.htm">749</a> (DB2. DB2 CLI), <a
-      href="otl4_ex750.htm">750</a> (MS SQL, SNAC).<br>
-    <p></p>
-    <hr width="100%">
-    <ul>
-      <center><a href="home.htm">Go Home</a></center>
-      <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
-          href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
-          href="mailto:skuchin@gmail.com">skuchin@gmail.com
-          <script language="JavaScript"><!-- hide from old browsers
- var modDate = new Date(document.lastModified)
- document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
- //-->
- </script></a>. </p>
-      <p><i>Permission to use, copy, modify and redistribute this
-          document for any purpose is hereby granted without fee,
-          provided that the above copyright notice appear in all copies.
-          THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
-          WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
-          WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL
-          THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
-          CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-          LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
-          CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-          OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p>
-    </ul>
-    <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-    <script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-5456201-1");
-pageTracker._trackPageview();
-</script>
-  </body>
-</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    binding, <a href="otl3_bind_variables.htm#raw">raw</a>[XXX] binding
+    needs to be used. Also, see code examples <a href="otl4_ex747.htm">747</a>
+    (Oracle, OCI7), <a href="otl4_ex748.htm">748</a> (Oracle, OCI8 and
+    higher), <a href="otl4_ex749.htm">749</a> (DB2. DB2 CLI), <a
+      href="otl4_ex750.htm">750</a> (MS SQL, SNAC).<br>
+    <p></p>
+    <hr width="100%">
+    <ul>
+      <center><a href="home.htm">Go Home</a></center>
+      <p>Copyright © 1996-2023, Sergei Kuchin, email: <a
+          href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+          href="mailto:skuchin@gmail.com">skuchin@gmail.com
+          <script language="JavaScript"><!-- hide from old browsers
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ var modDate = new Date(document.lastModified)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ //-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ </script></a>. </p>
+      <p><i>Permission to use, copy, modify and redistribute this
+          document for any purpose is hereby granted without fee,
+          provided that the above copyright notice appear in all copies.
+          THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+          WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+          WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL
+          THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR
+          CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+          LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF
+          CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+          OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.</i></p>
+    </ul>
+    <script type="text/javascript">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+    <script type="text/javascript">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var pageTracker = _gat._getTracker("UA-5456201-1");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pageTracker._trackPageview();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+  </body>
+</html>

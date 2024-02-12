@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -56,7 +60,7 @@ void select(void)
  otl_datetime in_f3;
 
 // SELECT output columns
- int f1;
+ int f1=0;
  otl_datetime f2, f3, f4;
 
 // setting second fraction precision to 6, microseconds
@@ -110,7 +114,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

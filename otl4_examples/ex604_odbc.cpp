@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <string.h>
 using namespace std;
@@ -96,8 +100,8 @@ public:
   {
     size_t cur_len=length();
     for(int i=0;i<len;++i)
-      buf[cur_len+i]=temp_buf[i];
-    buf[cur_len+len]=0;
+      buf[cur_len+static_cast<size_t>(i)]=temp_buf[i];
+    buf[cur_len+static_cast<size_t>(len)]=0;
   }
 
   char& operator[](int ndx)
@@ -180,7 +184,7 @@ void select()
              ); 
    // create select stream
 
- int f1; 
+ int f1=0; 
  otl_value<super_fast_string> f2;
  otl_value<otl_datetime> f3;
 

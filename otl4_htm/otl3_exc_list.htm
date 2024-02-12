@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
 <html>
   <head>
-    <meta content="text/html; charset=ISO-8859-1"
+    <meta content="text/html; charset=windows-1252"
       http-equiv="Content-Type">
     <meta content="Sergei Kuchin" name="Author">
     <meta content="Mozilla/4.77 [en] (Win95; U) [Netscape]"
@@ -17,6 +17,16 @@
     <h1> <a name="otl_compile"></a>OTL defined exceptions</h1>
     The following <a href="otl3_exception_class.htm">OTL exceptions</a>
     can be raised by the <a href="otl3_stream_class.htm">OTL stream </a>functions:
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -121,8 +131,8 @@
         cannot be used for writing.</li>
     </ul>
     <p><br>
-      <font size="+1"><b>Code=32012:</b> CLOB/BLOB stream is not open
-        for reading</font> </p>
+      <font size="+1"><b><a name="32012"></a>Code=32012:</b> CLOB/BLOB
+        stream is not open for reading</font> </p>
     <ul>
       <li> <b>Cause: </b>An attempt was made to read from the LOB
         stream, which was not initialized for reading.</li>
@@ -146,8 +156,12 @@
     <ul>
       <li> <b>Cause: </b>There was a typo in the bind variable
         declaration, e.g. :var&lt;date&gt;, instead of
-        :var&lt;timestamp&gt;.</li>
-      <li> <b>Action: </b>Correct the typo and try again.</li>
+        :var&lt;timestamp&gt;. <br>
+      </li>
+      <li> <b>Action: </b>Correct the typo and try again. In the case
+        of :var&lt;char[1]&gt;, <a href="otl3_bind_variables.htm#char">check</a>
+        the minimum acceptable size.<br>
+      </li>
     </ul>
     <p><br>
       <a name="32014"></a><font size="+1"><b>Code=32014:</b> No stored
@@ -223,7 +237,7 @@
         and try again.</li>
     </ul>
     <br>
-    <a name="32019"></a><font size="+1"><b>Code=32019:</b>
+    <a name="32020"></a><font size="+1"><b>Code=32019:</b>
       otl_stream::operator&gt;&gt;() should have been called before
       otl_stream::operator int()</font>
     <ul>
@@ -243,6 +257,16 @@
         "end-of-file" (eof) status of the stream, after something is
         supposed to be read from the stream. The difference in semantic
         between operator int() and <a href="otl3_stream_class.htm#eof">eof</a>()
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -319,8 +343,28 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
         <a href="otl4_stream_read_iterator.htm#attach">attach</a>() or
         in <a href="otl4_stream_read_iterator.htm#describe">describe</a>())
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -333,6 +377,16 @@ covers.
 When
 describe_out_vars()
 returns
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -384,6 +438,16 @@ is
 
 
 
+
+
+
+
+
+
+
+
+
+
         not compatible with the declared stream format.</li>
       &nbsp;
       <li><b>Action: </b>Make sure the data types are compatible.</li>
@@ -400,6 +464,16 @@ not
 supported
 in
 the
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -432,6 +506,16 @@ underlying
 
 
 
+
+
+
+
+
+
+
+
+
+
         otl_stream is in te LOB stream mode..</li>
       &nbsp;
       <li><b>Action: </b>Set the underlying stream to the LOB stream
@@ -454,6 +538,16 @@ JDBC-like
 
 
 
+
+
+
+
+
+
+
+
+
+
         <span style="font-style: italic;">getter </span>interface,
         which identifies output columns / variables by their names This
         exception gets thrown when the specified "var_name" parameter
@@ -462,6 +556,16 @@ JDBC-like
 functions
 or
 in
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -493,6 +597,16 @@ a
 
 
 
+
+
+
+
+
+
+
+
+
+
         SELECT statement / stored procedure call (ODBC, DB2 CLI) /
         reference cursor (Oracle) of an unsupported data type. For
         example, OTL does not support Oracle Objects.<br>
@@ -501,7 +615,7 @@ a
       <li><b>Action: </b>Make sure that the data types of the all
         columns of your SELECT statement are supported by OTL.
         otl_exception::<a href="otl3_exception_class.htm#var_info">var_info</a>
-        contains info on which column exactly has an unsopprted data
+        contains info on which column exactly has an unsupported data
         type.</li>
     </ul>
     <font size="+1"><b><a name="32029"></a><a name="raw1"></a>Code=32029:</b>
@@ -531,6 +645,16 @@ otl_stream::open()
 
 
 
+
+
+
+
+
+
+
+
+
+
         was called on the same stream.<br>
       </li>
       &nbsp;
@@ -552,6 +676,16 @@ was
 already
 connected
 to
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -585,6 +719,16 @@ under
 
 
 
+
+
+
+
+
+
+
+
+
+
         #define <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_WIN">OTL_ODBC_TIMESTEN_WIN</a>,
         and <a href="otl3_compile.htm#OTL_ODBC_TIMESTEN_UNIX">OTL_ODBC_TIMESTEN_UNIX</a>,
         which has the range of [0..128].<br>
@@ -609,6 +753,16 @@ connected
 
 
 
+
+
+
+
+
+
+
+
+
+
         to the database, before <a href="otl4_subscriber.htm">otl_subscriber</a>
         objects can be used with the otl_connect object..<br>
       </li>
@@ -626,6 +780,16 @@ connected
 stream
 uses
 a
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -655,10 +819,20 @@ was
 
 
 
+
+
+
+
+
+
+
+
+
+
         called to check the "end-of-row" condition. The condition was
         not met, and the function threw this exception. The "end-of-row"
         check addresses the "<a
-          href="http://soci.sourceforge.net/doc/rationale.html">row-tearing</a>"
+          href="http://soci.sourceforge.net/doc/3.1/rationale.html">row-tearing</a>"
         problem in a SELECT statement, for example:<br>
         <br>
         <span style="font-family: monospace;">otl_stream sql(10,"select
@@ -719,11 +893,31 @@ was
         </span><span style="font-family: monospace;">&nbsp;&nbsp;&nbsp;
           // ...</span><br style="font-family: monospace;">
         <span style="font-family: monospace;">}<br>
+          <br>
         </span><span style="font-family: monospace;"><br>
-        </span>In case if the number of columns in the SELECT statement
-        changes, and the actual loop is not changed, the
-        check_end_of_row() function (or its alternative
-        operator&gt;&gt;() form) will throw this exception.<br>
+        </span>or this way:<br>
+        <br>
+        <span style="font-family: monospace;">otl_stream sql(10,"select
+          a, b from some_table",db); // only TWO columns</span><br
+          style="font-family: monospace;">
+        <br style="font-family: monospace;">
+        <span style="font-family: monospace;">while (!sql.eof())</span><span
+          style="font-family: monospace;">{</span><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; int a,
+          b;<br>
+        </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <tt><a
+            href="otl4_read_row.htm">otl_read_row</a>(sql,a,b);</tt><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">&nbsp;&nbsp;&nbsp; // ...</span><br
+          style="font-family: monospace;">
+        <span style="font-family: monospace;">}<br>
+        </span><br>
+        <br>
+        In case the number of columns in the SELECT statement changes,
+        and the actual loop is not changed, the check_end_of_row()
+        function (or its alternative operator&gt;&gt;() form) will throw
+        this exception.<br>
         <br>
         Besides the row-tearing problem in SELECT statements, this OTL
         defined exception also addresses a similar "row-tearing" in
@@ -732,14 +926,19 @@ was
         <br>
         <span style="font-family: monospace;">otl_stream sql(10,"INSERT
           INTO test_tab VALUES(:f1&lt;int&gt;,:f2&lt;int&gt;)",db); //
-          only TWO column<br>
+          only TWO columns<br>
         </span><span style="font-family: monospace;">int f1, f2;<br>
-        </span>...<br>
+          ...</span><br>
         <span style="font-family: monospace;">sql&lt;&lt;f1&lt;&lt;f2&lt;&lt;endr;<br>
         </span><span style="font-family: monospace;">sql&lt;&lt;f1&lt;&lt;f2;<br>
           sql&lt;&lt;f2&lt;&lt;endr;<br>
-        </span><br style="font-family: monospace;">
-        As table layout, and code change over time,&nbsp; "end-of-row"
+          ...<br>
+          <a href="otl4_read_row.htm">otl_write_row</a>(sql,f1,f2);<br>
+        </span><span style="font-family: monospace;">sql&lt;&lt;f1&lt;&lt;f2;<br>
+          otl_write_row(sql,f2);<br>
+        </span><br>
+        <br style="font-family: monospace;">
+        As table layout and code change over time,&nbsp; "end-of-row"
         check may play more important role in keeping the code base in
         good shape, and reduce code rot.<br style="font-family:
           monospace;">
@@ -761,12 +960,32 @@ was
 
 
 
+
+
+
+
+
+
+
+
+
+
         <a
 href="otl3_compile.htm#OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION">OTL_STREAM_THROWS_NOT_CONNECTED_TO_DATABASE_EXCEPTION</a>
         was enabled, OTL stream did the
         otl_connect-not-connected-to-database check (<span
           style="font-family: monospace;">if(!otl_connect::connected)</span>),
 and
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -783,6 +1002,16 @@ and
         a white space in bind variable declaration</b></font>
     <ul>
       <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>White
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -837,25 +1066,238 @@ and
     <p> </p>
     <ul>
       <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>This
+
+
+
+
+
+
+
+
+
+
         exception is raised when the stream is opening a call to a
         stored procedure that returns an implicit result set, and the
         stream finds output, or input/output parameters in the call.<br>
       </li>
       &nbsp;
       <li><b>Action: </b>Fix the stored procedure call (use only input
-        parameters), and try again.<br>
+        parameters), and try again.</li>
+    </ul>
+    <p><font size="+1"><b><br>
+          <a name="32041"></a>Code=3204<font size="+1">1</font>: Invalid
+          stream buffer size (&lt;=0)<br>
+        </b></font> </p>
+    <p> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>This
+
+
+
+
+
+
+
+
+
+
+        exception is raised when the stream buffer size is &lt;= 0.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>The stream buffer size should be a positive
+        integer. Fix the buffer size and try again.</li>
+    </ul>
+    <p><font size="+1"><b><br>
+          <a name="32042"></a>Code=3204<font size="+1">2</font>: <font
+            size="+1">otl_lob_stream can't<font size="+1"> be used as an
+              input para<font size="+1">meter with a SELECT statement <br>
+                &nbsp;or a stored procedure that returns an impl<font
+                  size="+1">ic<font size="+1">it resul<font size="+1">t
+                      set</font></font></font></font></font></font><br>
+        </b></font> </p>
+    <p> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>This
+
+
+
+
+
+
+
+
+
+
+        exception is raised when the stream is used with a SELECT
+        statement, or a stored procedure that returns an implicit result
+        set (DB2 CLI, or ODBC).<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Fix the code and try again.</li>
+    </ul>
+    <p><font size="+1"><b><br>
+          <a name="32043"></a>Code=32043:
+          otl_stream::operator&gt;&gt;(XXX) has been called when EOF was
+          already reached<br>
+        </b></font> </p>
+    <p> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>This
+
+
+
+
+
+
+        exception is raised when the otl_stream::eof() returns 1/true
+        and an attempt to call otl_stream::operator&gt;&gt;(XXX) is
+        being made. This exception can only raised when #define <a
+          href="otl3_compile.htm#OTL_PARANOID_EOF">OTL_PARANOID_EOF</a>
+        is enabled.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Correct the program logic and try again.<br>
       </li>
     </ul>
-    <hr width="100%">
+    <br>
+    <font size="+1"><b><a name="32043"></a>Code=32043:
+        otl_stream::operator&gt;&gt;(XXX) has been called when EOF was
+        already reached<br>
+      </b></font>
     <p> </p>
-    <center>
-      <hr width="100%">
-      <p><a href="otl3_namespaces.htm">Prev</a> <a href="otl3.htm">Contents</a><a
-          href="home.htm">Go Home</a><br>
-        <br>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>This
+
+
+
+
+
+
+        exception is raised when the otl_stream::eof() returns 1/true
+        and an attempt to call otl_stream::operator&gt;&gt;(XXX) is
+        being made. This exception can only raised when #define <a
+          href="otl3_compile.htm#OTL_PARANOID_EOF">OTL_PARANOID_EOF</a>
+        is enabled.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Correct the program logic and try again.<br>
+      </li>
+    </ul>
+    <br>
+    <font size="+1"><b><a name="32044"></a>Code=32044: Bind variable
+        declaration is missing a terminator: &gt; or */<br>
+      </b></font>
+    <p> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>Bind
+
+
+
+
+
+
+        variable <a href="otl3_bind_variables.htm">declaration</a> is
+        not complete: a terminator token of &gt; or */ is missing.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Correct the bind variable declaration and try
+        again.<br>
+      </li>
+    </ul>
+    <font size="+1"><b><br>
+      </b></font><font size="+1"><b><a name="32045"></a>Code=32045:
+        Empty TNS name in connect string<br>
+      </b></font>
+    <p> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>Oracle
+
+
+
+
+        specific: connect string contains an empty TNS name, for example
+        "user/password@".<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Correct the connect string and try again.</li>
+    </ul>
+    <p><font size="+1"><b><br>
+        </b></font><font size="+1"><b><a name="32046"></a>Code=32046:
+          target std::array&lt;char,...&gt; container is too small<br>
+        </b></font> </p>
+    <p> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>Under
+
+
+
+        # define <a
+          href="otl3_compile.htm#OTL_STREAM_WITH_STD_CHAR_ARRAY_ON">OTL_STREAM_WITH_STD_CHAR_ARRAY_ON</a>,
+        the actual output database string size exceeds the size of the
+        target <a
+          href="http://en.cppreference.com/w/cpp/container/array">std::array</a>&lt;char,...&gt;
+
+
+
+        container.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Increase the container size and try again.</li>
+    </ul>
+    <ul>
+    </ul>
+    <br>
+    <font size="+1"><b><a name="32047"></a>Code=32047: target
+        std::array&lt;char16_t,...&gt; container is too small<br>
+      </b></font>
+    <p> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>Under
+
+
+
+        # define <a
+          href="otl3_compile.htm#OTL_STREAM_WITH_STD_UNICODE_CHAR_ARRAY_ON">OTL_STREAM_WITH_STD_UNICODE_CHAR_ARRAY_ON</a>,
+        the actual output database string size exceeds the size of the
+        target <a
+          href="http://en.cppreference.com/w/cpp/container/array">std::array</a>&lt;char16_t,...&gt;
+
+
+
+        container.<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Increase the container size and try again.<br>
+      </li>
+    </ul>
+    <p><font size="+1"><b><a name="32048"></a>Code=32048: rewind()
+          cannot be called when implicit_select ==
+          otl_direct_exec_select<br>
+        </b></font> </p>
+    <p> </p>
+    <ul>
+      <li><span style="font-weight: bold;"> Cause</span><b>:&nbsp; </b>When
+        otl_direct_exec_select is used for implicit_select in
+        otl_stream::<a href="otl3_stream_class.htm#otl_stream_open2">open</a>()
+        or otl_stream::<a
+          href="otl3_stream_class.htm#otl_stream_odbc_constructor">otl_stream</a>()
+        calls in OTL for ODBC/DB2-CLI, otl_stream::<a
+          href="otl3_stream_class.htm#rewind">rewind</a>() can't be
+        called (limitation of implementation)<br>
+      </li>
+      &nbsp;
+      <li><b>Action: </b>Use otl_stream::<a
+          href="otl3_stream_class.htm#otl_stream_open2">open</a>()
+        instead of otl_stream::<a href="otl3_stream_class.htm#rewind">rewind</a>().<br>
+      </li>
+    </ul>
+    <hr width="100%" size="2">
+    <center><a href="otl3_namespaces.htm">Prev</a> <a href="otl3.htm">Contents</a><a
+        href="home.htm">Go Home</a><br>
+      <p> <br>
       </p>
     </center>
-    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
+    <p>Copyright © 1996-2023, Sergei Kuchin, email: <a
         href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
         href="mailto:skuchin@gmail.com">skuchin@gmail.com
         <script language="JavaScript"><!-- hide from old browsers

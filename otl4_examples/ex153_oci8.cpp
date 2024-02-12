@@ -1,8 +1,12 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
 #include <stdio.h>
-
+#define OTL_ORA_CREATE_STORED_PROC_CALL_MAPS_RAW_TO_RAW_LONG
 #define OTL_ORA8 // Compile OTL 4.0/OCI8
 //#define OTL_ORA8I // Compile OTL 4.0/OCI8i
 //#define OTL_ORA9I // Compile OTL 4.0/OCI9i
@@ -191,6 +195,24 @@ void stored_proc()
   cout<<"REF.CUR.NAME8="<<refcur_placeholder<<endl;
   cout<<endl;
 
+  otl_stream::create_stored_proc_call 
+   (db, // connect object
+    s, // an external stream variable is needed here
+    sql_stm, // output buffer for generating a stored procedure call
+    stm_type, // output paremeter, indicating what type of stored procedure
+    refcur_placeholder, // output parameter, which gets populated
+                        // in the case of a stored procedure that returns
+                        // a reference cursor.
+    "my_proc5", // stored procedure name
+    "my_pkg" // PL/SQL package name
+   );
+  cout<<"SQL_STM9="<<sql_stm<<endl;
+  cout<<"STM_TYPE9=";
+  print_proc_type(stm_type);
+  cout<<endl;
+  cout<<"REF.CUR.NAME9="<<refcur_placeholder<<endl;
+  cout<<endl;
+
 }
 
 int main()
@@ -198,7 +220,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (
@@ -219,6 +241,8 @@ int main()
     "CREATE OR REPLACE PACKAGE my_pkg IS "
     " "
     "  TYPE my_cursor IS REF CURSOR; "
+    " "
+    "  SUBTYPE my_raw IS RAW(123); "
     " "
     "  PROCEDURE my_proc1; "
     "  PROCEDURE my_proc2 "
@@ -242,6 +266,10 @@ int main()
     "    f3 OUT NUMBER, "
     "    f4 OUT my_cursor, "
     "    f5 OUT my_cursor); "
+    " "
+    "  PROCEDURE my_proc5 "
+    "   (f1 IN my_raw, "
+    "    f2 IN OUT LONG RAW); "
     " "
     "  FUNCTION my_func2 "
     "   (f1 IN NUMBER, "
@@ -327,6 +355,14 @@ int main()
     "    OPEN lv_cur FOR "
     "    SELECT * FROM test_tab; "
     "    RETURN lv_cur; "
+    "  END; "
+    " "   
+    "  PROCEDURE my_proc5 "
+    "   (f1 IN my_raw, "
+    "    f2 IN OUT LONG RAW) "
+    "  IS "
+    "  BEGIN "
+    "    NULL; "
     "  END; "
     " "   
     "END; "

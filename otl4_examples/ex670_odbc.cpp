@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <string>
 using namespace std;
@@ -75,7 +79,7 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8 
    // SELECT automatically executes when all input variables are
@@ -86,9 +90,9 @@ void select()
   cout<<"f1="<<f1<<", f2=";
   for(size_t j=0;j<f2.length();++j)
     if(f2[j]<128)
-      cout<<(char)f2[j];
+      cout<<static_cast<char>(f2[j]);
     else
-      cout<<(int)f2[j]<<" ";
+      cout<<static_cast<int>(f2[j])<<" ";
   cout<<endl;
  }
 

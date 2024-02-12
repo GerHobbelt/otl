@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -15,7 +19,11 @@ using namespace std;
 #endif
 #include <otlv4.h> // include the OTL 4.0 header file
 
+#if defined(_MSC_VER) && (_MSC_VER==1200)
+const OTL_UBIGINT UBIG_VAL1=18446744073709551615;
+#else
 const OTL_UBIGINT UBIG_VAL1=18446744073709551615ULL;
+#endif
 
 otl_connect db; // connect object
 
@@ -54,9 +62,9 @@ void select()
              ); 
    // create select stream
  
- OTL_BIGINT f1;
- char f2[31];
- OTL_UBIGINT f3;
+ OTL_BIGINT f1=0;
+ char f2[31]={0};
+ OTL_UBIGINT f3=0;
 
  i<<static_cast<OTL_BIGINT>(8)
   <<static_cast<OTL_BIGINT>(8); // assigning :f = 8; :ff = 8

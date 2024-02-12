@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <string>
 
@@ -28,12 +32,13 @@ void insert()
               db // connect object
              );
 
+ otl_compact_value<int,-1> f1;
  otl_value<string> f2; // otl_value container of STL string
  otl_value<otl_datetime> f3; // container of otl_datetime
 
 
  for(int i=1;i<=100;++i){
-
+   f1=i;
   if(i%2==0)
    f2="NameXXX";
   else
@@ -51,7 +56,7 @@ void insert()
   }else
    f3.set_null(); // Set f3 as null via .set_null() function
 
-  o<<i<<f2<<f3;
+  o<<f1<<f2<<f3;
 
  }
 }
@@ -65,7 +70,7 @@ void select()
              ); 
    // create select stream
 
- int f1; 
+ otl_compact_value<int,-1> f1(0); 
  otl_value<string> f2;
  otl_value<otl_datetime> f3;
 

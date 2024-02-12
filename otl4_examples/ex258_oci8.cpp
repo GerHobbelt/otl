@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -63,7 +67,7 @@ const OTL_BIGINT BIGINT_VAL1=12345678901234000LL;
 // below is compiler specific.
 #define OTL_STR_TO_BIGINT(str,n)                \
 {                                               \
-  n=strtoll(str,nullptr,10);                    \
+  sscanf(str,"%lld",&n);                        \
 }
 
 // Defining a bigint-to-string conversion 
@@ -125,7 +129,7 @@ void select()
              ); 
    // create select stream
  
- OTL_BIGINT f1;
+ OTL_BIGINT f1=0;
  char f2[31];
 #if defined(_MSC_VER)
  char f1str[40];
@@ -158,7 +162,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (

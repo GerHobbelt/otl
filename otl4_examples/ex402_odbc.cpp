@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -24,7 +28,16 @@ void insert()
  o.set_commit(0); // set stream's auto-commit to OFF.
 
  try{
-  o<<1<<"Line1"; // Enter one row into the stream
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+   otl_write_row(o,1,"Line1"); // Enter one row into the stream
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+   otl_write_row(o,1,"Line1"); // Enter one row into the stream
+  // the old way (operators >>() / <<()) is available as always:
+  //   o<<1<<"Line1"; // Enter one row into the stream
+#endif
   o.flush(); // flush the strem buffer, i.e. force
              // the stream to execute
   o<<1<<"Line1"; // Enter the same data into the stream
@@ -65,11 +78,20 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  char f2[31];
 
  while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2;
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+   otl_read_row(i,f1,f2);
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+   otl_read_row(i,f1,f2);
+  // the old way (operators >>() / <<()) is available as always:
+  //   i>>f1>>f2;
+#endif
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
  }
 
@@ -80,7 +102,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("scott/tigger@sybsql"); // connect to the database
+  db.rlogon("sa/tigger@sybsql"); // connect to the database
 
   otl_cursor::direct_exec
    (

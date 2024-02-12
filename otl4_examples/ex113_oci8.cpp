@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -78,7 +82,7 @@ void select()
 // as SQL statements are not equal. It will generate two entry point in the
 // OTL stream pool.
  
- int f1;
+ int f1=0;
  char f2[31];
 
  i1<<2<<2; // assigning :f11 = 2, :f12 = 2
@@ -108,7 +112,7 @@ int main()
  otl_connect::otl_initialize(); // initialize the environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to the database
+  db.rlogon("system/oracle@myora_tns"); // connect to the database
 #ifdef OTL_STREAM_POOLING_ON
   db.set_stream_pool_size(2); 
    // set the maximum stream pool size and actually initializes 

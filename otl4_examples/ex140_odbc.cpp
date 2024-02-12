@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -35,7 +39,16 @@ void insert()
 #else
   sprintf(tmp,"Name%d",i);
 #endif
-  o<<i<<tmp;
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+  otl_write_row(o,i,tmp);
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+  otl_write_row(o,i,tmp);
+  // the old way (operators >>() / <<()) is available as always:
+  //  o<<i<<tmp;
+#endif
  }
 }
 
@@ -64,20 +77,45 @@ void select(const int af1)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  char f2[31];
 
- i<<af1<<af1; // Writing input values into the stream
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
+#if (defined(_MSC_VER) && _MSC_VER>=1600) || defined(OTL_CPP_11_ON)
+// C++11 (or higher) compiler
+#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
+ otl_write_row(i,af1,af1); // Writing input values into the stream
+#else
+  // when variadic template functions are not supported by the C++
+  // compiler, OTL provides nonvariadic versions of the same template
+  // functions in the range of [1..15] parameters
+ otl_write_row(i,af1,af1); // Writing input values into the stream
+  // the old way (operators >>() / <<()) is available as always:
+  // i<<af1<<af1; // Writing input values into the stream
+#endif
+ for(auto& it : i){
+  it>>f1;
   cout<<"f1="<<f1<<", f2=";
-  i>>f2;
-  if(i.is_null())
+  it>>f2;
+  if(it.is_null())
    cout<<"NULL";
   else
    cout<<f2;
   cout<<endl;
  }
+#else
+// C++98/03 compiler
+ i<<af1<<af1; // Writing input values into the stream
+ while(!i.eof()){ // while not end-of-data
+   i>>f1;
+   cout<<"f1="<<f1<<", f2=";
+   i>>f2;
+   if(i.is_null())
+     cout<<"NULL";
+   else
+     cout<<f2;
+   cout<<endl;
+ }
+#endif
 
 }
 

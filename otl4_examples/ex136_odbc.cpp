@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 #include <stdio.h>
@@ -16,7 +20,7 @@ void insert(void)
  db.set_max_long_size(70000); // set maximum long string size for connect object
 
  otl_stream o(1, // buffer size needs to be set to 1
-              "insert into test_tab values(:f1<int>,:f2<varchar_long>)", 
+              "insert into test_tab values(:f1<int>,:f2<raw_long>)", 
                  // INSERT statement
               db // connect object
              );
@@ -43,7 +47,7 @@ void select(void)
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
 
 
  while(!i.eof()){ // while not end-of-data
@@ -58,8 +62,8 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-   db.rlogon("UID=scott;PWD=tiger;DSN=firebird"); // connect to ODBC
-//  db.rlogon("scott/tiger@firebird"); // connect to ODBC, alternative format
+   db.rlogon("UID=scott;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
+//  db.rlogon("scott/tiger@firebirdsql"); // connect to ODBC, alternative format
                                     // of connect string
   otl_cursor::direct_exec
    (

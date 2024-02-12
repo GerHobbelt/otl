@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -59,10 +63,10 @@ private:
 
 otl_stream& operator>>(otl_stream& s, MyBigNumber& bn)
 {
-  OTL_UNICODE_CHAR_TYPE temp_val[60];
+  OTL_UNICODE_CHAR_TYPE temp_val[60]={0};
   s>>temp_val;
   for(OTL_UNICODE_CHAR_TYPE* c=temp_val;*c;++c)
-    cout<<(char)*c;
+    cout<<static_cast<char>(*c);
   bn.toMyBigNumber(temp_val);
   return s;
 }

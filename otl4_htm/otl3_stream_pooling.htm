@@ -1,134 +1,137 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
-  <head>
-    <meta http-equiv="content-type" content="text/html;
-      charset=ISO-8859-1">
-    <title>OTL 4.0, OTL stream pooling</title>
-    <meta name="Author" content="Sergei Kuchin">
-    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
-      [Netscape]">
-    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
-      API, C++, Template Library">
-  </head>
-  <body>
-    <h1>OTL 4.0, OTL stream pooling</h1>
-    <p>OTL stream pooling is a mechanism which allows to turn
-      inefficiently managed otl_stream's into something of a greater
-      value as far as performance is concerned. Instances of otl_stream
-      variables get saved in a stream pool, when they get closed, for
-      further reuse in the program. Typically, the program may have a
-      handful of otl_stream variables, defined locally in functions. The
-      streams get instantiated and closed all over again, especially
-      when functions get called repeatedly. </p>
-    <p>Each instantiation of a stream triggers re-parsing of the
-      stream's SQL statement on the database back end. It is a
-      relatively expensive operation. The stream pooling mechanism
-      alleviates that burden and simplifies coding techniques. </p>
-    <p>When a stream variable gets closed, the actual instance of the
-      otl_stream gets saved in the stream pool. Then if there is a
-      request to a similar OTL stream, the OTL stream instance can be
-      assigned to the otl_stream variable, which, may be, in its turn,
-      either a local [in function] variable, or allocated on the heap. <a
-        name="stream_pool_key"></a>The <i>similarity</i> of the streams
-      is defined as <i>stream buffer size</i> + <i>SQL statement text</i>
-      + <span style="font-style: italic;">overrides for SELECT output
-        columns</span> (overridden via calls to otl_stream::<a
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html;
+      charset=windows-1252">
+    <title>OTL 4.0, OTL stream pooling</title>
+    <meta name="Author" content="Sergei Kuchin">
+    <meta name="GENERATOR" content="Mozilla/3.03Gold (Win95; I)
+      [Netscape]">
+    <meta name="KeyWords" content="OTL, Oracle, ODBC, DB2, CLI, database
+      API, C++, Template Library">
+  </head>
+  <body>
+    <h1>OTL 4.0, OTL stream pooling</h1>
+    <p>OTL stream pooling is a mechanism which allows to turn
+      inefficiently managed otl_stream's into something of a greater
+      value as far as performance is concerned. Instances of otl_stream
+      variables get saved in a stream pool, when they get closed, for
+      further reuse in the program. Typically, the program may have a
+      handful of otl_stream variables, defined locally in functions. The
+      streams get instantiated and closed all over again, especially
+      when functions get called repeatedly. </p>
+    <p>Each instantiation of a stream triggers re-parsing of the
+      stream's SQL statement on the database back end. It is a
+      relatively expensive operation. The stream pooling mechanism
+      alleviates that burden and simplifies coding techniques. </p>
+    <p>When a stream variable gets closed, the actual instance of the
+      otl_stream gets saved in the stream pool. Then if there is a
+      request to a similar OTL stream, the OTL stream instance can be
+      assigned to the otl_stream variable, which, may be, in its turn,
+      either a local [in function] variable, or allocated on the heap. <a
+        name="stream_pool_key"></a>The <i>similarity</i> of the streams
+      is defined as <i>stream buffer size</i> + <i>SQL statement text</i>
+      + <span style="font-style: italic;">overrides for SELECT output
+        columns</span> (overridden via calls to otl_stream::<a
         href="otl3_stream_class.htm#set_column_type">set_column_type</a>()),
 
 
-      meaning that streams with the same SQL statements, buffer sizes,
-      and possibly SELECT output column overrides (in the case if the
-      statement is a SELECT statement and some of its output columns
-      were overridden) will be saved in the same bucket in the stream
-      pool. </p>
-    <p>Say, three instances of <i>similar</i> streams of
-      &lt;buf_size1+SQLStm1+overrides&gt; were allocated and then all of
-      them were closed. The pool will have one entry point for all the
-      three and the actual bodies of the instances will be placed in the
-      same bucket (see the diagram below). After that, the functions, in
-      which the streams had been created, get called on the second
-      iteration of a loop, and the corresponding otl_stream variables
-      get instantiated again. The second time around, the instances of
-      the similar streams, which were previously saved in the pool, will
-      be pulled out of the pool and re-assigned to the variables, until
-      the variables get closed again.</p>
-    <p>In some cases, an instance of a stream, if it is, say, used only
-      once, can bypass the pool and be destroyed without saving it in
+
+      meaning that streams with the same SQL statements, buffer sizes,
+      and possibly SELECT output column overrides (in the case if the
+      statement is a SELECT statement and some of its output columns
+      were overridden) will be saved in the same bucket in the stream
+      pool. </p>
+    <p>Say, three instances of <i>similar</i> streams of
+      &lt;buf_size1+SQLStm1+overrides&gt; were allocated and then all of
+      them were closed. The pool will have one entry point for all the
+      three and the actual bodies of the instances will be placed in the
+      same bucket (see the diagram below). After that, the functions, in
+      which the streams had been created, get called on the second
+      iteration of a loop, and the corresponding otl_stream variables
+      get instantiated again. The second time around, the instances of
+      the similar streams, which were previously saved in the pool, will
+      be pulled out of the pool and re-assigned to the variables, until
+      the variables get closed again.</p>
+    <p>In some cases, an instance of a stream, if it is, say, used only
+      once, can bypass the pool and be destroyed without saving it in
       the pool. The otl_stream::<a href="otl3_stream_class.htm#close">close</a>()
 
 
-      function has extended functionality to allow the developer to do
-      that.</p>
-    <p>If the stream pooling is undesirable, then the OTL code, which
-      implements the pooling, can be turned off (not turned on at all).
-      This is controlled by a conditional compilation <a
-        href="otl3_compile.htm#OTL_STREAM_POOLING_ON">directive</a>,
-      since OTL is a C++ template as well as macro library with a lot of
-      conditional compilation directives in it, for efficient code
-      generation.</p>
-    <p>The stream pool has a fixed maximum size, that can be changed by
-      the otl_connect::<a
+
+      function has extended functionality to allow the developer to do
+      that.</p>
+    <p>If the stream pooling is undesirable, then the OTL code, which
+      implements the pooling, can be turned off (not turned on at all).
+      This is controlled by a conditional compilation <a
+        href="otl3_compile.htm#OTL_STREAM_POOLING_ON">directive</a>,
+      since OTL is a C++ template as well as macro library with a lot of
+      conditional compilation directives in it, for efficient code
+      generation.</p>
+    <p>The stream pool has a fixed maximum size, that can be changed by
+      the otl_connect::<a
         href="otl3_connect_class.htm#set_stream_pool_size">set_stream_pool_size</a>()
 function.
 And,
 as
 
 
-      it already should be obvious from the description above, the
-      stream pool is a property of the <a href="otl3_connect_class.htm">otl_connect</a>
-      object. </p>
-    <p>The implementation of the stream pool was made with the help of
-      STL containers, maps and vectors in particular. Therefore, #define
-      <a href="otl3_compile.htm#OTL_STL">OTL_STL</a> (or #define <a
-        href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> if <a
-        href="http://www.cs.wustl.edu/%7Eschmidt/ACE.html">ACE</a> is
-      used) needs to be enabled in order to turn on the OTL code in the
-      STL compliance mode.<br>
-      <br>
-      When a new stream is being added to the stream pool but it doesn't
-      have free slots, the <span style="font-style: italic;">least used</span>
-      (as in LRU count based algorithms) entry gets freed up and used
-      for the new stream. <br>
-    </p>
-    <p>The stream pooling has&nbsp; a relatively small overhead,
-      compared to the use of otl_stream's, which are kept open always,
-      and don't get closed. This is due to the fact that the
-      std::map&lt;&gt;, as an STL&nbsp;data container, is efficient
-      enough.</p>
-    <p><img src="pool.gif" height="664" width="795"><br>
-    </p>
-    <hr width="100%">
-    <p></p>
-    <center>
-      <pre><a href="home.htm">Go Home</a> </pre>
-    </center>
-    <p>Copyright &copy; 1996-2012, Sergei Kuchin, email: <a
-        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
-        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>.
-      <script language="JavaScript"><!-- hide from oldgmailsers
- var modDate = new Date(document.lastModified)
- document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
- //-->
- </script></p>
-    <p><i>Permission to use, copy, modify and redistribute this document
-        for any purpose is hereby granted without fee, provided that the
-        above copyright notice appear in all copies. THE SOFTWARE IS
-        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
-        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
-        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
-        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
-        USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
-    <script type="text/javascript">
-var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-</script>
-    <script type="text/javascript">
-var pageTracker = _gat._getTracker("UA-5456201-1");
-pageTracker._trackPageview();
-</script>
-  </body>
-</html>
+
+      it already should be obvious from the description above, the
+      stream pool is a property of the <a href="otl3_connect_class.htm">otl_connect</a>
+      object. </p>
+    <p><a name="STREAM_POOLING_PREREQS"></a>Stream pooling can be
+      enabled when #define <a href="otl3_compile.htm#OTL_STL">OTL_STL</a>
+      (or #define <a href="otl3_compile.htm#OTL_ACE">OTL_ACE</a> if <a
+        href="http://www.cs.wustl.edu/%7Eschmidt/ACE.html">ACE</a> is
+      used, or when #define <a href="otl3_compile.htm#OTL_UNICODE">OTL_UNICODE</a>
+      / #define <a href="otl3_compile.htm#OTL_UNICODE_STRING_TYPE">OTL_UNICODE_STRING_TYPE</a>
+      are used) is defined.<br>
+      <br>
+      When a new stream is being added to the stream pool but it doesn't
+      have free slots, the <span style="font-style: italic;">least used</span>
+      (as in LRU count based algorithms) entry gets freed up and used
+      for the new stream. <br>
+    </p>
+    <p>The stream pooling has&nbsp; a relatively small overhead,
+      compared to the use of otl_stream's, which are kept open always,
+      and don't get closed. This is due to the fact that the
+      std::map&lt;&gt;, as an STL&nbsp;data container, is efficient
+      enough.</p>
+    <p><img src="pool.gif" height="664" width="795"><br>
+    </p>
+    <hr width="100%">
+    <p></p>
+    <center>
+      <pre><a href="home.htm">Go Home</a> </pre>
+    </center>
+    <p>Copyright © 1996-2023, Sergei Kuchin, email: <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a
+        href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>.
+      <script language="JavaScript"><!-- hide from oldgmailsers
+ var modDate = new Date(document.lastModified)
+ document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+ //-->
+ </script></p>
+    <p><i>Permission to use, copy, modify and redistribute this document
+        for any purpose is hereby granted without fee, provided that the
+        above copyright notice appear in all copies. THE SOFTWARE IS
+        PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+        REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+        MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE
+        LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+        DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE,
+        DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+        OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE
+        USE OR PERFORMANCE OF THIS SOFTWARE. </i></p>
+    <script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+    <script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-5456201-1");
+pageTracker._trackPageview();
+</script>
+  </body>
+</html>

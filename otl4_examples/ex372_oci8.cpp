@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 using namespace std;
 
@@ -62,7 +66,7 @@ void select()
 
 // By and large, this is all syntactical sugar, but "some like it hot".
  
- int f1;
+ int f1=0;
  char f2[31];
 
  i<<8<<8; // assigning :f11 = 8, :f12 = 8
@@ -90,7 +94,7 @@ int main()
  otl_connect::otl_initialize(); // initialize the database API environment
  try{
 
-  db<<"scott/tiger"; // connect to the database
+  db<<"system/oracle@myora_tns"; // connect to the database
 
   // Send SQL statements to the connect obejct for immediate execution. 
   // Ignore any exception for the first statement.

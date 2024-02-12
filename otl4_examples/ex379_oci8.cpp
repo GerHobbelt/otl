@@ -1,3 +1,7 @@
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+#define _ALLOW_RTCc_IN_STL 
+#define _HAS_STD_BYTE 0
+#endif
 #include <iostream>
 #include <string>
 using namespace std;
@@ -9,6 +13,25 @@ using namespace std;
 // #define OTL_ORA10G // Compile OTL 4.0/OCI10g
 // #define OTL_ORA10G_R2 // Compile OTL 4.0/OCI10g Release2
 #define OTL_STL // enable OTL support for STL
+
+#if (defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 900)) && \
+     (defined(OTL_CPP_14_ON))
+#include <experimental/string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::experimental::string_view
+#elif (defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 900)) && \
+     (defined(OTL_CPP_17_ON))
+#include <string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::string_view
+#elif (defined(__clang__) && (__clang_major__*100+__clang_minor__ < 900) || defined(__GNUC__)) && \
+     (defined(OTL_CPP_14_ON) || defined(OTL_CPP_17_ON))
+#include <experimental/string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::experimental::string_view
+#elif defined(_MSC_VER) && (_MSC_VER>=1910) && defined(OTL_CPP_17_ON)
+// VC++ 2017 or higher when /std=c++latest is used
+#include <string_view>
+#define OTL_STD_STRING_VIEW_CLASS std::string_view
+#endif
+
 #include <otlv4.h> // include the OTL 4.0 header file
 
 otl_connect db; // connect object
@@ -39,13 +62,28 @@ void insert()
   lob.set_len(50001+23123); // setting the total size of
                             // the CLOB to be written.
    // It is required for bakward compatibility
- 
-  lob<<f2; // writing first chunk of the CLOB into lob
 
+#if defined(OTL_STD_STRING_VIEW_CLASS)
+  {
+    OTL_STD_STRING_VIEW_CLASS f2_sv(f2.c_str(),f2.length());
+    lob<<f2_sv; // writing first chunk of the CLOB into lob
+  }
+#else
+  lob<<f2; // writing first chunk of the CLOB into lob
+#endif
+ 
   f2.erase();
   f2.append(23122,'*');
   f2 += '?';
-  lob<<f2; // writing the second chunk of the CLOB into lob
+
+#if defined(OTL_STD_STRING_VIEW_CLASS)
+  {
+    OTL_STD_STRING_VIEW_CLASS f2_sv(f2.c_str(),f2.length());
+    lob<<f2_sv; // writing first chunk of the CLOB into lob
+  }
+#else
+  lob<<f2; // writing first chunk of the CLOB into lob
+#endif
   lob.close(); // closing the otl_lob_stream
  }
 
@@ -99,7 +137,7 @@ void select()
              ); 
    // create select stream
  
- int f1;
+ int f1=0;
  otl_lob_stream lob; // Stream for reading CLOB
 
  lob.setStringBuffer(40000); // Set a bigger internal buffer (default is 4096 bytes)
@@ -128,7 +166,7 @@ int main()
  otl_connect::otl_initialize(); // initialize OCI environment
  try{
 
-  db.rlogon("scott/tiger"); // connect to Oracle
+  db.rlogon("system/oracle@myora_tns"); // connect to Oracle
 
   otl_cursor::direct_exec
    (
