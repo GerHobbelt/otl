@@ -1,6 +1,6 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.468,
-// Copyright (C) 1996-2022, Sergei Kuchin (skuchin@gmail.com)
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.476,
+// Copyright (C) 1996-2023, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
 // and/or distribute this software for any purpose with or without fee
@@ -26,7 +26,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401D4L)
+#define OTL_VERSION_NUMBER (0x0401DCL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -67,10 +67,12 @@
 #endif
 
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__<=407) && (__GNUC__*100+__GNUC_MINOR__>=404)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 #endif
 
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>=701)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #endif
 
@@ -353,14 +355,14 @@
 #define OTL_SPRINTF_S sprintf_s
 #else
 #ifndef OTL_STRCAT_S
-#define OTL_STRCAT_S(dest, dest_sz, src)  ((void)(dest_sz),strcat(dest, src))
+#define OTL_STRCAT_S(dest, dest_sz, src) (strncat(dest, src, static_cast<std::size_t>(dest_sz-1)))
 #endif // OTL_STRCAT_S
 #ifndef OTL_STRCPY_S
-#define OTL_STRCPY_S(dest, dest_sz, src) ((void)(dest_sz),strcpy(dest, src))
+#define OTL_STRCPY_S(dest, dest_sz, src) (strncpy(dest, src, static_cast<std::size_t>(dest_sz-1)),dest[static_cast<std::size_t>(dest_sz-1)]=0)
 #endif // OTL_STRCPY_S
 #ifndef OTL_STRNCPY_S
 #define OTL_STRNCPY_S(dest, dest_sz, src, count)                               \
-  ((void)(dest_sz),strncpy(dest, src, count))
+  ((void)(dest_sz),strncpy(dest, src, count),dest[static_cast<std::size_t>(count)]=0)
 #endif // OTL_STRNCPY_S
 
 #ifndef OTL_SPRINTF_S
@@ -370,16 +372,18 @@
 
 #if defined(__GNUC__)
 #define OTL_SPRINTF_S_ATTRIBUTE __attribute__ ((format (printf, 3, 4)))
+#elif defined(__clang__)
+#define OTL_SPRINTF_S_ATTRIBUTE __attribute__ ((__format__ (__printf__, 3, 4)))
 #else
 #define OTL_SPRINTF_S_ATTRIBUTE
 #endif
 
-int otl_sprintf_s(char* dest, size_t /* dest_sz */, const char* fmt, ...) OTL_SPRINTF_S_ATTRIBUTE;
+int otl_sprintf_s(char* dest, size_t dest_sz, const char* fmt, ...) OTL_SPRINTF_S_ATTRIBUTE;
 
-inline int otl_sprintf_s(char* dest, size_t /* dest_sz */, const char* fmt, ...){
+inline int otl_sprintf_s(char* dest, size_t dest_sz, const char* fmt, ...){
   va_list vl;
   va_start(vl, fmt);
-  int res = vsprintf(dest, fmt, vl);
+  int res = vsnprintf(dest, dest_sz, fmt, vl);
   va_end(vl);
   return res;
 }
@@ -1067,14 +1071,14 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   if (OTL_TRACE_LEVEL & level) {                                               \
     char temp_connect_str[2048];                                               \
     OTL_STRCPY_S(temp_connect_str, sizeof(temp_connect_str), userid);          \
-    OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "/");             \
+    OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "/");             \
     size_t sz = strlen(passwd);                                                \
     for (size_t i = 0; i < sz; ++i)                                            \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "*");           \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "*");           \
     size_t tns_sz = strlen(tnsname);                                           \
     if (tns_sz > 0) {                                                          \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "@");           \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), tnsname);       \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "@");           \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, tnsname);       \
     }                                                                          \
     OTL_TRACE_STREAM << OTL_TRACE_LINE_PREFIX;                                 \
     OTL_TRACE_STREAM << class_name << "(this=";                                \
@@ -1092,14 +1096,14 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   {                                                                            \
     char temp_connect_str[2048];                                               \
     OTL_STRCPY_S(temp_connect_str, sizeof(temp_connect_str), userid);          \
-    OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "/");             \
+    OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "/");             \
     size_t sz = strlen(passwd);                                                \
     for (size_t i = 0; i < sz; ++i)                                            \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "*");           \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "*");           \
     size_t tns_sz = strlen(tnsname);                                           \
     if (tns_sz > 0) {                                                          \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "@");           \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), tnsname);       \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "@");           \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, tnsname);       \
     }                                                                          \
     OTL_TRACE_STREAM << OTL_TRACE_LINE_PREFIX;                                 \
     OTL_TRACE_STREAM << class_name << "(this=";                                \
@@ -1120,14 +1124,14 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
    if (OTL_TRACE_LEVEL & level) {                                              \
     char temp_connect_str2[2048];                                              \
     OTL_STRCPY_S(temp_connect_str2, sizeof(temp_connect_str2), userid);        \
-    OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "/");           \
+    OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "/"); \
     size_t sz = strlen(passwd);                                                \
     for (size_t i = 0; i < sz; ++i)                                            \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "*");         \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "*");         \
     size_t tns_sz = strlen(tnsname);                                           \
     if (tns_sz > 0) {                                                          \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "@");         \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), tnsname);     \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "@");         \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, tnsname);     \
     }                                                                          \
     OTL_TRACE_STREAM << OTL_TRACE_LINE_PREFIX;                                 \
     OTL_TRACE_STREAM << class_name;                                            \
@@ -1148,14 +1152,14 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   {                                                                            \
     char temp_connect_str2[2048];                                              \
     OTL_STRCPY_S(temp_connect_str2, sizeof(temp_connect_str2), userid);        \
-    OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "/");           \
+    OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "/");           \
     size_t sz = strlen(passwd);                                                \
     for (size_t i = 0; i < sz; ++i)                                            \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "*");         \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "*");         \
     size_t tns_sz = strlen(tnsname);                                           \
     if (tns_sz > 0) {                                                          \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "@");         \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), tnsname);     \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "@");         \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, tnsname);     \
     }                                                                          \
     OTL_TRACE_STREAM << OTL_TRACE_LINE_PREFIX;                                 \
     OTL_TRACE_STREAM << class_name;                                            \
@@ -3711,7 +3715,6 @@ inline void otl_strcpy(unsigned char *trg, unsigned char *src, int &overflow,
   }
 }
 
-#if defined(OTL_UNICODE) || (defined(_MSC_VER) && (_MSC_VER >= 1400))
 inline void otl_strcpy(unsigned char *trg, const unsigned char *src) {
   OTL_CHAR *c1 = OTL_RCAST(OTL_CHAR *, trg);
   const OTL_CHAR *c2 = OTL_RCAST(const OTL_CHAR *, src);
@@ -3720,11 +3723,6 @@ inline void otl_strcpy(unsigned char *trg, const unsigned char *src) {
   }
   *c1 = 0;
 }
-#else
-inline void otl_strcpy(unsigned char *trg, const unsigned char *src) {
-  strcpy(OTL_RCAST(char *, trg), OTL_RCAST(const char *, src));
-}
-#endif
 
 inline void otl_strcat(char *trg, const char *src) {
   while (*trg)
@@ -5500,11 +5498,26 @@ public:
       OTL_STRNCPY_S(OTL_RCAST(char *, stm_text), sizeof(stm_text), sqlstm,
                     sizeof(stm_text) - 1);
 #else
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
       strncpy(OTL_RCAST(char *, stm_text), sqlstm, sizeof(stm_text));
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic pop
+#endif
+
       stm_text[sizeof(stm_text) - 1] = 0;
 #endif
 #else
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+#endif
       strncpy(OTL_RCAST(char *, stm_text), sqlstm, sizeof(stm_text));
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>800)
+#pragma GCC diagnostic pop
+#endif
       stm_text[sizeof(stm_text) - 1] = 0;
 #endif
     }
@@ -12058,6 +12071,7 @@ public:
   };
 
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__==408)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 
@@ -12123,6 +12137,7 @@ public:
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>=705)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
       SQLPOINTER temp = OTL_SCAST(SQLPOINTER,SQL_AUTOCOMMIT_OFF);
@@ -12189,6 +12204,7 @@ inline void otl_special_convert_char_to_SQLWCHAR
 #pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>=407)
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 #endif
   OTL_NODISCARD int rlogon(const char*username, const char *passwd,
@@ -15772,7 +15788,7 @@ OTL_THROWS_OTL_EXCEPTION:
       sc.init(sc.get_max_size());
 #endif
 #if defined(OTL_FREETDS_ODBC_WORKAROUNDS)
-    if (!auto_commit_)
+    if (!auto_commit_ && connected)
       rollback();
 #endif
 #if defined(OTL_ROLLS_BACK_BEFORE_LOGOFF)
@@ -23561,23 +23577,23 @@ public:
       char err_msg[1024];
       char temp_num[64];
       OTL_STRCPY_S(err_msg, sizeof(err_msg), otl_error_msg_7);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), ", trying to store ");
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, ", trying to store ");
       otl_itoa(s.len(), temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), temp_num);
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, temp_num);
 #if defined(OTL_UNICODE)
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), " Unicode characters at offset ");
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, " Unicode characters at offset ");
 #else
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), " bytes at offset ");
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, " bytes at offset ");
 #endif
       otl_itoa(offset, temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), ". New length: ");
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, temp_num);
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, ". New length: ");
       otl_itoa((offset - 1) + s.len(), temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg),
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, temp_num);
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1,
                    " would be bigger than length of lob: ");
       otl_itoa(lob_len, temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), temp_num);
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, temp_num);
       OTL_THROW((otl_tmpl_exception<TExceptionStruct, TConnectStruct, TCursorStruct>(
                    err_msg, otl_error_code_7,
                    cursor->get_stm_label() ? cursor->get_stm_label()
@@ -26145,8 +26161,8 @@ public:
     if (!sel_cur.get_connected())
       return;
     OTL_STRCPY_S(tmp_buf, sizeof(tmp_buf), "begin close ");
-    OTL_STRCAT_S(tmp_buf, sizeof(tmp_buf), cur_placeholder);
-    OTL_STRCAT_S(tmp_buf, sizeof(tmp_buf), "; end;");
+    OTL_STRCAT_S(tmp_buf, sizeof(tmp_buf)-strlen(tmp_buf)-1, cur_placeholder);
+    OTL_STRCAT_S(tmp_buf, sizeof(tmp_buf)-strlen(tmp_buf)-1, "; end;");
     otl_tmpl_cursor<otl_exc, otl_conn, otl_cur, otl_var>::parse(tmp_buf);
     rc = OCIBindByName(cursor_struct.cda, &bindpp, cursor_struct.errhp,
                        OTL_RCAST(text *, cur_placeholder),
@@ -28510,11 +28526,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
           OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                         desc.get_ptr()[0].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
           otl_strcat(sql_stm, "BEGIN ");
           otl_strcat(sql_stm, full_name);
@@ -28560,11 +28587,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
           OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                         desc.get_ptr()[0].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
           otl_strcat(sql_stm, "BEGIN ");
           otl_strcat(sql_stm, temp_buf2);
@@ -28674,11 +28712,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
             OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                           desc.get_ptr()[i].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
           otl_strcat(sql_stm, temp_buf2);
         }
@@ -28733,11 +28782,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
             OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                           desc.get_ptr()[i].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
           otl_strcat(sql_stm, temp_buf2);
         }
@@ -28780,11 +28840,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
         OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                       desc.get_ptr()[i].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
         otl_strcat(sql_stm, temp_buf2);
       }
@@ -28815,11 +28886,22 @@ public:
 #if defined(__clang__)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-value"
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-value"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
+#elif defined(_MSC_VER )
+#pragma warning( push )
 #endif
         OTL_SPRINTF_S(temp_buf2, sizeof(temp_buf2),
                       desc.get_ptr()[i].get_ptr()->bind_var, temp_buf);
 #if defined(__clang__)
 #pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER )
+#pragma warning( pop )
 #endif
         otl_strcat(sql_stm, temp_buf2);
       }
@@ -31590,7 +31672,7 @@ public:
       OTL_THROW((otl_exception(otl_error_msg_32, otl_error_code_32)));
     char sql_stmt[1024];
     OTL_STRCPY_S(sql_stmt, sizeof(sql_stmt), "select :i<int> from ");
-    OTL_STRCAT_S(sql_stmt, sizeof(sql_stmt), table_name);
+    OTL_STRCAT_S(sql_stmt, sizeof(sql_stmt)-strlen(sql_stmt)-1, table_name);
     int arg = 0;
     otl_stream s(1, sql_stmt, *db);
     if (!s.get_shell() || !s.get_shell()->ss)
