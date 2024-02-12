@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.472,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.473,
 // Copyright (C) 1996-2020, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401D8L)
+#define OTL_VERSION_NUMBER (0x0401D9L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -352,10 +352,10 @@
 #define OTL_SPRINTF_S sprintf_s
 #else
 #ifndef OTL_STRCAT_S
-#define OTL_STRCAT_S(dest, dest_sz, src)  ((void)(dest_sz),strcat(dest, src))
+#define OTL_STRCAT_S(dest, dest_sz, src)  (dest[static_cast<std::size_t>(dest_sz-1)]=0, strncat(dest, src, static_cast<std::size_t>(dest_sz-1)))
 #endif // OTL_STRCAT_S
 #ifndef OTL_STRCPY_S
-#define OTL_STRCPY_S(dest, dest_sz, src) ((void)(dest_sz),strcpy(dest, src))
+#define OTL_STRCPY_S(dest, dest_sz, src) (dest[static_cast<std::size_t>(dest_sz-1)]=0, strncpy(dest, src, static_cast<std::size_t>(dest_sz-1)))
 #endif // OTL_STRCPY_S
 #ifndef OTL_STRNCPY_S
 #define OTL_STRNCPY_S(dest, dest_sz, src, count)                               \
@@ -1043,14 +1043,14 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   if (OTL_TRACE_LEVEL & level) {                                               \
     char temp_connect_str[2048];                                               \
     OTL_STRCPY_S(temp_connect_str, sizeof(temp_connect_str), userid);          \
-    OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "/");             \
+    OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "/");             \
     size_t sz = strlen(passwd);                                                \
     for (size_t i = 0; i < sz; ++i)                                            \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "*");           \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "*");           \
     size_t tns_sz = strlen(tnsname);                                           \
     if (tns_sz > 0) {                                                          \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "@");           \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), tnsname);       \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "@");           \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, tnsname);       \
     }                                                                          \
     OTL_TRACE_STREAM << OTL_TRACE_LINE_PREFIX;                                 \
     OTL_TRACE_STREAM << class_name << "(this=";                                \
@@ -1068,14 +1068,14 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   {                                                                            \
     char temp_connect_str[2048];                                               \
     OTL_STRCPY_S(temp_connect_str, sizeof(temp_connect_str), userid);          \
-    OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "/");             \
+    OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "/");             \
     size_t sz = strlen(passwd);                                                \
     for (size_t i = 0; i < sz; ++i)                                            \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "*");           \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "*");           \
     size_t tns_sz = strlen(tnsname);                                           \
     if (tns_sz > 0) {                                                          \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), "@");           \
-      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str), tnsname);       \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, "@");           \
+      OTL_STRCAT_S(temp_connect_str, sizeof(temp_connect_str) - strlen(temp_connect_str) - 1, tnsname);       \
     }                                                                          \
     OTL_TRACE_STREAM << OTL_TRACE_LINE_PREFIX;                                 \
     OTL_TRACE_STREAM << class_name << "(this=";                                \
@@ -1096,14 +1096,14 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
    if (OTL_TRACE_LEVEL & level) {                                              \
     char temp_connect_str2[2048];                                              \
     OTL_STRCPY_S(temp_connect_str2, sizeof(temp_connect_str2), userid);        \
-    OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "/");           \
+    OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "/"); \
     size_t sz = strlen(passwd);                                                \
     for (size_t i = 0; i < sz; ++i)                                            \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "*");         \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "*");         \
     size_t tns_sz = strlen(tnsname);                                           \
     if (tns_sz > 0) {                                                          \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "@");         \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), tnsname);     \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "@");         \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, tnsname);     \
     }                                                                          \
     OTL_TRACE_STREAM << OTL_TRACE_LINE_PREFIX;                                 \
     OTL_TRACE_STREAM << class_name;                                            \
@@ -1124,14 +1124,14 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
   {                                                                            \
     char temp_connect_str2[2048];                                              \
     OTL_STRCPY_S(temp_connect_str2, sizeof(temp_connect_str2), userid);        \
-    OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "/");           \
+    OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "/");           \
     size_t sz = strlen(passwd);                                                \
     for (size_t i = 0; i < sz; ++i)                                            \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "*");         \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "*");         \
     size_t tns_sz = strlen(tnsname);                                           \
     if (tns_sz > 0) {                                                          \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), "@");         \
-      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2), tnsname);     \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, "@");         \
+      OTL_STRCAT_S(temp_connect_str2, sizeof(temp_connect_str2) - strlen(temp_connect_str2) - 1, tnsname);     \
     }                                                                          \
     OTL_TRACE_STREAM << OTL_TRACE_LINE_PREFIX;                                 \
     OTL_TRACE_STREAM << class_name;                                            \
@@ -3401,7 +3401,6 @@ inline void otl_strcpy(unsigned char *trg, unsigned char *src, int &overflow,
   }
 }
 
-#if defined(OTL_UNICODE) || (defined(_MSC_VER) && (_MSC_VER >= 1400))
 inline void otl_strcpy(unsigned char *trg, const unsigned char *src) {
   OTL_CHAR *c1 = OTL_RCAST(OTL_CHAR *, trg);
   const OTL_CHAR *c2 = OTL_RCAST(const OTL_CHAR *, src);
@@ -3410,11 +3409,6 @@ inline void otl_strcpy(unsigned char *trg, const unsigned char *src) {
   }
   *c1 = 0;
 }
-#else
-inline void otl_strcpy(unsigned char *trg, const unsigned char *src) {
-  strcpy(OTL_RCAST(char *, trg), OTL_RCAST(const char *, src));
-}
-#endif
 
 inline void otl_strcat(char *trg, const char *src) {
   while (*trg)
@@ -23135,23 +23129,23 @@ public:
       char err_msg[1024];
       char temp_num[64];
       OTL_STRCPY_S(err_msg, sizeof(err_msg), otl_error_msg_7);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), ", trying to store ");
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, ", trying to store ");
       otl_itoa(s.len(), temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), temp_num);
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, temp_num);
 #if defined(OTL_UNICODE)
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), " Unicode characters at offset ");
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, " Unicode characters at offset ");
 #else
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), " bytes at offset ");
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, " bytes at offset ");
 #endif
       otl_itoa(offset, temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), ". New length: ");
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, temp_num);
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, ". New length: ");
       otl_itoa((offset - 1) + s.len(), temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg),
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, temp_num);
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1,
                    " would be bigger than length of lob: ");
       otl_itoa(lob_len, temp_num);
-      OTL_STRCAT_S(err_msg, sizeof(err_msg), temp_num);
+      OTL_STRCAT_S(err_msg, sizeof(err_msg)-strlen(err_msg)-1, temp_num);
       OTL_THROW((otl_tmpl_exception<TExceptionStruct, TConnectStruct, TCursorStruct>(
                    err_msg, otl_error_code_7,
                    cursor->get_stm_label() ? cursor->get_stm_label()
@@ -25711,8 +25705,8 @@ public:
     if (!sel_cur.get_connected())
       return;
     OTL_STRCPY_S(tmp_buf, sizeof(tmp_buf), "begin close ");
-    OTL_STRCAT_S(tmp_buf, sizeof(tmp_buf), cur_placeholder);
-    OTL_STRCAT_S(tmp_buf, sizeof(tmp_buf), "; end;");
+    OTL_STRCAT_S(tmp_buf, sizeof(tmp_buf)-strlen(tmp_buf)-1, cur_placeholder);
+    OTL_STRCAT_S(tmp_buf, sizeof(tmp_buf)-strlen(tmp_buf)-1, "; end;");
     otl_tmpl_cursor<otl_exc, otl_conn, otl_cur, otl_var>::parse(tmp_buf);
     rc = OCIBindByName(cursor_struct.cda, &bindpp, cursor_struct.errhp,
                        OTL_RCAST(text *, cur_placeholder),
@@ -31222,7 +31216,7 @@ public:
       OTL_THROW((otl_exception(otl_error_msg_32, otl_error_code_32)));
     char sql_stmt[1024];
     OTL_STRCPY_S(sql_stmt, sizeof(sql_stmt), "select :i<int> from ");
-    OTL_STRCAT_S(sql_stmt, sizeof(sql_stmt), table_name);
+    OTL_STRCAT_S(sql_stmt, sizeof(sql_stmt)-strlen(sql_stmt)-1, table_name);
     int arg = 0;
     otl_stream s(1, sql_stmt, *db);
     if (!s.get_shell() || !s.get_shell()->ss)
