@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.477,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.478,
 // Copyright (C) 1996-2023, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -48,6 +48,13 @@
 #define OTL_CPP_11_ON
 #define OTL_CPP_14_ON
 #define OTL_CPP_17_ON
+#endif
+
+#if defined(OTL_CPP_23_ON)
+#define OTL_CPP_11_ON
+#define OTL_CPP_14_ON
+#define OTL_CPP_17_ON
+#define OTL_CPP_20_ON
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER==1700)
@@ -5511,7 +5518,7 @@ public:
       delete[] name;
     size_t len = strlen(aname) + 1;
     name = new char[len];
-    OTL_STRCPY_S(name, len, aname);
+!!    OTL_STRCPY_S(name, len, aname);
   }
 
   void copy_pos(const int apos) {
