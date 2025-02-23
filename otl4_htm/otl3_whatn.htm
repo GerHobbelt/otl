@@ -18,7 +18,7 @@
     <meta name="Info 4" content="">
   </head>
   <body dir="ltr" lang="en-US">
-    <ul>
+    <div>
       <h1 align="center">Oracle, Odbc and DB2-CLI Template Library,
         Version 4.0</h1>
       <h1 align="center">What's New</h1>
@@ -28,11 +28,11 @@
 
 <!-- hide from old browsers
 
- var modDate = new Date(document.lastModified)
+	var modDate = new Date(document.lastModified)
 
- document.write("<i> (Updated: " + (modDate.getMonth()+1) + "/" +
+	document.write("<" + "i> (Updated: " + (modDate.getMonth()+1) + "/" +
 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+"</i>).");
+	modDate.getDate() + "/" + "0"+(modDate.getYear())%100+"<" + "/i>).");
 
  //-->
 
@@ -44,17 +44,17 @@
       </p>
       <h1>OTL 4.0.481 (updated (4)) is now released.<br>
       </h1>
-    </ul>
+    </div>
     <h1>For more detail, see the <a href="https://otl.sourceforge.net/otl3_whatn.htm#summary">summary </a>of new
       features. <i>The <a href="https://otl.sourceforge.net/otl4_htm.zip">archived version</a> of
         the OTL Web pages </i>is available. <br>
     </h1>
-    <ul>
+    <div>
       <h1><a name="summary"></a><i>From OTL 3.0.0 to OTL 4.0.481:
           summary of new features and bug fixes</i></h1>
-    </ul>
+    </div>
     <dl>
-      <dd> <t4 valign="top"></t4>
+      <dd> 
         <table style="page-break-before: always;" width="923" cellspacing="3" cellpadding="2" border="1">
           <colgroup><col width="816"> <col width="2"> <col width="80">
           </colgroup><tbody>
@@ -2799,8 +2799,8 @@
                     supported C++11 (by GNU C++ 4.4) features when GNU
                     C++ 4.4 is using -std=c++0x. This OTL release
                     automatically enables support for<a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_STREAM_WITH_STD_TUPLE_ON">
-                      std::tuples</a> and <a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_STREAM_WITH_STD_CHAR_ARRAY_ON">std::array<char,n></char,n></a>
-                    / <a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_STREAM_WITH_STD_UNICODE_CHAR_ARRAY_ON">std::array<char16_t,n></char16_t,n></a>,
+                      std::tuples</a> and <a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_STREAM_WITH_STD_CHAR_ARRAY_ON">std::array&lt;char,n&gt;</a>
+                    / <a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_STREAM_WITH_STD_UNICODE_CHAR_ARRAY_ON">std::array&lt;char16_t,n&gt;</a>,
                     which are supported by GNU C++ 4.4 when it's using
                     -std=c++0x. The rationale for supporting GNU C++ 4.4
                     is that it's the default C++ compiler for RHEL 6.x /
@@ -3576,7 +3576,6 @@
                   <li>This release of OTL introduces the following new
                     #defines:<br>
                     <br>
-                  </li>
                   <ul>
                     <li><a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_COMPILER_HAS_STD_OPTIONAL">OTL_COMPILER_HAS_STD_OPTIONAL</a>,
                       which can be used to resolve C++ compiler errors
@@ -3592,6 +3591,7 @@
                       <br>
                     </li>
                   </ul>
+                  </li>
                 </ul>
               </td>
             </tr>
@@ -3626,13 +3626,13 @@
                 30-Mar-2017, (New in OTL 4.0.399):<br>
                 <br>
                 <ul>
-                  <li>This release introduces support for <a href="http://en.cppreference.com/w/cpp/container/array">std::array</a><char16_t,...>
+                  <li>This release introduces support for <a href="http://en.cppreference.com/w/cpp/container/array">std::array</a>&lt;char16_t,...&gt;
 
                     (a.k.a. UTF-16 character arrays) via the following
                     new #define <a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_STREAM_WITH_STD_UNICODE_CHAR_ARRAY_ON">OTL_STREAM_WITH_STD_UNICODE_CHAR_ARRAY_ON</a>,
                     and new OTL stream operators <a href="https://otl.sourceforge.net/otl3_stream_class.htm#OTL_STD_UNICODE_CHAR_ARRAY">&lt;&gt;</a>.
                     The advantage of using
-                    std::array<char16_t,...> compared with plain
+                    std::array&lt;char16_t,...&gt; compared with plain
                     char16_t[...] is that the container does not decay
                     to a plain pointer to char16_t, so OTL can check the
                     size of the target container and throw an <a href="https://otl.sourceforge.net/otl3_exc_list.htm#32047">otl_exception</a>.
@@ -3648,7 +3648,7 @@
               <td valign="top">25-Mar-2017, (New in OTL 4.0.398):<br>
                 <br>
                 <ul>
-                  <li>This release introduces support for <a href="http://en.cppreference.com/w/cpp/container/array">std::array</a><char,...>
+                  <li>This release introduces support for <a href="http://en.cppreference.com/w/cpp/container/array">std::array</a>&lt;char,...&gt;
 
                     via the following new #define <a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_STREAM_WITH_STD_CHAR_ARRAY_ON">OTL_STREAM_WITH_STD_CHAR_ARRAY_ON</a>,
                     and new OTL stream operators <a href="https://otl.sourceforge.net/otl3_stream_class.htm#OTL_STD_CHAR_ARRAY">&lt;&gt;</a>.
@@ -3799,7 +3799,7 @@
                   <li>A runtime error was reported when OTL was used
                     with MS ACCESS ODBC: Optional feature is not
                     implemented. The problem was that when a
-                    <float> bind variable was declared in the SQL
+                    &lt;float&gt; bind variable was declared in the SQL
                     statement, OTL mapped SQL_C_FLOAT to SQL_FLOAT,
                     which was not supported by the MS ACCESS ODBC
                     driver. This release introduces the following new
@@ -3900,7 +3900,7 @@
                 <ul>
                   <li>A documentation issue was reported that it was not
                     clear how OTL handled database NULLs in the context
-                    of std::optional<t> variables. Additional <a href="https://otl.sourceforge.net/otl3_value.htm#OPTIONAL_NULL">text</a> has
+                    of std::optional&lt;t&gt; variables. Additional <a href="https://otl.sourceforge.net/otl3_value.htm#OPTIONAL_NULL">text</a> has
                     been added to the manual for clarification. Happy
                     New Year to everyone!<br>
                     <br>
@@ -3943,7 +3943,7 @@
                 <br>
                 <ul>
                   <li>This release moves the overloads for operators
-                    &gt;&gt; / &lt;&lt; for <a href="http://en.cppreference.com/w/cpp/utility/optional">std::optional</a><t>
+                    &gt;&gt; / &lt;&lt; for <a href="http://en.cppreference.com/w/cpp/utility/optional">std::optional</a>&lt;t&gt;
 
                     from the global namespace into the corresponding
                     implementations of the <a href="https://otl.sourceforge.net/otl3_stream_class.htm#otl_std_optional">otl_stream</a>
@@ -4010,11 +4010,11 @@
                 <br>
                 <ul>
                   <li><a name="std_optional"></a>This release introduces
-                    support for std::experimental::optional<t> /
-                    std::optional<t>. OTL <a href="https://otl.sourceforge.net/otl3_value.htm">works</a> with
-                    std::optional<t> the same way it does with <a href="https://otl.sourceforge.net/otl3_value.htm">otl_value</a><t>: <a href="https://otl.sourceforge.net/otl3_value.htm">otl_compact_value</a><t,null>.
+                    support for std::experimental::optional&lt;t&gt; /
+                    std::optional&lt;t&gt;. OTL <a href="https://otl.sourceforge.net/otl3_value.htm">works</a> with
+                    std::optional&lt;t&gt; the same way it does with <a href="https://otl.sourceforge.net/otl3_value.htm">otl_value</a>&lt;t&gt;: <a href="https://otl.sourceforge.net/otl3_value.htm">otl_compact_value</a>&lt;t,null&gt;.
 
-                    The support for std::optional<t> is enabled
+                    The support for std::optional&lt;t&gt; is enabled
                     under <a href="https://otl.sourceforge.net/otl3_whatn.htm#CPP_AUTOMATIC_DETECTION">auto
                       detection</a> of what C++ standard is used by the
                     C++ compiler, or explicitly enabled by #define <a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_CPP_14_ON">OTL_CPP_14_ON</a>
@@ -4023,7 +4023,7 @@
                     <br>
                     For more detail, see code examples <a href="https://otl.sourceforge.net/otl3_ex98.htm">98</a>, <a href="https://otl.sourceforge.net/otl3_ex99.htm">99</a>,&nbsp; <a href="https://otl.sourceforge.net/otl3_ex100.htm">100</a>, and <a href="https://otl.sourceforge.net/otl4_ex204.htm">204</a>. If you can't find a
                     code example for your database type, it's easy to
-                    migrate the std::optional<t> based code from
+                    migrate the std::optional&lt;t&gt; based code from
                     examples for other database types.<br>
                     <br>
                   </t></t></t,null></t></t></t></t></li>
@@ -4035,25 +4035,25 @@
                 <br>
                 <ul>
                   <li>This release introduces the following new template
-                    container, similar to <a href="https://otl.sourceforge.net/otl3_value.htm">otl_value</a><t>:
+                    container, similar to <a href="https://otl.sourceforge.net/otl3_value.htm">otl_value</a>&lt;t&gt;:
 
-                    <a href="https://otl.sourceforge.net/otl3_value.htm">otl_compact_value</a><t,null>.
+                    <a href="https://otl.sourceforge.net/otl3_value.htm">otl_compact_value</a>&lt;t,null&gt;.
 
                     The new container can be used instead of
-                    otl_value<t> when T has a <i>magic value</i>
+                    otl_value&lt;t&gt; when T has a <i>magic value</i>
                     that can represent NULL in a given context. For
                     example, T is int and -1 can be used as NULL.
-                    otl_compact_value<int,-1> is as compact as int
+                    otl_compact_value&lt;int,-1&gt; is as compact as int
                     itself, and otl_compact_value is more convenient /
                     more readable to use than plain int. <br>
                     <br>
-                    For more detail on otl_compact_value<t,null>,
+                    For more detail on otl_compact_value&lt;t,null&gt;,
                     see code examples <a href="https://otl.sourceforge.net/otl3_ex98.htm">98</a>, <a href="https://otl.sourceforge.net/otl3_ex99.htm">99</a>, and <a href="https://otl.sourceforge.net/otl3_ex100.htm">100</a>. If you can't find a
                     code example for your database type, it's easy to
                     migrate the otl_compact_value based code from
                     examples for other database types.<br>
                     <br>
-                  </t,null></int,-1></t></t,null></t></li>
+                  </li>
                 </ul>
               </td>
             </tr>
@@ -5372,7 +5372,7 @@
                       exception</a>, for example:<br>
                     <br>
                     <tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      "...:v<char[100]"< tt="">, or even <tt>"...:v<char[100"< tt=""><br>
+                      "...:v&lt;char[100]&gt;</tt>, or even <tt>"...:v&lt;char[100]"</tt><br>
                     <br>
                     It only happens for the very last bind variable
                     declaration is an SQL statement. The problem is
@@ -8324,7 +8324,7 @@ code
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family: monospace;">s&gt;&gt;f1&gt;&gt;f2&gt;&gt;endr;<br>
                       &nbsp;&nbsp; ...<br>
                       <span style="font-family: monospace;">&nbsp;&nbsp;
-                        o&lt;&lt;</span>f1&lt;<f2<<endr;< span=""><br>
+                        o&lt;&lt;&lt;/span>f1&lt;&lt;f2&lt;&lt;endr;<br>
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...<br>
                     What it means is that when <span style="font-style:
                       italic;">endr</span> is called at the end of each
@@ -8334,7 +8334,7 @@ code
                     very similar to the following:<br>
                     <br>
                     &nbsp;&nbsp;&nbsp;&nbsp; <span style="font-family:
-                      monospace;">o&lt;<f1<<f1<<endl;< span=""><br>
+                      monospace;">o&lt;&lt;f1&lt;&lt;f1&lt;&lt;endl;</span><br>
                     <br>
                     endr is recommended for use in long term projects,
                     when over time the table layout may change, and the
@@ -8360,7 +8360,7 @@ code
                     the same code can be used with appropriate&nbsp;
                     database type specific #define's, and table columns.<br>
                     <br>
-                  </f1<<f1<<endl;<></span></f2<<endr;<></span></li>
+                  </span></span></li>
                 </ul>
               </td>
               <td style="vertical-align: top;"><br>
@@ -8649,15 +8649,15 @@ example
                   </li>
                   <li>A problem was reported that
                     operator&lt;&lt;(ostream&amp;,const
-                    otl_value<otl_datetime>&amp;) can't be
+                    otl_value&lt;otl_datetime&gt;&amp;) can't be
                     overloaded because the OTL header file already
                     defines such an operator. New #define <small><a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_DISABLE_OPERATOR_GT_GT_FOR_OTL_VALUE_OTL_DATETIME">OTL_DISABLE_OPERATOR_GT_GT_FOR_OTL_VALUE_OTL_DATETIME</a></small>
                     is introduced in this release to disable
                     operator&lt;&lt;(ostream&amp;,const
-                    otl_value<otl_datetime>&amp;) in the OTL
+                    otl_value&lt;otl_datetime&gt;&amp;) in the OTL
                     header file.<br>
                     <br>
-                  </otl_datetime></otl_datetime></li>
+                  </li>
                   <li>Documentation bug was reported in otl_subscriber::<a href="https://otl.sourceforge.net/otl4_subscriber.htm#OnException">OnException</a>()
 
                     function. OTL 4.0.200 code <a href="https://otl.sourceforge.net/otl3_whatn.htm#40200_CODE_CLEANUP">cleanup</a> changed the
@@ -8726,22 +8726,22 @@ example
                     <br>
                   </li>
                   <li>BUG: A problem was reported that when Oracle RAW
-                    columns are used with :v<raw[xxx]> bind
+                    columns are used with :v&lt;raw[xxx]&gt; bind
                     variables, and when a RAW NULL value is written into
                     the stream, then sometimes all the subsequent RAW
                     values get written as NULLs. The bug is fixed in
                     this release.<br>
                     <br>
-                  </raw[xxx]></li>
+                  </li>
                   <li>BUG: A problem was reported that when
-                    :v<varchar_long> is used in the WHERE clause
+                    :v&lt;varchar_long&gt; is used in the WHERE clause
                     of a SELECT statement with PostgreSQL, it doesn't
                     work. The problem was that very few database types
-                    allow <varchar_long> to be used in a WHERE
+                    allow &lt;varchar_long&gt; to be used in a WHERE
                     clause, and OTL didn't implement it properly. The
                     bug is fixed in this release.<br>
                     <br>
-                  </varchar_long></varchar_long></li>
+                  </li>
                   <li>TYPOS: Two typos were fixed in&nbsp; "operator
                     &gt;&gt;" in OTL tracing statements. "operator
                     &gt;&gt;"'s were changed to "operator &lt;&lt;" to
@@ -8969,7 +8969,7 @@ example
                         f2(6000);</span></small><span style="font-family: monospace;"><br>
                       &nbsp;otl_stream o;</span><br style="font-family:
                       monospace;">
-                    <pre><small> o.set_lob_stream_mode(true);<br> o.open(1,<br>        "insert into test_tab (F1,F2,F3) values"<br>        "(:f1<int>,:f2<double>,:f3<varchar_long>) ",<br>        db<br>       );<br> o.set_commit(0); <br> int i,j;<br> otl_lob_stream lob;<br> for(i=0;i&lt;=7;++i){<br>  o&lt;<i;<br>  if(i==0||i==2||i==4||i==6)<br>    o&lt;<i+12.56;<br>  else<br><span style="color: rgb(255, 0, 0);">    o&lt;<otl_null(); doesn't="" work="" correctly<="" span=""><br>  o&lt;<lob;<br>  for(j=0;j&lt;50;++j)<br>   f2[j]='*';<br>  f2[50]='?';<br>  f2.set_len(51);<br><br>  lob.set_len(51+23);<br>  lob&lt;<f2;<br>  f2[22]='?';<br>  f2.set_len(23);<br>  lob&lt;<f2;<br>  lob.close(); <br> }<br> db.commit();<br> ...<br></f2;<br></f2;<br></lob;<br></otl_null();></span></i+12.56;<br></i;<br></varchar_long></double></int></small></pre>
+                    <pre><small> o.set_lob_stream_mode(true);<br> o.open(1,<br>        "insert into test_tab (F1,F2,F3) values"<br>        "(:f1&lt;int&gt;,:f2&lt;double&gt;,:f3&lt;varchar_long&gt;) ",<br>        db<br>       );<br> o.set_commit(0); <br> int i,j;<br> otl_lob_stream lob;<br> for(i=0;i&lt;=7;++i){<br>  o&lt;&lt;i;<br>  if(i==0||i==2||i==4||i==6)<br>    o&lt;&lt;i+12.56;<br>  else<br><span style="color: rgb(255, 0, 0);">    o&lt;&lt;otl_null(); doesn't work correctly<br>  o&lt;&lt;lob;<br>  for(j=0;j&lt;50;++j)<br>   f2[j]='*';<br>  f2[50]='?';<br>  f2.set_len(51);<br><br>  lob.set_len(51+23);<br>  lob&lt;&lt;f2;<br>  f2[22]='?';<br>  f2.set_len(23);<br>  lob&lt;&lt;f2;<br>  lob.close(); <br> }<br> db.commit();<br> ...<br></span><br><br></small></pre>
                     <p>It's not known at this time whether it's a bug or
                       a feature of MyODBC driver. The same code works
                       correctly at least with DB2 and MS SQL Server ODBC
@@ -9359,11 +9359,11 @@ singed
                     :#N&lt;<a href="https://otl.sourceforge.net/otl3_bind_variables.htm#raw2">raw</a>[XXX]&gt;
 
                     override for SELECT statements maps to
-                    <raw_long>, and that the bulk interface
+                    &lt;raw_long&gt;, and that the bulk interface
                     (stream buffer size &gt;1) for Oracle doesn't work
                     as a result. The bug is fixed in this release.<br>
                     <br>
-                  </raw_long></li>
+                  </li>
                 </ul>
               </td>
               <td style="vertical-align: top;"><br>
@@ -9711,7 +9711,7 @@ int
                   <li>
                     <p>The following deficiency was reported in the OTL
                       tracing:</p>
-                    <pre>...<br>(0) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC)::open<br>(buffer_size=5, sqlstm=select * from test_tab where f1&gt;=:f<int> <br>and f1&lt;=:ff<int>*2, connect=004332CC); <br>(1) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC)::operator &lt;&lt;<br>(char*: ftype=1, placeholder=:f2, value="Name10"); <br>(2) MY OTL TRACE ==&gt; otl_stream, executing SQL Stm=insert into <br>test_tab values(:f1     ,:f2          ), current batch size=10, row offset=0<br>...<br>(3) MY OTL TRACE ==&gt; otl_stream, executing SQL Stm=<br>select * from test_tab where f1&gt;=:f      and f1&lt;=:ff     *2, buffer size=5<br>(4) MY OTL TRACE ==&gt; otl_stream, fetched the first batch <br>of rows, SQL Stm=select * from test_tab where f1&gt;=:f      and f1&lt;=:ff     *2, RPC=5<br>...</int></int></pre>
+                    <pre>...<br>(0) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC)::open<br>(buffer_size=5, sqlstm=select * from test_tab where f1&gt;=:f&lt;int&gt; <br>and f1&lt;=:ff&lt;int&gt;*2, connect=004332CC); <br>(1) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC)::operator &lt;&lt;<br>(char*: ftype=1, placeholder=:f2, value="Name10"); <br>(2) MY OTL TRACE ==&gt; otl_stream, executing SQL Stm=insert into <br>test_tab values(:f1     ,:f2          ), current batch size=10, row offset=0<br>...<br>(3) MY OTL TRACE ==&gt; otl_stream, executing SQL Stm=<br>select * from test_tab where f1&gt;=:f      and f1&lt;=:ff     *2, buffer size=5<br>(4) MY OTL TRACE ==&gt; otl_stream, fetched the first batch <br>of rows, SQL Stm=select * from test_tab where f1&gt;=:f      and f1&lt;=:ff     *2, RPC=5<br>...</int></int></pre>
                     <p> (2), (3), and (4) don't have the stream address,
                       which makes it difficult to keep track of
                       different instances of OTL streams that have the
@@ -9719,7 +9719,7 @@ int
                       streams are used in different threads. The
                       deficiency is fixed in this release. The OTL trace
                       for the example above is going to look like this:</p>
-                    <pre>...<br>(0) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC)::open<br>(buffer_size=5, sqlstm=select * from test_tab <br>where f1&gt;=:f<int> and f1&lt;=:ff<int>*2, connect=004332CC); <br>(1) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC)::operator &lt;&lt;<br>(char*: ftype=1, placeholder=:f2, value="Name10"); <br>(2) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC), executing SQL Stm=<br>insert into test_tab values(:f1     ,:f2          ), <br>current batch size=10, row offset=0<br>...<br>(3) MY OTL TRACE ==&gt; otl_stream(this=0012FECC), executing SQL Stm=<br>select * from test_tab where f1&gt;=:f      and f1&lt;=:ff     *2, buffer size=5<br>(4) MY OTL TRACE ==&gt; otl_stream(this=0012FECC), fetched the first batch of rows, <br>SQL Stm=select * from test_tab where f1&gt;=:f      and f1&lt;=:ff     *2, RPC=5<br>...</int></int></pre>
+                    <pre>...<br>(0) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC)::open<br>(buffer_size=5, sqlstm=select * from test_tab <br>where f1&gt;=:f&lt;int&gt; and f1&lt;=:ff&lt;int&gt;*2, connect=004332CC); <br>(1) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC)::operator &lt;&lt;<br>(char*: ftype=1, placeholder=:f2, value="Name10"); <br>(2) MY OTL TRACE ==&gt; otl_stream(this=0012FEFC), executing SQL Stm=<br>insert into test_tab values(:f1     ,:f2          ), <br>current batch size=10, row offset=0<br>...<br>(3) MY OTL TRACE ==&gt; otl_stream(this=0012FECC), executing SQL Stm=<br>select * from test_tab where f1&gt;=:f      and f1&lt;=:ff     *2, buffer size=5<br>(4) MY OTL TRACE ==&gt; otl_stream(this=0012FECC), fetched the first batch of rows, <br>SQL Stm=select * from test_tab where f1&gt;=:f      and f1&lt;=:ff     *2, RPC=5<br>...</int></int></pre>
                   </li>
                   <li>
                     <p>A bug was reported that some OTL trace statements
@@ -9757,14 +9757,14 @@ int
                   <li>
                     <p>A problem was reported that when #define
                       OTL_ORA10G is used, an otl_stream stream has
-                      :v<refcur,...>, and the stream's buffer size
+                      :v&lt;refcur,...&gt;, and the stream's buffer size
                       is &gt; 1, the program crashes somewhere deep in
                       the OCI layer. The stream's buffer size should be
-                      set to 1 when the stream has :v<refcur>. OTL
+                      set to 1 when the stream has :v&lt;refcur&gt;. OTL
                       is supposed to throw the otl_exception with error
                       code of <a href="https://otl.sourceforge.net/otl3_exc_list.htm#32034">32034</a>,
                       but it doesn't&nbsp; The problem is fixed in this
-                      release.</refcur></refcur,...></p>
+                      release.</p>
                   </li>
                 </ul>
               </td>
@@ -10019,9 +10019,9 @@ an
                       <br>
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <font face="monospace">begin <br>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        GetClob(:f<char[30],out>,
-                        :c<clob,out>);<br>
-                        &nbsp;&nbsp; end;</clob,out></char[30],out></font><br>
+                        GetClob(:f&lt;char[30],out&gt;,
+                        :c&lt;clob,out&gt;);<br>
+                        &nbsp;&nbsp; end;</font><br>
                       <br>
                       In case if the preceding output parameter is NULL
                       (<font face="monospace">:f</font> is NULL), the
@@ -10046,21 +10046,21 @@ an
                   </li>
                   <li>
                     <p>The following constructor was broken:</p>
-                    <pre>   otl_value<otl_datetime>(const otl_null&amp;):<br><font color="#ff0000">    v(0),</font>
+                    <pre>   otl_value&lt;otl_datetime&gt;(const otl_null&amp;):<br><font color="#ff0000">    v(0),</font>
 
     ind(true)
 
   {
 
-  }</otl_datetime></pre>
+  }</pre>
                     <p> It should be</p>
-                    <pre>   otl_value<otl_datetime>(const otl_null&amp;):<br><font color="#ff0000">    v(),</font>
+                    <pre>   otl_value&lt;otl_datetime&gt;(const otl_null&amp;):<br><font color="#ff0000">    v(),</font>
 
     ind(true)
 
   {
 
-  }</otl_datetime></pre>
+  }</pre>
                     <p> The bug is fixed in this release.</p>
                   </li>
                   <li>
@@ -10754,7 +10754,7 @@ examples
                     <p>A bug was reported that when #define
                       OTL_ORA10G_R2 is used, and a PL/SQL table of
                       NUMBER(14,4) from&nbsp; a PL/SQL package gets
-                      bound with a :var<double,out[xx]> variable,
+                      bound with a :var&lt;double,out[xx]&gt; variable,
                       an otl_exception gets thrown that has the
                       following Oracle error message:<br>
                       <br>
@@ -10774,7 +10774,7 @@ examples
                       support for PL/SQL tables of BINARY_FLOAT /
                       BINARY_DOUBLE, and the appropriate changes are
                       made to OTL, it's recommended to use PL/SQL tables
-                      of NUMBERs instead. </double,out[xx]></p>
+                      of NUMBERs instead. </p>
                   </li>
                   <li>
                     <p>A bug was reported that when #define UNICODE /
@@ -11025,7 +11025,7 @@ order
                 <ul>
                   <li>
                     <p>In OTL 4.0.158, a bug was introduced which causes
-                      the following error message when an <int>
+                      the following error message when an &lt;int&gt;
                       bind variable is used:</int></p>
                     <pre>[Microsoft][SQL Native Client][SQL Server]Invalid 2-Parameter (''): The<br>0x23 data typ is a LOB marked as obsolete and used as output parameter.<br>Obsolete types are not supported as output parameters.</pre>
                     <p> The bug is fixed in this release.</p>
@@ -11208,11 +11208,11 @@ order
                       table via OTL, the resulting value that is stored
                       in the table is 1.6666666666666701E+000. A similar
                       thing happens with BINARY_FLOAT values. In order
-                      to bind <float> and <double> with
+                      to bind &lt;float&gt; and &lt;double&gt; with
                       Oracle NUMBERs, OTL used SQLT_FLT (with
                       sizeof(float), and sizeof(double), respectively)
                       as an external OCI datatype. The same SQLT_FLT was
-                      used to bind <float> and <double> with
+                      used to bind &lt;float&gt; and &lt;double&gt; with
                       BINARY_FLOAT, and BINARY_DOUBLE. The OCI manual
                       didn't specifiy any ramifications about doing
                       that. <br>
@@ -11225,19 +11225,19 @@ order
                       precision, even when bound with NUMBERs. <br>
                       <br>
                       As I understood the mechanism, when you bind a
-                      <double> as SQLT_BDOUBLE with, say, NUMBER
+                      &lt;double&gt; as SQLT_BDOUBLE with, say, NUMBER
                       or BINARY_DOUBLE, or with any other numeric type,
-                      a <double> value gets sent across the wire /
-                      SQL*Net as is, as opposed to a <double>
+                      a &lt;double&gt; value gets sent across the wire /
+                      SQL*Net as is, as opposed to a &lt;double&gt;
                       value would be converted into some wire format by
-                      the OCI, if the <double> variable is bound
+                      the OCI, if the &lt;double&gt; variable is bound
                       as SQLT_FLT (sizof(double)),. In the latter case
                       the conversion loses the 16th and the 17th decimal
                       significant digits (aka roundup).<br>
                       <br>
                       The bug has been fixed in this release. When
                       #define OTL_ORA10G or #define OTL_ORA10G_R2 is
-                      defined, <float> and <double> get
+                      defined, &lt;float&gt; and &lt;double&gt; get
                       bound as SQLT_BFLOAT and SQLT_BDOUBLE
                       respectively, which provides better precision.</double></float></double></double></double></double></double></float></double></float></p>
                   </li>
@@ -11637,14 +11637,14 @@ code
                   </li>
                   <li>
                     <p>This release enforces the minimum size of 2
-                      characters in <font face="monospace">:var<char[xxx]></char[xxx]></font>
+                      characters in <font face="monospace">:var&lt;char[xxx]&gt;</font>
                       declarations. The reason is that char[1] is
                       invalid because OTL char[xxx] variables are <a href="https://otl.sourceforge.net/otl3_bind_variables.htm#char">null
                         terminated</a> strings. <font face="monospace">#define
 
                         <a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_ADD_NULL_TERMINATOR_TO_STRING_SIZE">OTL_ADD_NULL_TERMINATOR_TO_STRING_SIZE</a></font>
                       adds one character to the string length, which
-                      makes <font face="monospace">:var<char[1]></char[1]></font>
+                      makes <font face="monospace">:var&lt;char[1]&gt;</font>
                       a valid declaration. </p>
                   </li>
                   <li>
@@ -11684,12 +11684,12 @@ code
 
                                   "insert into test_tab "<br>
                                   &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                  "values(:f1<int>,:f2<varchar_long>,
+                                  "values(:f1&lt;int&gt;,:f2&lt;varchar_long&gt;,
 
                                   "<br>
                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-                                  ":f3<varchar_long>) ",<br>
+                                  ":f3&lt;varchar_long&gt;) ",<br>
                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                   // SQL statement<br>
@@ -11720,7 +11720,7 @@ code
                                   &nbsp; lob = new otl_lob_stream;<br>
                                   &nbsp; lob2 = new otl_lob_stream;<br>
                                   <br>
-                                  &nbsp; o&lt;<i;<br>
+                                  &nbsp; o&lt;&lt;i;<br>
                                   &nbsp; o&lt;&lt;*lob; // Initialize
                                   otl_lob_stream by writing it<br>
                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -11737,7 +11737,7 @@ code
                                   &nbsp; f2[5000]='?';<br>
                                   &nbsp; f2.set_len(5001);<br>
                                   <br>
-                                </i;<br></varchar_long></varchar_long></int></big></big></font></font><font color="#996633"><font face="monospace"><font size="1"><big><big>&nbsp; // OTL &lt;
+                                <br></big></big></font></font><font color="#996633"><font face="monospace"><font size="1"><big><big>&nbsp; // OTL &lt;
                                     4.0.138</big></big></font></font></font><font face="monospace"><font size="1"><big><big><br>
                                 </big></big></font></font><font color="#996633"><font face="monospace"><font size="1"><big><big>&nbsp;
                                     lob-&gt;set_len(5001+2123); //
@@ -11745,18 +11745,18 @@ code
                                 </big></big></font></font><font color="#996633"><font face="monospace"><font size="1"><big><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                     // the TEXT to be written.</big></big></font></font></font><font face="monospace"><font size="1"><big><big><br>
-                                  &nbsp;&nbsp;&nbsp; *lob&lt;<f2; writing="" first="" chunk="" of="" the="" text="" into="" lob<br="">
+                                  &nbsp;&nbsp;&nbsp; *lob&lt;&lt;f2; writing="" first="" chunk="" of="" the="" text="" into="" lob<br="">
                                   <br>
                                   <br>
                                   &nbsp; f2[2122]='?';<br>
                                   &nbsp; f2.set_len(2123); // setting
                                   the size of the second chunk<br>
                                   <br>
-                                  &nbsp; *lob&lt;<f2; writing="" the="" second="" chunk="" of="" text="" into="" lob<br="">
+                                  &nbsp; *lob&lt;&lt;f2; // writing the second chunk of text into lob<br>
                                   &nbsp; lob-&gt;close(); // closing the
                                   otl_lob_stream<br>
                                   <br>
-                                </f2;></f2;></big></big></font></font><font color="#ff6666"><font face="monospace"><font size="1"><big><big>&nbsp;</big></big></font></font></font><font color="#ff0000"><font face="monospace"><font size="1"><big><big> delete lob; <br>
+                                </big></big></font></font><font color="#ff6666"><font face="monospace"><font size="1"><big><big>&nbsp;</big></big></font></font></font><font color="#ff0000"><font face="monospace"><font size="1"><big><big> delete lob; <br>
                                     &nbsp;&nbsp; // here is a problem
                                     (in OTL 4.0.138 - 4.0.144), <br>
                                     &nbsp;&nbsp; // OK in 4.0.145 (this
@@ -11787,17 +11787,17 @@ of
                               </big></big></font></font><font color="#996633"><font face="monospace"><font size="1"><big><big>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                                   // the TEXT to be written.</big></big></font></font></font><font face="monospace"><font size="1"><big><big><br>
-                                &nbsp; *lob2&lt;<f2; writing="" first="" chunk="" of="" the="" text="" into="" lob<br="">
+                                &nbsp; *lob2&lt;&lt;f2; // writing first chunk of the text into lob<br>
                                 <br>
                                 &nbsp; f2[2122]='?';<br>
                                 &nbsp; f2.set_len(2123); // setting the
                                 size of the second chunk<br>
                                 <br>
-                                &nbsp; *lob2&lt;<f2; writing="" the="" second="" chunk="" of="" text="" into="" lob<br="">
+                                &nbsp; *lob2&lt;&lt;f2; // writing the second chunk of text into lob<br>
                                 &nbsp; lob2-&gt;close(); // closing the
                                 otl_lob_stream<br>
                                 &nbsp; // end of the row<br>
-                                &nbsp; </f2;></f2;></big></big></font></font><font color="#33cc00"><font face="monospace"><font size="1"><big><big>//delete lob; //
+                                &nbsp; </big></big></font></font><font color="#33cc00"><font face="monospace"><font size="1"><big><big>//delete lob; //
                                   deleting here is OK</big></big></font></font></font><font face="monospace"><font size="1"><big><big><big><br>
                                   &nbsp; delete lob2;<br>
                                   &nbsp;} </big></big></big></font></font></big>
@@ -11847,17 +11847,17 @@ of
 
 <!-- hide from old browsers
 
- var modDate = new Date(document.lastModified)
+	var modDate = new Date(document.lastModified)
 
- document.write("<i> Last Updated:</i> " + (modDate.getMonth()+1) + "/" + 
+	document.write("<"+"i> Last Updated:<"+"/i> " + (modDate.getMonth()+1) + "/" + 
 
-                modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
+	modDate.getDate() + "/" + "0"+(modDate.getYear())%100+".");
 
  //-->
 
  
 
-  </script><i> Last Updated:</i> 2/21/025. </a>. </p>
+  </script><i> Last Updated:</i> 2/21/2025. </a>. </p>
       <p><i>Permission to use, copy, modify and redistribute this
           document for any purpose is hereby granted without fee,
           provided that the above copyright notice appear in all copies.
