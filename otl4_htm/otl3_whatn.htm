@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="CONTENT-TYPE" content="text/html;
-      charset=windows-1252">
+      charset=utf8">
     <title>Oracle, Odbc and DB2-CLITemplate Library, Version 4.0, What's
       New</title>
     <meta name="GENERATOR" content="OpenOffice.org 3.0 (Win32)">
@@ -6834,10 +6834,10 @@
                     4.6.1:<br>
                     <br>
                     <span style="font-family: monospace;">error: cannot
-                      convert ‘SQLUINTEGER* {aka unsigned int*}’ to
-                      ‘SQLULEN* {aka long unsigned int*}’ for argument
-                      ‘3’ to ‘SQLRETURN SQLParamOptions(SQLHSTMT,
-                      SQLULEN, SQLULEN*)’ </span><br style="font-family: monospace;">
+                      convert â€˜SQLUINTEGER* {aka unsigned int*}â€™ to
+                      â€˜SQLULEN* {aka long unsigned int*}â€™ for argument
+                      â€˜3â€™ to â€˜SQLRETURN SQLParamOptions(SQLHSTMT,
+                      SQLULEN, SQLULEN*)â€™ </span><br style="font-family: monospace;">
                     <br>
                     The problem has been fixed in this release.<br>
                     <br>
@@ -10212,7 +10212,7 @@ an
                   <li>
                     <p>When #define <a href="https://otl.sourceforge.net/otl3_compile.htm#OTL_ORA_UTF8">OTL_ORA_UTF8</a>
                       is enabled, OTL may truncate a string value, for
-                      example:<font face="Arial"><font size="2">'schwarz+weiß'
+                      example:<font face="Arial"><font size="2">'schwarz+weiÐ¯'
 
                           gets truncated to 'schwarz+wei' on a SELECT
                           statement. OTL allocated the size of described
@@ -10220,7 +10220,7 @@ an
                           not sufficient to hold multibyte UTF8
                           characters that were stored as single bytes in
                           the database. On the database side, character
-                          'ß' is stored in one byte in the case if the
+                          'Ð¯' is stored in one byte in the case if the
                           database character set is "8-bit European",
                           and the client / C++ side's is UTF8, it
                           requires 2 bytes. If the database character
@@ -10458,7 +10458,7 @@ example
                     <p>This release has been reworked to compile clean
                       with g++'s -Weffc++. effc++ warns about violations
                       of the following style guidelines from Scott
-                      Meyers™ Effective C++ book:</p>
+                      Meyersâ„¢ Effective C++ book:</p>
                     <ul>
                       <li>
                         <p style="margin-bottom: 0in;">Item 6:
@@ -10780,7 +10780,7 @@ examples
                     <p>A bug was reported that when #define UNICODE /
                       _UNICODE, OTL_UNICODE, and OTL_ODBC are defined,
                       and when a table has an accented column name in it
-                      (for example,: assigné),&nbsp; function
+                      (for example,: assignÐ¹),&nbsp; function
                       SQLDescribeCol() returns bad information about the
                       column, which results in the program's crash. The
                       second bug related to accented column names was
@@ -11842,7 +11842,7 @@ of
     <hr>
     <ul>
       <p align="center"><a href="https://otl.sourceforge.net/home.htm">Go Home</a></p>
-      <p>Copyright © 1996-2019, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com&nbsp;
+      <p>Copyright Â© 1996-2019, Sergei Kuchin, email: <a href="mailto:skuchin@gmail.com">skuchin@gmail.com</a>, <a href="mailto:skuchin@gmail.com">skuchin@gmail.com&nbsp;
           <script language="JavaScript">
 
 <!-- hide from old browsers
