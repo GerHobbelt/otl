@@ -1,6 +1,6 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.476,
-// Copyright (C) 1996-2023, Sergei Kuchin (skuchin@gmail.com)
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.481,
+// Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
 // and/or distribute this software for any purpose with or without fee
@@ -16,7 +16,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 // a.k.a. as Open BSD license
-// (http://www.openbsd.org/cgi-bin/cvsweb/~checkout~/src/share/misc/license.template
+// (https://cvsweb.openbsd.org/src/share/misc/license.template?rev=HEAD)
 // =================================================================================
 
 #ifndef OTL_H
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401DCL)
+#define OTL_VERSION_NUMBER (0x0401E1L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -48,6 +48,13 @@
 #define OTL_CPP_11_ON
 #define OTL_CPP_14_ON
 #define OTL_CPP_17_ON
+#endif
+
+#if defined(OTL_CPP_23_ON)
+#define OTL_CPP_11_ON
+#define OTL_CPP_14_ON
+#define OTL_CPP_17_ON
+#define OTL_CPP_20_ON
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER==1700)
@@ -85,6 +92,11 @@
 #pragma clang diagnostic ignored "-Wextra-semi-stmt"
 #endif
 
+#if defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 1800)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wswitch-default"
+#endif
+
 
 // auto-detection of "std" compiler switches
 
@@ -92,28 +104,44 @@
 
 // >= VC++ 2015 Update 3, and /std:c++14
 #if defined(_MSVC_LANG) && (_MSVC_LANG==201402L)
+
 #if !defined(OTL_CPP_11_ON)
 #define OTL_CPP_11_ON
 #endif
+
 #if !defined(OTL_CPP_14_ON)
 #define OTL_CPP_14_ON
 #endif
+
 #endif
 
 // >= VC++ 2015 Update 3, and /std:c++latest
 #if defined(_MSVC_LANG) && (_MSVC_LANG>201402L)
+
 #if !defined(OTL_CPP_11_ON)
 #define OTL_CPP_11_ON
 #endif
+
 #if !defined(OTL_CPP_14_ON)
 #define OTL_CPP_14_ON
 #endif
+
 #if !defined(OTL_CPP_17_ON) && defined(_MSC_VER) && (_MSC_VER>=1910)
 #define OTL_CPP_17_ON
 #endif
+
+#if !defined(OTL_CPP_20_ON) && defined(_MSVC_LANG) && (_MSVC_LANG==202002L)
+#define OTL_CPP_20_ON
+#endif
+
+#if !defined(OTL_CPP_23_ON) && defined(_MSVC_LANG) && (_MSVC_LANG>202002L)
+#define OTL_CPP_23_ON
+#endif
+
 #if defined(_MSC_VER) && (_MSC_VER>=1910)
 #define OTL_COMPILER_HAS_STD_OPTIONAL
 #endif
+
 #endif
 
 #endif
@@ -137,7 +165,7 @@
 #define OTL_CPP_14_ON
 #endif
 
-#elif defined(__cplusplus) && (__cplusplus>201402L)
+#elif defined(__cplusplus) && (__cplusplus==201703L)
 
 // std=c++17 / std=c++1z is used
 #if !defined(OTL_CPP_11_ON)
@@ -148,6 +176,41 @@
 #endif
 #if !defined(OTL_CPP_17_ON)
 #define OTL_CPP_17_ON
+#endif
+
+#elif defined(__cplusplus) && (__cplusplus == 202002L)
+
+// std=c++20
+#if !defined(OTL_CPP_11_ON)
+#define OTL_CPP_11_ON
+#endif
+#if !defined(OTL_CPP_14_ON)
+#define OTL_CPP_14_ON
+#endif
+#if !defined(OTL_CPP_17_ON)
+#define OTL_CPP_17_ON
+#endif
+#if !defined(OTL_CPP_20_ON)
+#define OTL_CPP_20_ON
+#endif
+
+#elif defined(__cplusplus) && (__cplusplus > 202002L)
+
+// std=c++23
+#if !defined(OTL_CPP_11_ON)
+#define OTL_CPP_11_ON
+#endif
+#if !defined(OTL_CPP_14_ON)
+#define OTL_CPP_14_ON
+#endif
+#if !defined(OTL_CPP_17_ON)
+#define OTL_CPP_17_ON
+#endif
+#if !defined(OTL_CPP_20_ON)
+#define OTL_CPP_20_ON
+#endif
+#if !defined(OTL_CPP_23_ON)
+#define OTL_CPP_23_ON
 #endif
 
 #endif
