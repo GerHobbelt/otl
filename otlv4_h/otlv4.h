@@ -2348,7 +2348,8 @@ OTL_NODISCARD inline bool otl_str_case_insensitive_equal(const char *s1, const c
 }
 
 OTL_NODISCARD inline unsigned int otl_to_fraction(unsigned int fraction, int frac_prec) {
-  if(fraction==0||frac_prec==0) return 0; /* fraction */; /* [i_a] part of fix; see [otl_odbc_date_scale] */
+  if (fraction == 0 || frac_prec == 0)
+    return 0; /* fraction */; /* [i_a] part of fix; see [otl_odbc_date_scale] */
 
 #if 0 /* [i_a] this code is wrong as it destroys the fraction conversion. What _should_ have happened instead is that the fraction is FORCIBLY clipped by the time it enters the backend: see the use of the otl_clip_fraction() function below */
   int fraction_degree = otl_decimal_degree(fraction);
@@ -2368,7 +2369,9 @@ OTL_NODISCARD inline unsigned int otl_to_fraction(unsigned int fraction, int fra
 }
 
 OTL_NODISCARD inline unsigned int otl_from_fraction(unsigned int fraction, int frac_prec) {
-  if(fraction==0||frac_prec==0)return 0 /* fraction */; /* [i_a] part of fix; see [otl_odbc_date_scale] */
+  if (fraction == 0 || frac_prec == 0)
+    return 0 /* fraction */; /* [i_a] part of fix; see [otl_odbc_date_scale] */
+	
   int degree_diff = 9 - frac_prec;
   for (int i = 0; i < degree_diff; ++i)
     fraction /= 10;
@@ -2378,7 +2381,9 @@ OTL_NODISCARD inline unsigned int otl_from_fraction(unsigned int fraction, int f
 inline unsigned int otl_clip_fraction /* [i_a] clip fraction to top N significant decimal digits */
 (unsigned int fraction,int frac_prec)
 {
-  if(fraction==0||frac_prec==0)return 0;
+  if (fraction == 0 || frac_prec == 0)
+    return 0;
+	
   return otl_to_fraction(otl_from_fraction(fraction, frac_prec), frac_prec);
 }
 
