@@ -1,6 +1,6 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.479,
-// Copyright (C) 1996-2023, Sergei Kuchin (skuchin@gmail.com)
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.480,
+// Copyright (C) 1996-2024, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
 // and/or distribute this software for any purpose with or without fee
@@ -16,7 +16,7 @@
 // OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 //
 // a.k.a. as Open BSD license
-// (http://www.openbsd.org/cgi-bin/cvsweb/~checkout~/src/share/misc/license.template
+// (https://cvsweb.openbsd.org/src/share/misc/license.template?rev=HEAD)
 // =================================================================================
 
 #ifndef OTL_H
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401DFL)
+#define OTL_VERSION_NUMBER (0x0401E0L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
