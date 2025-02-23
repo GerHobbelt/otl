@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.476,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.477,
 // Copyright (C) 1996-2023, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -83,6 +83,11 @@
 #if defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 800)
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wextra-semi-stmt"
+#endif
+
+#if defined(__clang__) && (__clang_major__*100+__clang_minor__ >= 1800)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wswitch-default"
 #endif
 
 
