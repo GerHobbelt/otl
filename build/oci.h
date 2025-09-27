@@ -4599,7 +4599,7 @@ COMMENTS
 This function sets up additional attributes which binding a named data type 
 or a REF. An error will be returned if this function is called when the OCI 
 environment has been initialized in non-object mode. 
-This call takes as a paramter a type descriptor object (TDO) of datatype 
+This call takes as a parameter a type descriptor object (TDO) of datatype 
 OCIType for the named data type being defined.  The TDO can be retrieved 
 with a call to OCITypeByName().
 If the OCI_DATA_AT_EXEC mode was specified in ocibindn() or ocibindp(), the 
@@ -5007,7 +5007,7 @@ COMMENTS
 
 This call sets up additional attributes necessary for a Named Data Type define.An error will be returned if this function is called when the OCI environment 
 has been initialized in non-Object mode.
-This call takes as a paramter a type descriptor object (TDO) of datatype 
+This call takes as a parameter a type descriptor object (TDO) of datatype 
 OCIType for the named data type being defined.  The TDO can be retrieved 
 with a call to OCITypeByName().
 See the description of OCIInitialize() on page 13 - 43 for more information 
