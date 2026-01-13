@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.495,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.496,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401EFL)
+#define OTL_VERSION_NUMBER (0x0401F0L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -437,47 +437,6 @@ inline int otl_sprintf_s(char* dest, size_t dest_sz, const char* fmt, ...){
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-//======================= CONFIGURATION #DEFINEs ===========================
-
-// Uncomment the following line in order to include the OTL for ODBC:
-//#define OTL_ODBC
-
-// Uncomment the following line in order to include the OTL for
-// MySQL/MyODBC for MyODBC 2.5 (pretty old). Otherwise, use OTL_ODBC
-//#define OTL_ODBC_MYSQL
-
-// Uncomment the following line in order to include the OTL for DB2 CLI:
-//#define OTL_DB2_CLI
-
-// Uncomment the following line in order to include the OTL for
-// Oracle 8:
-//#define OTL_ORA8
-
-// Uncomment the following line in order to include the OTL for
-// Oracle 8i:
-//#define OTL_ORA8I
-
-// Uncomment the following line in order to include the OTL for
-// Oracle 9i:
-//#define OTL_ORA9I
-
-// Uncomment the following line in order to include the OTL for
-// Oracle 10g Release 1:
-//#define OTL_ORA10G
-
-// Uncomment the following line in order to include the OTL for
-// Oracle 10g Release 2:
-//#define OTL_ORA10G_R2
-
-// Uncomment the following line in order to include the OTL for
-// Oracle 11g Release 1
-//#define OTL_ORA11G
-
-// The macro definitions may be also turned on via C++ compiler command line
-// option, e.g.: -DOTL_ODBC, DOTL_ORA8, -DOTL_ORA8I,
-// -DOTL_ODBC_UNIX
-// -DOTL_ODBC_MYSQL, -DOTL_DB2_CLI
 
 // this #define is always defined 
 #if !defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON)
@@ -3545,384 +3504,6 @@ inline int otl_numeric_convert_T(const int ftype, const void *val, T &n) {
   }
   return rc;
 }
-#endif
-
-#if defined(OTL_STL) && defined(OTL_STREAM_POOLING_ON)
-
-class otl_ltstr {
-public:
-  bool operator()(const OTL_STRING_CONTAINER &s1,
-                  const OTL_STRING_CONTAINER &s2) const {
-    return strcmp(s1.c_str(), s2.c_str()) < 0;
-  }
-};
-
-const int otl_max_default_pool_size = 32;
-
-#endif
-
-#if defined(OTL_UNICODE_STRING_TYPE) && defined(OTL_STREAM_POOLING_ON)
-#include <string>
-class otl_ltstr {
-public:
-  bool operator()(const std::string &s1, const std::string &s2) const {
-    return strcmp(s1.c_str(), s2.c_str()) < 0;
-  }
-};
-
-const int otl_max_default_pool_size = 32;
-#endif
-
-#if defined(OTL_ACE)
-const int otl_max_default_pool_size = 32;
-#endif
-
-class otl_stream_shell_generic {
-public:
-  otl_stream_shell_generic() = default;
-
-  virtual ~otl_stream_shell_generic() OTL_THROWS_OTL_EXCEPTION2 {}
-
-  int get_should_delete() const { return should_delete; }
-
-  void set_should_delete(const int ashould_delete) {
-    should_delete = ashould_delete;
-  }
-
-protected:
-  int should_delete {0};
-};
-
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-
-#if defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)
-#include <map>
-#include <vector>
-#endif
-
-class otl_stream_pool;
-
-class otl_stream_pool_entry {
-public:
-  friend class otl_stream_pool;
-
-#if defined(OTL_ACE)
-  otl_tmpl_vector<otl_stream_shell_generic *> s;
-#elif defined(OTL_UNICODE_STRING_TYPE)
-  std::vector<otl_stream_shell_generic *> s;
-#else
-  STD_NAMESPACE_PREFIX vector<otl_stream_shell_generic *> s;
-#endif
-
-  otl_stream_pool_entry() = default;
-
-  otl_stream_pool_entry(const otl_stream_pool_entry &sc){ copy(sc); }
-
-  otl_stream_pool_entry &operator=(const otl_stream_pool_entry &sc) {
-    copy(sc);
-    return *this;
-  }
-
-  virtual ~otl_stream_pool_entry() = default;
-
-  int get_cnt() const { return cnt; }
-
-  void set_cnt(const int acnt) { cnt = acnt; }
-
-private:
-  int cnt {0};
-
-  void copy(const otl_stream_pool_entry &sc) {
-    s.clear();
-#if defined(OTL_ACE)
-    for (int i = 0; i < sc.s.size(); ++i)
-#else
-    for (size_t i = 0; i < sc.s.size(); ++i)
-#endif
-      s.push_back(sc.s[i]);
-    cnt = sc.cnt;
-  }
-};
-
-class otl_stream_pool {
-public:
-  typedef otl_stream_pool_entry cache_entry_type;
-#if defined(OTL_ACE)
-  typedef ACE_RB_Tree<OTL_STRING_CONTAINER, cache_entry_type,
-                      ACE_Less_Than<OTL_STRING_CONTAINER>,
-                      ACE_Null_Mutex> sc_type;
-  typedef otl_tmpl_vector<otl_stream_shell_generic *> vec_type;
-  typedef ACE_RB_Tree_Node<OTL_STRING_CONTAINER, cache_entry_type>
-  ace_map_entry;
-#elif defined(OTL_UNICODE_STRING_TYPE)
-  typedef std::map<std::string, cache_entry_type, otl_ltstr> sc_type;
-  typedef std::vector<otl_stream_shell_generic *> vec_type;
-#else
-  typedef STD_NAMESPACE_PREFIX
-  map<OTL_STRING_CONTAINER, cache_entry_type, otl_ltstr> sc_type;
-  typedef STD_NAMESPACE_PREFIX vector<otl_stream_shell_generic *> vec_type;
-#endif
-
-protected:
-  sc_type sc;
-  bool pool_enabled_ {true};
-  int max_size {otl_max_default_pool_size};
-  int size {0};
-
-public:
-  otl_stream_pool() = default;
-
-  void init(int amax_size = otl_max_default_pool_size) {
-    if (size == 0 && max_size == 0)
-      return;
-    if (amax_size < 2)
-      amax_size = 2;
-#if defined(OTL_ACE)
-    sc_type::iterator elem0 = sc.begin();
-    sc_type::iterator elemN = sc.end();
-    for (sc_type::iterator i = elem0; i != elemN; ++i) {
-      cache_entry_type &ce = (*i).item();
-      int sz = ce.s.size();
-      for (int j = 0; j < sz; ++j) {
-        ce.s[j]->set_should_delete(1);
-        delete ce.s[j];
-        ce.s[j] = nullptr;
-      }
-      ce.s.clear();
-      ce.cnt = 0;
-    }
-    sc.clear();
-#else
-    sc_type::iterator elem0 = sc.begin();
-    sc_type::iterator elemN = sc.end();
-    for (sc_type::iterator i = elem0; i != elemN; ++i) {
-      cache_entry_type &ce = (*i).second;
-      size_t sz = ce.s.size();
-      for (size_t j = 0; j < sz; ++j) {
-        ce.s[j]->set_should_delete(1);
-        delete ce.s[j];
-        ce.s[j] = nullptr;
-      }
-      ce.s.clear();
-      ce.set_cnt(0);
-    }
-    sc.clear();
-#endif
-
-    size = 0;
-    max_size = amax_size;
-  }
-#if defined(OTL_UNICODE_STRING_TYPE)
-  otl_stream_shell_generic *find(const std::string &stmtxt)
-#else
-  otl_stream_shell_generic *find(const OTL_STRING_CONTAINER &stmtxt)
-#endif
-  {
-    otl_stream_shell_generic *s;
-
-#if defined(OTL_ACE)
-    ace_map_entry *ce = 0;
-    int found = sc.find(stmtxt, ce);
-    if (found == -1)
-      return 0; // entry not found
-    s = ce->item().s[ce->item().s.size() - 1];
-    ce->item().s.pop_back();
-    if (ce->item().s.size() == 0) {
-      sc.unbind(ce);
-      --size;
-    }
-#else
-    sc_type::iterator cur = sc.find(stmtxt);
-    if (cur == sc.end())
-      return nullptr; // entry not found
-    cache_entry_type &ce = (*cur).second;
-    s = ce.s[ce.s.size() - 1];
-    ce.s.pop_back();
-    if (ce.s.size() == 0) {
-      sc.erase(cur);
-      --size;
-    }
-#endif
-
-    return s;
-  }
-
-#if defined(OTL_UNICODE_STRING_TYPE)
-  void remove(const otl_stream_shell_generic *s, const std::string &stmtxt)
-#else
-  void remove(const otl_stream_shell_generic *s,
-              const OTL_STRING_CONTAINER &stmtxt)
-#endif
-  {
-#if defined(OTL_ACE)
-    ace_map_entry *cur = 0;
-    int found = sc.find(stmtxt, cur);
-    if (found == -1)
-      return;
-    cache_entry_type &ce = (*cur).item();
-    for (int i = 0; i < ce.s.size(); ++i)
-      if (ce.s[i] == s) {
-        if (ce.s.size() > 1 && i != ce.s.size() - 1) {
-          otl_stream_shell_generic *temp_s = ce.s[i];
-          ce.s[i] = ce.s[ce.s.size() - 1];
-          ce.s[ce.s.size() - 1] = temp_s;
-        }
-        ce.s.pop_back();
-        --size;
-        return;
-      }
-#else
-    sc_type::iterator cur = sc.find(stmtxt);
-    if (cur == sc.end())
-      return;
-    cache_entry_type &ce = (*cur).second;
-    vec_type::iterator bgn = ce.s.begin();
-    vec_type::iterator end = ce.s.end();
-    for (vec_type::iterator i = bgn; i != end; ++i)
-      if ((*i) == s) {
-        ce.s.erase(i);
-        --size;
-        return;
-      }
-#endif
-  }
-
-  int get_max_size() const { return max_size; }
-
-  void add(otl_stream_shell_generic *s, const char *stm_text) {
-#if defined(OTL_UNICODE_STRING_TYPE)
-    std::string stmtxt(stm_text);
-#else
-    OTL_STRING_CONTAINER stmtxt(stm_text);
-#endif
-
-#if defined(OTL_ACE)
-
-    ace_map_entry *cur = 0;
-    int found_in_map = sc.find(stmtxt, cur);
-    if (found_in_map == 0) { // entry found
-      bool found = false;
-      cache_entry_type &ce = (*cur).item();
-      int sz = ce.s.size();
-      for (int i = 0; i < sz; ++i) {
-        if (s == ce.s[i]) {
-          found = true;
-          break;
-        }
-      }
-      if (!found)
-        ce.s.push_back(s);
-      ++ce.cnt;
-    } else {                     // entry not found
-      if (size < max_size - 1) { // add new entry
-        cache_entry_type ce;
-        ce.s.push_back(s);
-        ce.cnt = 1;
-        sc.bind(stmtxt, ce);
-        ++size;
-      } else { // erase the least used entry and add new one
-
-        sc_type::iterator elem0 = sc.begin();
-        sc_type::iterator elemN = sc.end();
-        int min_cnt = 0;
-        ace_map_entry *min_entry = 0;
-
-        for (sc_type::iterator i = elem0; i != elemN; ++i) {
-          if (i == elem0) { // first element
-            min_entry = &(*i);
-            min_cnt = (*i).item().cnt;
-          }
-          if (min_cnt > (*i).item().cnt) { // found less used entry
-            min_entry = &(*i);
-            min_cnt = (*i).item().cnt;
-          }
-        }
-        cache_entry_type &me = (*min_entry).item();
-        int sz = me.s.size();
-        for (int n = 0; n < sz; ++n) {
-          me.s[n]->set_should_delete(1);
-          otl_stream_shell_generic *tmp = me.s[n];
-          delete tmp;
-        }
-        me.s.clear();
-        sc.unbind(min_entry);
-        cache_entry_type ce;
-        ce.cnt = 1;
-        ce.s.push_back(s);
-        sc.bind(stmtxt, ce);
-      }
-    }
-
-#else
-
-    sc_type::iterator cur = sc.find(stmtxt);
-
-    if (cur != sc.end()) { // entry found
-      bool found = false;
-      cache_entry_type &ce = (*cur).second;
-      size_t sz = ce.s.size();
-      for (size_t i = 0; i < sz; ++i) {
-        if (s == ce.s[i]) {
-          found = true;
-          break;
-        }
-      }
-      if (!found)
-        ce.s.push_back(s);
-      ce.set_cnt(ce.get_cnt() + 1);
-    } else {                     // entry not found
-      if (size < max_size - 1) { // add new entry
-        cache_entry_type ce;
-        ce.s.push_back(s);
-        ce.set_cnt(1);
-        sc[stmtxt] = ce;
-        ++size;
-      } else { // erase the least used entry and add new one
-
-        sc_type::iterator elem0 = sc.begin();
-        sc_type::iterator elemN = sc.end();
-        int min_cnt = 0;
-        sc_type::iterator min_entry;
-
-        for (sc_type::iterator i = elem0; i != elemN; ++i) {
-          if (i == elem0) { // first element
-            min_entry = i;
-            min_cnt = (*i).second.get_cnt();
-          }
-          if (min_cnt > (*i).second.get_cnt()) { // found less used entry
-            min_entry = i;
-            min_cnt = (*i).second.get_cnt();
-          }
-        }
-        cache_entry_type &me = (*min_entry).second;
-        size_t sz = me.s.size();
-        for (size_t n = 0; n < sz; ++n) {
-          me.s[n]->set_should_delete(1);
-          otl_stream_shell_generic *tmp = me.s[n];
-          delete tmp;
-        }
-        me.s.clear();
-        sc.erase(min_entry);
-        cache_entry_type ce;
-        ce.set_cnt(1);
-        ce.s.push_back(s);
-        sc[stmtxt] = ce;
-      }
-    }
-#endif
-  }
-
-  virtual ~otl_stream_pool() OTL_THROWS_OTL_EXCEPTION4 { init(); }
-
-public:
-  otl_stream_pool(const otl_stream_pool &) = delete;
-  otl_stream_pool &operator=(const otl_stream_pool &) = delete;
-  otl_stream_pool(otl_stream_pool &&) = delete;
-  otl_stream_pool &operator=(otl_stream_pool &&) = delete;
-};
-
 #endif
 
 // =========================== COMMON TEMPLATES  ============================
@@ -13873,29 +13454,8 @@ public:
 protected:
   friend class otl_stream;
 
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-  otl_stream_pool sc;
-  bool pool_enabled_ {false};
-#endif
 
 public:
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-
-  void set_stream_pool_size(const int max_size = otl_max_default_pool_size) {
-    sc.init(max_size);
-  }
-
-  void stream_pool_enable() { pool_enabled_ = true; }
-
-  void stream_pool_disable() { pool_enabled_ = false; }
-
-  bool get_stream_pool_enabled_flag() const { return pool_enabled_; }
-
-#endif
 
   void commit(void) {
     otl_odbc_connect::commit();
@@ -13919,11 +13479,6 @@ public:
   otl_connect(const char *connect_str, const int aauto_commit = 0)
 OTL_THROWS_OTL_EXCEPTION:
   otl_odbc_connect(connect_str, aauto_commit),
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-      sc(), pool_enabled_(true),
-#endif
       cmd_(nullptr)
   {
   }
@@ -13931,11 +13486,6 @@ OTL_THROWS_OTL_EXCEPTION:
   otl_connect(OTL_HENV ahenv, OTL_HDBC ahdbc, const int auto_commit = 0)
 OTL_THROWS_OTL_EXCEPTION:
   otl_odbc_connect(),
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-      sc(), pool_enabled_(true),
-#endif
       cmd_(nullptr)
   {
     rlogon(ahenv, ahdbc, auto_commit);
@@ -14062,11 +13612,6 @@ OTL_THROWS_OTL_EXCEPTION:
   }
 
   void logoff(void) OTL_THROWS_OTL_EXCEPTION {
-#if (defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)) &&                  \
-    defined(OTL_STREAM_POOLING_ON)
-    if (connected)
-      sc.init(sc.get_max_size());
-#endif
 #if defined(OTL_ROLLS_BACK_BEFORE_LOGOFF)
     otl_odbc_connect::rollback();
 #endif
@@ -14092,71 +13637,6 @@ public:
 const int otl_odbc_no_stream = 0;
 const int otl_odbc_io_stream = 1;
 const int otl_odbc_select_stream = 2;
-
-class otl_stream_shell : public otl_stream_shell_generic {
-public:
-  otl_select_stream *ss {nullptr};
-  otl_inout_stream *io {nullptr};
-  otl_connect *adb {nullptr};
-
-  int auto_commit_flag {0};
-
-  otl_var_desc *iov {nullptr};
-  int iov_len {0};
-  int next_iov_ndx {0};
-
-  otl_var_desc *ov {nullptr};
-  int ov_len {0};
-  int next_ov_ndx {0};
-
-  bool flush_flag {false};
-  int stream_type {otl_odbc_no_stream};
-  bool lob_stream_flag {0};
-
-  otl_select_struct_override override_;
-
-#if (defined(OTL_STL) || defined(OTL_ACE)) && defined(OTL_STREAM_POOLING_ON)
-  OTL_STRING_CONTAINER orig_sql_stm;
-#endif
-
-#if defined(OTL_UNICODE_STRING_TYPE) && defined(OTL_STREAM_POOLING_ON)
-  std::string orig_sql_stm;
-#endif
-
-  otl_stream_shell(){
-    should_delete = 0;
-  }
-
-  otl_stream_shell(const int ashould_delete){
-    should_delete = ashould_delete;
-  }
-
-  virtual ~otl_stream_shell() OTL_THROWS_OTL_EXCEPTION {
-    if (should_delete) {
-      delete[] iov;
-      delete[] ov;
-
-      iov = nullptr;
-      iov_len = 0;
-      ov = nullptr;
-      ov_len = 0;
-      next_iov_ndx = 0;
-      next_ov_ndx = 0;
-      override_.reset_containers();
-      flush_flag = true;
-
-      delete ss;
-      delete io;
-      ss = nullptr;
-      io = nullptr;
-      adb = nullptr;
-    }
-  }
-
-public:
-  otl_stream_shell(const otl_stream_shell &) = delete;
-  otl_stream_shell &operator=(const otl_stream_shell &) = delete;
-};
 
 template <OTL_TYPE_NAME TExceptionStruct, OTL_TYPE_NAME TConnectStruct,
           OTL_TYPE_NAME TCursorStruct, OTL_TYPE_NAME TVariableStruct>
@@ -14531,8 +14011,30 @@ public:
 
 class otl_stream {
 private:
-  otl_stream_shell *shell {nullptr};
-  otl_ptr<otl_stream_shell> shell_pt;
+  struct shell_state {
+    otl_select_stream *ss {nullptr};
+    otl_inout_stream *io {nullptr};
+    otl_connect *adb {nullptr};
+
+    int auto_commit_flag {0};
+
+    otl_var_desc *iov {nullptr};
+    int iov_len {0};
+    int next_iov_ndx {0};
+
+    otl_var_desc *ov {nullptr};
+    int ov_len {0};
+    int next_ov_ndx {0};
+
+    bool flush_flag {false};
+    int stream_type {otl_odbc_no_stream};
+    bool lob_stream_flag {false};
+
+    otl_select_struct_override override_;
+  };
+
+  shell_state *shell {nullptr};
+  otl_ptr<shell_state> shell_pt;
   int connected {0};
 
   otl_select_stream **ss {nullptr};
@@ -14765,7 +14267,6 @@ public:
       throw_end_of_row();
   }
 
-  OTL_NODISCARD otl_stream_shell *get_shell() { return shell; }
   OTL_NODISCARD int get_connected() const { return connected; }
 
   OTL_NODISCARD int get_dirty_buf_len() const {
@@ -15029,7 +14530,7 @@ public:
     buf_size_ = 1;
     last_oper_was_read_op = false;
     shell = nullptr;
-    shell = new otl_stream_shell(0);
+    shell = new shell_state();
     shell_pt.assign(&shell);
     connected = 0;
 
@@ -15104,23 +14605,12 @@ public:
         if ((*io) != nullptr)
           (*io)->set_flush_flag2(true);
       }
-#if (defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)) &&                  \
-    defined(OTL_STREAM_POOLING_ON)
-      clean(1);
-      if (shell != nullptr)
-        shell->set_should_delete(1);
       shell_pt.destroy();
-#else
-      shell_pt.destroy();
-#endif
 #if !defined(OTL_DESTRUCTORS_DO_NOT_THROW)
       throw;
 #endif
     }
-#if (defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)) &&                  \
-    defined(OTL_STREAM_POOLING_ON)
-    if(otl_uncaught_exception()){}
-#elif defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON)
+#if defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON)
     if (otl_uncaught_exception()){}
 #else
         shell_pt.destroy();
@@ -15218,93 +14708,6 @@ public:
       init_stream();
     buf_size_ = arr_size;
     OTL_TRACE_STREAM_OPEN
-
-#if (defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)) &&                  \
-    defined(OTL_STREAM_POOLING_ON)
-    if (adb != nullptr && *adb == nullptr)
-      *adb = &db;
-    if (adb != nullptr && (*adb) && (**adb).get_stream_pool_enabled_flag()) {
-      char temp_buf[128];
-      otl_itoa(arr_size, temp_buf);
-
-      const char delimiter = ';';
-#if defined(OTL_STREAM_POOL_USES_STREAM_LABEL_AS_KEY)
-      const char *temp_label = sqlstm_label ? sqlstm_label : sqlstm;
-#if defined(OTL_UNICODE_STRING_TYPE)
-      std::string sql_stm(temp_label);
-#else
-      OTL_STRING_CONTAINER sql_stm(temp_label);
-#endif
-      sql_stm += delimiter;
-#if defined(OTL_UNICODE_STRING_TYPE)
-      sql_stm += std::string(temp_buf);
-#else
-      sql_stm += OTL_STRING_CONTAINER(temp_buf);
-#endif
-#else
-#if defined(OTL_UNICODE_STRING_TYPE)
-      std::string sql_stm(sqlstm);
-#else
-      OTL_STRING_CONTAINER sql_stm(sqlstm);
-#endif
-      sql_stm += delimiter;
-#if defined(OTL_UNICODE_STRING_TYPE)
-      sql_stm += std::string(temp_buf);
-#else
-      sql_stm += OTL_STRING_CONTAINER(temp_buf);
-#endif
-#endif
-      if (shell != nullptr) {
-        otl_select_struct_override &temp_override = shell->override_;
-        for (int i = 0; i < temp_override.getLen(); ++i) {
-          otl_itoa(OTL_SCAST(int, temp_override.get_col_type(i)), temp_buf);
-          sql_stm += delimiter;
-#if defined(OTL_UNICODE_STRING_TYPE)
-          sql_stm += std::string(temp_buf);
-#else
-          sql_stm += OTL_STRING_CONTAINER(temp_buf);
-#endif
-        }
-      }
-      otl_stream_shell *temp_shell =
-          OTL_RCAST(otl_stream_shell *, db.sc.find(sql_stm));
-      if (temp_shell) {
-        if (shell != nullptr)
-          shell_pt.destroy();
-        shell = temp_shell;
-        ss = &(shell->ss);
-        io = &(shell->io);
-        if ((*io) != nullptr)
-          (*io)->set_flush_flag2(true);
-        adb = &(shell->adb);
-        if (*adb == nullptr)
-          *adb = &db;
-        auto_commit_flag = &(shell->auto_commit_flag);
-        iov = &(shell->iov);
-        iov_len = &(shell->iov_len);
-        next_iov_ndx = &(shell->next_iov_ndx);
-        ov = &(shell->ov);
-        ov_len = &(shell->ov_len);
-        next_ov_ndx = &(shell->next_ov_ndx);
-        override_ = &(shell->override_);
-        try {
-          if ((*iov_len) == 0)
-            this->rewind();
-        }
-        catch (OTL_CONST_EXCEPTION otl_exception &) {
-          if ((*adb))
-            (*adb)->sc.remove(shell, shell->orig_sql_stm);
-          intern_cleanup();
-          shell_pt.destroy();
-          connected = 0;
-          throw;
-        }
-        connected = 1;
-        return;
-      }
-      if(shell != nullptr) shell->orig_sql_stm = sql_stm;
-    }
-#endif
 
     delete[](*iov);
     delete[](*ov);
@@ -15483,75 +14886,15 @@ public:
     adb = nullptr;
   }
 
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-  void close(const bool save_in_stream_pool = true) OTL_THROWS_OTL_EXCEPTION
-#else
   void close(void) OTL_THROWS_OTL_EXCEPTION
-#endif
   {
     if (shell == nullptr)
       return;
 
     OTL_TRACE_FUNC(0x4, "otl_stream", "close", "")
 
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-    if (save_in_stream_pool && (*adb) &&
-        (**adb).get_stream_pool_enabled_flag() &&
-        !(otl_uncaught_exception())) {
-      try {
-        this->flush();
-        this->clean(1);
-      }
-      catch (OTL_CONST_EXCEPTION otl_exception &) {
-        this->clean(1);
-        throw;
-      }
-      if (otl_uncaught_exception()) {
-        (*adb)->sc.remove(shell, shell->orig_sql_stm);
-        intern_cleanup();
-        shell_pt.destroy();
-        connected = 0;
-        return;
-      }
-#if defined(OTL_STL) && defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON)
-      if (otl_uncaught_exception()) {
-        if ((*adb))
-          (*adb)->sc.remove(shell, shell->orig_sql_stm);
-        intern_cleanup();
-        shell_pt.destroy();
-        connected = 0;
-        return;
-      }
-#elif defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON)
-      if (otl_uncaught_exception()) {
-        if ((*adb))
-          (*adb)->sc.remove(shell, shell->orig_sql_stm);
-        intern_cleanup();
-        shell_pt.destroy();
-        connected = 0;
-        return;
-      }
-#endif
-      if(shell->io!=nullptr)
-        shell->io->set_commit(1);
-      (*adb)->sc.add(shell, shell->orig_sql_stm.c_str());
-      shell_pt.disconnect();
-      connected = 0;
-    } else {
-      if ((*adb))
-        (*adb)->sc.remove(shell, shell->orig_sql_stm);
-      intern_cleanup();
-      shell_pt.destroy();
-      connected = 0;
-    }
-#else
     intern_cleanup();
     connected = 0;
-#endif
   }
 
   OTL_NODISCARD otl_column_desc *describe_select(int &desc_len) OTL_NO_THROW {
@@ -21513,12 +20856,6 @@ const int otl_mixed_refcur_stream_type = 5;
 
 class otl_connect : public otl_ora8_connect {
 protected:
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-  otl_stream_pool sc;
-  bool pool_enabled_ {true};
-#endif
 
 public:
 #if defined(OTL_ORA11G_R2) || defined(OTL_ORA12C)
@@ -21534,23 +20871,6 @@ public:
   }
 #endif
 
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-
-  otl_stream_pool &get_sc() { return sc; }
-
-  void set_stream_pool_size(const int max_size = otl_max_default_pool_size) {
-    sc.init(max_size);
-  }
-
-  void stream_pool_enable() { pool_enabled_ = true; }
-
-  void stream_pool_disable() { pool_enabled_ = false; }
-
-  OTL_NODISCARD bool get_stream_pool_enabled_flag() const { return pool_enabled_; }
-
-#endif
 
 public:
   long direct_exec(const char *sqlstm,
@@ -21563,12 +20883,6 @@ public:
   }
 
   otl_connect() OTL_NO_THROW : otl_ora8_connect(),
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-                               sc(),
-                               pool_enabled_(true),
-#endif
                                cmd_(nullptr) {
   }
 
@@ -21756,11 +21070,6 @@ OTL_THROWS_OTL_EXCEPTION {
   }
 
   void logoff(void) OTL_THROWS_OTL_EXCEPTION {
-#if (defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)) &&                  \
-    defined(OTL_STREAM_POOLING_ON)
-    if (connected)
-      sc.init(sc.get_max_size());
-#endif
     if (!connected) {
       (void)connect_struct.session_end();
       (void)connect_struct.server_detach();
@@ -21871,11 +21180,6 @@ OTL_THROWS_OTL_EXCEPTION {
   }
 
   void session_end(void) OTL_THROWS_OTL_EXCEPTION {
-#if (defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)) &&                  \
-    defined(OTL_STREAM_POOLING_ON)
-    if (connected)
-      sc.init(sc.get_max_size());
-#endif
     connected = 0;
     retcode = connect_struct.session_end();
     if (!retcode) {
@@ -24904,9 +24208,6 @@ protected:
         sl_desc[i] = sl_desc_tmp[i];
       for (i = 0; i < sl_len; ++i)
         sel_cur.bind(sl[i]);
-#if defined(OTL_ORA_STREAM_POOL_ASSUMES_SAME_REF_CUR_STRUCT_ON_REUSE)
-      same_sl_flag = 1;
-#endif
     }
   }
 
@@ -24995,78 +24296,6 @@ public:
   otl_ref_select_stream &operator=(otl_ref_select_stream &&) = delete;
 };
 
-class otl_stream_shell : public otl_stream_shell_generic {
-public:
-  otl_ref_select_stream *ref_ss {nullptr};
-  otl_select_stream *ss {nullptr};
-  otl_inout_stream *io {nullptr};
-  otl_connect *adb {nullptr};
-
-  int auto_commit_flag {0};
-  bool lob_stream_flag {false};
-
-  otl_var_desc *iov {nullptr};
-  int iov_len {0};
-  int next_iov_ndx {0};
-
-  otl_var_desc *ov {nullptr};
-  int ov_len {0};
-  int next_ov_ndx {0};
-
-  bool flush_flag {false};
-  int stream_type {otl_no_stream_type};
-
-  otl_select_struct_override override_;
-
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-#if defined(OTL_UNICODE_STRING_TYPE)
-  std::string orig_sql_stm;
-#else
-  OTL_STRING_CONTAINER orig_sql_stm;
-#endif
-#endif
-
-  otl_stream_shell(){
-    should_delete = 0;
-  }
-
-  otl_stream_shell(const int ashould_delete){
-    should_delete = ashould_delete;
-  }
-
-  virtual ~otl_stream_shell() OTL_THROWS_OTL_EXCEPTION {
-    if (should_delete) {
-      delete[] iov;
-      delete[] ov;
-
-      iov = nullptr;
-      iov_len = 0;
-      ov = nullptr;
-      ov_len = 0;
-      next_iov_ndx = 0;
-      next_ov_ndx = 0;
-      override_.reset_containers();
-      flush_flag = true;
-
-      delete ss;
-      delete io;
-      delete ref_ss;
-      ss = nullptr;
-      io = nullptr;
-      ref_ss = nullptr;
-      adb = nullptr;
-    }
-  }
-
-public:
-  otl_stream_shell(const otl_stream_shell &) = delete;
-  otl_stream_shell &operator=(const otl_stream_shell &) = delete;
-  otl_stream_shell(otl_stream_shell &&) = delete;
-  otl_stream_shell &operator=(otl_stream_shell &&) = delete;
-};
-
 class otl_sp_parm_desc {
 public:
   int position {-1};
@@ -25138,8 +24367,31 @@ class otl_stream
 #endif
 {
 protected:
-  otl_stream_shell *shell {nullptr};
-  otl_ptr<otl_stream_shell> shell_pt;
+  struct shell_state {
+    otl_ref_select_stream *ref_ss {nullptr};
+    otl_select_stream *ss {nullptr};
+    otl_inout_stream *io {nullptr};
+    otl_connect *adb {nullptr};
+
+    int auto_commit_flag {0};
+    bool lob_stream_flag {false};
+
+    otl_var_desc *iov {nullptr};
+    int iov_len {0};
+    int next_iov_ndx {0};
+
+    otl_var_desc *ov {nullptr};
+    int ov_len {0};
+    int next_ov_ndx {0};
+
+    bool flush_flag {false};
+    int stream_type {otl_no_stream_type};
+
+    otl_select_struct_override override_;
+  };
+
+  shell_state *shell {nullptr};
+  otl_ptr<shell_state> shell_pt;
   int connected {0};
 
   otl_ref_select_stream **ref_ss {nullptr};
@@ -25383,13 +24635,13 @@ public:
     }
   }
 
-  OTL_NODISCARD otl_stream_shell *get_shell() { return shell; }
-
   OTL_NODISCARD int get_connected() const { return connected; }
 
   void setBufSize(int buf_size) { buf_size_ = buf_size; }
 
   OTL_NODISCARD int getBufSize(void) const { return buf_size_; }
+
+  OTL_NODISCARD shell_state *get_shell() const { return shell; }
 
   operator int(void) OTL_THROWS_OTL_EXCEPTION {
     if (shell && shell->lob_stream_flag) {
@@ -26361,7 +25613,7 @@ public:
     buf_size_ = 1;
     last_oper_was_read_op = false;
     shell = nullptr;
-    shell = new otl_stream_shell(0);
+    shell = new shell_state();
     shell_pt.assign(&shell);
     connected = 0;
 
@@ -26440,25 +25692,12 @@ OTL_THROWS_OTL_EXCEPTION {
         if ((*io) != nullptr)
           (*io)->set_flush_flag2(true);
       }
-#if (defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)) &&                  \
-    defined(OTL_STREAM_POOLING_ON)
-      clean(1);
-      if (shell != nullptr)
-        shell->set_should_delete(1);
       shell_pt.destroy();
-#else
-      shell_pt.destroy();
-#endif
 #if !defined(OTL_DESTRUCTORS_DO_NOT_THROW)
       throw;
 #endif
     }
-#if (defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)) &&                  \
-    defined(OTL_STREAM_POOLING_ON)
-    if(otl_uncaught_exception()){}
-#else
     shell_pt.destroy();
-#endif
   }
 
   OTL_NODISCARD int eof(void) OTL_THROWS_OTL_EXCEPTION{
@@ -26625,89 +25864,6 @@ OTL_THROWS_OTL_EXCEPTION {
       init_stream();
     buf_size_ = arr_size;
     OTL_TRACE_STREAM_OPEN2
-#if (defined(OTL_STL) || defined(OTL_UNICODE_STRING_TYPE)) &&                  \
-    defined(OTL_STREAM_POOLING_ON)
-    if (adb != nullptr && *adb == nullptr)
-      *adb = &db;
-    if (adb != nullptr && (*adb) && (**adb).get_stream_pool_enabled_flag()) {
-      char temp_buf[128];
-      otl_itoa(arr_size, temp_buf);
-      const char delimiter = ';';
-#if defined(OTL_STREAM_POOL_USES_STREAM_LABEL_AS_KEY)
-      const char *temp_label = sqlstm_label ? sqlstm_label : sqlstm;
-#if defined(OTL_UNICODE_STRING_TYPE)
-      std::string sql_stm(temp_label);
-      sql_stm += delimiter;
-      sql_stm += std::string(temp_buf);
-#else
-      OTL_STRING_CONTAINER sql_stm(temp_label);
-      sql_stm += delimiter;
-      sql_stm += OTL_STRING_CONTAINER(temp_buf);
-#endif
-#else
-#if defined(OTL_UNICODE_STRING_TYPE)
-      std::string sql_stm(sqlstm);
-#else
-      OTL_STRING_CONTAINER sql_stm(sqlstm);
-#endif
-      sql_stm += delimiter;
-#if defined(OTL_UNICODE_STRING_TYPE)
-      sql_stm += std::string(temp_buf);
-#else
-      sql_stm += OTL_STRING_CONTAINER(temp_buf);
-#endif
-#endif
-      if (shell != nullptr) {
-        otl_select_struct_override &temp_override = shell->override_;
-        for (int i = 0; i < temp_override.getLen(); ++i) {
-          otl_itoa(OTL_SCAST(int, temp_override.get_col_type(i)), temp_buf);
-          sql_stm += delimiter;
-#if defined(OTL_UNICODE_STRING_TYPE)
-          sql_stm += std::string(temp_buf);
-#else
-          sql_stm += OTL_STRING_CONTAINER(temp_buf);
-#endif
-        }
-      }
-      otl_stream_shell_generic *temp_shell = db.get_sc().find(sql_stm);
-      if (temp_shell) {
-        if (shell != nullptr)
-          shell_pt.destroy();
-        shell = OTL_RCAST(otl_stream_shell *, temp_shell);
-        ref_ss = &(shell->ref_ss);
-        ss = &(shell->ss);
-        io = &(shell->io);
-        if ((*io) != nullptr){
-          (*io)->set_flush_flag2(true);
-        }
-        adb = &(shell->adb);
-        auto_commit_flag = &(shell->auto_commit_flag);
-        iov = &(shell->iov);
-        iov_len = &(shell->iov_len);
-        next_iov_ndx = &(shell->next_iov_ndx);
-        ov = &(shell->ov);
-        ov_len = &(shell->ov_len);
-        next_ov_ndx = &(shell->next_ov_ndx);
-        override_ = &(shell->override_);
-        override_->set_master_stream_ptr(OTL_RCAST(void *, this));
-        try {
-          if ((*iov_len) == 0)
-            this->rewind();
-        }
-        catch (OTL_CONST_EXCEPTION otl_exception &) {
-          if ((*adb))
-            (*adb)->get_sc().remove(shell, shell->orig_sql_stm);
-          intern_cleanup();
-          shell_pt.destroy();
-          connected = 0;
-          throw;
-        }
-        connected = 1;
-        return;
-      }
-      if(shell != nullptr) shell->orig_sql_stm = sql_stm;
-    }
-#endif
 
     delete[](*iov);
     delete[](*ov);
@@ -26834,73 +25990,13 @@ OTL_THROWS_OTL_EXCEPTION {
     adb = nullptr;
   }
 
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-  void close(const bool save_in_stream_pool = true)
-#else
   void close(void)
-#endif
   {
     if (shell == nullptr)
       return;
     OTL_TRACE_FUNC(0x4, "otl_stream", "close", "")
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-    if (save_in_stream_pool && (*adb) &&
-        (**adb).get_stream_pool_enabled_flag() &&
-        !otl_uncaught_exception()) {
-      try {
-        this->flush();
-        this->clean(1);
-      }
-      catch (OTL_CONST_EXCEPTION otl_exception &) {
-        this->clean(1);
-        throw;
-      }
-      if (otl_uncaught_exception()) {
-        (*adb)->get_sc().remove(shell, shell->orig_sql_stm);
-        intern_cleanup();
-        shell_pt.destroy();
-        connected = 0;
-        return;
-      }
-#if defined(OTL_STL) && defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON)
-      if (otl_uncaught_exception()) {
-        if ((*adb))
-          (*adb)->get_sc().remove(shell, shell->orig_sql_stm);
-        intern_cleanup();
-        shell_pt.destroy();
-        connected = 0;
-        return;
-      }
-#elif defined(OTL_INTERNAL_UNCAUGHT_EXCEPTION_ON)
-      if (otl_uncaught_exception()) {
-        if ((*adb))
-          (*adb)->get_sc().remove(shell, shell->orig_sql_stm);
-        intern_cleanup();
-        shell_pt.destroy();
-        connected = 0;
-        return;
-      }
-#endif
-      if(shell->io!=nullptr)
-        shell->io->set_commit(1);
-      (*adb)->get_sc().add(shell, shell->orig_sql_stm.c_str());
-      shell_pt.disconnect();
-      connected = 0;
-    } else {
-      if ((*adb))
-        (*adb)->get_sc().remove(shell, shell->orig_sql_stm);
-      intern_cleanup();
-      shell_pt.destroy();
-      connected = 0;
-    }
-#else
     intern_cleanup();
     connected = 0;
-#endif
   }
 
   OTL_NODISCARD otl_column_desc *describe_select(int &desc_len) OTL_NO_THROW {
