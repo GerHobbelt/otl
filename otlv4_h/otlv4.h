@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.492,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.493,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401ECL)
+#define OTL_VERSION_NUMBER (0x0401EDL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -262,6 +262,7 @@ concept AllowedNumericTypes =
 #include <memory>
 #include <vector>
 #include <algorithm>
+#include <cstring>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1600)
 #pragma warning(disable : 28251)
@@ -1930,41 +1931,17 @@ const int otl_date_str_size = 60;
 
 template <OTL_TYPE_NAME T> class otl_auto_array_ptr {
 public:
-  otl_auto_array_ptr() = default;
 
-  otl_auto_array_ptr(const int arr_size)
-    : ptr(new T[OTL_SCAST(size_t,arr_size)]), arr_size_(arr_size) {}
+  explicit otl_auto_array_ptr(const int arr_size): ptr(OTL_SCAST(size_t,arr_size)) {}
 
-  void double_size(void) {
-    int old_arr_size = arr_size_;
-    arr_size_ *= 2;
-    T *temp_ptr = new T[OTL_SCAST(size_t,arr_size_)];
-    for (int i = 0; i < old_arr_size; ++i)
-      temp_ptr[i] = ptr[i];
-    delete[] ptr;
-    ptr = temp_ptr;
-  }
+  void double_size(void) { ptr.resize(ptr.size()*2); }
 
-  virtual ~otl_auto_array_ptr() { delete[] ptr; }
+  OTL_NODISCARD T *get_ptr() { return ptr.data(); }
 
-  OTL_NODISCARD T *get_ptr() { return ptr; }
-
-  OTL_NODISCARD int get_arr_size() const { return arr_size_; }
+  OTL_NODISCARD int get_arr_size() const { return OTL_SCAST(int,ptr.size()); }
 
 private:
-  T *ptr {nullptr};
-  int arr_size_ {0};
-
-  otl_auto_array_ptr(const otl_auto_array_ptr<T> &) = default;
-
-  otl_auto_array_ptr<T> &operator=(const otl_auto_array_ptr<T> &) {
-    return *this;
-  }
-
-  otl_auto_array_ptr(otl_auto_array_ptr<T> &&) = default;
-
-  otl_auto_array_ptr<T> &operator=(otl_auto_array_ptr<T> &&) { return *this; }
-
+  std::vector<T> ptr;
 };
 
 template <OTL_TYPE_NAME T> class otl_ptr {
@@ -2015,6 +1992,10 @@ public:
 template <OTL_TYPE_NAME T> class otl_Tptr {
 public:
   otl_Tptr() = default;
+  otl_Tptr& operator=(const otl_Tptr&) = default;
+  otl_Tptr& operator=(otl_Tptr&&) = default;
+  otl_Tptr(const otl_Tptr&) = default;
+  otl_Tptr(otl_Tptr&&) = default;
 
   void assign(T *var) { ptr = var; }
 
@@ -2029,12 +2010,6 @@ public:
 
   ~otl_Tptr() { destroy(); }
 
-  otl_Tptr &operator=(const otl_Tptr &src) {
-    ptr = src.ptr;
-    do_not_destroy = src.do_not_destroy;
-    return *this;
-  }
-
   void set_do_not_destroy(const bool ado_not_destroy) {
     do_not_destroy = ado_not_destroy;
   }
@@ -2044,10 +2019,6 @@ public:
 protected:
   T *ptr {nullptr};
   bool do_not_destroy {false};
-
-public:
-  otl_Tptr(const otl_Tptr &) = delete;
-  otl_Tptr(otl_Tptr &&) = delete;
 };
 
 class otl_select_struct_override {
