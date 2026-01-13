@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.490,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.491,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401EAL)
+#define OTL_VERSION_NUMBER (0x0401EBL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -17663,7 +17663,7 @@ public:
   char sqlstate[32];
 
 #if defined(OTL_EXCEPTION_ENABLE_ERROR_OFFSET)
-  int error_offset{-};
+  int error_offset{0};
 #endif
 
 #if defined(OTL_EXTENDED_EXCEPTION)
