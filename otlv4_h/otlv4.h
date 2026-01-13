@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.487,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.488,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401E7L)
+#define OTL_VERSION_NUMBER (0x0401E8L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -4652,6 +4652,10 @@ OTL_EXCEPTION_IS_DERIVED_FROM_STD_EXCEPTION is used with Unicode
 
 #endif
 
+#if defined(OTL_EXCEPTION_HAS_STD_STACKTRACE) & defined(OTL_CPP_23_ON)
+#include <stacktrace>
+#endif
+
 template <OTL_TYPE_NAME TExceptionStruct, OTL_TYPE_NAME TConnectStruct,
           OTL_TYPE_NAME TCursorStruct>
 #if defined(OTL_EXCEPTION_DERIVED_FROM)
@@ -4666,51 +4670,31 @@ public:
 #endif
 
 #if defined(OTL_EXCEPTION_STM_TEXT_SIZE)
-  char stm_text[OTL_EXCEPTION_STM_TEXT_SIZE];
+  char stm_text[OTL_EXCEPTION_STM_TEXT_SIZE] {};
 #else
-  char stm_text[2048];
+  char stm_text[2048] {};
 #endif
-  char var_info[256];
+  char var_info[256] {};
 
-  otl_tmpl_exception()
-#if defined(__GNUC__) && (__GNUC__ >= 3)
-  OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  OTL_NO_THROW
+#if defined(OTL_EXCEPTION_HAS_STD_STACKTRACE) & defined(OTL_CPP_23_ON)
+  std::stacktrace stack_trace {std::stacktrace::current()};
 #endif
-  {
-    stm_text[0] = 0;
-    var_info[0] = 0;
-  }
 
-  otl_tmpl_exception(TConnectStruct &conn_struct, const char *sqlstm = nullptr)
-#if defined(__GNUC__) && (__GNUC__ >= 3)
-  OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  OTL_NO_THROW
-#endif
+  otl_tmpl_exception() = default;
+
+  otl_tmpl_exception(TConnectStruct &conn_struct, const char *sqlstm = nullptr) noexcept
   {
-    stm_text[0] = 0;
-    var_info[0] = 0;
     if (sqlstm) {
       OTL_STRNCPY_S(OTL_RCAST(char *, stm_text), sizeof(stm_text), sqlstm,
                     sizeof(stm_text) - 1);
       stm_text[sizeof(stm_text) - 1] = 0;
     }
     conn_struct.error(OTL_SCAST(TExceptionStruct &, *this));
-    OTL_TRACE_EXCEPTION(this->code, this->msg, this->stm_text
-, this->var_info)
+    OTL_TRACE_EXCEPTION(this->code, this->msg, this->stm_text, this->var_info)
   }
 
-  otl_tmpl_exception(TCursorStruct &cursor_struct, const char *sqlstm = nullptr)
-#if defined(__GNUC__) && (__GNUC__ >= 3)
-  OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  OTL_NO_THROW
-#endif
+  otl_tmpl_exception(TCursorStruct &cursor_struct, const char *sqlstm = nullptr) noexcept
   {
-    stm_text[0] = 0;
-    var_info[0] = 0;
     if (sqlstm) {
       OTL_STRNCPY_S(OTL_RCAST(char *, stm_text), sizeof(stm_text), sqlstm,
                     sizeof(stm_text) - 1);
@@ -4722,19 +4706,12 @@ public:
 
   otl_tmpl_exception(const char *amsg, const int acode,
                      const char *sqlstm = nullptr,
-                     const char *varinfo = nullptr)
-#if defined(__GNUC__) && (__GNUC__ >= 3)
-  OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  OTL_NO_THROW
-#endif
+                     const char *varinfo = nullptr) noexcept
 #if defined(OTL_EXCEPTION_DERIVED_FROM) && \
     defined(OTL_EXCEPTION_INITIALIZED_WITH_BASE_CLASS_CONSTRUCTOR_CALL)
         : OTL_EXCEPTION_INITIALIZED_WITH_BASE_CLASS_CONSTRUCTOR_CALL
 #endif
   {
-    stm_text[0] = 0;
-    var_info[0] = 0;
     if (sqlstm) {
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1400)
@@ -4777,19 +4754,12 @@ OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW is defined
 #if defined(OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW)
   otl_tmpl_exception(const char *amsg, const int acode, const char *sqlstm,
                      const char *varinfo, const void *input_string,
-                     int input_string_size)
-#if defined(__GNUC__) && (__GNUC__ >= 3)
-  OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  OTL_NO_THROW
-#endif
+                     int input_string_size) noexcept
 #if defined(OTL_EXCEPTION_DERIVED_FROM) && \
   defined(OTL_EXCEPTION_INITIALIZED_WITH_BASE_CLASS_CONSTRUCTOR_CALL)
         : OTL_EXCEPTION_INITIALIZED_WITH_BASE_CLASS_CONSTRUCTOR_CALL
 #endif
   {
-    stm_text[0] = 0;
-    var_info[0] = 0;
     if (sqlstm) {
 #if defined(_MSC_VER)
 #if (_MSC_VER >= 1400)
@@ -4819,15 +4789,11 @@ OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW is defined
 #endif
 
   otl_tmpl_exception(const otl_tmpl_exception &) = default;
+  otl_tmpl_exception(otl_tmpl_exception &&) = default;
+  otl_tmpl_exception& operator=(const otl_tmpl_exception &) = default;
+  otl_tmpl_exception& operator=(otl_tmpl_exception &&) = default;
+  virtual ~otl_tmpl_exception() = default;
 
-  virtual ~otl_tmpl_exception()
-#if defined(__GNUC__) && (__GNUC__ >= 3)
-      OTL_ANSI_CPP_11_NOEXCEPT
-#else
-      OTL_NO_THROW
-#endif
-  {
-  }
 };
 
 template <OTL_TYPE_NAME TExceptionStruct, OTL_TYPE_NAME TConnectStruct,
