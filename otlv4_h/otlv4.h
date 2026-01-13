@@ -1602,7 +1602,6 @@ const int otl_unsupported_type = -10000;
 #define OTL_CCAST(_t, _e) const_cast<_t>(_e)
 
 #define OTL_CONST_EXCEPTION const
-#define OTL_THROWS_EX_OUT_OF_RANGE throw(otl_out_of_range_exception) /* [i_a] hack to ensure otl_long_string et al can throw exceptions while preventing a cyclic dependency at compile time in this code */
 #define OTL_TYPE_NAME typename
 
 #include <new>
@@ -2015,8 +2014,7 @@ const int otl_date_str_size = 60;
 /* [i_a] forwards references required to shut up the compiler */
 class otl_out_of_range_exception;
 #if defined(OTL_SANITY_CHECKS_ENABLED)
-static void throw_otl_out_of_range_exception(const char *msg, int code)
-      OTL_THROWS_EX_OUT_OF_RANGE;
+static void throw_otl_out_of_range_exception(const char *msg, int code);
 #endif
 
 template <OTL_TYPE_NAME T> class otl_auto_array_ptr {
@@ -2803,7 +2801,7 @@ class otl_long_string {
 
 /* protected:  -- [i_a] keep 'v' a protected data member: access directly through c_str() only! doesn't work as OTL classes access 'v' directly and it's not really useful to add a 'getter' method or be'friend'ing those classes+templates */
 public:
-  unsigned char *v {nullptr};
+  mutable unsigned char *v {nullptr};   // `mutable` to facilitate the operator[] methods below which allocate a dummy buffer in edge case scenarios.
 
 public:
 
@@ -2864,7 +2862,7 @@ public:
         OTL_ASSERT(buf_size == 0);
         OTL_ASSERT(s.buf_size == 0);
         OTL_ASSERT(s.length == 0);
-        v=new unsigned char[buf_size+1];
+        v = new unsigned char[buf_size + 1];
       }
       length = s.length;
       extern_buffer_flag = 0; // [i_a] same code as before, but clearer this way
@@ -2926,7 +2924,6 @@ public:
   }
 
   void set_len(int alen=0) /* [i_a] */
-      OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
     if (alen < 0 || alen > buf_size) // || alen > this->length ? to prevent nilling beyond what is currently set
@@ -2948,7 +2945,6 @@ public:
 
 #if !defined(OTL_UNICODE) /* [i_a] due to C++ not accepting polymorphism for return type, we'd better get rid of these when we're in unicode mode to prevent possible screwups */
   /* virtual */ unsigned char& operator[](int ndx) /* [i_a] */
-      OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
       if (ndx < 0 || ndx > buf_size)
@@ -2959,12 +2955,11 @@ public:
       if (!v) {
         OTL_ASSERT(buf_size == 0);
         OTL_ASSERT(length == 0);
-        v=new unsigned char[buf_size+1];
+        v = new unsigned char[buf_size + 1];
 	  }
       return v[ndx];
   }
-  /* virtual */ const unsigned char& operator[](int ndx) /* [i_a] */
-      OTL_THROWS_EX_OUT_OF_RANGE
+  /* virtual */ const unsigned char& operator[](int ndx) const /* [i_a] */
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
       if (ndx < 0 || ndx > buf_size)
@@ -2975,14 +2970,13 @@ public:
       if (!v) {
         OTL_ASSERT(buf_size == 0);
         OTL_ASSERT(length == 0);
-        v=new unsigned char[buf_size+1];
+        v = new unsigned char[buf_size + 1];
 	  }
       return v[ndx];
   }
 #endif
 
   virtual void null_terminate_string(int alen) /* [i_a] */
-      OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
     if (alen < 0 || alen > buf_size)
@@ -2993,37 +2987,34 @@ public:
       OTL_ASSERT(buf_size == 0);
       OTL_ASSERT(length == 0);
       OTL_ASSERT(alen == 0);
-      v=new unsigned char[buf_size+1];
+      v = new unsigned char[buf_size + 1];
 	}
     if (alen < 0)
 	  alen = 0;
 	else if (alen > buf_size)
 	  alen = buf_size;
     // write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
-	if (v[alen])
-	{
+	if (v[alen]) {
 	  OTL_ASSERT(!extern_buffer_flag);
-      v[alen]=0;
+      v[alen] = 0;
 	}
   }
 
 #if !defined(OTL_UNICODE) /* [i_a] due to C++ not accepting polymorphism for return type, we'd better get rid of this one when we're in unicode mode to prevent possible screwups */
   /* virtual */ unsigned char *c_str() /* [i_a] no use to put 'virtual' here; different return types, so unicode gets wc_str() */
-      OTL_THROWS_EX_OUT_OF_RANGE
   {
     OTL_ASSERT(length <= buf_size);
     //if (length <= buf_size)
     //{
-        if (!v){
+        if (!v) {
           // [i_a] under the rare circumstances where 'this' was a zero-length string previously, v MAY be NULL!
           OTL_ASSERT(buf_size == 0);
           OTL_ASSERT(s.buf_size == 0);
           OTL_ASSERT(s.length == 0);
-          v=new unsigned char[buf_size+1];
+          v = new unsigned char[buf_size + 1];
 	    }
         // write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
-		if (v[length])
-		{
+		if (v[length]) {
 			OTL_ASSERT(!extern_buffer_flag);
             v[length] = 0;
 		}
@@ -3082,10 +3073,10 @@ public:
     unicode_flag_ = true;
     // [i_a] these actions have already been done in otl_long_string(...)
 	OTL_ASSERT(buffer_size >= input_length);
-    OTL_ASSERT(extern_buffer_flag==1);
-    OTL_ASSERT(length==input_length);
-    OTL_ASSERT(buf_size==buffer_size);
-    OTL_ASSERT(v==OTL_RCAST(unsigned char*, OTL_CCAST(void*, external_buffer)));
+    OTL_ASSERT(extern_buffer_flag == 1);
+    OTL_ASSERT(length == input_length);
+    OTL_ASSERT(buf_size == buffer_size);
+    OTL_ASSERT(v == OTL_RCAST(unsigned char*, OTL_CCAST(void*, external_buffer)));
 #if 0
     extern_buffer_flag = 1;
     length = input_length;
@@ -3136,12 +3127,12 @@ public:
         v = new unsigned char
             [OTL_SCAST(size_t, buf_size + 1) * sizeof(OTL_WCHAR)];
       }
-      else if (!v){
+      else if (!v) {
         // [i_a] under the rare circumstances where 'this' was a zero-length string previously, v MAY be NULL!
         OTL_ASSERT(buf_size == 0);
         OTL_ASSERT(s.buf_size == 0);
         OTL_ASSERT(s.length == 0);
-        v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
+        v = new unsigned char[(buf_size + 1) * sizeof(OTL_CHAR)];
       }
       length = s.length;
       extern_buffer_flag = 0; // same code as before, but clearer this way
@@ -3184,17 +3175,16 @@ public:
   virtual ~otl_long_unicode_string() = default;
 
   /* virtual */ OTL_CHAR& operator[](int ndx) /* [i_a] */
-      OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
       if (ndx < 0 || ndx > buf_size)
           throw_otl_out_of_range_exception(otl_error_msg_48, otl_error_code_48);
 #endif
-      if (!v){
+      if (!v) {
         OTL_ASSERT(buf_size == 0);
         OTL_ASSERT(s.buf_size == 0);
         OTL_ASSERT(s.length == 0);
-        v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
+        v = new unsigned char[(buf_size + 1) * sizeof(OTL_CHAR)];
       }
 	  OTL_ASSERT(ndx >= 0);
 	  OTL_ASSERT(ndx <= buf_size);
@@ -3202,17 +3192,16 @@ public:
   }
 
   /* virtual */ const OTL_CHAR& operator[](int ndx) /* [i_a] */
-      OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
       if (ndx < 0 || ndx > buf_size)
           throw_otl_out_of_range_exception(otl_error_msg_48, otl_error_code_48);
 #endif
-      if (!v){
+      if (!v) {
         OTL_ASSERT(buf_size == 0);
         OTL_ASSERT(s.buf_size == 0);
         OTL_ASSERT(s.length == 0);
-        v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
+        v = new unsigned char[(buf_size + 1) * sizeof(OTL_CHAR)];
       }
 	  OTL_ASSERT(ndx >= 0);
 	  OTL_ASSERT(ndx <= buf_size);
@@ -3220,51 +3209,48 @@ public:
   }
 
   virtual void null_terminate_string(const int alen) /* [i_a] */
-      OTL_THROWS_EX_OUT_OF_RANGE
   {
 #if defined(OTL_SANITY_CHECKS_ENABLED)
       if (alen < 0 || alen > buf_size)
           throw_otl_out_of_range_exception(otl_error_msg_48, otl_error_code_48);
 #endif
-      if (!v){
+      if (!v) {
         // [i_a] under the rare circumstances where 'this' was a zero-length string previously, v MAY be NULL!
         OTL_ASSERT(buf_size == 0);
         OTL_ASSERT(s.buf_size == 0);
         OTL_ASSERT(s.length == 0);
-        v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
+        v = new unsigned char[(buf_size + 1) * sizeof(OTL_CHAR)];
       }
 	  if (alen < 0)
 		  alen = 0;
 	  else if (alen > buf_size)
 		  alen = buf_size;
       // [i_a] write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
-    if (OTL_RCAST(OTL_CHAR*,v)[alen])
-	{
+    if (OTL_RCAST(OTL_CHAR*, v)[alen]) {
 		OTL_ASSERT(!extern_buffer_flag);
-        OTL_RCAST(OTL_CHAR*,v)[alen]=0;
+        OTL_RCAST(OTL_CHAR*, v)[alen] = 0;
 	}
   }
 
   /* virtual */ OTL_CHAR *c_str() /* [i_a] for orthogonality's sake - same i/f as regular otl string now */
-      OTL_THROWS_EX_OUT_OF_RANGE
   {
     OTL_ASSERT(length <= buf_size);
     //if (length < buf_size)
     //{
-        if (!v){
+        if (!v) {
           // [i_a] under the rare circumstances where 'this' was a zero-length string previously, v MAY be NULL!
           OTL_ASSERT(buf_size == 0);
           OTL_ASSERT(s.buf_size == 0);
           OTL_ASSERT(s.length == 0);
-          v=new unsigned char[(buf_size+1)*sizeof(OTL_CHAR)];
+          v = new unsigned char[(buf_size + 1) * sizeof(OTL_CHAR)];
         }
         // [i_a] write NUL sentinel only when it's not there yet: prevents WRITE access to const external buffers, when they are properly set up
-        if (OTL_RCAST(OTL_CHAR*,v)[length])
+        if (OTL_RCAST(OTL_CHAR*, v)[length])
 		{
 			OTL_ASSERT(!extern_buffer_flag);
-            OTL_RCAST(OTL_CHAR*,v)[length] = 0;
+            OTL_RCAST(OTL_CHAR*, v)[length] = 0;
 		}
-        return OTL_RCAST(OTL_CHAR*,v);
+        return OTL_RCAST(OTL_CHAR*, v);
     //}
 //#if defined(OTL_SANITY_CHECKS_ENABLED)
 //    throw_otl_out_of_range_exception(otl_error_msg_49, otl_error_code_49);
@@ -14145,7 +14131,7 @@ private:
   p_connect connect {nullptr};
   p_cursor cursor {nullptr};
   otl_long_string *temp_buf {nullptr};
-  //char *temp_char_buf {nullptr};   [i_a] not needed; allow otl_long_string to do this itself
+  char *temp_char_buf {nullptr};   // TODO: [i_a] not needed; allow otl_long_string to do this itself
   bool written_to_flag {false};
   bool closed_flag {false};
   int last_read_lob_len {0};
@@ -30723,7 +30709,6 @@ public:
 
 #if defined(OTL_SANITY_CHECKS_ENABLED)
 static void throw_otl_out_of_range_exception(const char *msg, int code)
-      OTL_THROWS_EX_OUT_OF_RANGE
 {
     throw otl_out_of_range_exception(msg, code);
 }
