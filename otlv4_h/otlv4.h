@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.485,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.486,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401E5L)
+#define OTL_VERSION_NUMBER (0x0401E6L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -5259,7 +5259,11 @@ public:
     if (!connected)
       return;
     size_t len = strlen(sqlstm) + 1;
+#if defined(OTL_MAKE_UNIQUE_IS_SUPPORTED)
+    stm_text=std::make_unique<char[]>(len);
+#else
     stm_text.reset(new char[len]);
+#endif
     OTL_STRCPY_S(stm_text.get(), len, sqlstm);
     parse();
   }
