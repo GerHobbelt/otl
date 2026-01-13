@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -56,19 +56,23 @@ void select(void)
    // SELECT automatically executes when all input variables are
    // assigned. First portion of out rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[f2.len()-1]<<", len="<<f2.len()<<endl;
- }
+ 
+}
  
  i<<4<<4; // assigning :1 = 4, :2 = 4
    // SELECT automatically re-executes when all input variables are
    // assigned. First portion of out rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2[0]<<f2[f2.len()-1]<<", len="<<f2.len()<<endl;
- }
+ 
+}
 
 }
 

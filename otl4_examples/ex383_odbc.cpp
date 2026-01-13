@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -111,17 +111,19 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1;
   cout<<"f1="<<f1;
-  i>>lob; // initializing TEXT stream by reading the TEXT reference 
+  it>>lob; // initializing TEXT stream by reading the TEXT reference 
           // into the otl_lob_stream from the otl_stream.
   lob>>f2;
   cout<<", f2="<<f2[0]<<f2[f2.length()-1]
       <<", len="<<static_cast<int>(f2.length())<<endl;
   lob.close(); // closing the otl_lob_stream. This step may be skipped.
   
- }
+ 
+}
 
 }
 

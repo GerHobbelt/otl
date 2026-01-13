@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -63,10 +63,12 @@ void select(void* dummy_par)
 
   s<<1; // Now, forcing the execution of the SQL
 
-  while(!s.eof()){ // while not end-of-data
-   s>>count;
+  for(auto& it : s){ // while not end-of-data
+ // while not end-of-data
+   it>>count;
    cout<<"count="<<count<<endl;
-  }
+  
+}
  }catch(otl_exception& p){
   cerr<<"Select() ===> "<<p.msg<<endl; // print out error message
   cerr<<"Select() ===> "<<p.stm_text<<endl; // print out SQL that caused the error

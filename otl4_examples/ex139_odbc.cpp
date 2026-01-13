@@ -55,19 +55,21 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
-  if(i.is_null())
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1;
+  if(it.is_null())
    cout<<"f1=NULL,";
   else
    cout<<"f1="<<f1<<",";
-  i>>f2;
-  if(i.is_null())
+  it>>f2;
+  if(it.is_null())
    cout<<"f2=NULL";
   else
    cout<<"f2="<<f2;
   cout<<endl;
- }
+ 
+}
 
 }
 
@@ -76,8 +78,8 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("UID=scott;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
-//  db.rlogon("scott/tiger@firebirdsql"); // connect to ODBC, alternative format
+  db.rlogon("UID=sysdba;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
+//  db.rlogon("sysdba/tiger@firebirdsql"); // connect to ODBC, alternative format
                                     // of connect string 
   otl_cursor::direct_exec
    (

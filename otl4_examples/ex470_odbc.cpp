@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -40,10 +40,12 @@ void insert()
    sprintf(f2_in,"Name%d",i);
 #endif
    o<<f2_in; // write input variable :f2
-   while(!o.eof()){ // while not end-of-data
-     o>>f1>>f2; // fetch the columns from the OUTPUT clause
+   for(auto& it : o){ // while not end-of-data
+ // while not end-of-data
+     it>>f1>>f2; // fetch the columns from the OUTPUT clause
      cout<<"f1="<<f1<<", f2="<<f2<<endl;
-   }
+   
+}
  }
  db.commit(); // commit transaction
 

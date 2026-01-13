@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -80,9 +80,10 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
-  i>>reinterpret_cast<unsigned char*>(f2);
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1;
+  it>>reinterpret_cast<unsigned char*>(f2);
     // overloaded operator>>(unsigned char*) in the case of Unicode
     // OTL accepts a pointer to a Unicode chracter array.
     // operator>>(unsigned short*) wasn't overloaded 
@@ -95,20 +96,23 @@ void select()
      cout<<static_cast<char>(f2[j]);
    }
    cout<<endl;
- }
+ 
+}
 
  i<<4; // assigning :f = 4
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-   i>>f1>>reinterpret_cast<unsigned char*>(f2);
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+   it>>f1>>reinterpret_cast<unsigned char*>(f2);
   cout<<"f1="<<f1<<", f2=";
    for(int j=0;f2[j]!=0;++j){
      cout<<static_cast<char>(f2[j]);
    }
    cout<<endl;
- }
+ 
+}
 
 }
 

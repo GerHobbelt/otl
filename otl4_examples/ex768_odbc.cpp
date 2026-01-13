@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #define _HAS_STREAM_INSERTION_OPERATORS_DELETED_IN_CXX20 1
@@ -78,16 +78,18 @@ void select(void)
  int f1=0;
  char f2[31];
 
- while(!i.eof()){ // while not end-of-data
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
    // Read a row from the stream. Check for the "end-of-row" condition
    // at the end each row.
-   otl_read_row(i,f1,f2);
+   otl_read_row(it,f1,f2);
    
    // The old way (operators >>() / <<()) is available as always:
-   // i>>f1>>f2;
+   // it>>f1>>f2;
    
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
+ 
+}
  
 }
 

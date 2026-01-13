@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -67,8 +67,9 @@ void select()
    // assigned. First portion of output rows is fetched to the buffer
 
  int j;
- while(!i.eof()){ // while not end-of-data
-   i>>f1>>f2>>f3;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+   it>>f1>>f2>>f3;
    cout<<"f1="<<f1<<", f2=";
    for(j=0;f2[j]!=0;++j)
      printf("%2x ", f2[j]);
@@ -76,7 +77,8 @@ void select()
    for(j=0;f3[j]!=0;++j)
      printf("%2x ", f3[j]);
    cout<<endl;
- }
+ 
+}
 
 }
 

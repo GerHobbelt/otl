@@ -40,7 +40,7 @@ void insert()
 
 void select()
 {&nbsp;
- string f2;<br><br> otl_stream i(3,<br>              "select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> int f1;<br><br> i&lt;&lt;1; // assigning :f = 1<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br>  cout&lt;&lt;"======================================================"&lt;&lt;endl;<br> }<br>&nbsp;
+ string f2;<br><br> otl_stream i(3,<br>              "select * from test_tab where f1&gt;=:f&lt;int&gt; and f1&lt;=:f*2",<br>                 // SELECT statement<br>              db // connect object<br>             ); <br>   // create select stream<br> <br> int f1;<br><br> i&lt;&lt;1; // assigning :f = 1<br>   // SELECT automatically executes when all input variables are<br>   // assigned. First portion of output rows is fetched to the buffer<br><br> for(auto& it : i){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br>  cout&lt;&lt;"======================================================"&lt;&lt;endl;<br> }<br>&nbsp;
 }
 
 int main()

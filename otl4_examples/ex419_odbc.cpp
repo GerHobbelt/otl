@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -60,10 +60,12 @@ void select()
     // SELECT automatically executes when all input variables are
     // assigned. First portion of output rows is fetched to the buffer
 
-  while(!i.eof()){ // while not end-of-data
-   i>>f1>>f2;
+  for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+   it>>f1>>f2;
    cout<<"f1="<<f1<<", f2="<<f2<<endl;
-  } 
+  
+} 
  }catch(otl_exception& p){
   cerr<<"===> A database exception is caught: "<<endl;
   cerr<<p.msg<<endl; // print out error message
@@ -84,10 +86,12 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
+ 
+}
 
 }
 

@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -55,9 +55,10 @@ void select()
  char f2[31];
 
  i<<(OTL_BIGINT)8; // Writing input values into the stream
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
-  i>>f2;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1;
+  it>>f2;
 #if (defined(_MSC_VER)&&(_MSC_VER==1200)) // vc++ 6.0
   char f1_str[40];
   _i64toa(f1,f1_str,10);
@@ -66,7 +67,8 @@ void select()
   cout<<"f1="<<f1<<", f2=";
 #endif
   cout<<f2<<endl;
- }
+ 
+}
 
 }
 

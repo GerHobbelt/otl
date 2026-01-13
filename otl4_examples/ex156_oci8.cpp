@@ -55,10 +55,12 @@ void select(void* /*dummy_par*/)
  
   int count;
 
-  while(!i.eof()){ // while not end-of-data
-   i>>count;
+  for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+   it>>count;
    cout<<"count="<<count<<endl;
-  }
+  
+}
  }catch(otl_exception& p){
   cerr<<"Select() ===> "<<p.msg<<endl; // print out error message
   cerr<<"Select() ===> "<<p.stm_text<<endl; // print out SQL that caused the error

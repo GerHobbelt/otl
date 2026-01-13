@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -25,6 +25,11 @@
 
 #if defined(_MSC_VER) && (_MSC_VER>=1929) && (defined(OTL_CPP_20_ON))
 // VC++ 2022 or higher when /std=c++20 is used
+#define OTL_STREAM_WITH_STD_OPTIONAL_ON
+#endif
+
+#if defined(_MSC_VER) && (_MSC_VER>=1946) && defined(OTL_CPP_23_ON)
+// VC++ 2026 or higher when /std=c++23preview or higher is used
 #define OTL_STREAM_WITH_STD_OPTIONAL_ON
 #endif
 
@@ -159,16 +164,17 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
 #if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
-   otl_read_row(i,f1,f2,f3);
+   otl_read_row(it,f1,f2,f3);
 #else
   // when variadic template functions are not supported by the C++
   // compiler, OTL provides nonvariadic versions of the same template
   // functions in the range of [1..15] parameters
-   otl_read_row(i,f1,f2,f3);
+   otl_read_row(it,f1,f2,f3);
   // the old way (operators >>() / <<()) is available as always:
-  //  i>>f1>>f2>>f3;
+  //  it>>f1>>f2>>f3;
 #endif
 #if (defined(__clang__) || defined(__GNUC__)) && defined(OTL_CPP_14_ON) \
   && defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)
@@ -186,14 +192,16 @@ void select()
 #else
   cout<<"f1="<<f1<<", f2="<<f2<<", f3="<<f3<<endl;
 #endif
- }
+ 
+}
 
  i<<4<<4; // assigning :f11, :f12 = 4
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2>>f3;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1>>f2>>f3;
 #if (defined(__clang__) || defined(__GNUC__)) && defined(OTL_CPP_14_ON) \
   && defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)
 // for clang or g++, when they use -std=c++14 or higher
@@ -210,7 +218,8 @@ void select()
 #else
   cout<<"f1="<<f1<<", f2="<<f2<<", f3="<<f3<<endl;
 #endif
- }
+ 
+}
 
 }
 

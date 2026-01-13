@@ -46,7 +46,7 @@ int main()
   int native_error; // native error code
   SQLRETURN ret; // return value (for SQLMoreResults() calls)
 
-  const char* cmd = "BACKUP DATABASE master TO DISK='d:\\master.bak'";
+  const char* cmd = "BACKUP DATABASE master TO DISK='c:\\master.bak'";
 
   stm.open(1,cmd,db);
     // the stream recognizes the command as an "SQL statement 

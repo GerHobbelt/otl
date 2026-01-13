@@ -136,11 +136,11 @@ void select(const int af1)
  }
 #else
 // C++98/03 compiler
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
+ for(auto& it : i){ // while not end-of-data
+  it>>f1;
   cout<<"f1="<<f1<<", f2=";
-  i>>f2;
-  if(i.is_null())
+  it>>f2;
+  if(it.is_null())
    cout<<"NULL";
   else
    cout<<f2;

@@ -67,16 +67,18 @@ void select(const int af1)
  char f2[31];
 
  i<<af1<<af1; // Writing input values into the stream
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1;
   cout<<"f1="<<f1<<", f2=";
-  i>>f2;
-  if(i.is_null())
+  it>>f2;
+  if(it.is_null())
    cout<<"NULL";
   else
    cout<<f2;
   cout<<endl;
- }
+ 
+}
 
 }
 
@@ -85,7 +87,7 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("UID=scott;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
+  db.rlogon("UID=sysdba;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
 //  db.rlogon("scott/tiger@firebird"); // connect to ODBC, alternative format
                                     // of connect string 
 
