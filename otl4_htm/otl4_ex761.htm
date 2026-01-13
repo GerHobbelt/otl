@@ -63,7 +63,7 @@ void select()
 &nbsp;&nbsp; // SELECT automatically executes when all input variables are
 &nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br>  cout&lt;&lt;"======================================================"&lt;&lt;endl;<br><br> }<br>}
+ for(auto& it : i){ // while not end-of-data<br>  i&gt;&gt;f1&gt;&gt;f2;<br>  cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2&lt;&lt;endl;<br>  cout&lt;&lt;"======================================================"&lt;&lt;endl;<br><br> }<br>}
 
 int main()
 {

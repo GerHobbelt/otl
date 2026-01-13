@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -120,11 +120,13 @@ void select()
              ); 
  MyBigNumber bn;
    // create select stream
- while(!i.eof()){ // while not end-of-data
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
    cout<<"F1=";
-   i>>bn;
+   it>>bn;
    cout<<endl;
- }
+ 
+}
 
 }
 

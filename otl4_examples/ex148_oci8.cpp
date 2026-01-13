@@ -66,7 +66,8 @@ void select()
  while(!s.eof()){ // while not end-of-data
   s>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
+ 
+}
 
  s.close(); // closing the reference cursor
 
@@ -76,7 +77,8 @@ void select()
  while(!s.eof()){ // while not end-of-data
   s>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
+ 
+}
  // there is no need to explicitly calls s.close() since s's destructor 
  // will take care of closing the stream
 }

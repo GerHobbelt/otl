@@ -69,7 +69,7 @@ void select()
 &nbsp;&nbsp; // SELECT automatically executes when all input variables are
 &nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer
 
-&nbsp;while(!i.eof()){ // while not end-of-data
+&nbsp;for(auto& it : i){ // while not end-of-data
 &nbsp; i&gt;&gt;f1&gt;&gt;f2;
 &nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2[0]&lt;&lt;f2[f2.length()-1]&lt;&lt;", len="
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f2.length()&lt;&lt;endl;
@@ -79,7 +79,7 @@ void select()
 &nbsp;&nbsp; // SELECT automatically executes when all input variables are
 &nbsp;&nbsp; // assigned. First portion of output rows is fetched to the buffer
 
-&nbsp;while(!i.eof()){ // while not end-of-data
+&nbsp;for(auto& it : i){ // while not end-of-data
 &nbsp; i&gt;&gt;f1&gt;&gt;f2;
 &nbsp; cout&lt;&lt;"f1="&lt;&lt;f1&lt;&lt;", f2="&lt;&lt;f2[0]&lt;&lt;f2[f2.length()-1]&lt;&lt;", len="
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;&lt;f2.length()&lt;&lt;endl;

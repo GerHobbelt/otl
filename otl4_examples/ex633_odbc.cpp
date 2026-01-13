@@ -58,7 +58,7 @@ int main()
  otl_connect::otl_initialize(); // initialize Informix CLI environment
  try{
 
-  db.rlogon("informix/tigger@informixsql"); // connect to Informix
+  db.rlogon("informix/tiger@informixsql"); // connect to Informix
 
   otl_cursor::direct_exec
    (

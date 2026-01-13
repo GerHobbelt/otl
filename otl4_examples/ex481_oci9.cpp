@@ -1,9 +1,11 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
 #include <iostream>
 using namespace std;
+
+#include <stdlib.h>
 
 #define OTL_ORA9I // Compile OTL 4.0/OCI9i
 #define OTL_ORA_UTF8 // Enable UTF8 OTL for OCI9i
@@ -61,14 +63,16 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-   i>>f1;
-   i>>f2;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+   it>>f1;
+   it>>f2;
    cout<<"f1="<<f1<<", f2=";
    for(int j=0;f2[j]!=0;++j)
      printf("%2x ", f2[j]);
    cout<<endl;
- }
+ 
+}
 
 }
 
@@ -83,7 +87,7 @@ int main()
   // set your Oracle Client NLS_LANG 
   // if its default was set to something else
 #else
-  putenv(const_cast<char*>("NLS_LANG=.AL32UTF8")); // set your Oracle Client NLS_LANG 
+  putenv("NLS_LANG=.AL32UTF8"); // set your Oracle Client NLS_LANG 
                                 // if its default was set to something else
 #endif
 #else

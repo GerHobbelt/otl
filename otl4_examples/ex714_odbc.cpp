@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -72,24 +72,28 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2>>endr; // endr checks the end-of-row condition. As times goes on,
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1>>f2>>endr; // endr checks the end-of-row condition. As times goes on,
                    // The output column list on the SELECT statement may change,
                    // and the endr check may an exception.
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
+ 
+}
 
  i<<4<<4; // assigning :f_1 = 4, :f_2 = 4
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
  try{
 // example of a failed end-of-row check
-   while(!i.eof()){ // while not end-of-data
-    i>>f1;
+   for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+    it>>f1;
     // reading of the f2 output column is missing
-    i>>endr; // this will throw an exception
+    it>>endr; // this will throw an exception
     cout<<"f1="<<f1<<", f2="<<f2<<endl;
-   }
+   
+}
  }catch(otl_exception& p){
   cerr<<"ERROR CODE (SELECT) ="<<p.msg<<endl; // print out error message
   cerr<<"ERROR SQL STM (SELECT) ="<<p.stm_text<<endl; // print out SQL that caused the error

@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -83,16 +83,17 @@ void select()
    // assigned. First portion of output rows is fetched to the buffer
 
  cout<<"=====> Fetching rows and printing out default values instead of NULLs"<<endl;
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1;
   cout<<"f1="<<f1<<", ";
-  i>>f2;
+  it>>f2;
   cout<<"f2="<<f2<<", ";
-  i>>f22;
+  it>>f22;
   cout<<"f22="<<f22<<", ";
-  i>>f3;
+  it>>f3;
   cout<<"f3="<<f3<<", ";
-  i>>f4;
+  it>>f4;
   cout<<"f4="<<f4.month<<"/"
       <<f4.day<<"/"
       <<f4.year<<" "
@@ -100,33 +101,35 @@ void select()
       <<f4.minute<<":"
       <<f4.second;
   cout<<endl;
- }
+ 
+}
 
  i<<8<<8; // assigning :f11 = 8, :f12=8
  cout<<"=====> Fetching rows and printing out NULLs"<<endl;
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
-  if(i.is_null())
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1;
+  if(it.is_null())
    cout<<"f1=NULL, ";
   else
    cout<<"f1="<<f1<<", ";
-  i>>f2;
-  if(i.is_null())
+  it>>f2;
+  if(it.is_null())
    cout<<"f2=NULL, ";
   else
    cout<<"f2="<<f2<<", ";
-  i>>f22;
-  if(i.is_null())
+  it>>f22;
+  if(it.is_null())
    cout<<"f22=NULL, ";
   else
    cout<<"f22="<<f22<<", ";
-  i>>f3;
-  if(i.is_null())
+  it>>f3;
+  if(it.is_null())
    cout<<"f3=NULL, ";
   else
    cout<<"f3="<<f3<<", ";
-  i>>f4;
-  if(i.is_null())
+  it>>f4;
+  if(it.is_null())
    cout<<"f4=NULL,";
   else
    cout<<"f4="<<f4.month<<"/"
@@ -136,7 +139,8 @@ void select()
        <<f4.minute<<":"
        <<f4.second;
   cout<<endl;
- }
+ 
+}
 
 }
 

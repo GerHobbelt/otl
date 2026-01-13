@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -25,6 +25,11 @@ using namespace std;
 
 #if defined(_MSC_VER) && (_MSC_VER>=1929) && (defined(OTL_CPP_20_ON))
 // VC++ 2022 or higher when /std=c++20 is used
+#define OTL_STREAM_WITH_STD_OPTIONAL_ON
+#endif
+
+#if defined(_MSC_VER) && (_MSC_VER>=1946) && defined(OTL_CPP_23_ON)
+// VC++ 2026 or higher when /std=c++23preview or higher is used
 #define OTL_STREAM_WITH_STD_OPTIONAL_ON
 #endif
 
@@ -113,7 +118,8 @@ void select(void)
  otl_datetime f2;
 #endif
  
- while(!i.eof()){ // while not end-of-data
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
 
 #if (defined(__clang__) || defined(__GNUC__)) && defined(OTL_CPP_14_ON) \
   && defined(OTL_STREAM_WITH_STD_OPTIONAL_ON)
@@ -123,7 +129,7 @@ void select(void)
  // fractional part.
    f2.emplace(otl_datetime());
    f2->frac_precision=6; // microseconds
-   i>>f1>>f2;
+   it>>f1>>f2;
    cout<<"f1="<<*f1;
    if(!f2)
      cout<<", f2=NULL";
@@ -136,7 +142,7 @@ void select(void)
 // VC++ 2017 or higher when /std=c++latest is used
    f2.emplace(otl_datetime());
    f2->frac_precision=6; // microseconds
-   i>>f1>>f2;
+   it>>f1>>f2;
    cout<<"f1="<<*f1;
    if(!f2)
      cout<<", f2=NULL";
@@ -150,9 +156,9 @@ void select(void)
  // used either for writnig or reading timestamp values, which have second's 
  // fractional part.
    f2.frac_precision=6; // microseconds
-   i>>f1>>f2;
+   it>>f1>>f2;
    cout<<"f1="<<f1;
-   if(i.is_null())
+   if(it.is_null())
      cout<<", f2=NULL";
    else
      cout<<", f2="<<f2.month<<"/"<<f2.day<<"/"
@@ -161,7 +167,8 @@ void select(void)
          <<f2.fraction;
 #endif
   cout<<endl;
- }
+ 
+}
  
 }
 

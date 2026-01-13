@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -149,11 +149,13 @@ private:
       // here, there should be a mutex lock in case 
       // if the TSubscriber class is used from multiple threads
       select_str_<<row_id;
-      while(!select_str_.eof()){
+      for(auto& it : select_str_){ // while not end-of-data
+
         double x=0;
-        select_str_>>x;
+        it>>x;
         Log( "Event", "Row inserted, f1=", static_cast<int>(x) );
-      }    
+      
+}    
     }
   }
 
@@ -165,11 +167,13 @@ private:
       // here, there should be a mutex lock in case 
       // if the TSubscriber class is used from multiple threads
       select_str_<<row_id;
-      while(!select_str_.eof()){
+      for(auto& it : select_str_){ // while not end-of-data
+
         double x=0;
-        select_str_>>x;
+        it>>x;
         Log( "Event", "Row updated, f1=", static_cast<int>(x) );
-      }    
+      
+}    
     }
   }
 

@@ -36,10 +36,12 @@ void plsql(void)
  int a=0;
  char b[32];
 
- while(!o.eof()){ // not end-of-data
-  o>>a>>b;
+ for(auto& it : o){ // while not end-of-data
+ // not end-of-data
+  it>>a>>b;
   cout<<"A="<<a<<", B="<<b<<endl;
- }
+ 
+}
 
 }
 

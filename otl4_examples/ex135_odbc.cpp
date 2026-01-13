@@ -48,8 +48,9 @@ void select(void)
  int f1=0;
  otl_datetime f2,f3,f4;
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2>>f3>>f4;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1>>f2>>f3>>f4;
   cout<<"f1="<<f1;
   cout<<", f2="<<f2.month<<"/"<<f2.day<<"/"
       <<f2.year<<" "<<f2.hour<<":"<<f2.minute<<":"
@@ -61,7 +62,8 @@ void select(void)
       <<f4.year<<" "<<f4.hour<<":"<<f4.minute<<":"
       <<f4.second;
   cout<<endl;
- }
+ 
+}
  
 }
 
@@ -70,8 +72,8 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-  db.rlogon("UID=scott;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
-//  db.rlogon("scott/tiger@firebirdsql"); // connect to ODBC, alternative format
+  db.rlogon("UID=sysdba;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
+//  db.rlogon("sysdba/tiger@firebirdsql"); // connect to ODBC, alternative format
                                     // of connect string
 
   otl_cursor::direct_exec

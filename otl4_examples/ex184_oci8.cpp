@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -102,7 +102,8 @@ void select()
      cout<<static_cast<char>(f2[j]);
    }
    cout<<endl;
- }
+ 
+}
 
  s.close(); // closing the reference cursor
 
@@ -124,7 +125,8 @@ void select()
      cout<<static_cast<char>(f2[j]);
    }
    cout<<endl;
- }
+ 
+}
 
  // there is no need to explicitly calls s.close() since s's destructor 
  // will take care of closing the stream

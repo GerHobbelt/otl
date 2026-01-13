@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #define _HAS_STREAM_INSERTION_OPERATORS_DELETED_IN_CXX20 1
@@ -88,10 +88,11 @@ void select()
                // SQL statement
                db // connect object
               );
-  while(!i.eof()){
+  for(auto& it : i){ // while not end-of-data
+
     int id;
     oci_spatial_geometry geom;
-    i>>id>>geom;
+    it>>id>>geom;
     switch(geom.gtype){
     case 2001://read Point2D
       {
@@ -143,7 +144,8 @@ void select()
         break;
       }
     }
-  }
+  
+}
   
 }
 
