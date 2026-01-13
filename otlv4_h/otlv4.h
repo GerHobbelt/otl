@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.483,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.485,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401E3L)
+#define OTL_VERSION_NUMBER (0x0401E5L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -221,7 +221,38 @@
 #endif
 
 #if !defined(OTL_CPP_11_ON)
-#error  OTL requires C++11 of higher.
+#error  OTL requires C++11 or higher.
+#endif
+
+#ifdef OTL_CPP_20_ON
+#include <type_traits>
+template<typename T>
+concept AllowedNumericTypes = 
+     std::is_same_v<T, int>
+  || std::is_same_v<T, unsigned>
+  || std::is_same_v<T, float>
+  || std::is_same_v<T, short>
+  || std::is_same_v<T, double>
+  || std::is_same_v<T, long>
+#ifdef OTL_NUMERIC_TYPE_1
+  || std::is_same_v<T, OTL_NUMERIC_TYPE_1>
+#endif
+#ifdef OTL_NUMERIC_TYPE_2
+  || std::is_same_v<T, OTL_NUMERIC_TYPE_2>
+#endif
+#ifdef OTL_NUMERIC_TYPE_3
+  || std::is_same_v<T, OTL_NUMERIC_TYPE_3>
+#endif
+#ifdef OTL_BIGINT
+  || std::is_same_v<T, OTL_BIGINT>
+#endif
+#ifdef OTL_UBIGINT
+  || std::is_same_v<T, OTL_UBIGINT>
+#endif
+;
+#define OTL_ALLOWED_NUMERIC_TYPES AllowedNumericTypes
+#else
+#define OTL_ALLOWED_NUMERIC_TYPES typename
 #endif
 
 #include <memory>
@@ -238,38 +269,6 @@
 
 // enable C++ standard features
 
-#if defined(OTL_CPP_11_ON)
-
-#if !defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
-#define OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-#endif
-
-#if !defined(OTL_ANSI_CPP_11_NULLPTR_SUPPORT)
-#define OTL_ANSI_CPP_11_NULLPTR_SUPPORT
-#endif
-
-#if !(defined(_MSC_VER) && (_MSC_VER<1800))
-
-#if !defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
-#define OTL_ANSI_CPP_11_VARIADIC_TEMPLATES
-#endif
-
-#if !defined(OTL_ANSI_CPP_11_ENUM_IS_SUPPORTED)
-#define OTL_ANSI_CPP_11_ENUM_IS_SUPPORTED
-#endif
-
-#if !defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
-#define OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT
-#endif
-
-#endif
-
-#if !defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
-#define OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT
-#endif
-
-#endif
-
 #if defined(OTL_CPP_14_ON)
 
 #if !defined(OTL_MAKE_UNIQUE_IS_SUPPORTED)
@@ -280,12 +279,6 @@
 
 #define OTL_ANSI_CPP_11_NOEXCEPT
 
-#if !defined(OTL_ANSI_CPP_11_NULLPTR_SUPPORT) && !defined(__cplusplus_cli)
-// define nullptr as 0 only if C++/CLI is not used
-#define nullptr 0
-#endif
-
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
 #if defined(_MSC_VER) && (_MSC_VER>=1700) && (_MSC_VER<=1800) 
 #undef OTL_ANSI_CPP_11_NOEXCEPT
 #define OTL_ANSI_CPP_11_NOEXCEPT _NOEXCEPT
@@ -297,7 +290,6 @@
 #define OTL_ANSI_CPP_11_NOEXCEPT noexcept(true)
 #define OTL_ANSI_CPP_11_NOEXCEPT_FALSE noexcept(false)
 #endif
-#endif
 
 #if defined(OTL_CPP_17_ON) &&                                         \
   (defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__>=700) || \
@@ -307,33 +299,6 @@
   // VC++2017 update 6 or higher, clang++ 6.0 or higher
 #define OTL_ANSI_CPP_17_FOLD_EXPRESSIONS
 #define OTL_ANSI_CPP_17_CONSTEXPR_IF
-#endif
-
-#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__*100+__GNUC_MINOR__==404) && \
-    defined(__GXX_EXPERIMENTAL_CXX0X__)
-// automatically enable some C++0X features for GNU C++ 4.4 when it's
-// used with -std=c++0x
-
-#if !defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
-#define OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-#endif
-
-#if !defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
-#define OTL_ANSI_CPP_11_VARIADIC_TEMPLATES
-#endif
-
-#if !defined(OTL_ANSI_CPP_11_ENUM_IS_SUPPORTED)
-#define OTL_ANSI_CPP_11_ENUM_IS_SUPPORTED
-#endif
-
-#if !defined(OTL_ANSI_CPP_11_TUPLE_IS_SUPPORTED)
-#define OTL_ANSI_CPP_11_TUPLE_IS_SUPPORTED
-#endif
-
-#if !defined(OTL_ANSI_CPP_11_ARRAY_IS_SUPPORTED)
-#define OTL_ANSI_CPP_11_ARRAY_IS_SUPPORTED
-#endif
-
 #endif
 
 #if defined(OTL_CPP_14_ON)
@@ -566,7 +531,7 @@ inline int otl_sprintf_s(char* dest, size_t dest_sz, const char* fmt, ...){
 #define OTL_THROW(x) throw x
 #endif
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1900) && defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
+#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 // vc++ 14 or higher
 #define OTL_THROWS_OTL_EXCEPTION noexcept(false)
 #define OTL_THROWS_OTL_EXCEPTION2 noexcept(false)
@@ -1557,31 +1522,17 @@ OTL_BIGINT_TO_STR and OTL_STR_TO_BIGINT are defined
 
 const int otl_short_int_max = 32760;
 
-#if defined(OTL_ANSI_CPP_11_ENUM_IS_SUPPORTED)
 #define OTL_ADAPTER_ENUM otl_adapter_enum::
 enum class otl_adapter_enum : unsigned char {
   otl_odbc_adapter = 1,
   otl_ora8_adapter = 2
 };
-#else
-#define OTL_ADAPTER_ENUM
-typedef unsigned char otl_adapter_enum;
-const otl_adapter_enum otl_odbc_adapter = 1;
-const otl_adapter_enum otl_ora8_adapter = 2;
-#endif
 
-#if defined(OTL_ANSI_CPP_11_ENUM_IS_SUPPORTED)
 #define OTL_BINDING_ENUM otl_binding_enum::
 enum class otl_binding_enum : unsigned char {
   otl_inout_binding = 1,
   otl_select_binding = 2
 };
-#else
-#define OTL_BINDING_ENUM
-typedef unsigned char otl_binding_enum;
-const otl_binding_enum otl_inout_binding = 1;
-const otl_binding_enum otl_select_binding = 2;
-#endif
 
 const int otl_unsupported_type = -10000;
 
@@ -1599,11 +1550,7 @@ const int otl_unsupported_type = -10000;
 #define OTL_THROWS_OTL_EXCEPTION2
 #define OTL_THROWS_OTL_EXCEPTION3 throw(OTL_TMPL_EXCEPTION)
 #define OTL_THROWS_OTL_EXCEPTION4
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
 #define OTL_NO_THROW OTL_ANSI_CPP_11_NOEXCEPT
-#else
-#define OTL_NO_THROW throw()
-#endif
 #else
 
 #if defined(OTL_ANSI_CPP_11_NOEXCEPT_FALSE) && !defined(OTL_THROWS_OTL_EXCEPTION)
@@ -1620,7 +1567,7 @@ const int otl_unsupported_type = -10000;
 #endif
 #endif
 
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT) && !defined(OTL_NO_THROW)
+#if !defined(OTL_NO_THROW)
 #define OTL_NO_THROW OTL_ANSI_CPP_11_NOEXCEPT
 #else
 #if defined(OTL_NO_THROW_IS_EMPTY_THROW)
@@ -2559,8 +2506,6 @@ public:
 #endif
   }
 
-#if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
-
   otl_column_desc &operator=(otl_column_desc &&desc) OTL_ANSI_CPP_11_NOEXCEPT {
     if (name != nullptr)
       delete[] name;
@@ -2617,7 +2562,6 @@ public:
 #endif
   }
 
-#endif
 
   void set_name(const char *aname, const int aname_len = 0) {
     int len;
@@ -2928,7 +2872,6 @@ public:
     }
   }
 
-#if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
   otl_long_string &operator=(otl_long_string &&s) OTL_ANSI_CPP_11_NOEXCEPT {
     if (!extern_buffer_flag)
       delete[] v;
@@ -2954,7 +2897,6 @@ public:
     s.length = 0;
     s.buf_size = 0;
   }
-#endif
 
   virtual ~otl_long_string() {
     if (!extern_buffer_flag)
@@ -3063,7 +3005,6 @@ public:
     return *this;
   }
 
-#if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
   otl_long_unicode_string(otl_long_unicode_string &&s) OTL_ANSI_CPP_11_NOEXCEPT
       : otl_long_string(0, 0) {
     unicode_flag_ = true;
@@ -3091,7 +3032,6 @@ public:
     s.length = 0;
     return *this;
   }
-#endif
 
   virtual ~otl_long_unicode_string() = default;
 
@@ -4681,19 +4621,11 @@ OTL_EXCEPTION_IS_DERIVED_FROM_STD_EXCEPTION is used with Unicode
 #endif
 
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
 #define OTL_EXCEPTION_HAS_MEMBERS                                              \
   virtual const char *what() const noexcept {                                  \
     otl_convert_SQLWCHAR_to_char_2(this->char_msg, this->msg);                 \
     return reinterpret_cast<const char *>(this->char_msg);                     \
   }
-#else
-#define OTL_EXCEPTION_HAS_MEMBERS                                              \
-  virtual const char *what() const throw() {                                   \
-    otl_convert_SQLWCHAR_to_char_2(this->char_msg, this->msg);                 \
-    return reinterpret_cast<const char *>(this->char_msg);                     \
-  }
-#endif
 #else
 #define OTL_EXCEPTION_HAS_MEMBERS                                              \
   virtual const char *what() const throw() {                                   \
@@ -4705,17 +4637,10 @@ OTL_EXCEPTION_IS_DERIVED_FROM_STD_EXCEPTION is used with Unicode
 #else
 
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
 #define OTL_EXCEPTION_HAS_MEMBERS                                              \
   virtual const char *what() const noexcept {                                  \
     return reinterpret_cast<const char *>(this->msg);                          \
   }
-#else
-#define OTL_EXCEPTION_HAS_MEMBERS                                              \
-  virtual const char *what() const throw() {                                   \
-    return reinterpret_cast<const char *>(this->msg);                          \
-  }
-#endif
 #else
 #define OTL_EXCEPTION_HAS_MEMBERS                                              \
   virtual const char *what() const throw() {                                   \
@@ -4749,11 +4674,7 @@ public:
 
   otl_tmpl_exception()
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
   OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  throw()
-#endif
 #else
   OTL_NO_THROW
 #endif
@@ -4764,11 +4685,7 @@ public:
 
   otl_tmpl_exception(TConnectStruct &conn_struct, const char *sqlstm = nullptr)
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
   OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  throw()
-#endif
 #else
   OTL_NO_THROW
 #endif
@@ -4787,11 +4704,7 @@ public:
 
   otl_tmpl_exception(TCursorStruct &cursor_struct, const char *sqlstm = nullptr)
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
   OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  throw()
-#endif
 #else
   OTL_NO_THROW
 #endif
@@ -4811,11 +4724,7 @@ public:
                      const char *sqlstm = nullptr,
                      const char *varinfo = nullptr)
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
   OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  throw()
-#endif
 #else
   OTL_NO_THROW
 #endif
@@ -4870,11 +4779,7 @@ OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW is defined
                      const char *varinfo, const void *input_string,
                      int input_string_size)
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
   OTL_ANSI_CPP_11_NOEXCEPT
-#else
-  throw()
-#endif
 #else
   OTL_NO_THROW
 #endif
@@ -4913,17 +4818,11 @@ OTL_EXCEPTION_COPIES_INPUT_STRING_IN_CASE_OF_OVERFLOW is defined
   }
 #endif
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
   otl_tmpl_exception(const otl_tmpl_exception &) = default;
-#endif
 
   virtual ~otl_tmpl_exception()
 #if defined(__GNUC__) && (__GNUC__ >= 3)
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_SUPPORT)
       OTL_ANSI_CPP_11_NOEXCEPT
-#else
-      throw()
-#endif
 #else
       OTL_NO_THROW
 #endif
@@ -7423,7 +7322,7 @@ public:
 #endif
 #endif
 
-  template<OTL_TYPE_NAME T,const int T_type> OTL_D1(T,T_type)
+  template<OTL_ALLOWED_NUMERIC_TYPES T,const int T_type> OTL_D1(T,T_type)
 
   OTL_TMPL_SELECT_STREAM &operator>>(TTimestampStruct &t) {
     check_if_executed();
@@ -8024,7 +7923,7 @@ public:
   }
 #endif
 
-  template<OTL_TYPE_NAME T,const int T_type> OTL_D2(T,T_type)
+  template<OTL_ALLOWED_NUMERIC_TYPES T,const int T_type> OTL_D2(T,T_type)
 
   OTL_TMPL_SELECT_STREAM &operator<<(const TTimestampStruct &t) {
     check_in_var();
@@ -8892,7 +8791,7 @@ public:
   }
 #endif
 
-  template<OTL_TYPE_NAME T,const int T_type> OTL_D3(T,T_type)
+  template<OTL_ALLOWED_NUMERIC_TYPES T,const int T_type> OTL_D3(T,T_type)
 
 #if defined(OTL_PL_TAB)
   OTL_TMPL_OUT_STREAM &operator<<(otl_pl_tab_generic &tab) {
@@ -9842,7 +9741,7 @@ public:
     return *this;                                                              \
   }
 #endif
-  template<OTL_TYPE_NAME T,const int T_type> OTL_D4(T,T_type)
+  template<OTL_ALLOWED_NUMERIC_TYPES T,const int T_type> OTL_D4(T,T_type)
 
 #if defined(OTL_PL_TAB)
   OTL_TMPL_INOUT_STREAM &operator>>(otl_pl_tab_generic &tab) {
@@ -10173,14 +10072,9 @@ public:
 OTL_ODBC_SQL_EXTENDED_FETCH_ON is defined
 #endif
 
-#if defined(OTL_ANSI_CPP_11_NULLPTR_SUPPORT)
 #if !defined(OTL_DB2_CLI)
 #define OTL_SQL_NULL_HANDLE SQL_NULL_HANDLE
 #define OTL_SQL_NULL_HANDLE_VAL nullptr
-#else
-#define OTL_SQL_NULL_HANDLE SQL_NULL_HANDLE
-#define OTL_SQL_NULL_HANDLE_VAL 0
-#endif
 #else
 #define OTL_SQL_NULL_HANDLE SQL_NULL_HANDLE
 #define OTL_SQL_NULL_HANDLE_VAL 0
@@ -10593,8 +10487,7 @@ public:
 #endif
   }
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT) &&                            \
-    !defined(OTL_EXTENDED_EXCEPTION)
+#if !defined(OTL_EXTENDED_EXCEPTION)
   otl_exc(const otl_exc &) = default;
 #endif
 
@@ -11155,11 +11048,7 @@ inline void otl_special_convert_char_to_SQLWCHAR
                                  SQL_IS_POINTER);
     else
       status = SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT,
-#if defined(OTL_ANSI_CPP_11_NULLPTR_SUPPORT)
                                  nullptr,
-#else
-                                 OTL_RCAST(SQLPOINTER, SQL_AUTOCOMMIT_OFF),
-#endif
                                  SQL_IS_POINTER);
 #else
     if (auto_commit)
@@ -11379,11 +11268,7 @@ inline void otl_special_convert_char_to_SQLWCHAR
                                  SQL_IS_POINTER);
     else
       status = SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT,
-#if defined(OTL_ANSI_CPP_11_NULLPTR_SUPPORT)
                                  nullptr,
-#else
-                                 OTL_RCAST(SQLPOINTER, SQL_AUTOCOMMIT_OFF),
-#endif
                                  SQL_IS_POINTER);
 #else
     if (auto_commit)
@@ -11553,11 +11438,7 @@ inline void otl_special_convert_char_to_SQLWCHAR
 #else
 #if (ODBCVER >= 0x0300)
     status = SQLSetConnectAttr(hdbc, SQL_ATTR_AUTOCOMMIT,
-#if defined(OTL_ANSI_CPP_11_NULLPTR_SUPPORT)
                                nullptr,
-#else
-                               OTL_RCAST(SQLPOINTER, SQL_AUTOCOMMIT_OFF),
-#endif
                                SQL_IS_POINTER);
 #else
     status = SQLSetConnectOption(hdbc, SQL_AUTOCOMMIT, 0);
@@ -14942,7 +14823,6 @@ public:
 #endif
 #endif
 
-#if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
   OTL_NODISCARD otl_for_range_loop_odbc_stream_adapter begin(){
     if(!eof())
       return otl_for_range_loop_odbc_stream_adapter(*this);
@@ -14960,7 +14840,6 @@ public:
     else
       return *auto_commit_flag;
   }
-#endif
 
 #if defined(OTL_ODBC_SQL_STATEMENT_WITH_DIAG_REC_OUTPUT)
 
@@ -17703,12 +17582,10 @@ public:
 #endif
 };
 
-#if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
 inline bool operator!=(const otl_for_range_loop_odbc_stream_adapter& a1,
                        const otl_for_range_loop_odbc_stream_adapter& /*a2*/){
   return a1.str_!=nullptr && !a1.str_->eof();
 }
-#endif
 
 inline otl_connect &operator>>(otl_connect &connect, otl_stream &s) {
   const char *cmd = connect.getCmd();
@@ -17931,8 +17808,7 @@ public:
     msg[0] = 0;
   }
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT) &&                            \
-    !defined(OTL_EXTENDED_EXCEPTION)
+#if !defined(OTL_EXTENDED_EXCEPTION)
   otl_exc(const otl_exc &) = default;
 #endif
 
@@ -18081,11 +17957,7 @@ public:
     else
       mode = OCI_DEFAULT;
     status = OCIInitialize(OTL_SCAST(ub4, mode),
-#if defined(OTL_ANSI_CPP_11_NULLPTR_SUPPORT)
                            nullptr,
-#else
-                           OTL_RCAST(dvoid *, 0),
-#endif
                            nullptr, nullptr, nullptr);
     if (status != OCI_SUCCESS)
       return 0;
@@ -21205,11 +21077,7 @@ public:
     status = OCIAttrGet(
         OTL_RCAST(dvoid *, pard), OTL_SCAST(ub4, OCI_DTYPE_PARAM),
         OTL_RCAST(dvoid *, &dbsize),
-#if defined(OTL_ANSI_CPP_11_NULLPTR_SUPPORT)
         nullptr,
-#else
-        OTL_RCAST(ub4 *, 0),
-#endif
         OTL_SCAST(ub4, OCI_ATTR_DATA_SIZE), OTL_RCAST(OCIError *, errhp));
     if (status != OCI_SUCCESS)
       return 0;
@@ -24618,7 +24486,7 @@ public:
 #endif
 #endif
 
-  template<OTL_TYPE_NAME T,const int T_type> OTL_D7(T,T_type)
+  template<OTL_ALLOWED_NUMERIC_TYPES T,const int T_type> OTL_D7(T,T_type)
 
   otl_ref_select_stream &operator>>(otl_long_string &s) {
     check_if_executed();
@@ -25036,7 +24904,7 @@ public:
   }
 #endif
 
-  template <OTL_TYPE_NAME T, const int T_type> OTL_D8(T, T_type)
+  template <OTL_ALLOWED_NUMERIC_TYPES T, const int T_type> OTL_D8(T, T_type)
 
   OTL_NODISCARD int select_list_len(void) const { return sl_len; }
 
@@ -25609,7 +25477,6 @@ protected:
 
 public:
 
-#if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
   otl_for_range_loop_ora_stream_adapter begin(){
     if(!eof())
       return otl_for_range_loop_ora_stream_adapter(*this);
@@ -25620,7 +25487,6 @@ public:
   otl_for_range_loop_ora_stream_adapter end(){
     return otl_for_range_loop_ora_stream_adapter();
   }
-#endif
   
   void set_batch_error_mode(const bool batch_error_mode) {
     if (shell && shell->stream_type == otl_inout_stream_type)
@@ -29696,7 +29562,6 @@ public:
 };
 #endif
 
-#if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
 template<class OTLStream, 
          class OTLException, 
          class OTLLobStream> 
@@ -29731,7 +29596,6 @@ private:
   read_iter_type* iter_;
 
 };
-#endif
 
 template <OTL_TYPE_NAME OTLStream, OTL_TYPE_NAME OTLException,
           OTL_TYPE_NAME OTLLobStream>
@@ -30943,7 +30807,6 @@ inline void otl_write_to_stream(InputIterator first, InputIterator last,
   }
 }
 
-#if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
 #if defined(OTL_ANSI_CPP_17_FOLD_EXPRESSIONS) && defined(OTL_ANSI_CPP_17_CONSTEXPR_IF)
   template<typename OTLStreamType, typename Arg1, typename...Args>
   inline void otl_read_row(OTLStreamType &s, Arg1& arg1, Args&...args) OTL_THROWS_OTL_EXCEPTION {
@@ -30996,10 +30859,6 @@ inline void otl_write_row(OTLStreamType &s, Arg1 &&arg1,
   s << std::forward<Arg1>(arg1);
   __otl_write_row(s, std::forward<Args>(args)...);
 }
-#endif
-
-#else
-
 #endif
 
 #if (defined(OTL_CPP_11_ON) || defined(_MSC_VER) && (_MSC_VER >= 1700)) && \
