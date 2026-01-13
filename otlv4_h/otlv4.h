@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.493,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.494,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401EDL)
+#define OTL_VERSION_NUMBER (0x0401EEL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -2288,7 +2288,7 @@ public:
 #else
   int prec {0};
 #endif
-  int nullok;
+  int nullok {0};
 #if defined(OTL_ORA_UNICODE) || defined(OTL_ORA_UTF8) ||                       \
     defined(OTL_CONTAINER_CLASSES_HAVE_OPTIONAL_MEMBERS)
   int charset_form {0};
@@ -7814,7 +7814,7 @@ protected:
   int in_exception_flag {0};
   int in_destruct_flag {0};
   int should_delete_flag {0};
-  char var_info[256];
+  char var_info[256] {};
   bool flush_flag {false};
   bool flush_flag2 {false};
   bool lob_stream_mode {false};
@@ -18382,10 +18382,10 @@ private:
   friend class otl_refcur_stream;
   friend class otl_ref_select_stream;
 
-  ub1 *p_v {nullptr};
-  sb2 *p_ind {nullptr};
-  ub2 *p_rlen {nullptr};
-  ub2 *p_rcode {nullptr};
+  std::unique_ptr<ub1[]> p_v;
+  std::unique_ptr<sb2[]> p_ind;
+  std::unique_ptr<ub2[]> p_rlen;
+  std::unique_ptr<ub2[]> p_rcode;
   int ftype {0};
   int array_size {0};
   int elem_size {0};
@@ -18518,14 +18518,6 @@ public:
 #endif
     }
 #endif
-	if(p_v)
-		delete[] p_v;
-	if(p_ind)
-		delete[] p_ind;
-	if(p_rlen)
-		delete[] p_rlen;
-	if(p_rcode)
-		delete[] p_rcode;
     if (!ext_buf_flag)
       delete[] buf;
 
@@ -18669,7 +18661,7 @@ public:
             ,OCIType* oraOCIType_ =nullptr
 #endif
   ) {
-    int i;
+    size_t i;
     ub4 lobEmpty = 0;
     select_stm_flag = aselect_stm_flag;
     connect = OTL_RCAST(otl_conn *, OTL_CCAST(void *, connect_struct));
@@ -18704,7 +18696,7 @@ public:
       if(oraOCIType){
         sdoind = new OCISDOGeometryInd*[OTL_SCAST(size_t, array_size)];
         sdoobj = new OCISDOGeometryObj*[OTL_SCAST(size_t, array_size)];
-        p_ind = new sb2[OTL_SCAST(size_t, array_size)];
+        p_ind.reset(new sb2[OTL_SCAST(size_t, array_size)]);
         for(size_t j = 0;j < OTL_SCAST(size_t, array_size);j++){
           sdoind[j] = nullptr;
           sdoobj[j] = nullptr;
@@ -18737,11 +18729,11 @@ public:
       elem_size = sizeof(OCIDateTime *);
       act_elem_size = elem_size;
       timestamp = new OCIDateTime *[OTL_SCAST(size_t,array_size)];
-      p_v = OTL_RCAST(ub1 *, timestamp);
-      p_ind = new sb2[OTL_SCAST(size_t,array_size)];
-      p_rlen = new ub2[OTL_SCAST(size_t,array_size)];
-      p_rcode = new ub2[OTL_SCAST(size_t,array_size)];
-      for (i = 0; i < array_size; ++i) {
+      p_v.reset(OTL_RCAST(ub1 *, timestamp));
+      p_ind.reset(new sb2[OTL_SCAST(size_t,array_size)]);
+      p_rlen.reset(new ub2[OTL_SCAST(size_t,array_size)]);
+      p_rcode.reset(new ub2[OTL_SCAST(size_t,array_size)]);
+      for (i = 0; i < OTL_SCAST(size_t,array_size); ++i) {
         p_ind[i] = OTL_SCAST(short, elem_size);
         p_rlen[i] = OTL_SCAST(unsigned short, elem_size);
         p_rcode[i] = 0;
@@ -18769,7 +18761,7 @@ public:
            0,
            nullptr);        
 #endif
-        for (i = 0; i < array_size; ++i) {
+        for (i = 0; i < OTL_SCAST(size_t,array_size); ++i) {
 #if defined(OTL_ORA11G)||defined(OTL_ORA11G_R2)||defined(OTL_ORA12C)
 #else
           OCIDescriptorAlloc(OTL_RCAST(dvoid *, connect->envhp),
@@ -18785,8 +18777,8 @@ public:
         array_size = aarray_size;
         elem_size = aelem_size;
         lob = new OCILobLocator *[OTL_SCAST(size_t,array_size)];
-        p_v = OTL_RCAST(ub1 *, lob);
-        p_ind = new sb2[OTL_SCAST(size_t,array_size)];
+        p_v.reset(OTL_RCAST(ub1 *, lob));
+        p_ind.reset(new sb2[OTL_SCAST(size_t,array_size)]);
         p_rlen = nullptr;
         p_rcode = nullptr;
 #if defined(OTL_ORA11G)||defined(OTL_ORA11G_R2)||defined(OTL_ORA12C)
@@ -18801,7 +18793,7 @@ public:
         }
 #endif
       if (connect != nullptr) {
-        for (i = 0; i < array_size; ++i) {
+        for (i = 0; i < OTL_SCAST(size_t,array_size); ++i) {
 #if defined(OTL_ORA11G)||defined(OTL_ORA11G_R2)||defined(OTL_ORA12C)
 #else
           OCIDescriptorAlloc(OTL_RCAST(dvoid *, connect->get_envhp()),
@@ -18840,17 +18832,15 @@ public:
             OTL_SCAST(unsigned int, OTL_SCAST(unsigned, elem_size) *
                                         OTL_SCAST(unsigned, array_size) *
                                         sizeof(OTL_WCHAR));
-        p_v = new ub1[unicode_buffer_size];
-        memset(p_v, 0, unicode_buffer_size);
+        p_v.reset(new ub1[unicode_buffer_size]);
+        memset(p_v.get(), 0, unicode_buffer_size);
       } else if (ftype == otl_var_varchar_long) {
         unsigned int unicode_buffer_size = OTL_SCAST(unsigned, elem_size);
-        p_v = new ub1[unicode_buffer_size];
-        memset(p_v, 0, unicode_buffer_size);
+        p_v.reset(new ub1[unicode_buffer_size]);
+        memset(p_v.get(), 0, unicode_buffer_size);
       } else {
-        p_v = new ub1
-            [OTL_SCAST(unsigned, elem_size) * OTL_SCAST(unsigned, array_size)];
-        memset(p_v, 0,
-               OTL_SCAST(size_t, elem_size) * OTL_SCAST(unsigned, array_size));
+        p_v.reset(new ub1[OTL_SCAST(unsigned, elem_size) * OTL_SCAST(unsigned, array_size)]);
+        memset(p_v.get(), 0, OTL_SCAST(size_t, elem_size) * OTL_SCAST(unsigned, array_size));
       }
 #elif defined(OTL_ORA_UTF8)
       if (ftype == otl_var_char) {
@@ -18859,26 +18849,22 @@ public:
         if (select_stm_flag)
           buffer_size *= OTL_UTF8_BYTES_PER_CHAR; // 3 bytes per UTF8 char on
                                                   // SELECT by default
-        p_v = new ub1[buffer_size];
-        memset(p_v, 0, buffer_size);
+        p_v.reset(new ub1[buffer_size]);
+        memset(p_v.get(), 0, buffer_size);
       } else if (ftype == otl_var_varchar_long) {
-        p_v = new ub1[OTL_SCAST(size_t,elem_size)];
-        memset(p_v, 0, OTL_SCAST(size_t, elem_size));
+        p_v.reset(new ub1[OTL_SCAST(size_t,elem_size)]);
+        memset(p_v.get(), 0, OTL_SCAST(size_t, elem_size));
       } else {
-        p_v = new ub1
-            [OTL_SCAST(unsigned, elem_size) * OTL_SCAST(unsigned, array_size)];
-        memset(p_v, 0,
-               OTL_SCAST(size_t, elem_size) * OTL_SCAST(unsigned, array_size));
+        p_v.reset(new ub1[OTL_SCAST(unsigned, elem_size) * OTL_SCAST(unsigned, array_size)]);
+        memset(p_v.get(), 0, OTL_SCAST(size_t, elem_size) * OTL_SCAST(unsigned, array_size));
       }
 #else
-          p_v = new ub1[OTL_SCAST(unsigned, elem_size) *
-                        OTL_SCAST(unsigned, array_size)];
-          memset(p_v, 0, OTL_SCAST(unsigned, elem_size) *
-                             OTL_SCAST(unsigned, array_size));
+      p_v.reset(new ub1[OTL_SCAST(unsigned, elem_size) * OTL_SCAST(unsigned, array_size)]);
+      memset(p_v.get(), 0, OTL_SCAST(unsigned, elem_size) * OTL_SCAST(unsigned, array_size));
 #endif
-          p_ind = new sb2[OTL_SCAST(size_t,array_size)];
-          p_rlen = new ub2[OTL_SCAST(size_t,array_size)];
-          p_rcode = new ub2[OTL_SCAST(size_t,array_size)];
+      p_ind.reset(new sb2[OTL_SCAST(size_t,array_size)]);
+      p_rlen.reset(new ub2[OTL_SCAST(size_t,array_size)]);
+      p_rcode.reset(new ub2[OTL_SCAST(size_t,array_size)]);
       if (ftype == otl_var_varchar_long || ftype == otl_var_raw_long ||
           ftype == otl_var_raw) {
         if (aelem_size > otl_short_int_max)
@@ -18887,7 +18873,7 @@ public:
           p_ind[0] = OTL_SCAST(short, aelem_size);
         p_rcode[0] = 0;
       } else {
-        for (i = 0; i < array_size; ++i) {
+        for (i = 0; i < OTL_SCAST(size_t,array_size); ++i) {
 #if defined(OTL_UNICODE)
           if (ftype == otl_var_char) {
             p_ind[i] =
@@ -19693,16 +19679,16 @@ public:
     return 1;
   }
 #endif
-  void set_null(int ndx) { p_ind[ndx] = -1; }
+  void set_null(int ndx) { p_ind[OTL_SCAST(size_t,ndx)] = -1; }
 
   void set_not_null(int ndx, int pelem_size) {
-
+    size_t temp_ndx=OTL_SCAST(size_t,ndx);
     switch (ftype) {
     case otl_var_char:
       if (pelem_size > otl_short_int_max)
-        p_ind[ndx] = 0;
+        p_ind[temp_ndx] = 0;
       else
-        p_ind[ndx] = OTL_SCAST(short, pelem_size);
+        p_ind[temp_ndx] = OTL_SCAST(short, pelem_size);
       break;
     case otl_var_varchar_long:
     case otl_var_raw_long:
@@ -19710,9 +19696,9 @@ public:
       break;
     case otl_var_raw:
       if (pelem_size > otl_short_int_max)
-        p_ind[ndx] = 0;
+        p_ind[temp_ndx] = 0;
       else
-        p_ind[ndx] = OTL_SCAST(short, pelem_size);
+        p_ind[temp_ndx] = OTL_SCAST(short, pelem_size);
       break;
     case otl_var_clob:
     case otl_var_blob:
@@ -19724,7 +19710,7 @@ public:
       }
       break;
     default:
-      p_ind[ndx] = OTL_SCAST(short, pelem_size);
+      p_ind[temp_ndx] = OTL_SCAST(short, pelem_size);
       break;
     }
   }
@@ -19733,14 +19719,14 @@ public:
     if (ftype == otl_var_varchar_long || ftype == otl_var_raw_long) {
 #if defined(OTL_UNICODE)
       if (ftype == otl_var_varchar_long)
-        *OTL_RCAST(sb4 *, p_v) = len * OTL_SCAST(sb4, sizeof(OTL_CHAR));
+        *OTL_RCAST(sb4 *, p_v.get()) = len * OTL_SCAST(sb4, sizeof(OTL_CHAR));
       else
-        *OTL_RCAST(sb4 *, p_v) = len;
+        *OTL_RCAST(sb4 *, p_v.get()) = len;
 #else
-      *OTL_RCAST(sb4 *, p_v) = len;
+      *OTL_RCAST(sb4 *, p_v.get()) = len;
 #endif
     } else
-      p_rlen[ndx] = OTL_SCAST(unsigned short, len);
+      p_rlen[OTL_SCAST(size_t,ndx)] = OTL_SCAST(unsigned short, len);
   }
 
   int get_len(int ndx) {
@@ -19751,24 +19737,24 @@ public:
 #if defined(OTL_UNICODE)
 #if defined(OTL_ORA_UNICODE_LONG_LENGTH_IN_BYTES)
         if (ftype == otl_var_varchar_long)
-          return *OTL_RCAST(sb4 *, p_v);
+          return *OTL_RCAST(sb4 *, p_v.get());
         else
-          return *OTL_RCAST(sb4 *, p_v);
+          return *OTL_RCAST(sb4 *, p_v.get());
 #else
         if (ftype == otl_var_varchar_long)
-          return (*OTL_RCAST(sb4 *, p_v)) / sizeof(OTL_CHAR);
+          return (*OTL_RCAST(sb4 *, p_v.get())) / sizeof(OTL_CHAR);
         else
-          return *OTL_RCAST(sb4 *, p_v);
+          return *OTL_RCAST(sb4 *, p_v.get());
 #endif
 #else
-        return *OTL_RCAST(sb4 *, p_v);
+        return *OTL_RCAST(sb4 *, p_v.get());
 #endif
       }
     } else
-      return p_rlen[ndx];
+      return p_rlen[OTL_SCAST(size_t,ndx)];
   }
 
-  OTL_NODISCARD int is_null(int ndx) { return p_ind[ndx] == -1; }
+  OTL_NODISCARD int is_null(int ndx) { return p_ind[OTL_SCAST(size_t,ndx)] == -1; }
 
   OTL_NODISCARD void *val(int ndx, int pelem_size) {
     switch (ftype) {
@@ -19792,7 +19778,7 @@ public:
                        (OTL_SCAST(unsigned, pelem_size) + sizeof(short int))]);
     case otl_var_varchar_long:
     case otl_var_raw_long:
-      return OTL_RCAST(void *, p_v + sizeof(sb4));
+      return OTL_RCAST(void *, p_v.get() + sizeof(sb4));
 #if (defined(OTL_ORA8I) || defined(OTL_ORA9I)) && defined(OTL_ORA_TIMESTAMP)
     case otl_var_timestamp:
     case otl_var_tz_timestamp:
@@ -20499,7 +20485,7 @@ public:
         OTL_SCAST(sb4, strlen(name)), nullptr, 
         OTL_SCAST(sb4, 0), 
         OTL_SCAST(ub2, tmpl_ftype2ora_ftype(ftype)), 
-        OTL_RCAST(dvoid *, v.p_ind), nullptr, nullptr, 
+        OTL_RCAST(dvoid *, v.p_ind.get()), nullptr, nullptr, 
         OTL_SCAST(ub4, 0), nullptr, OTL_SCAST(ub4, OCI_DEFAULT));
       if(status)return 0;
       status = OCIBindObject(bindpp, errhp, v.oraOCIType, 
@@ -20548,24 +20534,24 @@ public:
           db_ftype = extFloat;
         status = OCIBindByName(
           cda, &bindpp, errhp, OTL_RCAST(text *, OTL_CCAST(char *, name)),
-          OTL_SCAST(sb4, strlen(name)), OTL_RCAST(dvoid *, v.p_v),
+          OTL_SCAST(sb4, strlen(name)), OTL_RCAST(dvoid *, v.p_v.get()),
           OTL_SCAST(sb4,
                     ftype == otl_var_raw
                     ? OTL_SCAST(size_t, var_elem_size) + sizeof(short)
                     : OTL_SCAST(size_t, var_elem_size)),
           OTL_SCAST(ub2, v.charz_flag ? extCharZ : db_ftype),
-          OTL_RCAST(dvoid *, v.p_ind), nullptr, nullptr,
+          OTL_RCAST(dvoid *, v.p_ind.get()), nullptr, nullptr,
           OTL_SCAST(ub4, v.max_tab_len), OTL_RCAST(ub4 *, &v.cur_tab_len),
           OTL_SCAST(ub4, OCI_DEFAULT));
       } else {
         status = OCIBindByName(
           cda, &bindpp, errhp, OTL_RCAST(text *, OTL_CCAST(char *, name)),
-          OTL_SCAST(sb4, strlen(name)), OTL_RCAST(dvoid *, v.p_v),
+          OTL_SCAST(sb4, strlen(name)), OTL_RCAST(dvoid *, v.p_v.get()),
           OTL_SCAST(sb4,
                     ftype == otl_var_raw
                     ? OTL_SCAST(size_t, var_elem_size) + sizeof(short)
                     : OTL_SCAST(size_t, var_elem_size)),
-          OTL_SCAST(ub2, db_ftype), OTL_RCAST(dvoid *, v.p_ind), nullptr,
+          OTL_SCAST(ub2, db_ftype), OTL_RCAST(dvoid *, v.p_ind.get()), nullptr,
           nullptr, 0, nullptr, OTL_SCAST(ub4, OCI_DEFAULT));
       }
       if (status)return 0;
@@ -20619,9 +20605,9 @@ public:
     } else {
       status = OCIBindByName(
           cda, &bindpp, errhp, OTL_RCAST(text *, OTL_CCAST(char *, name)),
-          OTL_SCAST(sb4, strlen(name)), OTL_RCAST(dvoid *, v.p_v),
+          OTL_SCAST(sb4, strlen(name)), OTL_RCAST(dvoid *, v.p_v.get()),
           OTL_SCAST(sb4, -1), OTL_SCAST(ub2, tmpl_ftype2ora_ftype(ftype)),
-          OTL_RCAST(dvoid *, v.p_ind), nullptr, nullptr, 0, nullptr,
+          OTL_RCAST(dvoid *, v.p_ind.get()), nullptr, nullptr, 0, nullptr,
           OTL_SCAST(ub4, OCI_DEFAULT));
       if (status)
         return 0;
@@ -20672,9 +20658,9 @@ public:
           status = OCIDefineByPos(cda, &defnp, errhp, OTL_SCAST(ub4, column_num),
                                   OTL_RCAST(dvoid *, v.sdoobj), OTL_SCAST(sb4, 0),
                                   OTL_SCAST(ub2, tmpl_ftype2ora_ftype(ftype)),
-                                  OTL_RCAST(dvoid *, v.p_ind),
-                                  OTL_RCAST(ub2 *, v.p_rlen),
-                                  OTL_RCAST(ub2 *, v.p_rcode), OTL_SCAST(ub4, OCI_DEFAULT));
+                                  OTL_RCAST(dvoid *, v.p_ind.get()),
+                                  OTL_RCAST(ub2 *, v.p_rlen.get()),
+                                  OTL_RCAST(ub2 *, v.p_rcode.get()), OTL_SCAST(ub4, OCI_DEFAULT));
           if(status)
             return 0;
           status = OCIDefineObject(defnp,
@@ -20721,12 +20707,12 @@ public:
 #endif
       status = OCIDefineByPos(
           cda, &defnp, errhp, OTL_SCAST(ub4, column_num),
-          OTL_RCAST(dvoid *, v.p_v),
+          OTL_RCAST(dvoid *, v.p_v.get()),
           OTL_SCAST(sb4, ftype == otl_var_raw
                              ? OTL_SCAST(size_t, var_elem_size) + sizeof(short)
                              : OTL_SCAST(size_t, var_elem_size)),
-          OTL_SCAST(ub2, db_ftype), OTL_RCAST(dvoid *, v.p_ind),
-          OTL_RCAST(ub2 *, v.p_rlen), OTL_RCAST(ub2 *, v.p_rcode), OCI_DEFAULT);
+          OTL_SCAST(ub2, db_ftype), OTL_RCAST(dvoid *, v.p_ind.get()),
+          OTL_RCAST(ub2 *, v.p_rlen.get()), OTL_RCAST(ub2 *, v.p_rcode.get()), OCI_DEFAULT);
       if (status)
         return 0;
 
@@ -20765,11 +20751,11 @@ public:
       return 1;
     } else {
       status = OCIDefineByPos(cda, &defnp, errhp, OTL_SCAST(ub4, column_num),
-                              OTL_RCAST(dvoid *, v.p_v), OTL_SCAST(sb4, -1),
+                              OTL_RCAST(dvoid *, v.p_v.get()), OTL_SCAST(sb4, -1),
                               OTL_SCAST(ub2, tmpl_ftype2ora_ftype(ftype)),
-                              OTL_RCAST(dvoid *, v.p_ind),
-                              OTL_RCAST(ub2 *, v.p_rlen),
-                              OTL_RCAST(ub2 *, v.p_rcode), OCI_DEFAULT);
+                              OTL_RCAST(dvoid *, v.p_ind.get()),
+                              OTL_RCAST(ub2 *, v.p_rlen.get()),
+                              OTL_RCAST(ub2 *, v.p_rcode.get()), OCI_DEFAULT);
       if (status)
         return 0;
 #if defined(OTL_UNICODE)
