@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.496,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.497,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401F0L)
+#define OTL_VERSION_NUMBER (0x0401F1L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -123,27 +123,93 @@
 
 #endif
 
-// >= VC++ 2015 Update 3, and /std:c++latest
+// >= VC++ 2017 or higher using /std flag
 #if defined(_MSVC_LANG) && (_MSVC_LANG>201402L)
 
 #if !defined(OTL_CPP_11_ON)
 #define OTL_CPP_11_ON
 #endif
 
+#if defined(_MSVC_LANG) && (_MSVC_LANG==201402L)
+
+// std=c++14 is used
+#if !defined(OTL_CPP_11_ON)
+#define OTL_CPP_11_ON
+#endif
 #if !defined(OTL_CPP_14_ON)
 #define OTL_CPP_14_ON
 #endif
 
-#if !defined(OTL_CPP_17_ON) && defined(_MSC_VER) && (_MSC_VER>=1910)
+#elif defined(_MSVC_LANG) && (_MSVC_LANG==201703L)
+
+// std=c++17 / std=c++1z is used
+#if !defined(OTL_CPP_11_ON)
+#define OTL_CPP_11_ON
+#endif
+#if !defined(OTL_CPP_14_ON)
+#define OTL_CPP_14_ON
+#endif
+#if !defined(OTL_CPP_17_ON)
 #define OTL_CPP_17_ON
 #endif
 
-#if !defined(OTL_CPP_20_ON) && defined(_MSVC_LANG) && (_MSVC_LANG==202002L)
+#elif defined(_MSVC_LANG) && (_MSVC_LANG == 202002L)
+
+// std=c++20
+#if !defined(OTL_CPP_11_ON)
+#define OTL_CPP_11_ON
+#endif
+#if !defined(OTL_CPP_14_ON)
+#define OTL_CPP_14_ON
+#endif
+#if !defined(OTL_CPP_17_ON)
+#define OTL_CPP_17_ON
+#endif
+#if !defined(OTL_CPP_20_ON)
 #define OTL_CPP_20_ON
 #endif
 
-#if !defined(OTL_CPP_23_ON) && defined(_MSVC_LANG) && (_MSVC_LANG>202002L)
+#elif defined(_MSVC_LANG) && (_MSVC_LANG == 202302L)
+
+// std=c++23
+#if !defined(OTL_CPP_11_ON)
+#define OTL_CPP_11_ON
+#endif
+#if !defined(OTL_CPP_14_ON)
+#define OTL_CPP_14_ON
+#endif
+#if !defined(OTL_CPP_17_ON)
+#define OTL_CPP_17_ON
+#endif
+#if !defined(OTL_CPP_20_ON)
+#define OTL_CPP_20_ON
+#endif
+#if !defined(OTL_CPP_23_ON)
 #define OTL_CPP_23_ON
+#endif
+
+#elif defined(_MSVC_LANG) && (_MSVC_LANG > 202302L)
+
+// std=c++26 and higher
+#if !defined(OTL_CPP_11_ON)
+#define OTL_CPP_11_ON
+#endif
+#if !defined(OTL_CPP_14_ON)
+#define OTL_CPP_14_ON
+#endif
+#if !defined(OTL_CPP_17_ON)
+#define OTL_CPP_17_ON
+#endif
+#if !defined(OTL_CPP_20_ON)
+#define OTL_CPP_20_ON
+#endif
+#if !defined(OTL_CPP_23_ON)
+#define OTL_CPP_23_ON
+#endif
+#if !defined(OTL_CPP_26_ON)
+#define OTL_CPP_26_ON
+#endif
+
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER>=1910)
@@ -202,7 +268,7 @@
 #define OTL_CPP_20_ON
 #endif
 
-#elif defined(__cplusplus) && (__cplusplus > 202002L)
+#elif defined(__cplusplus) && (__cplusplus == 202302L)
 
 // std=c++23
 #if !defined(OTL_CPP_11_ON)
@@ -219,6 +285,28 @@
 #endif
 #if !defined(OTL_CPP_23_ON)
 #define OTL_CPP_23_ON
+#endif
+
+#elif defined(__cplusplus) && (__cplusplus > 202302L)
+
+// std=c++26 and higher
+#if !defined(OTL_CPP_11_ON)
+#define OTL_CPP_11_ON
+#endif
+#if !defined(OTL_CPP_14_ON)
+#define OTL_CPP_14_ON
+#endif
+#if !defined(OTL_CPP_17_ON)
+#define OTL_CPP_17_ON
+#endif
+#if !defined(OTL_CPP_20_ON)
+#define OTL_CPP_20_ON
+#endif
+#if !defined(OTL_CPP_23_ON)
+#define OTL_CPP_23_ON
+#endif
+#if !defined(OTL_CPP_26_ON)
+#define OTL_CPP_26_ON
 #endif
 
 #endif
