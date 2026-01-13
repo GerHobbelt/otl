@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.491,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.492,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401EBL)
+#define OTL_VERSION_NUMBER (0x0401ECL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -3961,22 +3961,22 @@ public:
 
 template <OTL_TYPE_NAME TData> class otl_value {
 public:
-  TData v;
+  TData v {};
   bool ind {true};
 
   otl_value() = default;
-  otl_value(const otl_value<TData> &var) : v(var.v), ind(var.ind) {}
   otl_value(const TData &var) : v(var), ind(false) {}
+  otl_value(TData&& var) : v(std::move(var)), ind(false) {}
   otl_value(OTL_NULL_PARM){}
 
-  otl_value<TData> &operator=(const otl_value<TData> &var) {
-    v = var.v;
-    ind = var.ind;
+  otl_value<TData> &operator=(const TData& var) {
+    v = var;
+    ind = false;
     return *this;
   }
 
-  otl_value<TData> &operator=(const TData &var) {
-    v = var;
+  otl_value<TData> &operator=(TData&& var) {
+    v = std::move(var);
     ind = false;
     return *this;
   }
@@ -3999,21 +3999,8 @@ public:
 
   otl_compact_value() = default;
 
-  otl_compact_value(const otl_compact_value<TData,null_value> &var) : v(var.v) {}
-
   otl_compact_value(const TData &var) : v(var) {}
-
   otl_compact_value(OTL_NULL_PARM){}
-
-  otl_compact_value<TData,null_value> &operator=(const otl_compact_value<TData,null_value> &var) {
-    v = var.v;
-    return *this;
-  }
-
-  otl_compact_value<TData,null_value> &operator=(const TData &var) {
-    v = var;
-    return *this;
-  }
 
   otl_compact_value<TData,null_value> &operator=(OTL_NULL_PARM ) {
     v=null_value;
