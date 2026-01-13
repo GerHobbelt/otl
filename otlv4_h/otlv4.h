@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.481,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.482,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401E1L)
+#define OTL_VERSION_NUMBER (0x0401E2L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -218,6 +218,10 @@
 
 #if defined(OTL_CPP_11_ON) && defined(OTL_FUNC_THROW_SPEC_ON)
 #error OTL_CPP_11_ON and OTL_FUNC_THROW_SPEC_ON cannot be used together
+#endif
+
+#if !defined(OTL_CPP_11_ON)
+#error  OTL requires C++11 of higher.
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1600)
@@ -2121,27 +2125,11 @@ protected:
   T **ptr;
   int arr_flag;
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_ptr(const otl_ptr &) = delete;
   otl_ptr &operator=(const otl_ptr &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_ptr(otl_ptr &&) = delete;
   otl_ptr &operator=(otl_ptr &&) = delete;
-#endif
-private:
-#else
-  otl_ptr(const otl_ptr &) : ptr(nullptr), arr_flag(0) {}
-
-  otl_ptr &operator=(const otl_ptr &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_ptr(otl_ptr &&) : ptr(nullptr), arr_flag(0) {}
-
-  otl_ptr &operator=(otl_ptr &&) { return *this; }
-#endif
-#endif
 };
 
 template <OTL_TYPE_NAME T> class otl_Tptr {
@@ -2177,19 +2165,9 @@ protected:
   T *ptr;
   bool do_not_destroy;
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_Tptr(const otl_Tptr &) = delete;
   otl_Tptr(otl_Tptr &&) = delete;
-
-private:
-#else
-  otl_Tptr(const otl_Tptr &) : ptr(nullptr), do_not_destroy(false) {}
-#if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
-  otl_Tptr(otl_Tptr &&) : ptr(nullptr), do_not_destroy(false) {}
-#endif
-#endif
 };
 
 class otl_select_struct_override {
@@ -2292,37 +2270,11 @@ private:
   int container_size_;
   void *master_stream_ptr_;
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_select_struct_override(const otl_select_struct_override &) = delete;
-  otl_select_struct_override &operator=(const otl_select_struct_override &) =
-      delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
+  otl_select_struct_override &operator=(const otl_select_struct_override &) = delete;
   otl_select_struct_override(otl_select_struct_override &&) = delete;
   otl_select_struct_override &operator=(otl_select_struct_override &&) = delete;
-#endif
-private:
-#else
-  otl_select_struct_override(const otl_select_struct_override &)
-      : col_ndx(nullptr), col_type(nullptr), col_size(nullptr), len(0),
-        all_mask(0), lob_stream_mode(false), container_size_(0),
-        master_stream_ptr_(nullptr) {}
-
-  otl_select_struct_override &operator=(const otl_select_struct_override &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_select_struct_override(otl_select_struct_override &&)
-      : col_ndx(nullptr), col_type(nullptr), col_size(nullptr), len(0),
-        all_mask(0), lob_stream_mode(false), container_size_(0),
-        master_stream_ptr_(nullptr) {}
-
-  otl_select_struct_override &operator=(otl_select_struct_override &&) {
-    return *this;
-  }
-#endif
-#endif
 };
 
 OTL_NODISCARD inline int otl_decimal_degree(unsigned int num) {
@@ -3752,34 +3704,11 @@ protected:
   int tab_len;
   int vtype;
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_pl_tab_generic(const otl_pl_tab_generic &) = delete;
   otl_pl_tab_generic &operator=(const otl_pl_tab_generic &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_pl_tab_generic(otl_pl_tab_generic &&) = delete;
   otl_pl_tab_generic &operator=(otl_pl_tab_generic &&) = delete;
-#endif
-
-private:
-#else
-
-  otl_pl_tab_generic(const otl_pl_tab_generic &)
-      : p_v(nullptr), p_null(nullptr), elem_size(0), tab_size(0), tab_len(0),
-        vtype(0) {}
-
-  otl_pl_tab_generic &operator=(const otl_pl_tab_generic &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_pl_tab_generic(otl_pl_tab_generic &&)
-      : p_v(nullptr), p_null(nullptr), elem_size(0), tab_size(0), tab_len(0),
-        vtype(0) {}
-
-  otl_pl_tab_generic &operator=(otl_pl_tab_generic &&) { return *this; }
-#endif
-
-#endif
 };
 
 #if defined(OTL_STRICT_NUMERIC_TYPE_CHECK_ON_SELECT)
@@ -4299,29 +4228,11 @@ public:
 
   virtual ~otl_stream_pool() OTL_THROWS_OTL_EXCEPTION4 { init(); }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_stream_pool(const otl_stream_pool &) = delete;
   otl_stream_pool &operator=(const otl_stream_pool &) = delete;
-#if defined(OTL_ANSI_CPP_11_RVAL_REF_SUPPORT)
   otl_stream_pool(otl_stream_pool &&) = delete;
   otl_stream_pool &operator=(otl_stream_pool &&) = delete;
-#endif
-private:
-#else
-  otl_stream_pool(const otl_stream_pool &)
-      : sc(), pool_enabled_(true), max_size(0), size(0) {}
-
-  otl_stream_pool &operator=(const otl_stream_pool &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_stream_pool(otl_stream_pool &&)
-      : sc(), pool_enabled_(true), max_size(0), size(0) {}
-
-  otl_stream_pool &operator=(otl_stream_pool &&) { return *this; }
-#endif
-#endif
 };
 
 #endif
@@ -4522,29 +4433,11 @@ protected:
   int vtype;
   int elem_size;
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_pl_vec_generic(const otl_pl_vec_generic &) = delete;
   otl_pl_vec_generic &operator=(const otl_pl_vec_generic &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_pl_vec_generic(otl_pl_vec_generic &&) = delete;
   otl_pl_vec_generic &operator=(otl_pl_vec_generic &&) = delete;
-#endif
-private:
-#else
-  otl_pl_vec_generic(const otl_pl_vec_generic &)
-      : p_v(nullptr), null_flag(), vtype(0), elem_size(0) {}
-
-  otl_pl_vec_generic &operator=(const otl_pl_vec_generic &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_pl_vec_generic(otl_pl_vec_generic &&)
-      : p_v(nullptr), null_flag(), vtype(0), elem_size(0) {}
-
-  otl_pl_vec_generic &operator=(otl_pl_vec_generic &&) { return *this; }
-#endif
-#endif
 };
 
 template <OTL_TYPE_NAME T, const int type_code, const int T_sz>
@@ -4577,27 +4470,11 @@ public:
 
   T &operator[](int ndx) { return v[ndx]; }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_T_vec(const otl_T_vec &) = delete;
   otl_T_vec &operator=(const otl_T_vec &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_T_vec(otl_T_vec &&) = delete;
   otl_T_vec &operator=(otl_T_vec &&) = delete;
-#endif
-private:
-#else
-  otl_T_vec(const otl_T_vec &) : v() {}
-
-  otl_T_vec &operator=(const otl_T_vec &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_T_vec(otl_T_vec &&) : v() {}
-
-  otl_T_vec &operator=(otl_T_vec &&) { return *this; }
-#endif
-#endif
 };
 
 typedef otl_T_vec<double, otl_var_double, sizeof(double)> otl_double_vec;
@@ -4636,26 +4513,11 @@ public:
 private:
   short null_flag[atab_size];
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_pl_tab &operator=(const otl_tmpl_pl_tab &) = delete;
   otl_tmpl_pl_tab(const otl_tmpl_pl_tab &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_pl_tab &operator=(otl_tmpl_pl_tab &&) = delete;
   otl_tmpl_pl_tab(otl_tmpl_pl_tab &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_pl_tab &operator=(const otl_tmpl_pl_tab &) { return *this; }
-
-  otl_tmpl_pl_tab(const otl_tmpl_pl_tab &) : v(), null_flag() {}
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_pl_tab &operator=(otl_tmpl_pl_tab &&) { return *this; }
-
-  otl_tmpl_pl_tab(otl_tmpl_pl_tab &&) : v(), null_flag() {}
-#endif
-#endif
 };
 
 template <const int atab_size>
@@ -4724,27 +4586,11 @@ public:
 private:
   short null_flag[atab_size];
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_cstr_tab(const otl_cstr_tab &) = delete;
   otl_cstr_tab &operator=(const otl_cstr_tab &) = delete;
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_cstr_tab(otl_cstr_tab &&) = delete;
   otl_cstr_tab &operator=(otl_cstr_tab &&) = delete;
-#endif
-private:
-#else
-  otl_cstr_tab(const otl_cstr_tab &) : v(), null_flag() {}
-
-  otl_cstr_tab &operator=(const otl_cstr_tab &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_cstr_tab(otl_cstr_tab &&) : v(), null_flag() {}
-
-  otl_cstr_tab &operator=(otl_cstr_tab &&) { return *this; }
-#endif
-#endif
 };
 
 template <const int atab_size>
@@ -4807,35 +4653,13 @@ public:
 private:
   short *null_flag;
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_dyn_pl_tab(const otl_tmpl_dyn_pl_tab<T, avtype> &) = delete;
   otl_tmpl_dyn_pl_tab<T, avtype> &
   operator=(const otl_tmpl_dyn_pl_tab<T, avtype> &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_dyn_pl_tab(otl_tmpl_dyn_pl_tab<T, avtype> &&) = delete;
   otl_tmpl_dyn_pl_tab<T, avtype> &operator=(otl_tmpl_dyn_pl_tab<T, avtype> &&) =
       delete;
-#endif
-private:
-#else
-  otl_tmpl_dyn_pl_tab(const otl_tmpl_dyn_pl_tab<T, avtype> &)
-      : v(nullptr), null_flag(nullptr) {}
-
-  otl_tmpl_dyn_pl_tab<T, avtype> &
-  operator=(const otl_tmpl_dyn_pl_tab<T, avtype> &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_dyn_pl_tab(otl_tmpl_dyn_pl_tab<T, avtype> &&)
-      : v(nullptr), null_flag(nullptr) {}
-
-  otl_tmpl_dyn_pl_tab<T, avtype> &operator=(otl_tmpl_dyn_pl_tab<T, avtype> &&) {
-    return *this;
-  }
-#endif
-#endif
 };
 
 class otl_dynamic_int_tab : public otl_tmpl_dyn_pl_tab<int, otl_var_int> {
@@ -4911,31 +4735,11 @@ public:
 private:
   short *null_flag;
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_dynamic_cstr_tab(const otl_dynamic_cstr_tab &) = delete;
   otl_dynamic_cstr_tab &operator=(const otl_dynamic_cstr_tab &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_dynamic_cstr_tab(otl_dynamic_cstr_tab &&) = delete;
   otl_dynamic_cstr_tab &operator=(otl_dynamic_cstr_tab &&) = delete;
-#endif
-
-private:
-#else
-  otl_dynamic_cstr_tab(const otl_dynamic_cstr_tab &)
-      : v(nullptr), null_flag(nullptr) {}
-
-  otl_dynamic_cstr_tab &operator=(const otl_dynamic_cstr_tab &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_dynamic_cstr_tab(otl_dynamic_cstr_tab &&)
-      : v(nullptr), null_flag(nullptr) {}
-
-  otl_dynamic_cstr_tab &operator=(otl_dynamic_cstr_tab &&) { return *this; }
-#endif
-#endif
 };
 
 class otl_dynamic_datetime_tab : public otl_pl_tab_generic {
@@ -4971,33 +4775,11 @@ public:
 private:
   short *null_flag;
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_dynamic_datetime_tab(const otl_dynamic_datetime_tab &) = delete;
-  otl_dynamic_datetime_tab &operator=(const otl_dynamic_datetime_tab &) =
-      delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
+  otl_dynamic_datetime_tab &operator=(const otl_dynamic_datetime_tab &) = delete;
   otl_dynamic_datetime_tab(otl_dynamic_datetime_tab &&) = delete;
   otl_dynamic_datetime_tab &operator=(otl_dynamic_datetime_tab &&) = delete;
-#endif
-private:
-#else
-  otl_dynamic_datetime_tab(const otl_dynamic_datetime_tab &)
-      : otl_pl_tab_generic(), v(nullptr), null_flag(nullptr) {}
-
-  otl_dynamic_datetime_tab &operator=(const otl_dynamic_datetime_tab &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_dynamic_datetime_tab(otl_dynamic_datetime_tab &&)
-      : otl_pl_tab_generic(), v(nullptr), null_flag(nullptr) {}
-
-  otl_dynamic_datetime_tab &operator=(otl_dynamic_datetime_tab &&) {
-    return *this;
-  }
-#endif
-#endif
 };
 
 #define OTL_TMPL_EXCEPTION                                                     \
@@ -5441,35 +5223,11 @@ public:
     OTL_THROW((OTL_TMPL_EXCEPTION(connect_struct)));
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_connect(const otl_tmpl_connect &) = delete;
   otl_tmpl_connect &operator=(const otl_tmpl_connect &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_connect(otl_tmpl_connect &&) = delete;
   otl_tmpl_connect &operator=(otl_tmpl_connect &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_connect(const otl_tmpl_connect &)
-      : connected(0),
-#if defined(OTL_ODBC_USES_SQL_FETCH_SCROLL_WHEN_SPECIFIED_IN_OTL_CONNECT)
-        use_fetch_scroll_(false),
-#endif
-        connect_struct(), long_max_size(otl_short_int_max), retcode(1)
-    {}
-
-  otl_tmpl_connect &operator=(const otl_tmpl_connect &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_connect(otl_tmpl_connect &&)
-      : connected(0), connect_struct(), long_max_size(otl_short_int_max),
-        retcode(1){}
-
-  otl_tmpl_connect &operator=(otl_tmpl_connect &&) { return *this; }
-#endif
-#endif
 };
 
 template <OTL_TYPE_NAME TVariableStruct> class otl_tmpl_variable {
@@ -5613,31 +5371,11 @@ public:
     return TVariableStruct::int2ext(int_type);
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_variable(const otl_tmpl_variable &) = delete;
   otl_tmpl_variable &operator=(const otl_tmpl_variable &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_variable(otl_tmpl_variable &&) = delete;
   otl_tmpl_variable &operator=(otl_tmpl_variable &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_variable(const otl_tmpl_variable &)
-      : param_type(0), ftype(0), elem_size(0), array_size(0), name(nullptr),
-        pos(0), name_pos(0), bound(0), pl_tab_flag(0), var_struct() {}
-
-  otl_tmpl_variable &operator=(const otl_tmpl_variable &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_variable(otl_tmpl_variable &&)
-      : param_type(0), ftype(0), elem_size(0), array_size(0), name(nullptr),
-        pos(0), name_pos(0), bound(0), pl_tab_flag(0), var_struct() {}
-
-  otl_tmpl_variable &operator=(otl_tmpl_variable &&) { return *this; }
-#endif
-#endif
 };
 
 template <OTL_TYPE_NAME TExceptionStruct, OTL_TYPE_NAME TConnectStruct,
@@ -5940,33 +5678,11 @@ public:
     OTL_THROW((OTL_TMPL_EXCEPTION(cursor_struct, stm_label ? stm_label : stm_text)));
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_cursor(const otl_tmpl_cursor &) = delete;
   otl_tmpl_cursor &operator=(const otl_tmpl_cursor &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_cursor(otl_tmpl_cursor &&) = delete;
   otl_tmpl_cursor &operator=(otl_tmpl_cursor &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_cursor(const otl_tmpl_cursor &)
-      : connected(0), stm_text(nullptr), stm_label(nullptr), cursor_struct(),
-        vl_len(0), vl(nullptr), adb(nullptr), eof_data(), eof_desc(),
-        retcode(1), _rpc(0), in_destructor(0) {}
-
-  otl_tmpl_cursor &operator=(const otl_tmpl_cursor &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_cursor(otl_tmpl_cursor &&)
-      : connected(0), stm_text(nullptr), stm_label(nullptr), cursor_struct(),
-        vl_len(0), vl(nullptr), adb(nullptr), eof_data(), eof_desc(),
-        retcode(1), _rpc(0), in_destructor(0) {}
-
-  otl_tmpl_cursor &operator=(otl_tmpl_cursor &&) { return *this; }
-#endif
-#endif
 };
 
 inline int is_num(char c) { return c >= '0' && c <= '9'; }
@@ -6905,8 +6621,6 @@ public:
     }
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_ext_hv_decl(const otl_tmpl_ext_hv_decl<
       TVariableStruct, TTimestampStruct, TExceptionStruct, TConnectStruct,
@@ -6916,7 +6630,6 @@ public:
   operator=(const otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct,
                                        TExceptionStruct, TConnectStruct,
                                        TCursorStruct> &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_ext_hv_decl(
       otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct, TExceptionStruct,
                            TConnectStruct, TCursorStruct> &&) = delete;
@@ -6925,41 +6638,6 @@ public:
   operator=(
       otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct, TExceptionStruct,
                            TConnectStruct, TCursorStruct> &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_ext_hv_decl(const otl_tmpl_ext_hv_decl<
-      TVariableStruct, TTimestampStruct, TExceptionStruct, TConnectStruct,
-      TCursorStruct> &)
-      : hv(nullptr), inout(nullptr), pl_tab_size(0), array_size(0),
-        prev_array_size(0), vst(), len(0), stm_text_(nullptr),
-        stm_label_(nullptr), container_size_(0), has_plsql_tabs_or_refcur_(0) {}
-
-  otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct, TExceptionStruct,
-                       TConnectStruct, TCursorStruct> &
-  operator=(const otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct,
-                                       TExceptionStruct, TConnectStruct,
-                                       TCursorStruct> &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_ext_hv_decl(
-      otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct, TExceptionStruct,
-                           TConnectStruct, TCursorStruct> &&)
-      : hv(nullptr), inout(nullptr), pl_tab_size(0), array_size(0),
-        prev_array_size(0), vst(), len(0), stm_text_(nullptr),
-        stm_label_(nullptr), container_size_(0), has_plsql_tabs_or_refcur_(0) {}
-
-  otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct, TExceptionStruct,
-                       TConnectStruct, TCursorStruct> &
-  operator=(
-      otl_tmpl_ext_hv_decl<TVariableStruct, TTimestampStruct, TExceptionStruct,
-                           TConnectStruct, TCursorStruct> &&) {
-    return *this;
-  }
-#endif
-#endif
 };
 
 template <OTL_TYPE_NAME TExceptionStruct, OTL_TYPE_NAME TConnectStruct,
@@ -7057,35 +6735,11 @@ public:
     return cur_size != 0;
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_select_cursor(const otl_tmpl_select_cursor &) = delete;
   otl_tmpl_select_cursor &operator=(const otl_tmpl_select_cursor &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_select_cursor(otl_tmpl_select_cursor &&) = delete;
   otl_tmpl_select_cursor &operator=(otl_tmpl_select_cursor &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_select_cursor(const otl_tmpl_select_cursor &)
-      : OTL_TMPL_CURSOR(), cur_row(-1), cur_size(0), row_count(0),
-        array_size(0), prefetch_array_size(0), select_cursor_struct(),
-        local_override() {}
-
-  otl_tmpl_select_cursor &operator=(const otl_tmpl_select_cursor &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_select_cursor(otl_tmpl_select_cursor &&)
-      : OTL_TMPL_CURSOR(), cur_row(-1), cur_size(0), row_count(0),
-        array_size(0), prefetch_array_size(0), select_cursor_struct(),
-        local_override() {}
-
-  otl_tmpl_select_cursor &operator=(otl_tmpl_select_cursor &&) { return *this; }
-#endif
-#endif
 };
 
 #if defined(OTL_ORA8) || defined(OTL_ODBC)
@@ -7162,33 +6816,11 @@ public:
   OTL_NODISCARD virtual bool is_initialized(void) = 0;
   virtual void close(bool dont_throw_size_doesnt_match_exception = false) = 0;
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_lob_stream_generic(const otl_lob_stream_generic &) = delete;
   otl_lob_stream_generic &operator=(const otl_lob_stream_generic &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_lob_stream_generic(otl_lob_stream_generic &&) = delete;
   otl_lob_stream_generic &operator=(otl_lob_stream_generic &&) = delete;
-#endif
-private:
-#else
-  otl_lob_stream_generic(const otl_lob_stream_generic &)
-      : mode(0), retcode(0), ndx(0), offset(0), lob_len(0), in_destructor(0),
-        eof_flag(0), lob_is_null(0), ora_lob(false) {}
-
-  otl_lob_stream_generic &operator=(const otl_lob_stream_generic &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_lob_stream_generic(otl_lob_stream_generic &&)
-      : mode(0), retcode(0), ndx(0), offset(0), lob_len(0), in_destructor(0),
-        eof_flag(0), lob_is_null(0), ora_lob(false) {}
-
-  otl_lob_stream_generic &operator=(otl_lob_stream_generic &&) { return *this; }
-#endif
-#endif
 };
 
 #endif
@@ -8739,37 +8371,11 @@ public:
     return *this;
   }
 #endif
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_select_stream(const otl_tmpl_select_stream &) = delete;
   otl_tmpl_select_stream &operator=(const otl_tmpl_select_stream &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_select_stream(otl_tmpl_select_stream &&) = delete;
   otl_tmpl_select_stream &operator=(otl_tmpl_select_stream &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_select_stream(const otl_tmpl_select_stream &)
-      : OTL_TMPL_SELECT_CURSOR(), sl_desc(nullptr), sl(nullptr), sl_len(0),
-        null_fetched(0), cur_col(0), cur_in(0), executed(0), eof_status(0),
-        var_info(), override_(nullptr), delay_next(0), lob_stream_mode(false),
-        _rfc(0) {}
-
-  otl_tmpl_select_stream &operator=(const otl_tmpl_select_stream &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_select_stream(otl_tmpl_select_stream &&)
-      : OTL_TMPL_SELECT_CURSOR(), sl_desc(nullptr), sl(nullptr), sl_len(0),
-        null_fetched(0), cur_col(0), cur_in(0), executed(0), eof_status(0),
-        var_info(), override_(nullptr), delay_next(0), lob_stream_mode(false),
-        _rfc(0) {}
-
-  otl_tmpl_select_stream &operator=(otl_tmpl_select_stream &&) { return *this; }
-#endif
-#endif
 };
 
 template <OTL_TYPE_NAME TExceptionStruct, OTL_TYPE_NAME TConnectStruct,
@@ -10014,35 +9620,11 @@ public:
         should_delete_flag(0), var_info(), flush_flag(0), flush_flag2(0),
         lob_stream_mode(0), master_stream_ptr_(nullptr) {}
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_out_stream(const otl_tmpl_out_stream &) = delete;
   otl_tmpl_out_stream &operator=(const otl_tmpl_out_stream &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_out_stream(otl_tmpl_out_stream &&) = delete;
   otl_tmpl_out_stream &operator=(otl_tmpl_out_stream &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_out_stream(const otl_tmpl_out_stream &)
-      : OTL_TMPL_CURSOR(), auto_commit_flag(0), dirty(0), cur_x(0), cur_y(0),
-        array_size(0), in_exception_flag(0), in_destruct_flag(0),
-        should_delete_flag(0), var_info(), flush_flag(0), flush_flag2(0),
-        lob_stream_mode(0), master_stream_ptr_(nullptr) {}
-
-  otl_tmpl_out_stream &operator=(const otl_tmpl_out_stream &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_out_stream(otl_tmpl_out_stream &&)
-      : OTL_TMPL_CURSOR(), auto_commit_flag(0), dirty(0), cur_x(0), cur_y(0),
-        array_size(0), in_exception_flag(0), in_destruct_flag(0),
-        should_delete_flag(0), var_info(), flush_flag(0), flush_flag2(0),
-        lob_stream_mode(0), master_stream_ptr_(nullptr) {}
-
-  otl_tmpl_out_stream &operator=(otl_tmpl_out_stream &&) { return *this; }
-#endif
-#endif
 };
 
 template <OTL_TYPE_NAME TExceptionStruct, OTL_TYPE_NAME TConnectStruct,
@@ -10936,35 +10518,11 @@ public:
         cur_in_y(0), in_y_len(0), null_fetched(0), avl(nullptr), avl_len(0),
         var_info() {}
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_inout_stream(const otl_tmpl_inout_stream &) = delete;
   otl_tmpl_inout_stream &operator=(const otl_tmpl_inout_stream &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_inout_stream(otl_tmpl_inout_stream &&) = delete;
   otl_tmpl_inout_stream &operator=(otl_tmpl_inout_stream &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_inout_stream(const otl_tmpl_inout_stream &)
-      : OTL_TMPL_OUT_STREAM(), in_vl(nullptr), iv_len(0), cur_in_x(0),
-        cur_in_y(0), in_y_len(0), null_fetched(0), avl(nullptr), avl_len(0),
-        var_info() {}
-
-  otl_tmpl_inout_stream &operator=(const otl_tmpl_inout_stream &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_inout_stream(otl_tmpl_inout_stream &&)
-      : OTL_TMPL_OUT_STREAM(), in_vl(nullptr), iv_len(0), cur_in_x(0),
-        cur_in_y(0), in_y_len(0), null_fetched(0), avl(nullptr), avl_len(0),
-        var_info() {}
-
-  otl_tmpl_inout_stream &operator=(otl_tmpl_inout_stream &&) { return *this; }
-#endif
-#endif
 };
 
 // ==================== OTL-Adapter for ODBC/CLI =========================
@@ -11467,30 +11025,8 @@ public:
 #endif
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_exc &operator=(const otl_exc &) = delete;
-
-private:
-#else
-  otl_exc &operator=(const otl_exc &) { return *this; }
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1600)
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_exc(otl_exc &&)
-      : msg(), sqlstate(), code(0)
-#if defined(OTL_EXTENDED_EXCEPTION)
-        ,
-        msg_arr(nullptr), sqlstate_arr(nullptr), code_arr(nullptr), arr_len(0)
-#endif
-  {
-  }
-
-  otl_exc &operator=(otl_exc &&) { return *this; }
-#endif
-#endif
-#endif
 };
 
 #if (ODBCVER >= 0x0300)
@@ -12656,32 +12192,9 @@ inline void otl_special_convert_char_to_SQLWCHAR
 #endif
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_conn(const otl_conn &) = delete;
   otl_conn &operator=(const otl_conn &) = delete;
-
-private:
-#else
-  otl_conn(const otl_conn &)
-      : henv(OTL_SQL_NULL_HANDLE_VAL), hdbc(OTL_SQL_NULL_HANDLE_VAL),
-        timeout(0), cursor_type(0), status(SQL_SUCCESS),
-        long_max_size(otl_short_int_max), extern_lda(false)
-#if defined(OTL_ODBC_zOS)
-        ,
-        logoff_commit(true)
-#endif
-#if defined(OTL_THROWS_ON_SQL_SUCCESS_WITH_INFO)
-        ,
-        throws_on_sql_success_with_info(false)
-#endif
-        ,
-        connection_type(OTL_DEFAULT_ODBC_CONNECT) {
-  }
-
-  otl_conn &operator=(const otl_conn &) { return *this; }
-#endif
 };
 
 class otl_var;
@@ -12706,20 +12219,9 @@ public:
 
   OTL_NODISCARD OTL_SQLHSTMT get_cda() { return cda; }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_cur0(const otl_cur0 &) = delete;
   otl_cur0 &operator=(const otl_cur0 &) = delete;
-
-private:
-#else
-  otl_cur0(const otl_cur0 &)
-      : cda(OTL_SQL_NULL_HANDLE_VAL), last_param_data_token(0),
-        last_sql_param_data_status(0), sql_param_data_count(0) {}
-
-  otl_cur0 &operator=(const otl_cur0 &) { return *this; }
-#endif
 };
 
 class otl_cur;
@@ -13436,22 +12938,9 @@ to function
     desc.otl_var_dbtype = ftype;
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_var(const otl_var &) = delete;
   otl_var &operator=(const otl_var &) = delete;
-
-private:
-#else
-  otl_var(const otl_var &)
-      : p_v(nullptr), p_len(nullptr), ftype(0), act_elem_size(0),
-        lob_stream_mode(false), lob_stream_flag(0), vparam_type(-1), lob_len(0),
-        lob_pos(0), lob_ftype(0), otl_adapter(OTL_ADAPTER_ENUM otl_odbc_adapter),
-        charz_flag(false) {}
-
-  otl_var &operator=(const otl_var &) { return *this; }
-#endif
 };
 
 #if defined(OTL_ODBC_zOS) || defined(OTL_ODBC_TIMESTEN) ||                     \
@@ -14707,20 +14196,9 @@ OTL_UNICODE is defined
 #endif
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_cur(const otl_cur &) = delete;
   otl_cur &operator=(const otl_cur &) = delete;
-
-private:
-#else
-  otl_cur(const otl_cur &)
-      : otl_cur0(), status(0), adb(nullptr), direct_exec_flag(0), _rpc(0),
-        canceled(false), last_iters(0) {}
-
-  otl_cur &operator=(const otl_cur &) { return *this; }
-#endif
 };
 
 class otl_sel {
@@ -15095,30 +14573,9 @@ public:
     }
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_sel(const otl_sel &) = delete;
   otl_sel &operator=(const otl_sel &) = delete;
-
-private:
-#else
-  otl_sel(const otl_sel &)
-      :
-#if defined(OTL_ODBC_SQL_EXTENDED_FETCH_ON)
-        use_fetch_scroll_(false),
-#endif
-        implicit_cursor(0), status(0), prefetch_array_size(0), crow(0),
-        in_sequence(0)
-#if defined(OTL_ODBC_SQL_EXTENDED_FETCH_ON) || (ODBCVER < 0x0300)
-        ,
-        row_status(nullptr), row_status_arr_size(0)
-#endif
-  {
-  }
-
-  otl_sel &operator=(const otl_sel &) { return *this; }
-#endif
 };
 
 typedef otl_tmpl_connect<otl_exc, otl_conn, otl_cur> otl_odbc_connect;
@@ -15467,30 +14924,9 @@ private:
   bool auto_commit_;
 #endif
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_connect(const otl_connect &) = delete;
   otl_connect &operator=(const otl_connect &) = delete;
-
-private:
-#else
-  otl_connect(const otl_connect &) OTL_NO_THROW : otl_odbc_connect(),
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-                                                  sc(),
-                                                  pool_enabled_(true),
-#endif
-                                                  cmd_(nullptr)
-#if defined(OTL_FREETDS_ODBC_WORKAROUNDS)
-                                                  ,
-                                                  auto_commit_(false)
-#endif
-  {
-  }
-
-  otl_connect &operator=(const otl_connect &) { return *this; }
-#endif
 };
 
 const int otl_odbc_no_stream = 0;
@@ -15579,31 +15015,9 @@ public:
     }
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_stream_shell(const otl_stream_shell &) = delete;
   otl_stream_shell &operator=(const otl_stream_shell &) = delete;
-
-private:
-#else
-  otl_stream_shell(const otl_stream_shell &)
-      : otl_stream_shell_generic(), ss(nullptr), io(nullptr), adb(nullptr),
-        auto_commit_flag(0), iov(nullptr), iov_len(0), next_iov_ndx(0),
-        ov(nullptr), ov_len(0), next_ov_ndx(0), flush_flag(false),
-        stream_type(otl_odbc_no_stream), lob_stream_flag(0), override_()
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-        ,
-        orig_sql_stm()
-#endif
-  {
-    should_delete = 0;
-  }
-
-  otl_stream_shell &operator=(const otl_stream_shell &) { return *this; }
-#endif
 };
 
 template <OTL_TYPE_NAME TExceptionStruct, OTL_TYPE_NAME TConnectStruct,
@@ -15941,27 +15355,9 @@ public:
     }
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_lob_stream(const otl_tmpl_lob_stream &) = delete;
   otl_tmpl_lob_stream &operator=(const otl_tmpl_lob_stream &) = delete;
-
-private:
-#else
-  otl_tmpl_lob_stream(const otl_tmpl_lob_stream &) OTL_NO_THROW
-      : otl_lob_stream_generic(false),
-        bind_var(nullptr),
-        connect(nullptr),
-        cursor(nullptr),
-        temp_buf(nullptr),
-        temp_char_buf(nullptr),
-        written_to_flag(false),
-        closed_flag(false),
-        last_read_lob_len(0) {}
-
-  otl_tmpl_lob_stream &operator=(const otl_tmpl_lob_stream &) { return *this; }
-#endif
 };
 
 typedef otl_tmpl_lob_stream<otl_exc, otl_conn, otl_cur, otl_var> otl_lob_stream;
@@ -18140,7 +17536,7 @@ OTL_THROWS_OTL_EXCEPTION:
             char temp_val[otl_bigint_str_size];
 #if defined(OTL_UNICODE)
             OTL_CHAR unitemp_val[otl_bigint_str_size];
-            (*ss)->operator>>(OTL_RCAST(unsigned char *, unitemp_val));
+            (*io)->operator>>(OTL_RCAST(unsigned char *, unitemp_val));
             OTL_CHAR *uc = unitemp_val;
             char *c = temp_val;
             while (*uc) {
@@ -18150,7 +17546,7 @@ OTL_THROWS_OTL_EXCEPTION:
             }
             *c = 0;
 #else
-            (*ss)->operator>>(temp_val);
+            (*io)->operator>>(temp_val);
 #endif
             OTL_STR_TO_BIGINT(temp_val, l);
           } else
@@ -19049,8 +18445,6 @@ OTL_THROWS_OTL_EXCEPTION:
     return *this;
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_stream &operator=(const otl_stream &) = delete;
   otl_stream(const otl_stream &) = delete;
@@ -19061,31 +18455,6 @@ public:
 #if !defined(OTL_STREAM_NO_PRIVATE_UNSIGNED_LONG_OPERATORS)
   otl_stream &operator>>(unsigned long int &) = delete;
   otl_stream &operator<<(const unsigned long int) = delete;
-#endif
-private:
-#else
-  otl_stream &operator=(const otl_stream &) { return *this; }
-
-  otl_stream(const otl_stream &)
-      : shell(nullptr), shell_pt(), connected(0), ss(nullptr), io(nullptr),
-        adb(nullptr), auto_commit_flag(nullptr), iov(nullptr), iov_len(nullptr),
-        next_iov_ndx(nullptr), ov(nullptr), ov_len(nullptr),
-        next_ov_ndx(nullptr), override_(nullptr), end_marker(0),
-        oper_int_called(0), last_eof_rc(0), last_oper_was_read_op(false),
-        buf_size_(0) {}
-
-#if !defined(OTL_STREAM_NO_PRIVATE_BOOL_OPERATORS)
-  otl_stream &operator>>(bool &) OTL_NO_THROW { return *this; }
-
-  otl_stream &operator<<(const bool) OTL_NO_THROW { return *this; }
-
-#endif
-
-#if !defined(OTL_STREAM_NO_PRIVATE_UNSIGNED_LONG_OPERATORS)
-  otl_stream &operator>>(unsigned long int &) OTL_NO_THROW { return *this; }
-
-  otl_stream &operator<<(const unsigned long int) OTL_NO_THROW { return *this; }
-#endif
 #endif
 };
 
@@ -20056,62 +19425,16 @@ public:
     return !last_status;
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_conn(const otl_conn &) = delete;
   otl_conn &operator=(const otl_conn &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_conn(otl_conn &&) = delete;
   otl_conn &operator=(otl_conn &&) = delete;
-#endif
-private:
-#else
-  otl_conn(const otl_conn &)
-      : envhp(nullptr), srvhp(nullptr), errhp(nullptr), svchp(nullptr),
-        authp(nullptr), auto_commit(0), extern_lda(0), attached(0),
-        in_session(0), char_set_(SQLCS_IMPLICIT), session_begin_count(0),
-        session_mode_(OCI_DEFAULT), ext_cred(0), last_status(OCI_SUCCESS),
-        xa_server_external_name(nullptr), xa_server_internal_name(nullptr)
-#if defined(OTL_ORA_OCI_ENV_CREATE)
-        ,
-        threaded_mode(false)
-#endif
-#if defined(OTL_ORA11G_R2) || defined(OTL_ORA12C)
-        ,
-        lob_prefetch_size(0)
-#endif
-  {
-  }
-
-  otl_conn &operator=(const otl_conn &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_conn(otl_conn &&)
-      : envhp(nullptr), srvhp(nullptr), errhp(nullptr), svchp(nullptr),
-        authp(nullptr), auto_commit(0), extern_lda(0), attached(0),
-        in_session(0), char_set_(SQLCS_IMPLICIT), session_begin_count(0),
-        session_mode_(OCI_DEFAULT), ext_cred(0), last_status(OCI_SUCCESS),
-        xa_server_external_name(nullptr), xa_server_internal_name(nullptr)
-#if defined(OTL_ORA_OCI_ENV_CREATE)
-        ,
-        threaded_mode(false)
-#endif
-#if defined(OTL_ORA11G_R2) || defined(OTL_ORA12C)
-        ,
-        lob_prefetch_size(0)
-#endif
-  {
-  }
-
-  otl_conn &operator=(otl_conn &&) { return *this; }
-#endif
-#endif
 };
 
 class otl_cur0 {
 public:
-  virtual ~otl_cur0() {}
+  virtual ~otl_cur0() = default;
 };
 
 class otl_cur;
@@ -21838,67 +21161,11 @@ public:
     desc.otl_var_dbtype = aftype;
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_var(const otl_var &) = delete;
   otl_var &operator=(const otl_var &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_var(otl_var &&) = delete;
   otl_var &operator=(otl_var &&) = delete;
-#endif
-private:
-#else
-  otl_var(const otl_var &)
-      : p_v(nullptr), p_ind(nullptr), p_rlen(nullptr), p_rcode(nullptr),
-        ftype(0), array_size(0), elem_size(0), nls_flag(false), lob(nullptr),
-#if (defined(OTL_ORA8I) || defined(OTL_ORA9I)) && defined(OTL_ORA_TIMESTAMP)
-        timestamp(nullptr),
-#endif
-        cda(nullptr), connect(nullptr), buf(nullptr), buf_len(0),
-        real_buf_len(0), ext_buf_flag(0), act_elem_size(0), max_tab_len(0),
-        cur_tab_len(0), pl_tab_flag(0), lob_stream_flag(0), vparam_type(-1),
-        otl_adapter(OTL_ADAPTER_ENUM otl_ora8_adapter),
-        lob_stream_mode(false), 
-#if defined(OTL_UNICODE)
-        unicode_var_len(0), 
-#endif
-        csid(0),
-#if defined(OTL_UNICODE) || defined(OTL_ORA_UTF8)
-        csfrm(SQLCS_IMPLICIT), 
-#endif
-        read_blob_amt(0), total_read_blob_amt(0),
-        charz_flag(false), select_stm_flag(false) {
-  }
-
-  otl_var &operator=(const otl_var &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_var(otl_var &&)
-      : p_v(nullptr), p_ind(nullptr), p_rlen(nullptr), p_rcode(nullptr),
-        ftype(0), array_size(0), elem_size(0), nls_flag(false), lob(nullptr),
-#if (defined(OTL_ORA8I) || defined(OTL_ORA9I)) && defined(OTL_ORA_TIMESTAMP)
-        timestamp(nullptr),
-#endif
-        cda(nullptr), connect(nullptr), buf(nullptr), buf_len(0),
-        real_buf_len(0), ext_buf_flag(0), act_elem_size(0), max_tab_len(0),
-        cur_tab_len(0), pl_tab_flag(0), lob_stream_flag(0), vparam_type(-1),
-        otl_adapter(OTL_ADAPTER_ENUM otl_ora8_adapter),
-        lob_stream_mode(false), 
-#if defined(OTL_UNICODE)
-        unicode_var_len(0), 
-#endif
-        csid(0),
-#if defined(OTL_UNICODE) || defined(OTL_ORA_UTF8)
-        csfrm(SQLCS_IMPLICIT), 
-#endif
-        read_blob_amt(0), total_read_blob_amt(0),
-        charz_flag(false), select_stm_flag(false) {
-  }
-
-  otl_var &operator=(otl_var &&) { return *this; }
-#endif
-#endif
 };
 
 class otl_sel;
@@ -22861,40 +22128,11 @@ public:
 #endif
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_cur(const otl_cur &) = delete;
   otl_cur &operator=(const otl_cur &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_cur(otl_cur &&) = delete;
   otl_cur &operator=(otl_cur &&) = delete;
-#endif
-private:
-#else
-
-  otl_cur(const otl_cur &)
-      : otl_cur0(), cda(nullptr), errhp(nullptr), extern_cda(false), status(0),
-        eof_status(0), db(nullptr), straight_select(1), pos_nbr(0),
-        commit_on_success(0), last_param_data_token(0),
-        last_sql_param_data_status(0), sql_param_data_count(0), canceled(false),
-        direct_exec_flag(0), parse_only_flag(0), stm_executed(0),
-        batch_error_mode_(false), errhndl_(nullptr), errhp2_(nullptr) {}
-
-  otl_cur &operator=(const otl_cur &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_cur(otl_cur &&)
-      : otl_cur0(), cda(nullptr), errhp(nullptr), extern_cda(false), status(0),
-        eof_status(0), db(nullptr), straight_select(1), pos_nbr(0),
-        commit_on_success(0), last_param_data_token(0),
-        last_sql_param_data_status(0), sql_param_data_count(0), canceled(false),
-        direct_exec_flag(0), parse_only_flag(0), stm_executed(0),
-        batch_error_mode_(false), errhndl_(nullptr), errhp2_(nullptr) {}
-
-  otl_cur &operator=(otl_cur &&) { return *this; }
-#endif
-#endif
 };
 
 class otl_ref_cursor;
@@ -22975,27 +22213,11 @@ public:
     }
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_sel(const otl_sel &) = delete;
   otl_sel &operator=(const otl_sel &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_sel(otl_sel &&) = delete;
   otl_sel &operator=(otl_sel &&) = delete;
-#endif
-private:
-#else
-  otl_sel(const otl_sel &) : implicit_cursor(0) {}
-
-  otl_sel &operator=(const otl_sel &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_sel(otl_sel &&) : implicit_cursor(0) {}
-
-  otl_sel &operator=(otl_sel &&) { return *this; }
-#endif
-#endif
 };
 
 typedef otl_tmpl_connect<otl_exc, otl_conn, otl_cur> otl_ora8_connect;
@@ -23387,39 +22609,11 @@ public:
     }
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_tmpl_lob_stream(const otl_tmpl_lob_stream &) = delete;
   otl_tmpl_lob_stream &operator=(const otl_tmpl_lob_stream &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_tmpl_lob_stream(otl_tmpl_lob_stream &&) = delete;
   otl_tmpl_lob_stream &operator=(otl_tmpl_lob_stream &&) = delete;
-#endif
-private:
-#else
-  otl_tmpl_lob_stream(const otl_tmpl_lob_stream &) OTL_NO_THROW
-      : otl_lob_stream_generic(true),
-        bind_var(nullptr),
-        connect(nullptr),
-        cursor(nullptr),
-        temp_buf(nullptr),
-        temp_char_buf(nullptr) {}
-
-  otl_tmpl_lob_stream &operator=(const otl_tmpl_lob_stream &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_tmpl_lob_stream(otl_tmpl_lob_stream &&) OTL_NO_THROW
-      : otl_lob_stream_generic(true),
-        bind_var(nullptr),
-        connect(nullptr),
-        cursor(nullptr),
-        temp_buf(nullptr),
-        temp_char_buf(nullptr) {}
-
-  otl_tmpl_lob_stream &operator=(otl_tmpl_lob_stream &&) { return *this; }
-#endif
-#endif
 };
 
 typedef otl_tmpl_lob_stream<otl_exc, otl_conn, otl_cur, otl_var> otl_lob_stream;
@@ -23825,42 +23019,11 @@ OTL_THROWS_OTL_EXCEPTION:
 private:
   char *cmd_;
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_connect &operator=(const otl_connect &) = delete;
   otl_connect(const otl_connect &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_connect &operator=(otl_connect &&) = delete;
   otl_connect(otl_connect &&) = delete;
-#endif
-private:
-#else
-  otl_connect &operator=(const otl_connect &) { return *this; }
-
-  otl_connect(const otl_connect &)
-      : otl_ora8_connect(),
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-        sc(), pool_enabled_(true),
-#endif
-        cmd_(nullptr) {
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_connect &operator=(otl_connect &&) { return *this; }
-
-  otl_connect(otl_connect &&)
-      : otl_ora8_connect(),
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-        sc(), pool_enabled_(true),
-#endif
-        cmd_(nullptr) {
-  }
-#endif
-#endif
 };
 
 typedef otl_tmpl_variable<otl_var> otl_generic_variable;
@@ -23971,33 +23134,11 @@ public:
     return 1;
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_refcur_base_cursor(const otl_refcur_base_cursor &) = delete;
   otl_refcur_base_cursor &operator=(const otl_refcur_base_cursor &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_refcur_base_cursor(otl_refcur_base_cursor &&) = delete;
   otl_refcur_base_cursor &operator=(otl_refcur_base_cursor &&) = delete;
-#endif
-private:
-#else
-  otl_refcur_base_cursor(const otl_refcur_base_cursor &)
-      : otl_tmpl_cursor<otl_exc, otl_conn, otl_cur, otl_var>(), cur_row(-1),
-        cur_size(0), row_count(0), array_size(0) {}
-
-  otl_refcur_base_cursor &operator=(const otl_refcur_base_cursor &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_refcur_base_cursor(otl_refcur_base_cursor &&)
-      : otl_tmpl_cursor<otl_exc, otl_conn, otl_cur, otl_var>(), cur_row(-1),
-        cur_size(0), row_count(0), array_size(0) {}
-
-  otl_refcur_base_cursor &operator=(otl_refcur_base_cursor &&) { return *this; }
-#endif
-#endif
 };
 
 #if defined(OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE)
@@ -25271,44 +24412,11 @@ private:
     delay_next = 0;
   }
 
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_refcur_stream &operator=(const otl_refcur_stream &) = delete;
   otl_refcur_stream(const otl_refcur_stream &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_refcur_stream &operator=(otl_refcur_stream &&) = delete;
   otl_refcur_stream(otl_refcur_stream &&) = delete;
-#endif
-private:
-#else
-  otl_refcur_stream &operator=(const otl_refcur_stream &) { return *this; }
-
-  otl_refcur_stream(const otl_refcur_stream &)
-      :
-#if defined(OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE)
-        otl_read_stream_interface(),
-#endif
-        otl_refcur_base_cursor(), delay_next(0), same_sl_flag(0), override_(),
-        ov(nullptr), ov_len(0), next_ov_ndx(0), sl_desc(nullptr), sl_len(),
-        sl(nullptr), null_fetched(0), ret_code(0), cur_col(0), cur_in(0),
-        executed(0), var_info() {
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_refcur_stream &operator=(otl_refcur_stream &&) { return *this; }
-
-  otl_refcur_stream(otl_refcur_stream &&)
-      :
-#if defined(OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE)
-        otl_read_stream_interface(),
-#endif
-        otl_refcur_base_cursor(), delay_next(0), same_sl_flag(0), override_(),
-        ov(nullptr), ov_len(0), next_ov_ndx(0), sl_desc(nullptr), sl_len(),
-        sl(nullptr), null_fetched(0), ret_code(0), cur_col(0), cur_in(0),
-        executed(0), var_info() {
-  }
-#endif
-#endif
 };
 
 class otl_inout_stream : public otl_ora8_inout_stream {
@@ -25674,31 +24782,11 @@ public:
 protected:
   otl_connect *adb2;
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_inout_stream(const otl_inout_stream &) = delete;
   otl_inout_stream &operator=(const otl_inout_stream &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_inout_stream(otl_inout_stream &&) = delete;
   otl_inout_stream &operator=(otl_inout_stream &&) = delete;
-#endif
-
-private:
-#else
-  otl_inout_stream(const otl_inout_stream &)
-      : otl_ora8_inout_stream(), adb2(nullptr) {}
-
-  otl_inout_stream &operator=(const otl_inout_stream &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_inout_stream(otl_inout_stream &&)
-      : otl_ora8_inout_stream(), adb2(nullptr) {}
-
-  otl_inout_stream &operator=(otl_inout_stream &&) { return *this; }
-#endif
-
-#endif
 };
 
 // ============ OTL Reference Cursor Streams for Oracle 8 =================
@@ -25946,35 +25034,11 @@ protected:
   char cur_placeholder[64];
   void *master_stream_ptr_;
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_ref_cursor(const otl_ref_cursor &) = delete;
   otl_ref_cursor &operator=(const otl_ref_cursor &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_ref_cursor(otl_ref_cursor &&) = delete;
   otl_ref_cursor &operator=(otl_ref_cursor &&) = delete;
-#endif
-private:
-#else
-  otl_ref_cursor(const otl_ref_cursor &)
-      : otl_tmpl_cursor<otl_exc, otl_conn, otl_cur, otl_var>(), cur_row(-1),
-        cur_size(0), row_count(0), array_size(0), local_override(), sel_cur(),
-        rvl_len(0), rvl(nullptr), vl_cur_len(0), cur_placeholder(),
-        master_stream_ptr_(nullptr) {}
-
-  otl_ref_cursor &operator=(const otl_ref_cursor &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_ref_cursor(otl_ref_cursor &&)
-      : otl_tmpl_cursor<otl_exc, otl_conn, otl_cur, otl_var>(), cur_row(-1),
-        cur_size(0), row_count(0), array_size(0), local_override(), sel_cur(),
-        rvl_len(0), rvl(nullptr), vl_cur_len(0), cur_placeholder(),
-        master_stream_ptr_(nullptr) {}
-
-  otl_ref_cursor &operator=(otl_ref_cursor &&) { return *this; }
-#endif
-#endif
 };
 
 class otl_ref_select_stream : public otl_ref_cursor {
@@ -27223,35 +26287,11 @@ protected:
   }
 #endif
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_ref_select_stream(const otl_ref_select_stream &) = delete;
   otl_ref_select_stream &operator=(const otl_ref_select_stream &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_ref_select_stream(otl_ref_select_stream &&) = delete;
   otl_ref_select_stream &operator=(otl_ref_select_stream &&) = delete;
-#endif
-private:
-#else
-  otl_ref_select_stream(const otl_ref_select_stream &)
-      : otl_ref_cursor(), override_(nullptr), delay_next(0), same_sl_flag(0),
-        _rfc(0), sl_desc(nullptr), sl_len(0), sl(nullptr), null_fetched(0),
-        ret_code(0), cur_col(0), cur_in(0), executed(0), var_info() {}
-
-  otl_ref_select_stream &operator=(const otl_ref_select_stream &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_ref_select_stream(otl_ref_select_stream &&)
-      : otl_ref_cursor(), override_(nullptr), delay_next(0), same_sl_flag(0),
-        _rfc(0), sl_desc(nullptr), sl_len(0), sl(nullptr), null_fetched(0),
-        ret_code(0), cur_col(0), cur_in(0), executed(0), var_info() {}
-
-  otl_ref_select_stream &operator=(otl_ref_select_stream &&) { return *this; }
-#endif
-#endif
 };
 
 class otl_stream_shell : public otl_stream_shell_generic {
@@ -27341,51 +26381,11 @@ public:
     }
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_stream_shell(const otl_stream_shell &) = delete;
   otl_stream_shell &operator=(const otl_stream_shell &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_stream_shell(otl_stream_shell &&) = delete;
   otl_stream_shell &operator=(otl_stream_shell &&) = delete;
-#endif
-private:
-#else
-  otl_stream_shell(const otl_stream_shell &)
-      : otl_stream_shell_generic(), ref_ss(nullptr), ss(nullptr), io(nullptr),
-        adb(nullptr), auto_commit_flag(0), lob_stream_flag(false), iov(nullptr),
-        iov_len(0), next_iov_ndx(0), ov(nullptr), ov_len(0), next_ov_ndx(0),
-        flush_flag(false), stream_type(otl_no_stream_type), override_()
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-        ,
-        orig_sql_stm()
-#endif
-  {
-  }
-
-  otl_stream_shell &operator=(const otl_stream_shell &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_stream_shell(otl_stream_shell &&)
-      : otl_stream_shell_generic(), ref_ss(nullptr), ss(nullptr), io(nullptr),
-        adb(nullptr), auto_commit_flag(0), lob_stream_flag(false), iov(nullptr),
-        iov_len(0), next_iov_ndx(0), ov(nullptr), ov_len(0), next_ov_ndx(0),
-        flush_flag(false), stream_type(otl_no_stream_type), override_()
-#if (defined(OTL_STL) || defined(OTL_ACE) ||                                   \
-     defined(OTL_UNICODE_STRING_TYPE)) &&                                      \
-    defined(OTL_STREAM_POOLING_ON)
-        ,
-        orig_sql_stm()
-#endif
-  {
-  }
-
-  otl_stream_shell &operator=(otl_stream_shell &&) { return *this; }
-#endif
-#endif
 };
 
 class otl_sp_parm_desc {
@@ -31113,16 +30113,11 @@ public:
     return *this;
   }
 #endif
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_stream &operator=(const otl_stream &) = delete;
   otl_stream(const otl_stream &) = delete;
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_stream &operator=(otl_stream &&) = delete;
   otl_stream(otl_stream &&) = delete;
-#endif
 
 #if !defined(OTL_STREAM_NO_PRIVATE_BOOL_OPERATORS)
   otl_stream &operator>>(bool &) = delete;
@@ -31132,51 +30127,6 @@ public:
 #if !defined(OTL_STREAM_NO_PRIVATE_UNSIGNED_LONG_OPERATORS)
   otl_stream &operator>>(unsigned long int &) = delete;
   otl_stream &operator<<(const unsigned long int) = delete;
-#endif
-private:
-#else
-  otl_stream &operator=(const otl_stream &) { return *this; }
-
-  otl_stream(const otl_stream &)
-      :
-#if defined(OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE)
-        otl_read_stream_interface(),
-#endif
-        shell(nullptr), shell_pt(), connected(0), ref_ss(nullptr), ss(nullptr),
-        io(nullptr), adb(nullptr), auto_commit_flag(nullptr), iov(nullptr),
-        iov_len(nullptr), next_iov_ndx(nullptr), ov(nullptr), ov_len(nullptr),
-        next_ov_ndx(nullptr), end_marker(0), oper_int_called(0), last_eof_rc(0),
-        last_oper_was_read_op(false), override_(nullptr), buf_size_(0) {
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_stream &operator=(otl_stream &&) { return *this; }
-
-  otl_stream(otl_stream &&)
-      :
-#if defined(OTL_ORA_DECLARE_COMMON_READ_STREAM_INTERFACE)
-        otl_read_stream_interface(),
-#endif
-        shell(nullptr), shell_pt(), connected(0), ref_ss(nullptr), ss(nullptr),
-        io(nullptr), adb(nullptr), auto_commit_flag(nullptr), iov(nullptr),
-        iov_len(nullptr), next_iov_ndx(nullptr), ov(nullptr), ov_len(nullptr),
-        next_ov_ndx(nullptr), end_marker(0), oper_int_called(0), last_eof_rc(0),
-        last_oper_was_read_op(false), override_(nullptr), buf_size_(0) {
-  }
-#endif
-
-#if !defined(OTL_STREAM_NO_PRIVATE_BOOL_OPERATORS)
-  otl_stream &operator>>(bool &) OTL_NO_THROW { return *this; }
-
-  otl_stream &operator<<(const bool) OTL_NO_THROW { return *this; }
-
-#endif
-
-#if !defined(OTL_STREAM_NO_PRIVATE_UNSIGNED_LONG_OPERATORS)
-  otl_stream &operator>>(unsigned long int &) OTL_NO_THROW { return *this; }
-
-  otl_stream &operator<<(const unsigned long int) OTL_NO_THROW { return *this; }
-#endif
 #endif
 };
 
@@ -31494,27 +30444,11 @@ private:
 public:
   OTL_NODISCARD bool is_online(void) { return subscrhp != nullptr; }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_subscriber(const otl_subscriber &) = delete;
   otl_subscriber &operator=(const otl_subscriber &) = delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
   otl_subscriber(otl_subscriber &&) = delete;
   otl_subscriber &operator=(otl_subscriber &&) = delete;
-#endif
-private:
-#else
-  otl_subscriber(const otl_subscriber &) : db(nullptr), subscrhp(nullptr) {}
-
-  otl_subscriber &operator=(const otl_subscriber &) { return *this; }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_subscriber(otl_subscriber &&) : db(nullptr), subscrhp(nullptr) {}
-
-  otl_subscriber &operator=(otl_subscriber &&) { return *this; }
-#endif
-#endif
 };
 
 #endif
@@ -33059,59 +31993,11 @@ protected:
     out_vars_constructed_ = true;
   }
 
-private:
-#if defined(OTL_ANSI_CPP_11_DELETE_SPEC_SUPPORT)
 public:
   otl_stream_read_iterator(const otl_stream_read_iterator &) = delete;
-  otl_stream_read_iterator &operator=(const otl_stream_read_iterator &) =
-      delete;
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
+  otl_stream_read_iterator &operator=(const otl_stream_read_iterator &) = delete;
   otl_stream_read_iterator(otl_stream_read_iterator &&) = delete;
   otl_stream_read_iterator &operator=(otl_stream_read_iterator &&) = delete;
-#endif
-private:
-#else
-
-  otl_stream_read_iterator(const otl_stream_read_iterator &)
-      : out_vars_(nullptr), out_vars_len_(0), str_(nullptr),
-        out_vars_arr_(nullptr), out_vars_null_arr_(nullptr),
-        out_vars_constructed_(nullptr), lob_stream_mode_flag_(false)
-#if defined(OTL_STL)
-        ,
-        var_name2pos_map_()
-#endif
-#if defined(OTL_ACE)
-        ,
-        var_name2pos_map_()
-#endif
-  {
-  }
-
-  otl_stream_read_iterator &operator=(const otl_stream_read_iterator &) {
-    return *this;
-  }
-
-#if defined OTL_ANSI_CPP_11_RVAL_REF_SUPPORT
-  otl_stream_read_iterator(otl_stream_read_iterator &&)
-      : out_vars_(nullptr), out_vars_len_(0), str_(nullptr),
-        out_vars_arr_(nullptr), out_vars_null_arr_(nullptr),
-        out_vars_constructed_(false), lob_stream_mode_flag_(false)
-#if defined(OTL_STL)
-        ,
-        var_name2pos_map_()
-#endif
-#if defined(OTL_ACE)
-        ,
-        var_name2pos_map_()
-#endif
-  {
-  }
-
-  otl_stream_read_iterator &operator=(otl_stream_read_iterator &&) {
-    return *this;
-  }
-#endif
-#endif
 
 };
 
