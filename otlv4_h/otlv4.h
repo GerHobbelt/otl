@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.494,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.495,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401EEL)
+#define OTL_VERSION_NUMBER (0x0401EFL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -715,7 +715,7 @@ typedef int otl_stream_buffer_size_type;
     defined(OTL_NUMERIC_TYPE_2_TO_STR) && defined(OTL_NUMERIC_TYPE_2_ID)
 #if defined(OTL_NUMERIC_TYPE_3) && defined(OTL_STR_TO_NUMERIC_TYPE_3) &&       \
     defined(OTL_NUMERIC_TYPE_3_TO_STR) && defined(OTL_NUMERIC_TYPE_3_ID)
-#define OTL_CHECK_BIND_VARS                                                    \
+#define OTL_CHECK_BIND_VARS(return_val)                                        \
   if (strcmp(type_arr, "INT") == 0 || strcmp(type_arr, "UNSIGNED") == 0 ||     \
       strcmp(type_arr, "SHORT") == 0 || strcmp(type_arr, "LONG") == 0 ||       \
       strcmp(type_arr, "FLOAT") == 0 || strcmp(type_arr, "DOUBLE") == 0 ||     \
@@ -736,9 +736,9 @@ typedef int otl_stream_buffer_size_type;
       strcmp(type_arr, OTL_NUMERIC_TYPE_3_ID) == 0)                            \
     ;                                                                          \
   else                                                                         \
-    return 0;
+    return return_val;
 #else
-#define OTL_CHECK_BIND_VARS                                                    \
+#define OTL_CHECK_BIND_VARS(return_val)                                        \
   if (strcmp(type_arr, "INT") == 0 || strcmp(type_arr, "UNSIGNED") == 0 ||     \
       strcmp(type_arr, "SHORT") == 0 || strcmp(type_arr, "LONG") == 0 ||       \
       strcmp(type_arr, "FLOAT") == 0 || strcmp(type_arr, "DOUBLE") == 0 ||     \
@@ -758,10 +758,10 @@ typedef int otl_stream_buffer_size_type;
       strcmp(type_arr, OTL_NUMERIC_TYPE_2_ID) == 0)                            \
     ;                                                                          \
   else                                                                         \
-    return 0;
+    return return_val;
 #endif
 #else
-#define OTL_CHECK_BIND_VARS                                                    \
+#define OTL_CHECK_BIND_VARS(return_val)                                        \
   if (strcmp(type_arr, "INT") == 0 || strcmp(type_arr, "UNSIGNED") == 0 ||     \
       strcmp(type_arr, "SHORT") == 0 || strcmp(type_arr, "LONG") == 0 ||       \
       strcmp(type_arr, "FLOAT") == 0 || strcmp(type_arr, "DOUBLE") == 0 ||     \
@@ -780,10 +780,10 @@ typedef int otl_stream_buffer_size_type;
       strcmp(type_arr, OTL_NUMERIC_TYPE_1_ID) == 0)                            \
     ;                                                                          \
   else                                                                         \
-    return 0;
+    return return_val;
 #endif
 #else
-#define OTL_CHECK_BIND_VARS                                                    \
+#define OTL_CHECK_BIND_VARS(return_val)                                        \
   if (strcmp(type_arr, "INT") == 0 || strcmp(type_arr, "UNSIGNED") == 0 ||     \
       strcmp(type_arr, "SHORT") == 0 || strcmp(type_arr, "LONG") == 0 ||       \
       strcmp(type_arr, "FLOAT") == 0 || strcmp(type_arr, "DOUBLE") == 0 ||     \
@@ -801,10 +801,10 @@ typedef int otl_stream_buffer_size_type;
       strcmp(type_arr, "REFCUR") == 0)                                         \
     ;                                                                          \
   else                                                                         \
-    return 0;
+    return return_val;
 #endif
 #else
-#define OTL_CHECK_BIND_VARS
+#define OTL_CHECK_BIND_VARS(return_val)
 #endif
 
 // ------------------- Namespace generation ------------------------
@@ -5648,7 +5648,7 @@ public:
     }
 #endif
 
-    OTL_CHECK_BIND_VARS
+    OTL_CHECK_BIND_VARS(0);
 
     int rc = 1;
 #if defined(OTL_NUMERIC_TYPE_1) && defined(OTL_STR_TO_NUMERIC_TYPE_1) &&       \
@@ -5924,7 +5924,7 @@ public:
     else
       return nullptr;
 
-    OTL_CHECK_BIND_VARS
+    OTL_CHECK_BIND_VARS(nullptr);
 
     int pl_tab_flag = 0;
 
@@ -16073,7 +16073,7 @@ public:
     }
 #elif defined(OTL_DEFAULT_STRING_NULL_TO_VAL)
     if ((*this).is_null())
-      s = OTL_RCAST(OTL_UNICODE_CHAR_TYPE *, OTL_DEFAULT_STRING_NULL_TO_VAL);
+      s = OTL_DEFAULT_STRING_NULL_TO_VAL;
 #endif
     OTL_TRACE_WRITE(s.c_str(), "operator >>", "OTL_UNICODE_STRING_TYPE&");
     inc_next_ov();
@@ -16102,10 +16102,17 @@ public:
       break;
     }
 #if defined(OTL_DEFAULT_STRING_NULL_TO_VAL)
+#if defined(OTL_UNICODE)
+    if ((*this).is_null())
+      otl_strcpy(OTL_RCAST(unsigned char *, s),
+                 OTL_RCAST(unsigned char *,
+                           OTL_CCAST(OTL_UNICODE_CHAR_TYPE *, OTL_DEFAULT_STRING_NULL_TO_VAL)));
+#else
     if ((*this).is_null())
       otl_strcpy(OTL_RCAST(unsigned char *, s),
                  OTL_RCAST(unsigned char *,
                            OTL_CCAST(char *, OTL_DEFAULT_STRING_NULL_TO_VAL)));
+#endif
 #endif
 #if defined(OTL_UNICODE)
     OTL_TRACE_WRITE(OTL_RCAST(OTL_UNICODE_CHAR_TYPE *, s), "operator >>",
