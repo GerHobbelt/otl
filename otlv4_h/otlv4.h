@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.488,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.489,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401E8L)
+#define OTL_VERSION_NUMBER (0x0401E9L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -55,6 +55,14 @@
 #define OTL_CPP_14_ON
 #define OTL_CPP_17_ON
 #define OTL_CPP_20_ON
+#endif
+
+#if defined(OTL_CPP_26_ON)
+#define OTL_CPP_11_ON
+#define OTL_CPP_14_ON
+#define OTL_CPP_17_ON
+#define OTL_CPP_20_ON
+#define OTL_CPP_23_ON
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER==1700)
@@ -214,10 +222,6 @@
 #endif
 
 #endif
-#endif
-
-#if defined(OTL_CPP_11_ON) && defined(OTL_FUNC_THROW_SPEC_ON)
-#error OTL_CPP_11_ON and OTL_FUNC_THROW_SPEC_ON cannot be used together
 #endif
 
 #if !defined(OTL_CPP_11_ON)
@@ -532,14 +536,11 @@ inline int otl_sprintf_s(char* dest, size_t dest_sz, const char* fmt, ...){
 #define OTL_THROW(x) throw x
 #endif
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
-// vc++ 14 or higher
 #define OTL_THROWS_OTL_EXCEPTION noexcept(false)
 #define OTL_THROWS_OTL_EXCEPTION2 noexcept(false)
 #define OTL_THROWS_OTL_EXCEPTION3 noexcept(false)
 #define OTL_THROWS_OTL_EXCEPTION4 noexcept(false)
 #define OTL_NO_THROW noexcept(true)
-#endif
 
 #if defined(OTL_ORA11G)
 #if !defined(OTL_ORA10G_R2)
@@ -635,11 +636,6 @@ typedef int otl_stream_buffer_size_type;
 
 #if defined(OTL_ODBC_POSTGRESQL)
 #define OTL_ODBC
-#endif
-
-// Comment out this #define when using pre-ANSI C++ compiler
-#if !defined(OTL_ODBC_zOS) && !defined(OTL_ANSI_CPP)
-#define OTL_ANSI_CPP
 #endif
 
 #if defined(OTL_ODBC_zOS)
@@ -1537,72 +1533,15 @@ enum class otl_binding_enum : unsigned char {
 
 const int otl_unsupported_type = -10000;
 
-#if defined(OTL_ANSI_CPP)
-
 #define OTL_SCAST(_t, _e) static_cast<_t>(_e)
 #define OTL_RCAST(_t, _e) reinterpret_cast<_t>(_e)
 #define OTL_DCAST(_t, _e) dynamic_cast<_t>(_e)
 #define OTL_CCAST(_t, _e) const_cast<_t>(_e)
 
 #define OTL_CONST_EXCEPTION const
-
-#if defined(OTL_FUNC_THROW_SPEC_ON)
-#define OTL_THROWS_OTL_EXCEPTION throw(otl_exception)
-#define OTL_THROWS_OTL_EXCEPTION2
-#define OTL_THROWS_OTL_EXCEPTION3 throw(OTL_TMPL_EXCEPTION)
-#define OTL_THROWS_OTL_EXCEPTION4
-#define OTL_NO_THROW OTL_ANSI_CPP_11_NOEXCEPT
-#else
-
-#if defined(OTL_ANSI_CPP_11_NOEXCEPT_FALSE) && !defined(OTL_THROWS_OTL_EXCEPTION)
-#define OTL_THROWS_OTL_EXCEPTION OTL_ANSI_CPP_11_NOEXCEPT_FALSE
-#define OTL_THROWS_OTL_EXCEPTION2 OTL_ANSI_CPP_11_NOEXCEPT_FALSE
-#define OTL_THROWS_OTL_EXCEPTION3 OTL_ANSI_CPP_11_NOEXCEPT_FALSE
-#define OTL_THROWS_OTL_EXCEPTION4 OTL_ANSI_CPP_11_NOEXCEPT_FALSE
-#else
-#if !defined(OTL_THROWS_OTL_EXCEPTION)
-#define OTL_THROWS_OTL_EXCEPTION
-#define OTL_THROWS_OTL_EXCEPTION2
-#define OTL_THROWS_OTL_EXCEPTION3
-#define OTL_THROWS_OTL_EXCEPTION4
-#endif
-#endif
-
-#if !defined(OTL_NO_THROW)
-#define OTL_NO_THROW OTL_ANSI_CPP_11_NOEXCEPT
-#else
-#if defined(OTL_NO_THROW_IS_EMPTY_THROW)
-#define OTL_NO_THROW throw()
-#else
-#if !defined(OTL_NO_THROW)
-#define OTL_NO_THROW
-#endif
-#endif
-#endif
-#endif
-
 #define OTL_TYPE_NAME typename
 
 #include <new>
-
-#else
-
-#define OTL_SCAST(_t, _e) ((_t)(_e))
-#define OTL_RCAST(_t, _e) ((_t)(_e))
-#define OTL_DCAST(_t, _e) ((_t)(_e))
-#define OTL_CCAST(_t, _e) ((_t)(_e))
-#define OTL_CONST_EXCEPTION
-#define OTL_THROWS_OTL_EXCEPTION
-#define OTL_THROWS_OTL_EXCEPTION2
-#define OTL_THROWS_OTL_EXCEPTION3
-#if defined(OTL_NO_THROW_IS_EMPTY_THROW)
-#define OTL_NO_THROW throw()
-#else
-#define OTL_NO_THROW
-#endif
-#define OTL_TYPE_NAME class
-
-#endif
 
 #define OTL_PCONV(_to, _from, _val)                                            \
   OTL_SCAST(_to, *OTL_RCAST(_from *, OTL_CCAST(void *, _val)))
@@ -1704,17 +1643,12 @@ OTL_NODISCARD inline bool otl_uncaught_exception() { return std::uncaught_except
 #define OTL_UNCAUGHT_EXCEPTION_NORETURN if(otl_uncaught_exception()) return;
 #define OTL_UNCAUGHT_EXCEPTION_RETURN(x) if(otl_uncaught_exception()) return x;
 
- 
-
 #if defined(OTL_VALUE_TEMPLATE_ON) && !defined(OTL_STL) && !defined(OTL_ACE)
 #define STD_NAMESPACE_PREFIX
-#if (defined(_MSC_VER) && (_MSC_VER >= 1300)) || defined(OTL_ANSI_CPP)
+
 #include <iostream>
 #include <iomanip>
-#else
-#include <iostream.h>
-#include <iomanip.h>
-#endif
+
 #endif
 
 #if defined(OTL_USER_DEFINED_STRING_CLASS_ON)
@@ -5325,9 +5259,6 @@ public:
 
   static long direct_exec(OTL_TMPL_CONNECT &connect, const char *sqlstm,
                           const int exception_enabled = 1)
-#if defined(OTL_ANSI_CPP) && defined(OTL_FUNC_THROW_SPEC_ON)
-      throw(OTL_TMPL_EXCEPTION)
-#endif
   {
     OTL_TRACE_DIRECT_EXEC
     try {
@@ -5346,9 +5277,6 @@ public:
   }
 
   static void syntax_check(OTL_TMPL_CONNECT &connect, const char *sqlstm)
-#if defined(OTL_ANSI_CPP) && defined(OTL_FUNC_THROW_SPEC_ON)
-      throw(OTL_TMPL_EXCEPTION)
-#endif
   {
     OTL_TRACE_SYNTAX_CHECK
     OTL_TMPL_CURSOR cur(connect);
