@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.489,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.490,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401E9L)
+#define OTL_VERSION_NUMBER (0x0401EAL)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -1567,8 +1567,6 @@ public:
                                     : init_size) {
   }
 
-  ~otl_tmpl_vector() = default;
-
   OTL_NODISCARD int capacity(void) const { return this->max_size(); }
 
   OTL_NODISCARD int size(void) const { return length_; }
@@ -2055,8 +2053,6 @@ public:
 class otl_select_struct_override {
 public:
   otl_select_struct_override() = default;
-  ~otl_select_struct_override() = default;
-
   void set_master_stream_ptr(void *stream_ptr) {
     master_stream_ptr_ = stream_ptr;
   }
@@ -2230,8 +2226,6 @@ public:
   {
   }
 
-  ~otl_datetime() = default;
-
   otl_datetime &operator=(const otl_datetime &dt) {
     copy(dt);
     return *this;
@@ -2278,7 +2272,6 @@ struct otl_oracle_date {
     return *this;
   }
 
-  ~otl_oracle_date() = default;
 };
 
 inline void convert_date(otl_datetime &t, const otl_oracle_date &s) {
@@ -2301,15 +2294,7 @@ inline void convert_date(otl_oracle_date &t, const otl_datetime &s) {
   t.second = OTL_SCAST(unsigned char, (s.second + 1));
 }
 
-class otl_null {
-public:
-  otl_null() = default;
-  ~otl_null() = default;
-  otl_null(const otl_null&) = default;
-  otl_null(otl_null&&) = default;
-  otl_null& operator=(const otl_null&) = default;
-  otl_null& operator=(otl_null&&) = default;
-};
+struct otl_null {};
 
 #define OTL_NULL_PARM otl_null
 
@@ -2540,12 +2525,10 @@ public:
   int array_size {0};
   int pos {0};
   int name_pos {0};
-  char name[128];
+  char name[128] {};
   int pl_tab_flag {0};
 
-  otl_var_desc(){ name[0] = 0; }
-
-  ~otl_var_desc() = default;
+  otl_var_desc()= default;
 
   void copy_name(const char *nm) {
     if (!nm)
@@ -3982,13 +3965,9 @@ public:
   bool ind {true};
 
   otl_value() = default;
-  ~otl_value() = default;
-
   otl_value(const otl_value<TData> &var) : v(var.v), ind(var.ind) {}
-
   otl_value(const TData &var) : v(var), ind(false) {}
-
-  otl_value(OTL_NULL_PARM ) : v(), ind(true) {}
+  otl_value(OTL_NULL_PARM){}
 
   otl_value<TData> &operator=(const otl_value<TData> &var) {
     v = var.v;
@@ -4020,13 +3999,11 @@ public:
 
   otl_compact_value() = default;
 
-  ~otl_compact_value() = default;
-
   otl_compact_value(const otl_compact_value<TData,null_value> &var) : v(var.v) {}
 
   otl_compact_value(const TData &var) : v(var) {}
 
-  otl_compact_value(OTL_NULL_PARM ) : v(null_value) {}
+  otl_compact_value(OTL_NULL_PARM){}
 
   otl_compact_value<TData,null_value> &operator=(const otl_compact_value<TData,null_value> &var) {
     v = var.v;
@@ -4185,7 +4162,7 @@ public:
     this->elem_size = T_sz;
   }
 
-  virtual ~otl_T_vec() {}
+  virtual ~otl_T_vec() = default;
 
   virtual void set_len(const int new_len = 0,
                        const bool set_all_to_null = true) {
@@ -4314,7 +4291,7 @@ public:
 
   otl_cstr_tab() : v(), null_flag() { init(); }
 
-  virtual ~otl_cstr_tab() {}
+  virtual ~otl_cstr_tab() = default;
 
 private:
   short null_flag[atab_size];
@@ -25142,18 +25119,12 @@ public:
 class otl_sp_parm_desc {
 public:
   int position {-1};
-  char arg_name[40];
-  char in_out[20];
-  char data_type[40];
-  char bind_var[128];
+  char arg_name[40] {};
+  char in_out[20] {};
+  char data_type[40] {};
+  char bind_var[128] {};
 
-  otl_sp_parm_desc(){
-    arg_name[0] = 0;
-    in_out[0] = 0;
-    data_type[0] = 0;
-    bind_var[0] = 0;
-  }
-
+  otl_sp_parm_desc() = default;
   otl_sp_parm_desc(const otl_sp_parm_desc &r){
     copy(r);
   }
@@ -25162,8 +25133,6 @@ public:
     copy(r);
     return *this;
   }
-
-  ~otl_sp_parm_desc() = default;
 
 protected:
   void copy(const otl_sp_parm_desc &r) {
@@ -30800,7 +30769,6 @@ inline void otl_write_row(OTLStreamType &s, Arg1 &&arg1,
   public:
 
     otl_recursive_mutex() = default;
-    ~otl_recursive_mutex() = default;
     void lock() OTL_ACQUIRE(){mutex_.lock();}
     void unlock() OTL_RELEASE(){mutex_.unlock();}
     std::recursive_mutex& get_mutex(){return mutex_;}
