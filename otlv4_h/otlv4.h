@@ -1,5 +1,5 @@
 // =================================================================================
-// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.486,
+// ORACLE, ODBC and DB2/CLI Template Library, Version 4.0.487,
 // Copyright (C) 1996-2025, Sergei Kuchin (skuchin@gmail.com)
 //
 // This library is free software. Permission to use, copy, modify,
@@ -25,7 +25,7 @@
 #include "otl_include_0.h"
 #endif
 
-#define OTL_VERSION_NUMBER (0x0401E6L)
+#define OTL_VERSION_NUMBER (0x0401E7L)
 
 #if defined(OTL_THIRD_PARTY_STRING_VIEW_CLASS)
 #define OTL_STD_STRING_VIEW_CLASS OTL_THIRD_PARTY_STRING_VIEW_CLASS
@@ -257,6 +257,7 @@ concept AllowedNumericTypes =
 
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1600)
 #pragma warning(disable : 28251)
@@ -2129,29 +2130,27 @@ public:
   OTL_NODISCARD void *get_master_stream_ptr() { return master_stream_ptr_; }
 
   void reset(void) {
-    len = 0;
     all_mask = 0;
     lob_stream_mode = false;
   }
 
   void add_override(const int andx, const int atype, const int asize = 0) {
-    ++len;
     col_ndx.push_back(OTL_SCAST(short, andx));
     col_type.push_back(OTL_SCAST(short, atype));
     col_size.push_back(asize);
   }
 
   OTL_NODISCARD int find(const int ndx) const {
-    int i;
-    for (i = 0; i < len; ++i)
-      if (ndx == col_ndx[OTL_SCAST(size_t,i)])
-        return i;
-    return -1;
+    auto result=std::find(col_ndx.cbegin(),col_ndx.cend(),ndx);
+    if(result!=col_ndx.cend())
+      return OTL_SCAST(int,result-col_ndx.cbegin());
+    else
+      return -1;
   }
 
   void set_all_column_types(const unsigned int amask = 0) { all_mask = amask; }
 
-  OTL_NODISCARD int getLen(void) const { return len; }
+  OTL_NODISCARD int getLen(void) const { return OTL_SCAST(int,col_ndx.size()); }
 
   OTL_NODISCARD unsigned int get_all_mask() const { return all_mask; }
 
@@ -2159,7 +2158,11 @@ public:
 
   OTL_NODISCARD int get_col_size(int ndx) const { return col_size[OTL_SCAST(size_t,ndx)]; }
 
-  void setLen(const int alen) { len = alen; }
+  void reset_containers() { 
+    col_ndx.clear();
+    col_type.clear();
+    col_size.clear();
+  }
 
   OTL_NODISCARD bool get_lob_stream_mode() const { return lob_stream_mode; }
 
@@ -2171,12 +2174,9 @@ private:
   std::vector<short int> col_ndx;
   std::vector<short int> col_type;
   std::vector<int> col_size;
-  int len {0};
-
   unsigned int all_mask {0};
   bool lob_stream_mode {false};
   void *master_stream_ptr_ {nullptr};
-
 public:
   otl_select_struct_override(const otl_select_struct_override &) = delete;
   otl_select_struct_override &operator=(const otl_select_struct_override &) = delete;
@@ -14313,7 +14313,7 @@ public:
       ov_len = 0;
       next_iov_ndx = 0;
       next_ov_ndx = 0;
-      override_.setLen(0);
+      override_.reset_containers();
       flush_flag = true;
 
       delete ss;
@@ -15606,7 +15606,7 @@ public:
     (*ov_len) = 0;
     (*next_iov_ndx) = 0;
     (*next_ov_ndx) = 0;
-    override_->setLen(0);
+    override_->reset_containers();
     override_->set_lob_stream_mode(false);
 
     switch (shell->stream_type) {
@@ -25225,7 +25225,7 @@ public:
       ov_len = 0;
       next_iov_ndx = 0;
       next_ov_ndx = 0;
-      override_.setLen(0);
+      override_.reset_containers();
       flush_flag = true;
 
       delete ss;
@@ -26958,7 +26958,7 @@ OTL_THROWS_OTL_EXCEPTION {
     (*ov_len) = 0;
     (*next_iov_ndx) = 0;
     (*next_ov_ndx) = 0;
-    override_->setLen(0);
+    override_->reset_containers();
     switch (shell->stream_type) {
     case otl_no_stream_type:
       break;
