@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -78,22 +78,28 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1;
   cout<<"f1="<<f1<<endl;
-  i>>lob; // initializing CLOB stream by reading the CLOB reference 
+  it>>lob; // initializing CLOB stream by reading the CLOB reference 
           // into the otl_lob_stream from the otl_stream.
   int n=0;
-  while(!lob.eof()){ // read while not "end-of-file" -- end of CLOB
+  while(!lob.eof()){ // read while not "end-of-file"
+ // while not end-of-data
+ // read while not "end-of-file" -- end of CLOB
    ++n;
    lob>>f2; // reading a chunk of CLOB
    cout<<"   chunk #"<<n;
    cout<<", f2="
        <<static_cast<char>(f2[0]) // Unicode to ASCII
        <<static_cast<char>(f2[f2.len()-1])<<", len="<<f2.len()<<endl;
-  }
+  
+
+}
   lob.close(); // closing the otl_lob_stream. This step may be skipped.  
- }
+ 
+}
 }
 
 int main()

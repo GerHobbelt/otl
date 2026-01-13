@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #define _HAS_STREAM_INSERTION_OPERATORS_DELETED_IN_CXX20 1
@@ -33,10 +33,12 @@ void f1(ConnectPoolType* ptr)
     o.close();
     otl_stream s(3,"SELECT f1 FROM test_tab",*p1);
     int f1=0;
-    while(!s.eof()){
-      s>>f1;
+    for(auto& it : s){ // while not end-of-data
+
+      it>>f1;
       cout<<"F1="<<f1<<endl;
-    }
+    
+}
   }catch(otl_exception& p){ // intercept OTL exceptions
     cerr<<p.msg<<endl; // print out error message
     cerr<<p.stm_text<<endl; // print out SQL that caused the error
@@ -64,10 +66,12 @@ void f2(ConnectPoolType* ptr)
     o.close();
     otl_stream s(3,"SELECT f1 FROM test_tab2",*p2);
     int f1=0;
-    while(!s.eof()){
-      s>>f1;
+    for(auto& it : s){ // while not end-of-data
+
+      it>>f1;
       cout<<"F1="<<f1<<endl;
-    }
+    
+}
   }catch(otl_exception& p){ // intercept OTL exceptions
     cerr<<p.msg<<endl; // print out error message
     cerr<<p.stm_text<<endl; // print out SQL that caused the error

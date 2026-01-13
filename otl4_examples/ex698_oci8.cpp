@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -69,10 +69,12 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-   i>>f1>>f2>>f3;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+   it>>f1>>f2>>f3;
    printf("f1=%lld, f2=%s, f3=%llu\n",f1,f2,f3);
- }
+ 
+}
 
 }
 

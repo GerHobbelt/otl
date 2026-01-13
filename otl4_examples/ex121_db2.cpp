@@ -211,28 +211,32 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
 #if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
-   otl_read_row(i,f1,f2,f3);
+   otl_read_row(it,f1,f2,f3);
 #else
   // when variadic template functions are not supported by the C++
   // compiler, OTL provides nonvariadic versions of the same template
   // functions in the range of [1..15] parameters
-   otl_read_row(i,f1,f2,f3);
+   otl_read_row(it,f1,f2,f3);
   // the old way (operators >>() / <<()) is available as always:
-  //   i>>f1>>f2>>f3;
+  //   it>>f1>>f2>>f3;
 #endif
   cout<<"f1="<<f1<<", f2="<<f2<<", f3="<<f3<<endl;
- }
+ 
+}
 
  i<<4<<4; // assigning :f11 = :f12 = 4
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2>>f3;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1>>f2>>f3;
   cout<<"f1="<<f1<<", f2="<<f2<<", f3="<<f3<<endl;
- }
+ 
+}
 
 }
 

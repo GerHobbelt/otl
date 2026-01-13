@@ -129,8 +129,8 @@ int main()
  otl_connect::otl_initialize(); // initialize ODBC environment
  try{
 
-   db.rlogon("UID=scott;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
-//  db.rlogon("scott/tiger@firebirdsql"); // connect to ODBC, alternative format
+   db.rlogon("UID=sysdba;PWD=tiger;DSN=firebirdsql"); // connect to ODBC
+//  db.rlogon("sysdba/tiger@firebirdsql"); // connect to ODBC, alternative format
                                     // of connect string 
 
   otl_cursor::direct_exec

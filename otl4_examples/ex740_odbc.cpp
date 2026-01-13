@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -46,10 +46,12 @@ void insert()
     o<<f2_in; // write input variable :f2
 
     s.rewind();
-    while(!s.eof()){ // while not end-of-data
-      s>>f1_out;
+    for(auto& it : s){ // while not end-of-data
+ // while not end-of-data
+      it>>f1_out;
       cout<<"f1="<<f1_out<<", f2="<<f2_in<<endl;
-    }
+    
+}
   }
   db.commit(); // commit transaction
  }

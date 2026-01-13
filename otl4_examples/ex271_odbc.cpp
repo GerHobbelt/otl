@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -6,11 +6,52 @@
 using namespace std;
 
 #include <stdio.h>
+using namespace std;
 
-#define OTL_ODBC_MSSQL_2008 // Compile OTL 4/ODBC, MS SQL 2008
-//#define OTL_ODBC // Compile OTL 4/ODBC. Uncomment this when used with MS SQL 7.0/ 2000
-#define OTL_UNICODE // Enable Unicode OTL for ODBC
+#ifndef NDEBUG
+#define OTL_BIND_VAR_STRICT_TYPE_CHECKING_ON
+#endif
+
+// For the Unicode stuff:
+// See http://otl.sourceforge.net/otl3_compile.htm#OTL_UNICODE
+// and OT MS SQL Unicode examples at http://otl.sourceforge.net/otl4_mssql_unicode_examples.htm
+#define OTL_UNICODE
+
+// Make sure vcc does not bail out with XKEYCHEK compiler error
+#define _ALLOW_KEYWORD_MACROS
+// Compile OTL 4/ODBC, MS SQL 2008 and later
+#define OTL_ODBC_MSSQL_2008
+// Get rid of destructor warning
+#define OTL_DESTRUCTORS_DO_NOT_THROW
+
+// Default "numeric" NULLs to (-1)
+#define OTL_DEFAULT_NUMERIC_NULL_TO_VAL (-1)
+// Default "datetime" NULLs to otl_datetime(2000,1,1,0,0,0)
+#define OTL_DEFAULT_DATETIME_NULL_TO_VAL otl_datetime(2000, 1, 1, 0, 0, 0)
+// Default "string" NULLs to "***NULL***"
+#define OTL_DEFAULT_STRING_NULL_TO_VAL L"" 
+// Default "char" NULLs to '*'
+#define OTL_DEFAULT_CHAR_NULL_TO_VAL L'*'
+
+// Make sure OTL_UNICODE_STRING_TYPE points to correct type on Windows and Linux
+#if defined(__GNUC__)
+
+namespace std
+{
+	typedef wchar_t unicode_char;
+	typedef basic_string<unicode_char> unicode_string;
+}
+
+#define OTL_UNICODE_CHAR_TYPE unicode_char
+#define OTL_UNICODE_STRING_TYPE unicode_string
+
+#else
+#define OTL_UNICODE_CHAR_TYPE wchar_t
+#define OTL_UNICODE_STRING_TYPE wstring
+#endif
+
 #define OTL_STREAM_WITH_STD_UNICODE_CHAR_ARRAY_ON
+
 #if !defined(OTL_CPP_14_ON)
 #define OTL_CPP_14_ON
 #endif
@@ -61,26 +102,30 @@ void select()
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1;
-  i>>f2;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1;
+  it>>f2;
   cout<<"f1="<<f1<<", f2=";
    for(size_t j=0;f2[j]!=0;++j)
      cout<<" "<<static_cast<unsigned int>(f2[j]);
    cout<<endl;
- }
+ 
+}
 
  i<<4<<4; // assigning :f11 = 4, :f12 = 4
    // SELECT automatically executes when all input variables are
    // assigned. First portion of output rows is fetched to the buffer
 
- while(!i.eof()){ // while not end-of-data
-   i>>f1>>f2;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+   it>>f1>>f2;
   cout<<"f1="<<f1<<", f2=";
    for(size_t j=0;f2[j]!=0;++j)
      cout<<" "<<static_cast<unsigned int>(f2[j]);
    cout<<endl;
- }
+ 
+}
 
 }
 

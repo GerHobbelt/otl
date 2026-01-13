@@ -46,8 +46,8 @@ void select()
  int f1=0;
  char f2[37];
 
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2;
+ for(auto& it : i){ // while not end-of-data
+  it>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
   o<<f1<<f2;
  }

@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -37,19 +37,21 @@ void select()
     // describe the structure of the output columns of the result set.
 
  int rpc=0;
- while(!s.eof()){
+ for(auto& it : s){ // while not end-of-data
+
    ++rpc;
    char str[512];
    cout<<"ROW#"<<rpc<<" ";
    for(int col_num=0;col_num<desc_len;++col_num){
-     s>>str;
-     if(s.is_null())
+     it>>str;
+     if(it.is_null())
        cout<<desc[col_num].name<<"=NULL ";
      else
        cout<<desc[col_num].name<<"="<<str<<" ";
    }
    cout<<endl;
- }
+ 
+}
 
 }
 

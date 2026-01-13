@@ -72,13 +72,15 @@ void select()
  while(!s1.eof()){ // while not end-of-data
   s1>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
+ 
+}
 
  cout<<"=====> Reading :cur2..."<<endl;
  while(!s2.eof()){ // while not end-of-data
   s2>>f1>>f2;
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
+ 
+}
 
  s1.close(); // closing the reference cursor
  s2.close(); // closing the reference cursor

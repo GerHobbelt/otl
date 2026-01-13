@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -81,19 +81,21 @@ void select()
  int f1=0;
  char f2[31];
 
- while(!i.eof()){ // while not end-of-data
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
 #if defined(OTL_ANSI_CPP_11_VARIADIC_TEMPLATES)
-   otl_read_row(i,f1,f2);
+   otl_read_row(it,f1,f2);
 #else
   // when variadic template functions are not supported by the C++
   // compiler, OTL provides nonvariadic versions of the same template
   // functions in the range of [1..15] parameters
-   otl_read_row(i,f1,f2);
+   otl_read_row(it,f1,f2);
   // the old way (operators >>() / <<()) is available as always:
-  //   i>>f1>>f2;
+  //   it>>f1>>f2;
 #endif
   cout<<"f1="<<f1<<", f2="<<f2<<endl;
- }
+ 
+}
 
 }
 

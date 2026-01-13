@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -149,25 +149,34 @@ void select()
   s>>lob; // initializing CLOB stream by reading the CLOB reference 
           // into the otl_lob_stream from the otl_refcur_stream.
   int n=0;
-  while(!lob.eof()){ // read while not "end-of-file" -- end of CLOB
+  while(!lob.eof()){ // read while not "end-of-file"
+ // while not end-of-data
+ // read while not "end-of-file" -- end of CLOB
    ++n;
    lob>>f2; // reading a chunk of CLOB
    cout<<"   chunk #"<<n;
    cout<<", f2="<<f2[0]<<f2[f2.len()-1]<<", len="<<f2.len()<<endl;
-  }
+  
+
+}
   lob.close(); // closing the otl_lob_stream.
 
   s>>lob2; // initializing CLOB stream by reading the CLOB reference 
           // into the otl_lob_stream from the otl_refcur_stream.
   n=0;
-  while(!lob2.eof()){ // read while not "end-of-file" -- end of CLOB
+  while(!lob2.eof()){ // read while not "end-of-file"
+ // while not end-of-data
+ // read while not "end-of-file" -- end of CLOB
    ++n;
    lob2>>f2; // reading a chunk of CLOB
    cout<<"   chunk #"<<n;
    cout<<", f3="<<f2[0]<<f2[f2.len()-1]<<", len="<<f2.len()<<endl;
-  }
+  
+
+}
   lob2.close(); // closing the otl_lob_stream.
- }
+ 
+}
  s.close(); // closing the reference cursor stream
 
 }

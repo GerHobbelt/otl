@@ -50,12 +50,12 @@ public:
 #if defined(OTL_CPP_11_ON) || defined(_MSC_VER) && (_MSC_VER >= 1600)
 // when move constructors / assignment operators are supported
 
-  my_row_class(my_row_class&& r):f1(r.f1),f2(move(r.f2)){}
+  my_row_class(my_row_class&& r):f1(r.f1),f2(std::move(r.f2)){}
 
   my_row_class& operator=(my_row_class&& r)
   {
     f1=r.f1;
-    f2=move(r.f2);
+    f2=std::move(r.f2);
     return *this;
   }
 

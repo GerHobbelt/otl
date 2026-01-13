@@ -62,7 +62,7 @@ void select()
  int f1;
  char f2[37];
 
- while(!i.eof()){ // while not end-of-data
+ for(auto& it : i){ // while not end-of-data
   i&gt;&gt;f1&gt;&gt;f2;
   cout&lt;&lt;&quot;f1=&quot;&lt;&lt;f1&lt;&lt;&quot;, f2=&quot;&lt;&lt;f2&lt;&lt;endl;
   o&lt;&lt;f1&lt;&lt;f2;

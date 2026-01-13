@@ -1,4 +1,4 @@
-#if defined(_MSC_VER) && (_MSC_VER >= 1900)
+﻿#if defined(_MSC_VER) && (_MSC_VER >= 1900)
 #define _ALLOW_RTCc_IN_STL 
 #define _HAS_STD_BYTE 0
 #endif
@@ -62,8 +62,9 @@ void select(void)
  }
 #else
 // C++98/03 compiler
- while(!i.eof()){ // while not end-of-data
-  i>>f1>>f2>>f3;
+ for(auto& it : i){ // while not end-of-data
+ // while not end-of-data
+  it>>f1>>f2>>f3;
   cout<<"f1="<<f1;
   cout<<", f2="<<f2.month<<"/"<<f2.day<<"/"
       <<f2.year<<" "<<f2.hour<<":"<<f2.minute<<":"
@@ -72,7 +73,8 @@ void select(void)
       <<f3.year<<" "<<f3.hour<<":"<<f3.minute<<":"
       <<f3.second;
   cout<<endl;
- }
+ 
+}
 #endif
  
 }
